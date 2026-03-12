@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import random
+import sys
 from pathlib import Path
 from types import ModuleType
 from typing import Callable, Dict, Iterable, Iterator, List, Optional, Tuple
@@ -82,12 +83,29 @@ def _load_re_arc_generators_module() -> Optional[ModuleType]:
     path = ROOT_DIR / "external" / "re_arc" / "generators.py"
     if not path.exists():
         return None
-    spec = importlib.util.spec_from_file_location("re_arc_generators", path)
-    if spec is None or spec.loader is None:
-        return None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+
+    # Ensure relative imports like `from dsl import *` and `from utils import *`
+    # inside generators.py can be resolved by temporarily adding the re_arc
+    # directory to sys.path.
+    re_arc_dir = path.parent
+    original_sys_path = list(sys.path)
+    try:
+        if str(re_arc_dir) not in sys.path:
+            sys.path.insert(0, str(re_arc_dir))
+
+        spec = importlib.util.spec_from_file_location("re_arc_generators", path)
+        if spec is None or spec.loader is None:
+            return None
+        module = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(module)
+        except ModuleNotFoundError:
+            # If re_arc's own dependencies are not importable, just skip
+            # exposing generators rather than failing task loading entirely.
+            return None
+        return module
+    finally:
+        sys.path = original_sys_path
 
 
 def _make_re_arc_generator(task_id: str) -> Optional[Callable[[int], List[GridPair]]]:
