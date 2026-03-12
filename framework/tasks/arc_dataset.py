@@ -137,13 +137,30 @@ def _load_arc_gen_task_list_module() -> Optional[ModuleType]:
     path = ROOT_DIR / "external" / "ARC-GEN" / "task_list.py"
     if not path.exists():
         return None
-    spec = importlib.util.spec_from_file_location("arc_gen_task_list", path)
-    if spec is None or spec.loader is None:
-        return None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    _ARC_GEN_TASK_LIST_MODULE = module
-    return module
+
+    arc_gen_dir = path.parent
+    original_sys_path = list(sys.path)
+    try:
+        # Ensure `from tasks.training import ...` can resolve by adding the
+        # ARC-GEN root (which contains the `tasks` package) to sys.path.
+        if str(arc_gen_dir) not in sys.path:
+            sys.path.insert(0, str(arc_gen_dir))
+
+        spec = importlib.util.spec_from_file_location("arc_gen_task_list", path)
+        if spec is None or spec.loader is None:
+            return None
+        module = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(module)
+        except ModuleNotFoundError:
+            # If ARC-GEN's internal imports fail (e.g. missing dependencies),
+            # degrade gracefully and skip exposing its generators.
+            return None
+
+        _ARC_GEN_TASK_LIST_MODULE = module
+        return module
+    finally:
+        sys.path = original_sys_path
 
 
 def _arc_gen_id_to_task_num_and_generator(
@@ -196,14 +213,16 @@ def _load_secondary_verifier(task_id: str) -> Optional[Callable[[Grid], Grid]]:
     if not solutions_root.exists():
         return None
 
-    # Simple heuristic: any file in solutions/ whose stem contains the task id.
-    candidates = [
-        p for p in solutions_root.glob("*.py") if task_id in p.stem
-    ]
-    if not candidates:
+    # Use the same ARC-GEN mapping as for generators: find the task_num whose
+    # ARC id matches this task_id, then load the corresponding `taskNNN.py`
+    # solution file.
+    lookup = _arc_gen_id_to_task_num_and_generator(task_id)
+    if lookup is None:
         return None
-
-    path = candidates[0]
+    task_num, _generator = lookup
+    path = solutions_root / f"task{task_num:03d}.py"
+    if not path.exists():
+        return None
     spec = importlib.util.spec_from_file_location(f"cg_solutions_{task_id}", path)
     if spec is None or spec.loader is None:
         return None

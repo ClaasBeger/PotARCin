@@ -51,6 +51,25 @@ def _load_verifiers_module() -> ModuleType | None:
     return None
 
 
+def _wrap_re_arc_verifier(func: Callable[[Grid], Grid]) -> Callable[[Grid], Grid]:
+    """Adapt a re_arc-style verifier to the framework's Grid type.
+
+    re_arc verifiers expect grids as tuples of tuples in many of their DSL
+    utilities. The framework uses list-of-lists. This wrapper converts
+    back and forth so that callers can always work with the list-based
+    `Grid` type.
+    """
+
+    def wrapped(grid: Grid) -> Grid:
+        tuple_grid = tuple(tuple(row) for row in grid)
+        out = func(tuple_grid)  # type: ignore[arg-type]
+        # If the verifier already returns list-of-lists, this is cheap; if it
+        # returns tuples, we normalize back to lists.
+        return [list(row) for row in out]
+
+    return wrapped
+
+
 def is_available() -> bool:
     """Return True if the re_arc verifiers module can be loaded."""
     return _load_verifiers_module() is not None
@@ -75,14 +94,20 @@ def get_re_arc_verifier(task_id: str) -> Optional[Callable[[Grid], Grid]]:
         except Exception:
             verifier = None
         if callable(verifier):
-            return verifier
+            return _wrap_re_arc_verifier(verifier)
 
     # Pattern 2: module exposes a mapping `VERIFIERS` keyed by task_id.
     verifiers_map = getattr(module, "VERIFIERS", None)
     if isinstance(verifiers_map, dict):
         candidate = verifiers_map.get(task_id)
         if callable(candidate):
-            return candidate
+            return _wrap_re_arc_verifier(candidate)
+
+    # Pattern 3: plain functions named `verify_<task_id>` (this is how
+    # the bundled re_arc verifiers are actually structured).
+    func = getattr(module, f"verify_{task_id}", None)
+    if callable(func):
+        return _wrap_re_arc_verifier(func)
 
     return None
 
