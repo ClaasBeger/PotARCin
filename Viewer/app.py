@@ -243,6 +243,28 @@ def main() -> None:
                         f"<span style='color:orange; font-size:0.9rem;'>⚠️ Verifier error on re_arc synthetic pair: {e}</span>",
                         unsafe_allow_html=True,
                     )
+            # And also on first ARC-GEN stable synthetic pair, if present.
+            if task.arc_gen_synthetic_pairs:
+                pair = task.arc_gen_synthetic_pairs[0]
+                try:
+                    out = task.secondary_verifier(pair.input)
+                    ok = is_equal_grid(out, pair.output)
+                    symbol = "✅" if ok else "❌"
+                    color = "green" if ok else "red"
+                    msg = (
+                        "Matches ARC-GEN synthetic pair"
+                        if ok
+                        else "Does NOT match ARC-GEN synthetic pair"
+                    )
+                    st.markdown(
+                        f"<span style='color:{color}; font-size:0.9rem;'>{symbol} {msg}</span>",
+                        unsafe_allow_html=True,
+                    )
+                except Exception as e:
+                    st.markdown(
+                        f"<span style='color:orange; font-size:0.9rem;'>⚠️ Verifier error on ARC-GEN synthetic pair: {e}</span>",
+                        unsafe_allow_html=True,
+                    )
         else:
             st.warning("Not available")
 
