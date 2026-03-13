@@ -4,6 +4,7 @@ import importlib.util
 import json
 import random
 import sys
+import warnings
 from pathlib import Path
 from types import ModuleType
 from typing import Callable, Dict, Iterable, Iterator, List, Optional, Tuple
@@ -227,7 +228,11 @@ def _load_secondary_verifier(task_id: str) -> Optional[Callable[[Grid], Grid]]:
     if spec is None or spec.loader is None:
         return None
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    # Some golfed solutions trigger SyntaxWarning on import under certain
+    # Python versions. We don't want these warnings to spam the UI.
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", SyntaxWarning)
+        spec.loader.exec_module(module)
 
     # Prefer a function named `solve`, otherwise fall back to any callable.
     solve_fn = getattr(module, "solve", None)
