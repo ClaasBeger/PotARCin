@@ -87,6 +87,7 @@ def main() -> None:
                 status = "Unknown (no primary verifier)"
                 symbol = "⚪"
                 color = "gray"
+                alt_output: Optional[Grid] = None
                 if task.verifier is not None:
                     try:
                         out = task.verifier(pair.input)
@@ -98,6 +99,7 @@ def main() -> None:
                             status = "Does NOT match primary verifier"
                             symbol = "❌"
                             color = "red"
+                            alt_output = out
                     except Exception as e:
                         status = f"Verifier error: {e}"
                         symbol = "⚠️"
@@ -107,6 +109,12 @@ def main() -> None:
                     f"<span style='color:{color}; font-size:0.9rem;'>{symbol} {status}</span>",
                     unsafe_allow_html=True,
                 )
+
+                # If the verifier produced a valid but different output, show it.
+                if alt_output is not None:
+                    with st.expander("Verifier alternative output", expanded=False):
+                        _render_grid(alt_output, label="Verifier output")
+
                 st.markdown("---")
 
         if task.test_inputs:
