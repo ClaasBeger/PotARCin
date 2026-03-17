@@ -226,22 +226,22 @@ def main() -> None:
         else:
             st.warning("Not available")
     with c2:
-        st.markdown("**Secondary verifier (NeurIPS Code Golf)**")
-        if task.secondary_verifier is not None:
+        st.markdown("**Alternative verifiers**")
+
+        def _show_alt(name: str, verifier):
+            st.markdown(f"**{name}**")
+            if verifier is None:
+                st.warning("Not available")
+                return
             st.success("Available")
-            # Run secondary verifier on first re_arc stable synthetic pair, if present.
             if task.re_arc_synthetic_pairs:
                 pair = task.re_arc_synthetic_pairs[0]
                 try:
-                    out = task.secondary_verifier(pair.input)
+                    out = verifier(pair.input)
                     ok = is_equal_grid(out, pair.output)
                     symbol = "✅" if ok else "❌"
                     color = "green" if ok else "red"
-                    msg = (
-                        "Matches re_arc synthetic pair"
-                        if ok
-                        else "Does NOT match re_arc synthetic pair"
-                    )
+                    msg = "Matches re_arc synthetic pair" if ok else "Does NOT match re_arc synthetic pair"
                     st.markdown(
                         f"<span style='color:{color}; font-size:0.9rem;'>{symbol} {msg}</span>",
                         unsafe_allow_html=True,
@@ -251,19 +251,14 @@ def main() -> None:
                         f"<span style='color:orange; font-size:0.9rem;'>⚠️ Verifier error on re_arc synthetic pair: {e}</span>",
                         unsafe_allow_html=True,
                     )
-            # And also on first ARC-GEN stable synthetic pair, if present.
             if task.arc_gen_synthetic_pairs:
                 pair = task.arc_gen_synthetic_pairs[0]
                 try:
-                    out = task.secondary_verifier(pair.input)
+                    out = verifier(pair.input)
                     ok = is_equal_grid(out, pair.output)
                     symbol = "✅" if ok else "❌"
                     color = "green" if ok else "red"
-                    msg = (
-                        "Matches ARC-GEN synthetic pair"
-                        if ok
-                        else "Does NOT match ARC-GEN synthetic pair"
-                    )
+                    msg = "Matches ARC-GEN synthetic pair" if ok else "Does NOT match ARC-GEN synthetic pair"
                     st.markdown(
                         f"<span style='color:{color}; font-size:0.9rem;'>{symbol} {msg}</span>",
                         unsafe_allow_html=True,
@@ -273,8 +268,10 @@ def main() -> None:
                         f"<span style='color:orange; font-size:0.9rem;'>⚠️ Verifier error on ARC-GEN synthetic pair: {e}</span>",
                         unsafe_allow_html=True,
                     )
-        else:
-            st.warning("Not available")
+
+        _show_alt("v2 (google-code-golf-2025)", task.secondary_verifier)
+        _show_alt("v3 (golf)", getattr(task, "tertiary_verifier", None))
+        _show_alt("v4 (NeurIPS-Code-Golf-2025)", getattr(task, "quaternary_verifier", None))
 
 
 if __name__ == "__main__":

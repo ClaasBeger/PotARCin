@@ -30,6 +30,21 @@ _SYMBOL_TO_COLOR = {
 }
 
 
+def _normalize_grid(grid: Grid) -> Grid:
+    """Convert tuple-based grids to list-of-lists so equality is semantic."""
+    # Many golfed solutions return tuples of tuples; we want structural
+    # equality up to container type, not strict type equality.
+    if not isinstance(grid, (list, tuple)):
+        return grid
+    rows = []
+    for row in grid:
+        if isinstance(row, (list, tuple)):
+            rows.append(list(row))
+        else:
+            rows.append(row)  # type: ignore[list-item]
+    return rows  # type: ignore[return-value]
+
+
 def _grid_to_html(grid: Grid, title: str, cell_px: int = 20) -> str:
     """Return HTML for one grid with colored cells (viewer-style)."""
     from html import escape
@@ -53,6 +68,9 @@ def _grid_to_html(grid: Grid, title: str, cell_px: int = 20) -> str:
 def _write_mismatch_html(
     out_dir: Path,
     task_id: str,
+    verifier_key: str,
+    verifier_name: str,
+    failed_check: str,
     index: int,
     input_grid: Grid,
     expected: Grid,
@@ -60,19 +78,43 @@ def _write_mismatch_html(
 ) -> Path:
     """Write a single HTML file showing input, expected, and got side by side."""
     out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / f"{task_id}_dynamic_{index}.html"
+    path = out_dir / f"{task_id}_{verifier_key}_{failed_check}_{index}.html"
+    if failed_check == "train":
+        expected_label = "Expected (train label)"
+    elif failed_check == "test":
+        expected_label = "Expected (test label)"
+    elif failed_check == "stable":
+        expected_label = "Expected (ARC-GEN stable)"
+    elif failed_check == "dynamic":
+        expected_label = "Expected (ARC-GEN dynamic)"
+    else:
+        expected_label = "Expected"
     html = (
         "<!DOCTYPE html><html><head><meta charset='utf-8'/><title>Mismatch "
         + task_id
-        + " dynamic "
+        + " "
+        + verifier_key
+        + " "
+        + failed_check
+        + " "
         + str(index)
-        + "</title></head><body style='font-family:sans-serif;'><h2>"
+        + "</title></head><body style='font-family:sans-serif;'>"
+        + "<h2>"
         + task_id
-        + " — dynamic example "
+        + " — "
+        + verifier_name
+        + " — failed "
+        + failed_check
+        + " ["
         + str(index)
-        + "</h2><div style='display:flex;flex-wrap:wrap;gap:16px;'>"
+        + "]"
+        + "</h2>"
+        + "<div style='opacity:0.8;margin-bottom:10px;'>File: "
+        + str(path)
+        + "</div>"
+        + "<div style='display:flex;flex-wrap:wrap;gap:16px;'>"
         + _grid_to_html(input_grid, "Input")
-        + _grid_to_html(expected, "Expected (ARC-GEN)")
+        + _grid_to_html(expected, expected_label)
         + _grid_to_html(got, "Got (verifier)")
         + "</div></body></html>"
     )
@@ -124,13 +166,23 @@ def inspect_task(task_id: str) -> ArcTask:
             "  Verifier output on first train input:",
             task.verifier(task.train_pairs[0].input),
         )
-    print("Has secondary verifier?", task.secondary_verifier is not None)
+    print("Has verifier #2 (google-code-golf-2025)?", task.secondary_verifier is not None)
     if task.secondary_verifier is not None and task.train_pairs:
-        print("  Secondary verifier:", task.secondary_verifier)
+        print("  Verifier #2:", task.secondary_verifier)
         print(
-            "  Secondary output on first train input:",
+            "  Verifier #2 output on first train input:",
             task.secondary_verifier(task.train_pairs[0].input),
         )
+    print("Has verifier #3 (golf)?", getattr(task, "tertiary_verifier", None) is not None)
+    if getattr(task, "tertiary_verifier", None) is not None and task.train_pairs:
+        v = task.tertiary_verifier  # type: ignore[assignment]
+        print("  Verifier #3:", v)
+        print("  Verifier #3 output on first train input:", v(task.train_pairs[0].input))
+    print("Has verifier #4 (NeurIPS-Code-Golf-2025)?", getattr(task, "quaternary_verifier", None) is not None)
+    if getattr(task, "quaternary_verifier", None) is not None and task.train_pairs:
+        v = task.quaternary_verifier  # type: ignore[assignment]
+        print("  Verifier #4:", v)
+        print("  Verifier #4 output on first train input:", v(task.train_pairs[0].input))
 
     return task
 
@@ -145,189 +197,215 @@ def check_verifiers_on_arc_gen(task: ArcTask, max_examples: int = 5) -> dict:
     - a handful of dynamically generated ARC-GEN examples (if the generator exists)
     and prints simple match/mismatch statistics, returning a small stats dict.
     """
-    print("\n=== Verifier check on ARC-GEN examples ===")
+    verifiers = [
+        ("v1 (re_arc)", "v1", task.verifier),
+        ("v2 (google-code-golf-2025)", "v2", task.secondary_verifier),
+        ("v3 (golf)", "v3", getattr(task, "tertiary_verifier", None)),
+        ("v4 (NeurIPS-Code-Golf-2025)", "v4", getattr(task, "quaternary_verifier", None)),
+    ]
 
-    if task.verifier is None and task.secondary_verifier is None:
-        print("No verifiers available; skipping check.")
-        return {
-            "primary": {"train_ok": None, "test_ok": None, "stable_ok": None, "dynamic_ok": None},
-            "secondary": {"train_ok": None, "test_ok": None, "stable_ok": None, "dynamic_ok": None},
+    present = [(n, k, v) for (n, k, v) in verifiers if v is not None]
+    if not present:
+        return {}
+
+    # Ground-truth test outputs from arc_original.zip, when available.
+    test_labels = None
+    if task.test_inputs and getattr(task, "test_outputs", None):
+        # Normalize here so all verifiers can compare against the same form.
+        test_labels = [_normalize_grid(out) for out in task.test_outputs]
+
+    stats: dict[str, dict] = {}
+    for _name, key, _verifier in present:
+        stats[key] = {
+            "train_ok": None,
+            "test_ok": None,
+            "stable_ok": None,
+            "dynamic_ok": None,
+            "failed_fast": False,
+            "first_failure": None,  # dict with kind/index/error/input/expected/got
+            "counts": {
+                "train": {"ok": 0, "total": 0},
+                "test": {"ok": 0, "total": 0},
+                "stable": {"ok": 0, "total": 0},
+                "dynamic": {"ok": 0, "total": 0},
+            },
         }
 
-    stats = {
-        "primary": {
-            "train_ok": None,
-            "test_ok": None,
-            "stable_ok": None,
-            "dynamic_ok": None,
-            "dynamic_mismatches": [],
-        },
-        "secondary": {
-            "train_ok": None,
-            "test_ok": None,
-            "stable_ok": None,
-            "dynamic_ok": None,
-            "dynamic_mismatches": [],
-        },
-    }
+    def _mark_failed_fast(key: str, failure: dict) -> None:
+        stats[key]["failed_fast"] = True
+        stats[key]["first_failure"] = failure
+        # Ensure this verifier cannot be considered "all ok".
+        for f in ("train_ok", "test_ok", "stable_ok", "dynamic_ok"):
+            if stats[key][f] is None:
+                stats[key][f] = False
 
-    # 0) Original ARC training pairs.
-    if task.train_pairs:
-        print(f"\nOriginal ARC train pairs: {len(task.train_pairs)}")
-        for name, key, verifier in (
-            ("primary (re_arc)", "primary", task.verifier),
-            ("secondary (NeurIPS)", "secondary", task.secondary_verifier),
-        ):
-            if verifier is None:
-                continue
+    # Run checks per verifier; for each verifier, stop as soon as ANY grid fails.
+    for name, key, verifier in present:
+        # 0) Train
+        if task.train_pairs and not stats[key]["failed_fast"]:
             ok = 0
-            fail = 0
-            total = len(task.train_pairs)
-            for i, pair in enumerate(task.train_pairs, start=1):
+            stats[key]["counts"]["train"]["total"] = len(task.train_pairs)
+            for i, pair in enumerate(task.train_pairs):
                 try:
-                    out = verifier(pair.input)
-                    if is_equal_grid(out, pair.output):
+                    out = _normalize_grid(verifier(pair.input))
+                    if is_equal_grid(out, _normalize_grid(pair.output)):
                         ok += 1
+                        stats[key]["counts"]["train"]["ok"] = ok
                     else:
-                        fail += 1
-                        print(
-                            f"  [{name}] train mismatch at pair {i-1}: expected vs got differ"
+                        _mark_failed_fast(
+                            key,
+                            {"kind": "train", "index": i, "input": pair.input, "expected": pair.output, "got": out},
                         )
+                        break
                 except Exception as e:
-                    fail += 1
-                    print(f"  [{name}] train error at pair {i-1}: {e}")
-            all_ok = fail == 0 and ok > 0
-            stats[key]["train_ok"] = all_ok
-            bar = _progress_bar(ok, total)
-            color = GREEN if all_ok else RED
-            print(
-                f"  [{name}] train: {color}{bar}{RESET} (ok={ok}, fail={fail})"
-            )
-    else:
-        print("\nNo original ARC train pairs available.")
+                    _mark_failed_fast(key, {"kind": "train", "index": i, "error": str(e)})
+                    break
+            stats[key]["train_ok"] = (not stats[key]["failed_fast"]) and ok == len(task.train_pairs) and ok > 0
 
-    # 0b) Original ARC test inputs, if we can get labels via primary verifier.
-    if task.test_inputs and task.verifier is not None:
-        print(f"\nOriginal ARC test inputs: {len(task.test_inputs)}")
-        # Use primary as a "label generator" for test; others should match it.
-        primary = task.verifier
-        primary_outputs = [primary(inp) for inp in task.test_inputs]
-
-        for name, key, verifier in (
-            ("primary (re_arc)", "primary", task.verifier),
-            ("secondary (NeurIPS)", "secondary", task.secondary_verifier),
-        ):
-            if verifier is None:
-                continue
+        # 0b) Test against ground-truth outputs from arc_original.zip.
+        if task.test_inputs and test_labels is not None and not stats[key]["failed_fast"]:
             ok = 0
-            fail = 0
-            total = len(task.test_inputs)
-            for i, inp in enumerate(task.test_inputs, start=1):
+            stats[key]["counts"]["test"]["total"] = len(task.test_inputs)
+            for i, inp in enumerate(task.test_inputs):
                 try:
-                    out = verifier(inp)
-                    if is_equal_grid(out, primary_outputs[i - 1]):
+                    out = _normalize_grid(verifier(inp))
+                    if is_equal_grid(out, test_labels[i]):
                         ok += 1
+                        stats[key]["counts"]["test"]["ok"] = ok
                     else:
-                        fail += 1
-                        print(
-                            f"  [{name}] test mismatch at input {i-1}: expected vs got differ"
+                        _mark_failed_fast(
+                            key,
+                            {"kind": "test", "index": i, "input": inp, "expected": test_labels[i], "got": out},
                         )
+                        break
                 except Exception as e:
-                    fail += 1
-                    print(f"  [{name}] test error at input {i-1}: {e}")
-            all_ok = fail == 0 and ok > 0
-            stats[key]["test_ok"] = all_ok
-            bar = _progress_bar(ok, total)
-            color = GREEN if all_ok else RED
-            print(
-                f"  [{name}] test: {color}{bar}{RESET} (ok={ok}, fail={fail})"
-            )
+                    _mark_failed_fast(key, {"kind": "test", "index": i, "error": str(e)})
+                    break
+            stats[key]["test_ok"] = (not stats[key]["failed_fast"]) and ok == len(task.test_inputs) and ok > 0
 
-    # 1) Stable ARC-GEN synthetic pairs: use ALL available.
-    if task.arc_gen_synthetic_pairs:
-        pairs = task.arc_gen_synthetic_pairs
-        print(f"\nStable ARC-GEN pairs: {len(pairs)} total")
-
-        for name, key, verifier in (
-            ("primary (re_arc)", "primary", task.verifier),
-            ("secondary (NeurIPS)", "secondary", task.secondary_verifier),
-        ):
-            if verifier is None:
-                continue
+        # 1) Stable ARC-GEN
+        if task.arc_gen_synthetic_pairs and not stats[key]["failed_fast"]:
+            pairs = task.arc_gen_synthetic_pairs
             ok = 0
-            fail = 0
-            total = len(pairs)
-            for i, pair in enumerate(pairs, start=1):
+            stats[key]["counts"]["stable"]["total"] = len(pairs)
+            for i, pair in enumerate(pairs):
                 try:
-                    out = verifier(pair.input)
-                    if is_equal_grid(out, pair.output):
+                    out = _normalize_grid(verifier(pair.input))
+                    if is_equal_grid(out, _normalize_grid(pair.output)):
                         ok += 1
+                        stats[key]["counts"]["stable"]["ok"] = ok
                     else:
-                        fail += 1
-                        print(
-                            f"  [{name}] stable mismatch at pair {i-1}: expected vs got differ"
+                        _mark_failed_fast(
+                            key,
+                            {"kind": "stable", "index": i, "input": pair.input, "expected": pair.output, "got": out},
                         )
+                        break
                 except Exception as e:
-                    fail += 1
-                    print(
-                        f"  [{name}] stable error at pair {i-1}: {e}"
-                    )
-            all_ok = fail == 0 and ok > 0
-            stats[key]["stable_ok"] = all_ok
-            bar = _progress_bar(ok, total)
-            color = GREEN if all_ok else RED
-            print(
-                f"  [{name}] stable ARC-GEN: {color}{bar}{RESET} (ok={ok}, fail={fail})"
-            )
-    else:
-        print("\nNo stable ARC-GEN synthetic pairs available.")
+                    _mark_failed_fast(key, {"kind": "stable", "index": i, "error": str(e)})
+                    break
+            stats[key]["stable_ok"] = (not stats[key]["failed_fast"]) and ok == len(pairs) and ok > 0
 
-    # 2) Dynamically generated ARC-GEN examples: limit to max_examples.
-    if task.arc_gen_generator is not None:
-        print(f"\nDynamic ARC-GEN examples (up to {max_examples})")
-        dyn_pairs = task.arc_gen_generator(max_examples)
-        for name, key, verifier in (
-            ("primary (re_arc)", "primary", task.verifier),
-            ("secondary (NeurIPS)", "secondary", task.secondary_verifier),
-        ):
-            if verifier is None:
-                continue
+        # 2) Dynamic ARC-GEN
+        if task.arc_gen_generator is not None and not stats[key]["failed_fast"]:
+            dyn_pairs = task.arc_gen_generator(max_examples)
             ok = 0
-            fail = 0
-            total = len(dyn_pairs)
-            for i, pair in enumerate(dyn_pairs, start=1):
+            stats[key]["counts"]["dynamic"]["total"] = len(dyn_pairs)
+            for i, pair in enumerate(dyn_pairs):
                 try:
-                    out = verifier(pair.input)
-                    if is_equal_grid(out, pair.output):
+                    out = _normalize_grid(verifier(pair.input))
+                    if is_equal_grid(out, _normalize_grid(pair.output)):
                         ok += 1
+                        stats[key]["counts"]["dynamic"]["ok"] = ok
                     else:
-                        fail += 1
-                        print(
-                            f"  [{name}] dynamic mismatch at pair {i-1}: expected vs got differ"
+                        _mark_failed_fast(
+                            key,
+                            {"kind": "dynamic", "index": i, "input": pair.input, "expected": pair.output, "got": out},
                         )
-                        # Record mismatch details for later inspection.
-                        stats[key]["dynamic_mismatches"].append(
-                            {
-                                "index": i - 1,
-                                "input": pair.input,
-                                "expected": pair.output,
-                                "got": out,
-                            }
-                        )
+                        break
                 except Exception as e:
-                    fail += 1
-                    print(
-                        f"  [{name}] dynamic error at pair {i-1}: {e}"
-                    )
-            all_ok = fail == 0 and ok > 0
-            stats[key]["dynamic_ok"] = all_ok
-            bar = _progress_bar(ok, total)
-            color = GREEN if all_ok else RED
-            print(
-                f"  [{name}] dynamic ARC-GEN: {color}{bar}{RESET} (ok={ok}, fail={fail})"
-            )
-    else:
-        print("\nNo ARC-GEN generator available.")
+                    _mark_failed_fast(key, {"kind": "dynamic", "index": i, "error": str(e)})
+                    break
+            stats[key]["dynamic_ok"] = (not stats[key]["failed_fast"]) and ok == len(dyn_pairs) and ok > 0
+
+        # If a verifier never ran any checks (no data), keep fields as None.
+        if not task.train_pairs:
+            stats[key]["train_ok"] = None
+        if not (task.test_inputs and test_labels is not None):
+            stats[key]["test_ok"] = None
+        if not task.arc_gen_synthetic_pairs:
+            stats[key]["stable_ok"] = None
+        if task.arc_gen_generator is None:
+            stats[key]["dynamic_ok"] = None
+
+    # Only log tasks where NONE of the verifiers pass all available checks.
+    def _verifier_all_ok(vs: dict) -> bool:
+        return all(vs.get(f) in (True, None) for f in ("train_ok", "test_ok", "stable_ok", "dynamic_ok"))
+
+    any_all_ok = any(_verifier_all_ok(vs) for vs in stats.values())
+    if any_all_ok:
+        return {}
+
+    # Logging/printing only for "all verifiers failed" tasks.
+    print("\n=== Verifier check on ARC-GEN examples (logged: no verifier fully consistent) ===")
+    print(f"Task: {task.task_id}")
+
+    def _fmt(flag):
+        if flag is True:
+            return f"{GREEN}ok{RESET}"
+        if flag is False:
+            return f"{RED}fail{RESET}"
+        return "n/a"
+
+    for name, key, verifier in present:
+        vs = stats[key]
+        c_train = vs["counts"]["train"]
+        c_test = vs["counts"]["test"]
+        c_stable = vs["counts"]["stable"]
+        c_dynamic = vs["counts"]["dynamic"]
+        print(f"- {name}:")
+        if c_train["total"]:
+            print(f"    train   {_fmt(vs['train_ok'])} {_progress_bar(c_train['ok'], c_train['total'])} (ok={c_train['ok']}, total={c_train['total']})")
+        else:
+            print(f"    train   {_fmt(vs['train_ok'])}")
+        if c_test["total"]:
+            print(f"    test    {_fmt(vs['test_ok'])} {_progress_bar(c_test['ok'], c_test['total'])} (ok={c_test['ok']}, total={c_test['total']})")
+        else:
+            print(f"    test    {_fmt(vs['test_ok'])}")
+        if c_stable["total"]:
+            print(f"    stable  {_fmt(vs['stable_ok'])} {_progress_bar(c_stable['ok'], c_stable['total'])} (ok={c_stable['ok']}, total={c_stable['total']})")
+        else:
+            print(f"    stable  {_fmt(vs['stable_ok'])}")
+        if c_dynamic["total"]:
+            print(f"    dynamic {_fmt(vs['dynamic_ok'])} {_progress_bar(c_dynamic['ok'], c_dynamic['total'])} (ok={c_dynamic['ok']}, total={c_dynamic['total']})")
+        else:
+            print(f"    dynamic {_fmt(vs['dynamic_ok'])}")
+        if vs["first_failure"] is not None:
+            ff = vs["first_failure"]
+            if "error" in ff:
+                print(f"    first failure: {ff['kind']}[{ff['index']}] error={ff['error']}")
+            else:
+                print(f"    first failure: {ff['kind']}[{ff['index']}] mismatch")
+
+    # Only write mismatch HTMLs for these logged tasks, and only when we have grids.
+    mismatch_dir = Path("caller_mismatches")
+    for name, key, _verifier in present:
+        ff = stats[key]["first_failure"]
+        if not ff or "input" not in ff or "expected" not in ff or "got" not in ff:
+            continue
+        out_dir = mismatch_dir / task.task_id
+        p = _write_mismatch_html(
+            out_dir,
+            task.task_id,
+            key,
+            name,
+            str(ff.get("kind", "unknown")),
+            int(ff["index"]),
+            ff["input"],
+            ff["expected"],
+            ff["got"],
+        )
+        print(f"    mismatch HTML ({name}): {p}")
+
     return stats
 
 
@@ -360,84 +438,14 @@ if __name__ == "__main__":
                 break
             print("=" * 80)
             print(f"[Task {idx+1}] ID: {task.task_id}")
-            stats = check_verifiers_on_arc_gen(task, max_examples=5)
-            task_stats.append((task.task_id, stats))
+            # Increase dynamic samples to 25. The function itself will only print/log
+            # tasks where none of the verifiers are fully consistent.
+            _stats = check_verifiers_on_arc_gen(task, max_examples=25)
+            task_stats.append((task.task_id, _stats))
 
-        # Summary focusing on tasks where the primary verifier fails anywhere.
+        # Small final note: by design, only "all-verifiers-failed" tasks were logged above.
         print("\n" + "=" * 80)
-        print("SUMMARY: Tasks where the primary verifier failed on any ARC-GEN check\n")
-
-        failing_primary = []
-        for task_id, s in task_stats:
-            p_train = s["primary"]["train_ok"]
-            p_test = s["primary"]["test_ok"]
-            p_stable = s["primary"]["stable_ok"]
-            p_dyn = s["primary"]["dynamic_ok"]
-            # Treat None as "no data" (does not cause failure).
-            primary_all_ok = (
-                (p_train in (True, None))
-                and (p_test in (True, None))
-                and (p_stable in (True, None))
-                and (p_dyn in (True, None))
-            )
-            if not primary_all_ok:
-                failing_primary.append((task_id, s))
-
-        if not failing_primary:
-            print("Primary verifier passed on all checked ARC-GEN examples for all tasks.")
-        else:
-            for task_id, s in failing_primary:
-                p_train = s["primary"]["train_ok"]
-                p_test = s["primary"]["test_ok"]
-                p_stable = s["primary"]["stable_ok"]
-                p_dyn = s["primary"]["dynamic_ok"]
-                sec_train = s["secondary"]["train_ok"]
-                sec_test = s["secondary"]["test_ok"]
-                sec_stable = s["secondary"]["stable_ok"]
-                sec_dyn = s["secondary"]["dynamic_ok"]
-
-                def _fmt(flag):
-                    if flag is True:
-                        return f"{GREEN}ok{RESET}"
-                    if flag is False:
-                        return f"{RED}fail{RESET}"
-                    return "n/a"
-
-                secondary_all_ok = all(
-                    flag in (True, None)
-                    for flag in (sec_train, sec_test, sec_stable, sec_dyn)
-                )
-
-                print(f"- Task {task_id}:")
-                print(
-                    f"    primary:   train={_fmt(p_train)}, test={_fmt(p_test)}, "
-                    f"stable={_fmt(p_stable)}, dynamic={_fmt(p_dyn)}"
-                )
-                print(
-                    f"    secondary: train={_fmt(sec_train)}, test={_fmt(sec_test)}, "
-                    f"stable={_fmt(sec_stable)}, dynamic={_fmt(sec_dyn)}"
-                )
-                if secondary_all_ok:
-                    print("    => Secondary verifier is fully consistent on ARC-GEN.")
-                else:
-                    print("    => No verifier is fully consistent on ARC-GEN.")
-
-                # Write dynamic mismatches to HTML files (viewer-style) for inspection.
-                dyn_mismatches = s["primary"]["dynamic_mismatches"] or []
-                mismatch_dir = Path("caller_mismatches")
-                if dyn_mismatches:
-                    print("    Dynamic ARC-GEN mismatches (primary) — saved to HTML:")
-                    for m in dyn_mismatches:
-                        idx = m["index"]
-                        p = _write_mismatch_html(
-                            mismatch_dir,
-                            task_id,
-                            idx,
-                            m["input"],
-                            m["expected"],
-                            m["got"],
-                        )
-                        print(f"      {p}")
+        print("DONE. Only tasks where no verifier was fully consistent were logged.\n")
     finally:
         sys.stdout = _orig_stdout
         _log_file.close()

@@ -45,12 +45,18 @@ class ArcTask:
     # original ARC JSONs).
     train_pairs: List[GridPair]
     test_inputs: List[Grid]
+    # Ground-truth outputs for the original ARC test inputs, when available.
+    test_outputs: List[Grid]
 
     # Primary verifier, ideally sourced from re_arc's ground-truth programs.
     verifier: Optional[Verifier] = None
 
     # Optional secondary verifier (e.g. from an independent solution set).
     secondary_verifier: Optional[Verifier] = None
+
+    # Optional additional verifiers (e.g. other independent solution sets).
+    tertiary_verifier: Optional[Verifier] = None
+    quaternary_verifier: Optional[Verifier] = None
 
     # Optional handle to an underlying program representation, if you
     # want to keep richer metadata than just a callable.
