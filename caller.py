@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 from datetime import datetime
+import copy
 from pathlib import Path
 
 from framework.tasks.arc_dataset import load_task, iter_tasks
@@ -247,14 +248,22 @@ def check_verifiers_on_arc_gen(task: ArcTask, max_examples: int = 5) -> dict:
             stats[key]["counts"]["train"]["total"] = len(task.train_pairs)
             for i, pair in enumerate(task.train_pairs):
                 try:
-                    out = _normalize_grid(verifier(pair.input))
+                    orig_input = pair.input
+                    work_input = copy.deepcopy(orig_input)
+                    out = _normalize_grid(verifier(work_input))
                     if is_equal_grid(out, _normalize_grid(pair.output)):
                         ok += 1
                         stats[key]["counts"]["train"]["ok"] = ok
                     else:
                         _mark_failed_fast(
                             key,
-                            {"kind": "train", "index": i, "input": pair.input, "expected": pair.output, "got": out},
+                            {
+                                "kind": "train",
+                                "index": i,
+                                "input": copy.deepcopy(orig_input),
+                                "expected": copy.deepcopy(pair.output),
+                                "got": out,
+                            },
                         )
                         break
                 except Exception as e:
@@ -268,14 +277,22 @@ def check_verifiers_on_arc_gen(task: ArcTask, max_examples: int = 5) -> dict:
             stats[key]["counts"]["test"]["total"] = len(task.test_inputs)
             for i, inp in enumerate(task.test_inputs):
                 try:
-                    out = _normalize_grid(verifier(inp))
+                    orig_input = inp
+                    work_input = copy.deepcopy(inp)
+                    out = _normalize_grid(verifier(work_input))
                     if is_equal_grid(out, test_labels[i]):
                         ok += 1
                         stats[key]["counts"]["test"]["ok"] = ok
                     else:
                         _mark_failed_fast(
                             key,
-                            {"kind": "test", "index": i, "input": inp, "expected": test_labels[i], "got": out},
+                            {
+                                "kind": "test",
+                                "index": i,
+                                "input": copy.deepcopy(orig_input),
+                                "expected": copy.deepcopy(test_labels[i]),
+                                "got": out,
+                            },
                         )
                         break
                 except Exception as e:
@@ -290,14 +307,22 @@ def check_verifiers_on_arc_gen(task: ArcTask, max_examples: int = 5) -> dict:
             stats[key]["counts"]["stable"]["total"] = len(pairs)
             for i, pair in enumerate(pairs):
                 try:
-                    out = _normalize_grid(verifier(pair.input))
+                    orig_input = pair.input
+                    work_input = copy.deepcopy(orig_input)
+                    out = _normalize_grid(verifier(work_input))
                     if is_equal_grid(out, _normalize_grid(pair.output)):
                         ok += 1
                         stats[key]["counts"]["stable"]["ok"] = ok
                     else:
                         _mark_failed_fast(
                             key,
-                            {"kind": "stable", "index": i, "input": pair.input, "expected": pair.output, "got": out},
+                            {
+                                "kind": "stable",
+                                "index": i,
+                                "input": copy.deepcopy(orig_input),
+                                "expected": copy.deepcopy(pair.output),
+                                "got": out,
+                            },
                         )
                         break
                 except Exception as e:
@@ -312,14 +337,22 @@ def check_verifiers_on_arc_gen(task: ArcTask, max_examples: int = 5) -> dict:
             stats[key]["counts"]["dynamic"]["total"] = len(dyn_pairs)
             for i, pair in enumerate(dyn_pairs):
                 try:
-                    out = _normalize_grid(verifier(pair.input))
+                    orig_input = pair.input
+                    work_input = copy.deepcopy(orig_input)
+                    out = _normalize_grid(verifier(work_input))
                     if is_equal_grid(out, _normalize_grid(pair.output)):
                         ok += 1
                         stats[key]["counts"]["dynamic"]["ok"] = ok
                     else:
                         _mark_failed_fast(
                             key,
-                            {"kind": "dynamic", "index": i, "input": pair.input, "expected": pair.output, "got": out},
+                            {
+                                "kind": "dynamic",
+                                "index": i,
+                                "input": copy.deepcopy(orig_input),
+                                "expected": copy.deepcopy(pair.output),
+                                "got": out,
+                            },
                         )
                         break
                 except Exception as e:
