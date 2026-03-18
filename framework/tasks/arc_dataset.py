@@ -16,7 +16,7 @@ from framework.integrations.re_arc_adapter import get_re_arc_verifier
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
-ARC_ORIGINAL_ZIP = ROOT_DIR / "external" / "re_arc" / "arc_original.zip"
+ARC_ORIGINAL_DIR = ROOT_DIR / "external" / "arc_original_train"
 RE_ARC_ZIP = ROOT_DIR / "external" / "re_arc" / "re_arc.zip"
 ARC_GEN_STABLE_ZIP = ROOT_DIR / "external" / "arc_gen_stable.zip"
 
@@ -24,24 +24,22 @@ _ARC_GEN_TASK_LIST_MODULE: ModuleType | None = None
 
 
 def _load_arc_original(task_id: str) -> Tuple[List[GridPair], List[Grid], List[Grid]]:
-    """Load canonical ARC train/test examples for a task from arc_original.zip.
+    """Load canonical ARC train/test examples for a task from arc_original_train/.
 
     Returns (train_pairs, test_inputs, test_outputs), where test_outputs
     come from the same JSON file (ground truth for the original ARC test
     inputs).
     """
-    import zipfile
+    if not ARC_ORIGINAL_DIR.exists():
+        raise FileNotFoundError(
+            f"Missing arc_original_train directory at {ARC_ORIGINAL_DIR}"
+        )
 
-    if not ARC_ORIGINAL_ZIP.exists():
-        raise FileNotFoundError(f"Missing arc_original.zip at {ARC_ORIGINAL_ZIP}")
+    path = ARC_ORIGINAL_DIR / f"{task_id}.json"
+    if not path.exists():
+        raise KeyError(f"No original ARC task {task_id!r} at {path}")
 
-    with zipfile.ZipFile(ARC_ORIGINAL_ZIP) as zf:
-        path = f"arc_original/training/{task_id}.json"
-        try:
-            raw = zf.read(path)
-        except KeyError as exc:
-            raise KeyError(f"No original ARC task {task_id!r} in arc_original.zip") from exc
-    data = json.loads(raw)
+    data = json.loads(path.read_text(encoding="utf-8"))
 
     train_pairs = [
         GridPair(example["input"], example["output"]) for example in data["train"]
@@ -383,8 +381,6 @@ def iter_tasks(
     source: Optional[TaskSource] = None,
 ) -> Iterator[ArcTask]:
     """Iterate over tasks from the original ARC JSONs."""
-    import zipfile
-
     if source not in (None, TaskSource.ORIGINAL_ARC):
         raise ValueError(
             f"iter_tasks currently only supports source={TaskSource.ORIGINAL_ARC!r}"
@@ -394,17 +390,14 @@ def iter_tasks(
     if split not in (None, "train"):
         raise ValueError("Only split='train' (or None) is supported at the moment.")
 
-    if not ARC_ORIGINAL_ZIP.exists():
-        raise FileNotFoundError(f"Missing arc_original.zip at {ARC_ORIGINAL_ZIP}")
+    if not ARC_ORIGINAL_DIR.exists():
+        raise FileNotFoundError(
+            f"Missing arc_original_train directory at {ARC_ORIGINAL_DIR}"
+        )
 
-    with zipfile.ZipFile(ARC_ORIGINAL_ZIP) as zf:
-        for name in zf.namelist():
-            if not name.startswith("arc_original/training/") or not name.endswith(
-                ".json"
-            ):
-                continue
-            task_id = Path(name).stem
-            yield load_task(task_id)
+    for path in sorted(ARC_ORIGINAL_DIR.glob("*.json")):
+        task_id = path.stem
+        yield load_task(task_id)
 
 
 def to_grid_pairs(

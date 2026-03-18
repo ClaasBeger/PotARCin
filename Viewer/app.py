@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import sys
-import zipfile
 from pathlib import Path
 from typing import List, Optional
 
@@ -15,20 +14,16 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from framework.grids import Grid, GridPair, is_equal_grid
-from framework.tasks.arc_dataset import ARC_ORIGINAL_ZIP, load_task
+from framework.tasks.arc_dataset import ARC_ORIGINAL_DIR, load_task
 from Viewer.render import grid_html, grid_height_px
 
 
 def _list_original_task_ids() -> List[str]:
-    if not ARC_ORIGINAL_ZIP.exists():
+    if not ARC_ORIGINAL_DIR.exists():
         return []
-    with zipfile.ZipFile(ARC_ORIGINAL_ZIP) as zf:
-        ids: List[str] = []
-        for name in zf.namelist():
-            if name.startswith("arc_original/training/") and name.endswith(".json"):
-                ids.append(Path(name).stem)
-        ids.sort()
-        return ids
+    ids = [p.stem for p in ARC_ORIGINAL_DIR.glob("*.json")]
+    ids.sort()
+    return ids
 
 
 def _render_pair(pair: GridPair, *, label: str) -> None:
@@ -63,7 +58,7 @@ def main() -> None:
 
     task_ids = _list_original_task_ids()
     if not task_ids:
-        st.error(f"Could not find ARC tasks in `{ARC_ORIGINAL_ZIP}`.")
+        st.error(f"Could not find ARC tasks in `{ARC_ORIGINAL_DIR}`.")
         st.stop()
 
     default_idx = task_ids.index("a85d4709") if "a85d4709" in task_ids else 0

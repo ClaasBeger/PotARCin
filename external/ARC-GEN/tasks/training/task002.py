@@ -15,6 +15,7 @@
 """Generator."""
 
 import common
+from collections import deque
 
 
 def generate(size=None, rows=None, cols=None, brows=None, bcols=None,
@@ -67,6 +68,43 @@ def generate(size=None, rows=None, cols=None, brows=None, bcols=None,
     for c in range(size):
       if output[r][c] == common.black() and common.is_surrounded(output, r, c):
         output[r][c] = common.yellow()
+
+  # Conditional correction:
+  # The original single-pass surrounded fill can miss cells in non-rectangular
+  # / concave enclosed pockets (because it depends on scan order).
+  #
+  # We only apply a correction when there still exist black (0) cells that are
+  # enclosed, i.e. not reachable from the border through black cells.
+  outside = [[False for _ in range(size)] for _ in range(size)]
+  q = deque()
+  # Seed with black border cells (4-neighborhood).
+  for r in range(size):
+    for c in (0, size - 1):
+      if output[r][c] == common.black() and not outside[r][c]:
+        outside[r][c] = True
+        q.append((r, c))
+  for c in range(size):
+    for r in (0, size - 1):
+      if output[r][c] == common.black() and not outside[r][c]:
+        outside[r][c] = True
+        q.append((r, c))
+
+  while q:
+    r, c = q.popleft()
+    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+      rr = r + dr
+      cc = c + dc
+      if 0 <= rr < size and 0 <= cc < size and not outside[rr][cc]:
+        if output[rr][cc] == common.black():
+          outside[rr][cc] = True
+          q.append((rr, cc))
+
+  applied_correction = False
+  for r in range(size):
+    for c in range(size):
+      if output[r][c] == common.black() and not outside[r][c]:
+        output[r][c] = common.yellow()
+        applied_correction = True
   return {"input": grid, "output": output}
 
 
