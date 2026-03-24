@@ -1,0 +1,362 @@
+@font-face {
+  font-family: myconsolas;
+  src: url(consolas.ttf), local(consolas), local(Fira Mono), local(DejaVu Sans Mono), local(Menlo), local(Liberation Mono), local(Monaco), local(Lucida Console);
+}
+
+
+body, html {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+}
+
+.max {
+    width: 100%;
+    max-height: 100%;
+    max-width: 100%;
+    height: 100%;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    font-family: myconsolas;
+    color: white;
+}
+
+.max-width { width: 100%; }
+.max-height { height: 100%; }
+
+.flex-horizontal, .flex-vertical {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-vertical { flex-direction: column; }
+
+.flex-horizontal { flex-direction: row; }
+
+.flex-align-start {
+    align-items: start;
+}
+
+.inline-flex {
+    display: inline-flex;
+}
+
+.justify-space-between {
+    justify-content: space-between;
+}
+
+/* more specific stuff */
+
+.buttons {
+    padding: 2px;
+    width: calc(100% - 10px);
+    align-items: center;
+    gap: 5px;
+}
+
+button, input {
+    font-size: 18px;
+    border-radius: 0px;
+    outline: none;
+}
+
+input[type="checkbox"]#long-timeout {
+    font-family: myconsolas;
+    border-radius: 0px;
+    border: 2px solid #666688;
+    border-image-width: 0px;
+    margin: 0px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 2.2em;
+    height: 27px;
+    background-color: #444466;
+    color: white;
+    margin-left: 6px;
+}
+
+input[type="checkbox"]#long-timeout::before {
+    content: "20s";
+    width: 2em;
+    text-align: center;
+    display: inherit;
+}
+
+input[type="checkbox"]#long-timeout:checked {
+    background-color: #63c695;
+    border-color: #9edb97;
+}
+
+input[type="checkbox"]#long-timeout:checked::before {
+    content: "90s";
+}
+
+#editor {
+    height: 100%;
+    width: 100%;
+}
+
+#annotations {
+    height: 100%;
+    width: 100%;
+}
+
+.overflow-scroll-horizontal {
+    overflow-x: scroll;
+}
+
+.editor-outer {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.cm-editor {
+    height: 100%;
+    width: 100%;
+}
+
+.m38 {
+    height: calc(100% - 38px);
+}
+
+.images {
+    width: 100%;
+}
+
+#latency-text {
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    margin: 0px;
+    user-select: none;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.legend {
+    width: calc(100% - 2px);
+    border-bottom: 1px solid white;
+    border-left: 1px solid white;
+    border-top: 1px solid white;
+    border-right: 1px solid white;
+}
+
+#result {
+    background-color: #aaa;
+    height: calc(100% - 125px);
+    width: calc(100% - 20px);
+    padding-left: 20px;
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+.result-outer {
+    width: 50em;
+    height: 100%;
+}
+
+.broken {
+    width: calc(100% - 40px);
+    max-height: 60%;
+    object-fit: contain;
+}
+/*
+img {
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: pixelated;
+    image-rendering: optimize-contrast;
+    -ms-interpolation-mode: nearest-neighbor;
+
+} */
+
+.cm-editor {
+    border: none;
+}
+#char-count {
+    font-size: 20px;
+    margin-left: 8px;
+    color: white;
+    background-color: #222;
+    font-family: myconsolas;
+    border: 2px solid #333;
+    padding: 3px;
+}
+
+.char-count-good {
+    background-color: #63c695 !important;
+    border: 2px solid #9edb97 !important;
+}
+.char-count-bad {
+    background-color: #e58c8a !important;
+    border: 2px solid #fe6d73 !important;
+}
+
+#known-count {
+    font-size: 20px;
+    margin-left: 8px;
+    color: white;
+    background-color: #446;
+    font-family: myconsolas;
+    border: 2px solid #668;
+    padding: 3px;
+}
+#number-listening-outer {
+    font-size: 20px;
+    margin-left: 8px;
+    color: white;
+    background-color: #222;
+    font-family: myconsolas;
+    border: 2px solid #333;
+    padding: 3px;
+}
+#number-listening {
+    padding-right: 5px;
+}
+
+.editor-buttons {
+    position: absolute;
+    left: 0px;
+    bottom: -40px;
+}
+.topleft-buttons-divider {
+    height: 30px;
+    width: 2px;
+    margin-left: 7px;
+    background-color: #aaa;
+}
+.pos-relative {
+    position: relative;
+}
+#copy-sol, #paste-sol, #open-tools-dialog, #filter-min-max-set-dialog {
+    margin-left: 8px;
+}
+
+#copy-testcase-buttons-outer {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    justify-content: start;
+}
+
+#copy-testcase-buttons-label {
+    font-size: 20px;
+    color: white;
+    background-color: #446;
+    font-family: myconsolas;
+    border: 2px solid #668;
+    padding: 3px;
+    width: 18em;
+}
+
+#copy-testcase-buttons {
+    display: flex;
+    justify-content: start;
+}
+.fancy-button {
+    display: flex-inline;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 20px;
+    color: white;
+    font-family: myconsolas;
+    padding: 3px 10px 3px 10px;
+    margin-left: 3px;
+    text-align: center;
+    user-select: none;
+    border: 2px solid #7fb685;
+    background-color: #426a5a;
+    transition-property: background-color, border;
+}
+.fancy-button:hover {
+    border: 2px solid #a0dfa7;
+    background-color: #58917a;
+}
+.fancy-button:active {
+    border: 2px solid #6daedb;
+    background-color: #1d70a2;
+}
+.fancy-button-compact {
+    padding: 0px 10px 0px 10px;
+}
+
+#tools-close {
+    width: 1em;
+}
+
+#tools-update {
+    width: 12em;
+}
+
+.tools-header {
+    margin-bottom: 12px;
+    justify-content: space-between;
+}
+
+.tools-option {
+    text-align: left;
+}
+
+.tools-options {
+    overflow: auto;
+}
+
+.tools-error-outer {
+    max-height: 40vh;
+    width: 100%;
+    background-color: #aaa;
+    overflow: scroll;
+    min-height: 2px;
+    margin-bottom: 14px;
+}
+
+#tools-error {
+    max-height: 40vh;
+    overflow: auto;
+}
+
+#tools-label {
+    font-size: 24px;
+    margin: 0px;
+}
+
+:modal {
+    background: #11111555;
+    outline: none;
+    border: 1px solid transparent;
+    width: calc(50vw - 50px);
+    border-image: linear-gradient(-40deg,#4fdc4a 20%,#3fdad8 50%,#2fc9e2 70%,#1c7fee 100%);
+    border-image-slice: 1;
+    animation: open 0.2s linear forwards;
+    overflow: hidden;
+}
+
+dialog {
+  height: 0px;
+
+  &[open] {
+    height: calc(90vh - 50px);
+  }
+}
+
+dialog::backdrop {
+    background: none;
+}
+
+@keyframes open {
+  0%{
+    height: 0px;
+  }
+  100%{
+    height: calc(90vh - 50px);
+  }
+}
