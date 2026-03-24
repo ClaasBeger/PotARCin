@@ -17,6 +17,38 @@
 import common
 
 
+def _visible_d4_asymmetric(rows, cols, colors, wide, tall):
+  """True iff the yellow+red pixel pattern is distinct under all 8 D4 transforms.
+
+  When the visible (yellow+red) pattern is invariant under a non-identity D4
+  transform, verifiers cannot uniquely determine sprite orientation, causing
+  mismatches on blue/green pixel placement.
+  """
+  visible = [(r, c, v) for r, c, v in zip(rows, cols, colors) if v in (2, 4)]
+  if not visible:
+    return True
+  seen = set()
+  for t in range(8):
+    transformed = []
+    for r, c, v in visible:
+      if t == 0:   nr, nc = r, c
+      elif t == 1: nr, nc = c, tall - 1 - r
+      elif t == 2: nr, nc = tall - 1 - r, wide - 1 - c
+      elif t == 3: nr, nc = wide - 1 - c, r
+      elif t == 4: nr, nc = r, wide - 1 - c
+      elif t == 5: nr, nc = tall - 1 - r, c
+      elif t == 6: nr, nc = c, r
+      elif t == 7: nr, nc = wide - 1 - c, tall - 1 - r
+      transformed.append((nr, nc, v))
+    min_r = min(r for r, c, v in transformed)
+    min_c = min(c for r, c, v in transformed)
+    normed = frozenset((r - min_r, c - min_c, v) for r, c, v in transformed)
+    if normed in seen:
+      return False
+    seen.add(normed)
+  return True
+
+
 def generate(width=None, height=None, rows=None, cols=None, colors=None,
              megarows=None, megacols=None, megarotates=None):
   """Returns input and output grids according to the given parameters.
@@ -33,39 +65,45 @@ def generate(width=None, height=None, rows=None, cols=None, colors=None,
   """
   if width is None:
     width, height = common.randint(13, 15), common.randint(13, 15)
-    # Choose the dimensions of the rainbow sprites.
-    sprite_type, wide, tall = common.randint(0, 2), 3, 3
-    if sprite_type == 1: wide, tall = 4, 2
-    if sprite_type == 2: wide, tall = 5, 1
-    # Choose the positions of the yellow pixels.
+    # Retry sprite generation until the visible (yellow+red) pattern is
+    # distinguishable under all D4 transforms, so verifiers can uniquely
+    # determine each sprite's orientation.
     while True:
-      pixels = common.sample(common.all_pixels(wide, tall), 5)
-      if common.diagonally_connected(pixels): break
-    extra_pixels, colors, extra_colors = [], [4] * len(pixels), []
-    # Choose the number of pixels of each other color.
-    num_red, num_blue, num_green = 1, common.randint(1, 2), common.randint(1, 3)
-    extra_colors += [common.red()] * num_red
-    extra_colors += [common.blue()] * num_blue
-    extra_colors += [common.green()] * num_green
-    # Choose the positions of the other pixels (make sure they don't clobber).
-    for color in extra_colors:
+      # Choose the dimensions of the rainbow sprites.
+      sprite_type, wide, tall = common.randint(0, 2), 3, 3
+      if sprite_type == 1: wide, tall = 4, 2
+      if sprite_type == 2: wide, tall = 5, 1
+      # Choose the positions of the yellow pixels.
       while True:
-        pixel, angle = common.choice(pixels), common.randint(0, 3)
-        r, c = pixel[0], pixel[1]
-        if angle == 0: r -= 1
-        if angle == 1: r += 1
-        if angle == 2: c -= 1
-        if angle == 3: c += 1
-        # The red pixel is important; don't place it in the center.
-        if color == common.red() and (r == tall // 2 or c == wide // 2):
-          continue
-        if (r, c) not in pixels and (r, c) not in extra_pixels: break
-      extra_pixels.append((r, c))
-    # Add the extra pixels & colors, and shift the row/col values if needed.
-    colors, pixels = colors + extra_colors, pixels + extra_pixels
-    rows, cols = zip(*pixels)
-    rows, cols = [r - min(rows) for r in rows], [c - min(cols) for c in cols]
-    wide, tall = max(cols) + 1, max(rows) + 1
+        pixels = common.sample(common.all_pixels(wide, tall), 5)
+        if common.diagonally_connected(pixels): break
+      extra_pixels, colors, extra_colors = [], [4] * len(pixels), []
+      # Choose the number of pixels of each other color.
+      num_red, num_blue, num_green = 1, common.randint(1, 2), common.randint(1, 3)
+      extra_colors += [common.red()] * num_red
+      extra_colors += [common.blue()] * num_blue
+      extra_colors += [common.green()] * num_green
+      # Choose the positions of the other pixels (make sure they don't clobber).
+      for color in extra_colors:
+        while True:
+          pixel, angle = common.choice(pixels), common.randint(0, 3)
+          r, c = pixel[0], pixel[1]
+          if angle == 0: r -= 1
+          if angle == 1: r += 1
+          if angle == 2: c -= 1
+          if angle == 3: c += 1
+          # The red pixel is important; don't place it in the center.
+          if color == common.red() and (r == tall // 2 or c == wide // 2):
+            continue
+          if (r, c) not in pixels and (r, c) not in extra_pixels: break
+        extra_pixels.append((r, c))
+      # Add the extra pixels & colors, and shift the row/col values if needed.
+      colors, pixels = colors + extra_colors, pixels + extra_pixels
+      rows, cols = zip(*pixels)
+      rows, cols = [r - min(rows) for r in rows], [c - min(cols) for c in cols]
+      wide, tall = max(cols) + 1, max(rows) + 1
+      if _visible_d4_asymmetric(rows, cols, colors, wide, tall):
+        break
     # Choose the positions of the mega-sprites, making sure they don't overlap.
     num_sprites = common.randint(3, 4)
     megarotates = [common.randint(0, 3) for _ in range(num_sprites)]
