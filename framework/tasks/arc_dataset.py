@@ -9,6 +9,7 @@ from pathlib import Path
 from types import ModuleType
 from typing import Callable, Dict, Iterable, Iterator, List, Optional, Tuple
 
+from framework.custom_verifiers import get_custom_verifier
 from framework.grids import Grid, GridPair
 from framework.tasks.base import ArcTask, TaskSource
 from framework.integrations.re_arc_adapter import get_re_arc_verifier
@@ -326,18 +327,21 @@ def _load_alternative_verifiers(
     Optional[Callable[[Grid], Grid]],
     Optional[Callable[[Grid], Grid]],
     Optional[Callable[[Grid], Grid]],
+    Optional[Callable[[Grid], Grid]],
 ]:
-    """Load up to 3 alternative verifiers from external repos.
+    """Load up to 4 alternative verifiers from external/custom sources.
 
     Order:
     - google-code-golf-2025 (`external/google-code-golf-2025/submission`)
     - key-moon/golf (`external/golf/sols`)
     - NeurIPS-Code-Golf-2025 (`external/NeurIPS-Code-Golf-2025/solutions`)
+    - custom local verifiers (`framework/custom_verifiers`)
     """
     v2 = _load_golf_verifier_from_google_code_golf_2025(task_id)
     v3 = _load_golf_verifier_from_keymoon(task_id)
     v4 = _load_golf_verifier_from_neurips(task_id)
-    return v2, v3, v4
+    v5 = get_custom_verifier(task_id)
+    return v2, v3, v4, v5
 
 
 def load_task(task_id: str) -> ArcTask:
@@ -355,8 +359,8 @@ def load_task(task_id: str) -> ArcTask:
 
     # Primary and alternative verifiers.
     verifier = get_re_arc_verifier(task_id)
-    secondary_verifier, tertiary_verifier, quaternary_verifier = _load_alternative_verifiers(
-        task_id
+    secondary_verifier, tertiary_verifier, quaternary_verifier, quinary_verifier = (
+        _load_alternative_verifiers(task_id)
     )
 
     return ArcTask(
@@ -368,6 +372,7 @@ def load_task(task_id: str) -> ArcTask:
         secondary_verifier=secondary_verifier,
         tertiary_verifier=tertiary_verifier,
         quaternary_verifier=quaternary_verifier,
+        quinary_verifier=quinary_verifier,
         re_arc_synthetic_pairs=re_arc_pairs,
         arc_gen_synthetic_pairs=arc_gen_pairs,
         re_arc_generator=re_arc_gen,

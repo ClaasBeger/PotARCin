@@ -15,6 +15,7 @@
 """Generator."""
 
 import common
+from collections import deque
 
 
 def generate(width=None, height=None, rows=None, cols=None, wides=None,
@@ -68,6 +69,38 @@ def generate(width=None, height=None, rows=None, cols=None, wides=None,
         if grid[r][c] == -2: grid[r][c] = color
         if output[r][c] == -2: output[r][c] = color
     return legal
+
+  def fill_enclosed_pockets(grid, output):
+    """Color enclosed black pockets red in the output."""
+    h = len(grid)
+    w = len(grid[0]) if h else 0
+    outside = [[False for _ in range(w)] for _ in range(h)]
+    q = deque()
+
+    def push(r, c):
+      if 0 <= r < h and 0 <= c < w and grid[r][c] == common.black() and not outside[r][c]:
+        outside[r][c] = True
+        q.append((r, c))
+
+    for r in range(h):
+      push(r, 0)
+      push(r, w - 1)
+    for c in range(w):
+      push(0, c)
+      push(h - 1, c)
+
+    while q:
+      r, c = q.popleft()
+      for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+        rr, cc = r + dr, c + dc
+        if 0 <= rr < h and 0 <= cc < w and grid[rr][cc] == common.black() and not outside[rr][cc]:
+          outside[rr][cc] = True
+          q.append((rr, cc))
+
+    for r in range(h):
+      for c in range(w):
+        if grid[r][c] == common.black() and not outside[r][c]:
+          output[r][c] = common.red()
 
   if width is None:
     while True:  # Keep trying this until we get a grid with no intersections.
@@ -131,6 +164,7 @@ def generate(width=None, height=None, rows=None, cols=None, wides=None,
   grid = common.grid(width, height)
   output = common.grid(width, height, common.green())
   draw(grid, output)
+  fill_enclosed_pockets(grid, output)
   if flip: grid, output = grid[::-1], output[::-1]
   if xpose: grid, output = common.transpose(grid), common.transpose(output)
   return {"input": grid, "output": output}

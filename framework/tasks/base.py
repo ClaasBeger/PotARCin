@@ -57,6 +57,7 @@ class ArcTask:
     # Optional additional verifiers (e.g. other independent solution sets).
     tertiary_verifier: Optional[Verifier] = None
     quaternary_verifier: Optional[Verifier] = None
+    quinary_verifier: Optional[Verifier] = None
 
     # Optional handle to an underlying program representation, if you
     # want to keep richer metadata than just a callable.

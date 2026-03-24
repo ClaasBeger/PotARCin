@@ -184,6 +184,11 @@ def inspect_task(task_id: str) -> ArcTask:
         v = task.quaternary_verifier  # type: ignore[assignment]
         print("  Verifier #4:", v)
         print("  Verifier #4 output on first train input:", v(task.train_pairs[0].input))
+    print("Has verifier #5 (custom)?", getattr(task, "quinary_verifier", None) is not None)
+    if getattr(task, "quinary_verifier", None) is not None and task.train_pairs:
+        v = task.quinary_verifier  # type: ignore[assignment]
+        print("  Verifier #5:", v)
+        print("  Verifier #5 output on first train input:", v(task.train_pairs[0].input))
 
     return task
 
@@ -203,6 +208,7 @@ def check_verifiers_on_arc_gen(task: ArcTask, max_examples: int = 5) -> dict:
         ("v2 (google-code-golf-2025)", "v2", task.secondary_verifier),
         ("v3 (golf)", "v3", getattr(task, "tertiary_verifier", None)),
         ("v4 (NeurIPS-Code-Golf-2025)", "v4", getattr(task, "quaternary_verifier", None)),
+        ("v5 (custom)", "v5", getattr(task, "quinary_verifier", None)),
     ]
 
     present = [(n, k, v) for (n, k, v) in verifiers if v is not None]
