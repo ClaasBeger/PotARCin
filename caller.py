@@ -477,9 +477,9 @@ if __name__ == "__main__":
                 break
             print("=" * 80)
             print(f"[Task {idx+1}] ID: {task.task_id}")
-            # Increase dynamic samples to 25. The function itself will only print/log
-            # tasks where none of the verifiers are fully consistent.
-            _stats = check_verifiers_on_arc_gen(task, max_examples=25)
+            # Dynamic ARC-GEN samples per task (only tasks where no verifier is fully
+            # consistent are printed/logged).
+            _stats = check_verifiers_on_arc_gen(task, max_examples=50)
             task_stats.append((task.task_id, _stats))
 
         # Small final note: by design, only "all-verifiers-failed" tasks were logged above.
