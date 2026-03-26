@@ -637,7 +637,8 @@ def task_list():
       216: ["8efcae92", task216.generate, task216.validate],  # mostpixels
       217: ["8f2ea7aa", task217.generate, task217.validate],  # fractal2
       218: ["90c28cc7", task218.generate, task218.validate],  # cleanquilt
-      219: ["90f3ed37", task219.generate, task219.validate],  # extendblue
+      # extendblue; PotARCin quinary verifier (v5) matches task219 rejection-sampled randoms
+      219: ["90f3ed37", task219.generate, task219.validate],
       220: ["913fb3ed", task220.generate, task220.validate],  # candyshells
       221: ["91413438", task221.generate, task221.validate],  # lessismore
       222: ["91714a58", task222.generate, task222.validate],  # justthebox

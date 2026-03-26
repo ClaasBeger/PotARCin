@@ -1,13 +1,15 @@
 from __future__ import annotations
 
 import importlib.util
+import itertools
 import json
 import random
+from collections import defaultdict
 import sys
 import warnings
 from pathlib import Path
 from types import ModuleType
-from typing import Callable, Dict, Iterable, Iterator, List, Optional, Tuple
+from typing import Callable, Dict, Iterable, Iterator, List, Optional, Set, Tuple
 
 from framework.custom_verifiers import get_custom_verifier
 from framework.grids import Grid, GridPair
@@ -184,6 +186,308 @@ def _arc_gen_id_to_task_num_and_generator(
         if arc_id == task_id:
             return num, generator
     return None
+
+
+def _arc_gen_90f3ed37_cols_match_global_awide(cols: List[int]) -> bool:
+    """task219 uses one pre-sample ``awide`` in {1,2}; each band has ``col = awide * k``, k∈{1,2}.
+
+    So either every col is in {1, 2} (original awide=1) or every col is in {2, 4} (original awide=2).
+    Mixing 1 and 4 across bands is impossible for the real generator.
+    """
+    if any(c == 1 for c in cols):
+        return all(c in (1, 2) for c in cols)
+    if any(c == 4 for c in cols):
+        return all(c in (2, 4) for c in cols)
+    return True
+
+
+def _arc_gen_90f3ed37_analyze_latent_fits(
+    example: Dict[str, Grid],
+    *,
+    apply_col_lexmax: bool = True,
+) -> Tuple[Set[Tuple[Tuple[int, ...], ...]], bool]:
+    """Enumerate task219-consistent outputs for ``example["input"]`` (no verifier calls).
+
+    Returns ``(output_keys, expected_matches)`` where ``output_keys`` is the set of
+    distinct output grids (as row-tuple keys) consistent with the input, and
+    ``expected_matches`` is True iff ``example["output"]`` is among them.
+
+    If ``apply_col_lexmax`` is True, within each fixed band geometry, only column
+    assignments in the ``{1,2}`` regime that are lexicographically maximal are kept
+    (removes degenerate ``1`` vs ``2`` ambiguities). Set False for the raw latent set.
+    """
+    inp = example["input"]
+    exp = example["output"]
+    h = len(inp)
+    w = len(inp[0]) if h else 0
+    if h == 0 or w == 0:
+        return False
+
+    BLACK, BLUE, CYAN = 0, 1, 8
+
+    cyan_rows = sorted(r for r in range(h) if any(inp[r][c] == CYAN for c in range(w)))
+    if not cyan_rows:
+        return set(), False
+
+    def _cluster_cyan_rows(rows_list: List[int], tall: int) -> List[List[int]]:
+        clusters: List[List[int]] = []
+        cluster = [rows_list[0]]
+        for r in rows_list[1:]:
+            lo = min(cluster + [r])
+            hi = max(cluster + [r])
+            if hi - lo <= tall - 1:
+                cluster.append(r)
+            else:
+                clusters.append(cluster)
+                cluster = [r]
+        clusters.append(cluster)
+        return clusters
+
+    def _bases_for_cluster(cluster: List[int], tall: int) -> List[int]:
+        lo, hi = min(cluster), max(cluster)
+        lo_b, hi_b = hi - tall + 1, lo
+        return [b for b in range(lo_b, hi_b + 1) if b >= 0 and b + tall <= h]
+
+    def _pack(vals: List[List[int]], wide: int, tall_local: int) -> int:
+        m = 0
+        for rr in range(tall_local):
+            for cc in range(wide):
+                if vals[rr][cc]:
+                    m |= 1 << (rr * wide + cc)
+        return m
+
+    exp_key = tuple(tuple(row) for row in exp)
+    # Per fixed (tall, band placement), keep only lexicographically maximal ``cols``
+    # among assignments that match the input — removes spurious (1,*,*,...) vs (2,*,*,...)
+    # ties when both are valid under global awide=1.
+    fits_by_geom: Dict[
+        Tuple[int, Tuple[Tuple[int, int], ...]],
+        List[Tuple[Tuple[int, ...], Tuple[Tuple[int, ...], ...]]],
+    ] = defaultdict(list)
+
+    for tall in (1, 2, 3):
+        clusters = _cluster_cyan_rows(cyan_rows, tall)
+        base_opts: List[List[int]] = []
+        skip_tall = False
+        for cl in clusters:
+            bs = _bases_for_cluster(cl, tall)
+            if not bs:
+                skip_tall = True
+                break
+            base_opts.append(bs)
+        if skip_tall:
+            continue
+
+        for base_choice in itertools.product(*base_opts):
+            bc = list(base_choice)
+            ok_gap = True
+            for i in range(len(bc) - 1):
+                if bc[i + 1] < bc[i] + tall + 1:
+                    ok_gap = False
+                    break
+            if not ok_gap:
+                continue
+            bands = [(b, b + tall - 1) for b in bc]
+            n = len(bands)
+
+            def _render(
+                aw: int,
+                bw: int,
+                cw: int,
+                cols: List[int],
+                ma: int,
+                mb: int,
+                mc: int,
+                output_mode: bool,
+            ) -> Grid:
+                out = [[BLACK for _ in range(w)] for _ in range(h)]
+                for bi, (s, _e) in enumerate(bands):
+                    col = cols[bi]
+                    for rr in range(tall):
+                        row = s + rr
+                        for a0 in range(0, col, aw):
+                            for lc in range(aw):
+                                if ((ma >> (rr * aw + lc)) & 1):
+                                    c = a0 + lc
+                                    if 0 <= c < w:
+                                        out[row][c] = CYAN
+                        for lc in range(bw):
+                            if ((mb >> (rr * bw + lc)) & 1):
+                                c = col + lc
+                                if 0 <= c < w:
+                                    out[row][c] = CYAN
+                        if output_mode:
+                            c_color = CYAN if bi == 0 else BLUE
+                            for c0 in range(col + bw, w, cw):
+                                for lc in range(cw):
+                                    if ((mc >> (rr * cw + lc)) & 1):
+                                        c = c0 + lc
+                                        if 0 <= c < w:
+                                            out[row][c] = c_color
+                        elif bi == 0:
+                            for c0 in range(col + bw, w, cw):
+                                for lc in range(cw):
+                                    if ((mc >> (rr * cw + lc)) & 1):
+                                        c = c0 + lc
+                                        if 0 <= c < w:
+                                            out[row][c] = CYAN
+                return out
+
+            for aw in (1, 2):
+                for bw in (1, 2):
+                    for cw in (1, 2):
+                        col_options = [aw, 2 * aw] + ([4 * aw] if aw == 1 else [])
+                        for col_mask in range(len(col_options) ** n):
+                            tmp = col_mask
+                            cols = []
+                            for _ in range(n):
+                                cols.append(col_options[tmp % len(col_options)])
+                                tmp //= len(col_options)
+
+                            if not _arc_gen_90f3ed37_cols_match_global_awide(cols):
+                                continue
+
+                            a_vals = [[-1 for _ in range(aw)] for _ in range(tall)]
+                            b_vals = [[-1 for _ in range(bw)] for _ in range(tall)]
+                            c_vals = [[-1 for _ in range(cw)] for _ in range(tall)]
+                            valid = True
+
+                            def _set(arr: List[List[int]], rr: int, cc: int, val: int) -> None:
+                                nonlocal valid
+                                old = arr[rr][cc]
+                                if old == -1:
+                                    arr[rr][cc] = val
+                                elif old != val:
+                                    valid = False
+
+                            for bi, (s, _e) in enumerate(bands):
+                                col = cols[bi]
+                                for rr in range(tall):
+                                    row = s + rr
+                                    for a0 in range(0, col, aw):
+                                        for lc in range(aw):
+                                            cc = a0 + lc
+                                            if not (0 <= cc < w):
+                                                valid = False
+                                                break
+                                            _set(a_vals, rr, lc, 1 if inp[row][cc] == CYAN else 0)
+                                        if not valid:
+                                            break
+                                    if not valid:
+                                        break
+                                    for lc in range(bw):
+                                        cc = col + lc
+                                        if not (0 <= cc < w):
+                                            valid = False
+                                            break
+                                        _set(b_vals, rr, lc, 1 if inp[row][cc] == CYAN else 0)
+                                    if not valid:
+                                        break
+                                    if bi == 0:
+                                        for c0 in range(col + bw, w, cw):
+                                            for lc in range(cw):
+                                                cc = c0 + lc
+                                                if 0 <= cc < w:
+                                                    _set(c_vals, rr, lc, 1 if inp[row][cc] == CYAN else 0)
+                                            if not valid:
+                                                break
+                                    if not valid:
+                                        break
+                                if not valid:
+                                    break
+
+                            if not valid:
+                                continue
+
+                            for rr in range(tall):
+                                for cc in range(aw):
+                                    if a_vals[rr][cc] == -1:
+                                        a_vals[rr][cc] = 0
+                                for cc in range(bw):
+                                    if b_vals[rr][cc] == -1:
+                                        b_vals[rr][cc] = 0
+                                for cc in range(cw):
+                                    if c_vals[rr][cc] == -1:
+                                        c_vals[rr][cc] = 0
+
+                            ma = _pack(a_vals, aw, tall)
+                            mb = _pack(b_vals, bw, tall)
+                            mc = _pack(c_vals, cw, tall)
+                            if ma == 0 or mb == 0 or mc == 0:
+                                continue
+
+                            if _render(aw, bw, cw, cols, ma, mb, mc, output_mode=False) != inp:
+                                continue
+
+                            out = _render(aw, bw, cw, cols, ma, mb, mc, output_mode=True)
+                            key = tuple(tuple(row) for row in out)
+                            geom = (tall, tuple(bands))
+                            fits_by_geom[geom].append((tuple(cols), key))
+
+    output_keys: Set[Tuple[Tuple[int, ...], ...]] = set()
+    expected_matches = False
+    for _geom, lst in fits_by_geom.items():
+        if not lst:
+            continue
+        feasible_cols = {t[0] for t in lst}
+        col_filter: Optional[Tuple[int, ...]] = None
+        if apply_col_lexmax:
+            # Only apply tie-break when ambiguity is within orig_awide=1 ({1,2} per band).
+            strict12 = {c for c in feasible_cols if all(x in (1, 2) for x in c)}
+            if len(strict12) >= 2:
+                col_filter = max(strict12)
+        for cols_tuple, key in lst:
+            if col_filter is not None and cols_tuple != col_filter:
+                continue
+            output_keys.add(key)
+            if key == exp_key:
+                expected_matches = True
+
+    return output_keys, expected_matches
+
+
+def _arc_gen_90f3ed37_example_is_unambiguous(example: Dict[str, Grid]) -> bool:
+    """Dynamic filter: accept if raw latent outputs are unique, or if canonical {1,2}-cols tie-break yields a unique label-consistent output."""
+    keys_raw, _ = _arc_gen_90f3ed37_analyze_latent_fits(example, apply_col_lexmax=False)
+    if len(keys_raw) == 1:
+        return True
+    keys_canon, ok = _arc_gen_90f3ed37_analyze_latent_fits(example, apply_col_lexmax=True)
+    return len(keys_canon) == 1 and ok
+
+
+def verify_arc_gen_90f3ed37_stable_coverage() -> Tuple[int, int, List[int]]:
+    """Each stable pair has at least one latent fit that reproduces its labeled output.
+
+    This is weaker than :func:`_arc_gen_90f3ed37_example_is_unambiguous` (which also
+    requires uniqueness). Use this to confirm the stable dataset lies in the
+    generator's *support*.
+
+    Returns ``(accepted_count, total, failed_indices)``. If ``arc_gen_stable.zip`` is
+    missing, returns ``(0, 0, [])``.
+    """
+    pairs = _load_arc_gen_stable_pairs("90f3ed37")
+    if not pairs:
+        return 0, 0, []
+    failed: List[int] = []
+    for i, p in enumerate(pairs):
+        _keys, ok = _arc_gen_90f3ed37_analyze_latent_fits(
+            {"input": p.input, "output": p.output}
+        )
+        if not ok:
+            failed.append(i)
+    return len(pairs) - len(failed), len(pairs), failed
+
+
+def verify_arc_gen_90f3ed37_stable_unambiguous_coverage() -> Tuple[int, int, List[int]]:
+    """Same as stable coverage but requires the strict dynamic-generator predicate."""
+    pairs = _load_arc_gen_stable_pairs("90f3ed37")
+    if not pairs:
+        return 0, 0, []
+    failed: List[int] = []
+    for i, p in enumerate(pairs):
+        if not _arc_gen_90f3ed37_example_is_unambiguous({"input": p.input, "output": p.output}):
+            failed.append(i)
+    return len(pairs) - len(failed), len(pairs), failed
 
 
 def _make_arc_gen_generator(task_id: str) -> Optional[Callable[[int], List[GridPair]]]:

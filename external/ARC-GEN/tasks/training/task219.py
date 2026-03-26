@@ -17,6 +17,55 @@
 import common
 
 
+def _generate_one_random_90f3ed37(width, height):
+  """Single draw from the legacy random pipeline (used by rejection wrapper)."""
+  tall = min(3, common.randint(1, 5))
+  awide = common.randint(1, 2)
+  bwide = common.randint(1, 2)
+  cwide = common.randint(1, 2)
+  apixels = common.all_pixels(awide, tall)
+  bpixels = common.all_pixels(bwide, tall)
+  cpixels = common.all_pixels(cwide, tall)
+  apixels = common.sample(apixels, common.randint(1, len(apixels)))
+  bpixels = common.sample(bpixels, common.randint(1, len(bpixels)))
+  cpixels = common.sample(cpixels, common.randint(1, len(cpixels)))
+  arows, acols = zip(*apixels)
+  brows, bcols = zip(*bpixels)
+  crows, ccols = zip(*cpixels)
+  rows, cols, r = [], [], common.randint(1, 2)
+  while r + tall < height:
+    rows.append(r)
+    cols.append(awide * common.randint(1, 2))
+    r += common.randint(tall + 1, tall + 3)
+
+  grid, output = common.grids(width, height)
+  awide, bwide, cwide = max(acols) + 1, max(bcols) + 1, max(ccols) + 1
+  for idx in range(len(rows)):
+    row, col = rows[idx], cols[idx]
+    for c in range(0, col, awide):
+      for ar, ac in zip(arows, acols):
+        output[row + ar][c + ac] = grid[row + ar][c + ac] = common.cyan()
+    for br, bc in zip(brows, bcols):
+      output[row + br][col + bc] = grid[row + br][col + bc] = common.cyan()
+    for c in range(col + bwide, width, cwide):
+      for cr, cc in zip(crows, ccols):
+        if not idx:
+          common.draw(grid, row + cr, c + cc, common.cyan())
+          common.draw(output, row + cr, c + cc, common.cyan())
+        else:
+          common.draw(output, row + cr, c + cc, common.blue())
+  return {"input": grid, "output": output}
+
+
+def _latent_ambiguous_for_verifiers(example):
+  """True if this pair should be resampled (PotARCin-only; ImportError => never)."""
+  try:
+    from framework.tasks.arc_dataset import _arc_gen_90f3ed37_example_is_unambiguous
+  except ImportError:
+    return False
+  return not _arc_gen_90f3ed37_example_is_unambiguous(example)
+
+
 def generate(arows=None, acols=None, brows=None, bcols=None, crows=None,
              ccols=None, rows=None, cols=None, width=10, height=15):
   """Returns input and output grids according to the given parameters.
@@ -33,25 +82,20 @@ def generate(arows=None, acols=None, brows=None, bcols=None, crows=None,
     width: the width of the grid
     height: the height of the grid
   """
+  # Random mode: resample when the grid is "latent-ambiguous" — the same cyan input
+  # can be explained by more than one task219 completion (e.g. shifted C tails), so
+  # solvers cannot know which output to produce. PotARCin encodes the acceptance test
+  # in framework.tasks.arc_dataset (global col regime + optional {1,2} lex tie-break);
+  # we reuse it here so ARC-GEN and the repo stay aligned. Outside PotARCin, import
+  # fails and we keep the legacy single-draw behavior.
   if arows is None:
-    tall = min(3, common.randint(1, 5))
-    awide = common.randint(1, 2)
-    bwide = common.randint(1, 2)
-    cwide = common.randint(1, 2)
-    apixels = common.all_pixels(awide, tall)
-    bpixels = common.all_pixels(bwide, tall)
-    cpixels = common.all_pixels(cwide, tall)
-    apixels = common.sample(apixels, common.randint(1, len(apixels)))
-    bpixels = common.sample(bpixels, common.randint(1, len(bpixels)))
-    cpixels = common.sample(cpixels, common.randint(1, len(cpixels)))
-    arows, acols = zip(*apixels)
-    brows, bcols = zip(*bpixels)
-    crows, ccols = zip(*cpixels)
-    rows, cols, r = [], [], common.randint(1, 2)
-    while r + tall < height:
-      rows.append(r)
-      cols.append(awide * common.randint(1, 2))
-      r += common.randint(tall + 1, tall + 3)
+    max_tries = 250
+    last = None
+    for _ in range(max_tries):
+      last = _generate_one_random_90f3ed37(width, height)
+      if not _latent_ambiguous_for_verifiers(last):
+        return last
+    return last
 
   grid, output = common.grids(width, height)
   awide, bwide, cwide = max(acols) + 1, max(bcols) + 1, max(ccols) + 1
