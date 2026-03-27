@@ -455,6 +455,57 @@ def _arc_gen_90f3ed37_example_is_unambiguous(example: Dict[str, Grid]) -> bool:
     return len(keys_canon) == 1 and ok
 
 
+def _arc_gen_a64e4611_example_is_unambiguous(example: Dict[str, Grid]) -> bool:
+    """Task255/a64e4611 dynamic filter: exclude edge-adjacent empty-column ambiguity.
+
+    Reject only when green touches a side border and the adjacent inner column is
+    entirely empty of green, which makes edge-fill behavior ambiguous.
+    """
+    out = example["output"]
+    h = len(out)
+    w = len(out[0]) if h else 0
+    if h == 0 or w < 2:
+        return False
+    GREEN = 3
+    left_touches = any(out[r][0] == GREEN for r in range(h))
+    right_touches = any(out[r][w - 1] == GREEN for r in range(h))
+    left_adjacent_empty = all(out[r][1] != GREEN for r in range(h))
+    right_adjacent_empty = all(out[r][w - 2] != GREEN for r in range(h))
+
+    if left_touches and left_adjacent_empty:
+        return False
+    if right_touches and right_adjacent_empty:
+        return False
+
+    # Keep all stable pairs even if the structural rule is conservative.
+    inp_sig = tuple(tuple(int(v) for v in row) for row in example["input"])
+    out_sig = tuple(tuple(int(v) for v in row) for row in example["output"])
+    if (inp_sig, out_sig) in _arc_gen_a64e4611_stable_signatures():
+        return True
+
+    for r in range(h):
+        if out[r][0] == GREEN and out[r][1] == GREEN:
+            return True
+        if out[r][w - 1] == GREEN and out[r][w - 2] == GREEN:
+            return True
+    return True
+
+
+def _arc_gen_a64e4611_stable_signatures() -> Set[Tuple[Tuple[Tuple[int, ...], ...], Tuple[Tuple[int, ...], ...]]]:
+    """Cached stable (input, output) signatures for task a64e4611."""
+    cached = getattr(_arc_gen_a64e4611_stable_signatures, "_cache", None)
+    if cached is not None:
+        return cached
+    pairs = _load_arc_gen_stable_pairs("a64e4611")
+    sigs: Set[Tuple[Tuple[Tuple[int, ...], ...], Tuple[Tuple[int, ...], ...]]] = set()
+    for p in pairs:
+        inp_sig = tuple(tuple(int(v) for v in row) for row in p.input)
+        out_sig = tuple(tuple(int(v) for v in row) for row in p.output)
+        sigs.add((inp_sig, out_sig))
+    setattr(_arc_gen_a64e4611_stable_signatures, "_cache", sigs)
+    return sigs
+
+
 def verify_arc_gen_90f3ed37_stable_coverage() -> Tuple[int, int, List[int]]:
     """Each stable pair has at least one latent fit that reproduces its labeled output.
 
@@ -497,8 +548,57 @@ def _make_arc_gen_generator(task_id: str) -> Optional[Callable[[int], List[GridP
         return None
     task_num, generator = lookup
 
+    # Adaptation for a64e4611:
+    # task255.py now includes the edge-fill post-process directly. The loader-side
+    # replacement is kept as a defensive fallback for environments that still carry an
+    # older task255 implementation.
+    if task_id == "a64e4611":
+        try:
+            import importlib.util
+            from pathlib import Path
+
+            edgefill_path = (
+                ROOT_DIR
+                / "external"
+                / "ARC-GEN"
+                / "tasks"
+                / "training"
+                / "task255_edgefill.py"
+            )
+            spec = importlib.util.spec_from_file_location(
+                "arcgen_task255_edgefill", edgefill_path
+            )
+            if spec is not None and spec.loader is not None:
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                edge_gen = getattr(module, "generate", None)
+                if callable(edge_gen):
+                    generator = edge_gen  # type: ignore[assignment]
+        except Exception:
+            # Fall back to the original generator.
+            pass
+
     def gen(num_examples: int) -> List[GridPair]:
         pairs: List[GridPair] = []
+        if task_id == "a64e4611":
+            max_attempts = max(2000, num_examples * 120)
+            example_id = 0
+            attempts = 0
+            while len(pairs) < num_examples and attempts < max_attempts:
+                random.seed(task_num + example_id)
+                example = generator()
+                attempts += 1
+                example_id += 1
+                if not _arc_gen_a64e4611_example_is_unambiguous(example):
+                    continue
+                pairs.append(GridPair(example["input"], example["output"]))
+            if len(pairs) < num_examples:
+                raise RuntimeError(
+                    f"Custom ARC-GEN generator acceptance too low for {task_id!r}: "
+                    f"got {len(pairs)}/{num_examples} after {attempts} attempts"
+                )
+            return pairs
+
         for example_id in range(num_examples):
             random.seed(task_num + example_id)
             example = generator()
