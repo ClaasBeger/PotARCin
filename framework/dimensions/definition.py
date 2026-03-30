@@ -211,6 +211,81 @@ def _load_script_callable(script: str) -> Callable[[Grid], Grid]:
     raise ValueError("No callable function found in generated script.")
 
 
+def evaluate_definition_script_on_task(
+    *,
+    task: ArcTask,
+    script: str,
+    test_idx: int = 0,
+) -> dict[str, Any]:
+    """Evaluate a solved definition script across all configured splits."""
+    if not task.train_pairs:
+        raise ValueError(f"Task {task.task_id} has no training pairs.")
+    if test_idx < 0 or test_idx >= len(task.test_inputs) or test_idx >= len(task.test_outputs):
+        raise ValueError(f"Invalid test_idx={test_idx} for task {task.task_id}.")
+
+    eval_sets: dict[str, list[dict[str, Grid]]] = {
+        "train": [{"input": p.input, "output": p.output} for p in task.train_pairs],
+        "test": [{"input": task.test_inputs[test_idx], "output": task.test_outputs[test_idx]}],
+        "stable": [
+            {"input": p.input, "output": p.output}
+            for p in (task.arc_gen_synthetic_pairs or [])
+        ],
+        "dynamic50": [],
+        "re_arc_stable": [
+            {"input": p.input, "output": p.output}
+            for p in (task.re_arc_synthetic_pairs or [])
+        ],
+        "re_arc_dynamic50": [],
+    }
+    if task.arc_gen_generator is not None:
+        dyn = task.arc_gen_generator(50)
+        eval_sets["dynamic50"] = [{"input": p.input, "output": p.output} for p in dyn]
+    if task.re_arc_generator is not None:
+        dyn = task.re_arc_generator(50)
+        eval_sets["re_arc_dynamic50"] = [{"input": p.input, "output": p.output} for p in dyn]
+
+    out: dict[str, Any] = {
+        "script_loaded": False,
+        "script_load_error": None,
+        "metrics": {},
+        "first_failures": {},
+    }
+    try:
+        fn = _load_script_callable(script)
+        out["script_loaded"] = True
+    except Exception as e:
+        out["script_load_error"] = f"{e}\n{traceback.format_exc()}"
+        fn = None
+
+    for split_name, pairs in eval_sets.items():
+        total = len(pairs)
+        ok = 0
+        failure: Optional[dict[str, Any]] = None
+        if fn is not None:
+            for i, ex in enumerate(pairs):
+                try:
+                    got = fn(copy.deepcopy(ex["input"]))
+                    if is_equal_grid(got, ex["output"]):
+                        ok += 1
+                    elif failure is None:
+                        failure = {
+                            "index": i,
+                            "input": ex["input"],
+                            "expected": ex["output"],
+                            "got": got,
+                        }
+                except Exception as e:
+                    if failure is None:
+                        failure = {"index": i, "error": str(e)}
+        out["metrics"][split_name] = {
+            "ok": ok,
+            "total": total,
+            "success_rate": (ok / total) if total > 0 else 0.0,
+        }
+        out["first_failures"][split_name] = failure
+    return out
+
+
 def run_definition_api_evaluation(
     *,
     task: ArcTask,
@@ -274,19 +349,6 @@ def run_definition_api_evaluation(
         )
     script = _extract_python_script(raw_response)
 
-    eval_sets: dict[str, list[dict[str, Grid]]] = {
-        "train": [{"input": p.input, "output": p.output} for p in task.train_pairs],
-        "test": [{"input": task.test_inputs[test_idx], "output": task.test_outputs[test_idx]}],
-        "stable": [
-            {"input": p.input, "output": p.output}
-            for p in (task.arc_gen_synthetic_pairs or [])
-        ],
-        "dynamic50": [],
-    }
-    if task.arc_gen_generator is not None:
-        dyn = task.arc_gen_generator(50)
-        eval_sets["dynamic50"] = [{"input": p.input, "output": p.output} for p in dyn]
-
     result: dict[str, Any] = {
         "task_id": task.task_id,
         "test_idx": test_idx,
@@ -303,44 +365,15 @@ def run_definition_api_evaluation(
         "metrics": {},
         "first_failures": {},
     }
-
-    try:
-        fn = _load_script_callable(script)
-        result["script_loaded"] = True
-    except Exception as e:
-        result["script_load_error"] = f"{e}\n{traceback.format_exc()}"
-        fn = None
-
-    for split_name, pairs in eval_sets.items():
-        total = len(pairs)
-        ok = 0
-        failure: Optional[dict[str, Any]] = None
-        if fn is not None:
-            for i, ex in enumerate(pairs):
-                try:
-                    got = fn(copy.deepcopy(ex["input"]))
-                    if is_equal_grid(got, ex["output"]):
-                        ok += 1
-                    else:
-                        if failure is None:
-                            failure = {
-                                "index": i,
-                                "input": ex["input"],
-                                "expected": ex["output"],
-                                "got": got,
-                            }
-                except Exception as e:
-                    if failure is None:
-                        failure = {
-                            "index": i,
-                            "error": str(e),
-                        }
-        result["metrics"][split_name] = {
-            "ok": ok,
-            "total": total,
-            "success_rate": (ok / total) if total > 0 else 0.0,
-        }
-        result["first_failures"][split_name] = failure
+    eval_result = evaluate_definition_script_on_task(
+        task=task,
+        script=script,
+        test_idx=test_idx,
+    )
+    result["script_loaded"] = eval_result["script_loaded"]
+    result["script_load_error"] = eval_result["script_load_error"]
+    result["metrics"] = eval_result["metrics"]
+    result["first_failures"] = eval_result["first_failures"]
 
     ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     out_root = Path(out_dir)
