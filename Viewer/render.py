@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from html import escape
-from typing import Iterable
+from typing import Iterable, Optional
 
 from framework.grids import Grid
 
@@ -30,17 +30,25 @@ def _cell_size_px(grid: Grid, max_px: int = 26) -> int:
     return size
 
 
-def grid_height_px(grid: Grid) -> int:
+def grid_height_px(grid: Grid, *, max_px: int = 26) -> int:
     """Rough height for displaying a grid in Streamlit (for iframe)."""
     h = len(grid) or 1
-    size = _cell_size_px(grid)
+    size = _cell_size_px(grid, max_px=max_px)
     # Add some margin for title and padding.
     return int(h * size + 80)
 
 
-def grid_html(grid: Grid, *, show_numbers: bool = False, title: str | None = None) -> str:
+def grid_html(
+    grid: Grid,
+    *,
+    show_numbers: bool = False,
+    title: str | None = None,
+    max_px: int = 26,
+    border_color: Optional[str] = None,
+    border_width_px: int = 1,
+) -> str:
     """Return an HTML snippet rendering a single ARC grid."""
-    size = _cell_size_px(grid)
+    size = _cell_size_px(grid, max_px=max_px)
     h = len(grid)
     w = len(grid[0]) if h else 0
 
@@ -87,11 +95,17 @@ def grid_html(grid: Grid, *, show_numbers: bool = False, title: str | None = Non
 </style>
 """
 
+    grid_border_style = ""
+    if border_color is not None:
+        grid_border_style = (
+            f" style='border:{border_width_px}px solid {escape(border_color)};'"
+        )
+
     return (
         style
         + "<div class='arc-grid-wrap'>"
         + f"{title_html}"
-        + "<div class='arc-grid'>"
+        + f"<div class='arc-grid'{grid_border_style}>"
         + "".join(rows)
         + "</div></div>"
     )

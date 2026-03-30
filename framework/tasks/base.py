@@ -12,6 +12,7 @@ class DimensionName(str, Enum):
     CLASSIFICATION = "classification"
     CONSTRAINED_GENERATION = "constrained_generation"
     EDITING = "editing"
+    INVERSION = "inversion"
 
 
 class Verifier(Protocol):

@@ -11,16 +11,23 @@ from framework.dimensions.definition import (
     DefinitionInstance,
 )
 from framework.dimensions.editing import EditingEvaluator, EditingInstance
+from framework.dimensions.inversion import InversionEvaluator, InversionInstance
 from framework.grids import Grid, GridPair
 from framework.tasks.base import ArcTask
 
 
 def _dummy_task() -> ArcTask:
     train_pair = GridPair(input=[[1]], output=[[2]])
+
+    def _verifier(grid: Grid) -> Grid:
+        return [[cell + 1 for cell in row] for row in grid]
+
     return ArcTask(
         task_id="dummy",
         train_pairs=[train_pair],
         test_inputs=[[[3]]],
+        test_outputs=[[[4]]],
+        verifier=_verifier,
     )
 
 
@@ -62,4 +69,15 @@ def test_editing_dimension_roundtrip():
     predictions: list[Grid] = [instances[0].target]
     result = evaluator.score_predictions(instances, predictions)
     assert result.dimension.value == "editing"
+
+
+def test_inversion_dimension_roundtrip():
+    evaluator = InversionEvaluator()
+    instances = evaluator.generate_instances([_dummy_task()])
+    assert instances
+    assert isinstance(instances[0], InversionInstance)
+    predictions: list[Grid] = [[[3]]]
+    result = evaluator.score_predictions(instances, predictions)
+    assert result.dimension.value == "inversion"
+    assert result.metrics.success_rate == 1.0
 
