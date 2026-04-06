@@ -38,7 +38,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--out-dir",
-        default="definition_eval_results",
+        default="evaluation/definition_eval_results",
         help="Directory for saved evaluation JSON",
     )
     args = parser.parse_args()

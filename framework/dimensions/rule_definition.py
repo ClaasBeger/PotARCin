@@ -175,7 +175,7 @@ def run_rule_definition_api_evaluation(
     tools_enabled: bool = False,
     api_key: Optional[str] = None,
     base_url: Optional[str] = None,
-    out_dir: str | Path = "definition_rule_eval_results",
+    out_dir: str | Path = "evaluation/definition_rule_eval_results",
     dynamic_n: int = 50,
     max_train_demos: Optional[int] = 3,
 ) -> dict[str, Any]:

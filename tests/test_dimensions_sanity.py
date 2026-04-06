@@ -1,6 +1,8 @@
 from framework.dimensions.classification import (
     ClassificationEvaluator,
     ClassificationInstance,
+    DistributionClassificationEvaluator,
+    DistributionClassificationInstance,
 )
 from framework.dimensions.constrained_generation import (
     ConstrainedGenerationEvaluator,
@@ -49,6 +51,30 @@ def test_classification_dimension_roundtrip():
     predictions = [True for _ in instances]
     result = evaluator.score_predictions(instances, predictions)
     assert result.dimension.value == "classification"
+
+
+def test_distribution_classification_dimension_roundtrip():
+    """Five binary labels per instance; no API (mirrors definition roundtrip style)."""
+    demos = [GridPair([[0]], [[1]])]
+    pairs = [
+        GridPair([[0]], [[1]]),
+        GridPair([[1]], [[2]]),
+        GridPair([[0]], [[1]]),
+        GridPair([[2]], [[3]]),
+        GridPair([[0]], [[2]]),
+    ]
+    target = [True, False, True, False, True]
+    inst = DistributionClassificationInstance(
+        task_id="dummy",
+        input=(demos, pairs),
+        target=target,
+    )
+    evaluator = DistributionClassificationEvaluator()
+    predictions = [[1, 0, 1, 0, 1]]
+    result = evaluator.score_predictions([inst], predictions)
+    assert result.dimension.value == "classification"
+    assert result.metrics.accuracy == 1.0
+    assert result.metrics.exact_match_rate == 1.0
 
 
 def test_constrained_generation_dimension_roundtrip():

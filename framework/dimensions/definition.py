@@ -296,7 +296,7 @@ def run_definition_api_evaluation(
     api_endpoint: str = "responses",
     api_key: Optional[str] = None,
     base_url: Optional[str] = None,
-    out_dir: str | Path = "definition_eval_results",
+    out_dir: str | Path = "evaluation/definition_eval_results",
 ) -> dict[str, Any]:
     """End-to-end Definition evaluation: prompt -> model -> script -> scoring.
 
