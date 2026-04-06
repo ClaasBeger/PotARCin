@@ -22,6 +22,13 @@ def main() -> None:
     p.add_argument("--seed", type=int, default=0, help="RNG seed for corruption sampling")
     p.add_argument("--include-true", action="store_true", help="Allow sampling an already-correct pair")
     p.add_argument(
+        "--max-norm-edit",
+        type=float,
+        default=0.70,
+        help="Guardrail: fail if normalized padded edit distance between candidate and prediction "
+        "exceeds this for either input or output. Negative disables.",
+    )
+    p.add_argument(
         "--out-dir",
         default="evaluation/editing_eval_results",
         help="Directory for saved evaluation JSON",
@@ -36,6 +43,7 @@ def main() -> None:
         tools_enabled=args.tools_enabled,
         seed=args.seed,
         include_true=args.include_true,
+        max_norm_edit=(None if args.max_norm_edit < 0 else args.max_norm_edit),
         out_dir=args.out_dir,
     )
     print(f"saved: {res['result_path']}")

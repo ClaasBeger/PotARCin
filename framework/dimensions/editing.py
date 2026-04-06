@@ -22,7 +22,14 @@ from framework.dimensions.base import (
     DimensionResult,
 )
 from framework.dimensions.classification_distribution import select_verifier_for_task
-from framework.grids import Grid, GridPair, connected_component_color_flips_on_pair, is_equal_grid, sample_flip_count_favor_one
+from framework.grids import (
+    Grid,
+    GridPair,
+    connected_component_color_flips_on_pair,
+    is_equal_grid,
+    normalized_cell_edit_distance_padded,
+    sample_flip_count_favor_one,
+)
 from framework.tasks.base import ArcTask, DimensionName
 
 EditingVariant = Literal["h_arc_incorrect", "corrupted_verifier", "ground_truth", "color_flip"]
@@ -183,6 +190,7 @@ def run_editing_api_evaluation_once(
     base_url: Optional[str] = None,
     seed: int = 0,
     include_true: bool = False,
+    max_norm_edit: float | None = 0.70,
     out_dir: str | Path = "evaluation/editing_eval_results",
 ) -> dict[str, Any]:
     rng = random.Random(seed)
@@ -210,15 +218,32 @@ def run_editing_api_evaluation_once(
 
     pred_pair = parse_editing_prediction(raw)
 
+    rail: dict[str, Any] = {"enabled": max_norm_edit is not None}
+    if max_norm_edit is not None:
+        d_in = normalized_cell_edit_distance_padded(
+            corrupted_pair.input,
+            pred_pair.input,
+        )
+        d_out = normalized_cell_edit_distance_padded(
+            corrupted_pair.output,
+            pred_pair.output,
+        )
+        rail["max_norm_edit"] = max_norm_edit
+        rail["normalized_distance_input"] = d_in
+        rail["normalized_distance_output"] = d_out
+        rail["passed"] = bool(d_in <= max_norm_edit and d_out <= max_norm_edit)
+    else:
+        rail["passed"] = True
+
     picked = select_verifier_for_task(task)
     ok = False
-    if picked is not None:
+    if rail["passed"] and picked is not None:
         _slot, v = picked
         try:
             ok = is_equal_grid(v(copy.deepcopy(pred_pair.input)), pred_pair.output)
         except Exception:
             ok = False
-    else:
+    elif rail["passed"]:
         ok = is_equal_grid(pred_pair.input, target_pair.input) and is_equal_grid(
             pred_pair.output, target_pair.output
         )
@@ -237,6 +262,7 @@ def run_editing_api_evaluation_once(
         "corrupted_pair": {"input": corrupted_pair.input, "output": corrupted_pair.output},
         "target_pair": {"input": target_pair.input, "output": target_pair.output},
         "prediction_pair": {"input": pred_pair.input, "output": pred_pair.output},
+        "guardrail": rail,
         "metrics": {"success": ok},
     }
 
