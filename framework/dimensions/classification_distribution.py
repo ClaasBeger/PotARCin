@@ -1,9 +1,8 @@
 """Build 5-way distribution classification items (ARC-GEN, corruption, flips, retrieval, mismatch).
 
-Weights favor **same-task instance mismatch** most, then **corrupted verifier**, then
-**color-flip** and **correct dynamic** at similar rates, then **retrieval** (nearest
-alternative pair) least. Retrieval uses rank-0 once and rank-1 on a second draw; a
-third retrieval is resampled to another category.
+Includes an H-ARC human-error corruption source (same task, incorrect outputs).
+Sampling weights currently make **H-ARC** and **retrieval** tied for highest mass,
+with **corrupted verifier** second highest.
 """
 
 from __future__ import annotations
@@ -18,6 +17,7 @@ from framework.corruption.cross_dynamic_mismatch import (
     synthetic_input_borrowed_output_pair,
 )
 from framework.corruption.golf_ast import GolfSource, load_and_corrupt_golf_verifier
+from framework.corruption.h_arc import load_h_arc_incorrect_outputs_for_task
 from framework.corruption.nearest_inputs import find_nearest_alternative_instances
 from framework.corruption.verifier_ast import load_and_corrupt_re_arc_verifier
 from framework.grids import GridPair, connected_component_color_flips_on_pair, is_equal_grid, sample_flip_count_favor_one
@@ -27,6 +27,7 @@ from framework.tasks.base import ArcTask, Verifier
 Category = Literal[
     "instance_mismatch",
     "corrupted_verifier",
+    "h_arc_incorrect",
     "color_flip",
     "dynamic_correct",
     "retrieval",
@@ -36,11 +37,12 @@ VerifierSlot = Literal["re_arc", "google", "keymoon", "neurips", "custom"]
 
 # Relative sampling weights (sum = 1); normalized when drawing a category.
 _CATEGORY_WEIGHTS: dict[Category, float] = {
-    "instance_mismatch": 0.28,
-    "corrupted_verifier": 0.24,
-    "color_flip": 0.18,
-    "dynamic_correct": 0.18,
-    "retrieval": 0.12,
+    "retrieval": 0.10,
+    "h_arc_incorrect": 0.24,
+    "corrupted_verifier": 0.18,
+    "instance_mismatch": 0.24,
+    "color_flip": 0.08,
+    "dynamic_correct": 0.16,
 }
 
 
@@ -234,6 +236,19 @@ def _try_instance_mismatch(
     return None
 
 
+def _try_h_arc_pair(task: ArcTask, rng: random.Random) -> GridPair | None:
+    if not task.test_inputs:
+        return None
+    rows = load_h_arc_incorrect_outputs_for_task(task.task_id, exclude_evaluation=True)
+    if not rows:
+        return None
+    weights = [max(1, r.count) for r in rows]
+    (picked,) = rng.choices(rows, weights=weights, k=1)
+    inp = copy.deepcopy(rng.choice(task.test_inputs))
+    out = copy.deepcopy(picked.output_grid)
+    return GridPair(inp, out)
+
+
 @dataclass(frozen=True)
 class DistributionClassificationItem:
     pair: GridPair
@@ -302,6 +317,13 @@ def _build_one_item(
         if pair is None:
             return None, False, meta, False
         meta["kind"] = "corrupted_verifier"
+        return pair, False, meta, False
+
+    if cat == "h_arc_incorrect":
+        pair = _try_h_arc_pair(task, rng)
+        if pair is None:
+            return None, False, meta, False
+        meta["kind"] = "h_arc_incorrect_submission"
         return pair, False, meta, False
 
     # retrieval

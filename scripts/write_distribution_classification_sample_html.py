@@ -99,8 +99,8 @@ def main() -> None:
         "</head><body style='font-family:Segoe UI,sans-serif;background:#1a1a1a;color:#eee;max-width:1100px;margin:24px auto;'>",
         f"<h1>Distribution classification (sample)</h1>",
         f"<p>Task <code>{html_module.escape(batch.task_id)}</code>, RNG seed <b>{args.seed}</b>. "
-        "Each test row is one category (instance mismatch, corrupted verifier, color flip, "
-        "correct ARC-GEN dynamic, or retrieval); order below is <b>after</b> shuffling.</p>",
+        "Each test row is one category (instance mismatch, corrupted verifier, H-ARC incorrect, "
+        "color flip, correct ARC-GEN dynamic, or retrieval); order below is <b>after</b> shuffling.</p>",
         "<section style='border:1px solid #444;padding:16px;border-radius:8px;margin-bottom:24px;'>",
         "<h2>Ground-truth labels (1 = same distribution)</h2>",
         "<p><code>",

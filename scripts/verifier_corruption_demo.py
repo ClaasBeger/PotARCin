@@ -59,6 +59,7 @@ from framework.corruption.cross_dynamic_mismatch import (
     find_cross_dynamic_mismatch,
     synthetic_input_borrowed_output_pair,
 )
+from framework.corruption.h_arc import sample_h_arc_incorrect_output_for_task
 from framework.corruption.nearest_inputs import NeighborInstance, find_nearest_alternative_instances
 from framework.corruption.verifier_ast import (
     load_and_corrupt_re_arc_verifier,
@@ -347,6 +348,56 @@ def _cross_dynamic_block_html(
     )
 
 
+def _h_arc_block_html(
+    task: ArcTask,
+    *,
+    skipped: bool,
+    sample_seed: int,
+) -> str:
+    if skipped:
+        return (
+            "<section style='margin-bottom:32px;border:1px solid #444;padding:16px;border-radius:8px;'>"
+            "<h2>H-ARC human incorrect submission</h2>"
+            "<p><i>Skipped (--skip-h-arc).</i></p></section>"
+        )
+    picked = sample_h_arc_incorrect_output_for_task(task.task_id, rng_seed=sample_seed)
+    if picked is None:
+        return (
+            "<section style='margin-bottom:32px;border:1px solid #444;padding:16px;border-radius:8px;'>"
+            "<h2>H-ARC human incorrect submission</h2>"
+            "<p><i>No non-evaluation H-ARC incorrect output available for this task.</i></p>"
+            "</section>"
+        )
+    if not task.test_inputs:
+        return (
+            "<section style='margin-bottom:32px;border:1px solid #444;padding:16px;border-radius:8px;'>"
+            "<h2>H-ARC human incorrect submission</h2>"
+            "<p><i>Task has no canonical test input to pair with H-ARC output.</i></p>"
+            "</section>"
+        )
+    inp = task.test_inputs[0]
+    gold = task.test_outputs[0] if task.test_outputs else None
+    block = (
+        "<section style='margin-bottom:32px;border:1px solid #444;padding:16px;border-radius:8px;'>"
+        "<h2>H-ARC human incorrect submission</h2>"
+        "<p>Source: <code>external/H-ARC/incorrect_submissions.csv</code>. "
+        "Rows with <code>task_type=evaluation</code> are excluded. "
+        "Grid parsing uses H-ARC's pipe format <code>|...|...|</code>. "
+        "Shown below: one sampled incorrect output for the same task.</p>"
+        "<div style='display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;'>"
+        + _grid_to_html(inp, "Canonical test input[0]")
+    )
+    if gold is not None:
+        block += _grid_to_html(gold, "Canonical test output[0] (gold)")
+    block += (
+        _grid_to_html(picked.output_grid, "H-ARC incorrect output (sampled)")
+        + "</div>"
+        + f"<p>task_type=<code>{escape(picked.task_type)}</code>, count=<b>{picked.count}</b>.</p>"
+        + "</section>"
+    )
+    return block
+
+
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--task-id", default="a85d4709")
@@ -398,6 +449,17 @@ def main() -> None:
         help="Skip same-task cross-instance dynamic block (extra generator samples).",
     )
     p.add_argument(
+        "--skip-h-arc",
+        action="store_true",
+        help="Skip H-ARC human incorrect submission block.",
+    )
+    p.add_argument(
+        "--h-arc-seed",
+        type=int,
+        default=0,
+        help="RNG seed for choosing one H-ARC incorrect output for the task.",
+    )
+    p.add_argument(
         "--cross-dynamic-pool",
         type=int,
         default=50,
@@ -431,6 +493,7 @@ def main() -> None:
     neighbor_block = ""
     flip_block = ""
     cross_block = ""
+    h_arc_block = ""
     cross_result: CrossDynamicMismatch | None = None
     gold_r = bad_r = gold_g = bad_g = None
     src_r = ""
@@ -582,6 +645,11 @@ def main() -> None:
         cross_result,
         skipped=args.skip_cross_dynamic,
     )
+    h_arc_block = _h_arc_block_html(
+        task,
+        skipped=args.skip_h_arc,
+        sample_seed=args.h_arc_seed,
+    )
 
     title_bits = []
     if verifier == "both":
@@ -603,6 +671,7 @@ def main() -> None:
         + neighbor_block
         + flip_block
         + cross_block
+        + h_arc_block
         + "</body></html>"
     )
     path.write_text(html, encoding="utf-8")
