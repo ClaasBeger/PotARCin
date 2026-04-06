@@ -1,8 +1,10 @@
 """Build 5-way distribution classification items (ARC-GEN, corruption, flips, retrieval, mismatch).
 
 Includes an H-ARC human-error corruption source (same task, incorrect outputs).
-Sampling weights currently make **H-ARC** and **retrieval** tied for highest mass,
-with **corrupted verifier** second highest.
+
+Only ``dynamic_correct`` is a positive label; its sampling mass is set so that across
+five independent draws, **E[# correct] ≈ 1.5** (i.e. P(dynamic_correct) = 0.30).
+Other category masses are scaled to keep relative ratios and sum to 0.70.
 """
 
 from __future__ import annotations
@@ -35,14 +37,16 @@ Category = Literal[
 
 VerifierSlot = Literal["re_arc", "google", "keymoon", "neurips", "custom"]
 
-# Relative sampling weights (sum = 1); normalized when drawing a category.
+# Relative sampling weights (sum = 1). P(dynamic_correct)=0.30 => E[# correct in 5] = 1.5.
+# Non-positive categories keep the same relative mix as before, scaled by 0.70/0.84.
+_NON_POSITIVE_SCALE = 0.70 / 0.84  # free mass after fixing P(dynamic_correct)=0.30
 _CATEGORY_WEIGHTS: dict[Category, float] = {
-    "retrieval": 0.10,
-    "h_arc_incorrect": 0.24,
-    "corrupted_verifier": 0.18,
-    "instance_mismatch": 0.24,
-    "color_flip": 0.08,
-    "dynamic_correct": 0.16,
+    "h_arc_incorrect": 0.24 * _NON_POSITIVE_SCALE,
+    "instance_mismatch": 0.24 * _NON_POSITIVE_SCALE,
+    "corrupted_verifier": 0.18 * _NON_POSITIVE_SCALE,
+    "dynamic_correct": 0.30,
+    "retrieval": 0.10 * _NON_POSITIVE_SCALE,
+    "color_flip": 0.08 * _NON_POSITIVE_SCALE,
 }
 
 

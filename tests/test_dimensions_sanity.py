@@ -92,7 +92,7 @@ def test_editing_dimension_roundtrip():
     instances = evaluator.generate_instances([_dummy_task()])
     assert instances
     assert isinstance(instances[0], EditingInstance)
-    predictions: list[Grid] = [instances[0].target]
+    predictions: list[GridPair] = [instances[0].target]
     result = evaluator.score_predictions(instances, predictions)
     assert result.dimension.value == "editing"
 
