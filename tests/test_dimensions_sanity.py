@@ -24,12 +24,21 @@ def _dummy_task() -> ArcTask:
     def _verifier(grid: Grid) -> Grid:
         return [[cell + 1 for cell in row] for row in grid]
 
+    def _arc_gen_generator(n: int) -> list[GridPair]:
+        out: list[GridPair] = []
+        for i in range(n):
+            inp = [[10 + i]]
+            out.append(GridPair(input=inp, output=_verifier(inp)))
+        return out
+
     return ArcTask(
         task_id="dummy",
         train_pairs=[train_pair],
         test_inputs=[[[3]]],
         test_outputs=[[[4]]],
         verifier=_verifier,
+        arc_gen_synthetic_pairs=[GridPair(input=[[5]], output=[[6]])],
+        arc_gen_generator=_arc_gen_generator,
     )
 
 
@@ -102,7 +111,7 @@ def test_inversion_dimension_roundtrip():
     instances = evaluator.generate_instances([_dummy_task()])
     assert instances
     assert isinstance(instances[0], InversionInstance)
-    predictions: list[Grid] = [[[3]]]
+    predictions: list[Grid] = [instances[0].target]
     result = evaluator.score_predictions(instances, predictions)
     assert result.dimension.value == "inversion"
     assert result.metrics.success_rate == 1.0
