@@ -115,6 +115,27 @@ def select_verifier_for_task(task: ArcTask) -> Tuple[VerifierSlot, Verifier] | N
     return None
 
 
+def valid_verifier_slots_for_task(task: ArcTask) -> List[VerifierSlot]:
+    """Every verifier slot that passes :func:`verifier_matches_train_test_stable_dynamic50`.
+
+    Order matches the priority used by :func:`select_verifier_for_task` (re_arc → … → custom).
+    """
+    candidates: List[Tuple[VerifierSlot, Optional[Verifier]]] = [
+        ("re_arc", task.verifier),
+        ("google", task.secondary_verifier),
+        ("keymoon", task.tertiary_verifier),
+        ("neurips", task.quaternary_verifier),
+        ("custom", task.quinary_verifier),
+    ]
+    out: List[VerifierSlot] = []
+    for name, fn in candidates:
+        if fn is None:
+            continue
+        if verifier_matches_train_test_stable_dynamic50(task, fn):
+            out.append(name)
+    return out
+
+
 def _sample_demo_pair_for_query(task: ArcTask, rng: random.Random) -> GridPair:
     opts: List[GridPair] = []
     opts.extend(task.train_pairs)
