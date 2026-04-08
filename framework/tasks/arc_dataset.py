@@ -4,6 +4,7 @@ import importlib.util
 import itertools
 import json
 import random
+import zipfile
 from collections import defaultdict
 import sys
 import warnings
@@ -622,15 +623,18 @@ def _load_golf_verifier_from_neurips(task_id: str) -> Optional[Callable[[Grid], 
     if not path.exists():
         return None
 
-    spec = importlib.util.spec_from_file_location(f"cg_solutions_{task_id}", path)
-    if spec is None or spec.loader is None:
+    try:
+        spec = importlib.util.spec_from_file_location(f"cg_solutions_{task_id}", path)
+        if spec is None or spec.loader is None:
+            return None
+        module = importlib.util.module_from_spec(spec)
+        # Some golfed solutions trigger SyntaxWarning on import under certain
+        # Python versions. We don't want these warnings to spam the UI.
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", SyntaxWarning)
+            spec.loader.exec_module(module)
+    except Exception:
         return None
-    module = importlib.util.module_from_spec(spec)
-    # Some golfed solutions trigger SyntaxWarning on import under certain
-    # Python versions. We don't want these warnings to spam the UI.
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", SyntaxWarning)
-        spec.loader.exec_module(module)
 
     solve_fn = getattr(module, "solve", None)
     if callable(solve_fn):
@@ -662,13 +666,16 @@ def _load_golf_verifier_from_google_code_golf_2025(
     if not path.exists():
         return None
 
-    spec = importlib.util.spec_from_file_location(f"google_code_golf_{task_id}", path)
-    if spec is None or spec.loader is None:
+    try:
+        spec = importlib.util.spec_from_file_location(f"google_code_golf_{task_id}", path)
+        if spec is None or spec.loader is None:
+            return None
+        module = importlib.util.module_from_spec(spec)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", SyntaxWarning)
+            spec.loader.exec_module(module)
+    except Exception:
         return None
-    module = importlib.util.module_from_spec(spec)
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", SyntaxWarning)
-        spec.loader.exec_module(module)
 
     solve_fn = getattr(module, "solve", None)
     if callable(solve_fn):
@@ -685,7 +692,13 @@ def _load_golf_verifier_from_google_code_golf_2025(
 
 
 def _load_golf_verifier_from_keymoon(task_id: str) -> Optional[Callable[[Grid], Grid]]:
-    """Best-effort loader from `external/golf` (key-moon/golf)."""
+    """Best-effort loader from `external/golf` (key-moon/golf).
+
+    Tries, in order:
+
+    1. ``sols/taskNNN.py`` (layout from a full clone).
+    2. ``submission.zip`` with a top-level ``taskNNN.py`` (bundled snapshot).
+    """
     root = ROOT_DIR / "external" / "golf"
     if not root.exists():
         return None
@@ -695,21 +708,42 @@ def _load_golf_verifier_from_keymoon(task_id: str) -> Optional[Callable[[Grid], 
         return None
     task_num, _generator = lookup
 
-    # key-moon/golf stores solutions under `sols/taskNNN.py`.
-    sols_dir = root / "sols"
-    if not sols_dir.exists():
-        return None
-    path = sols_dir / f"task{task_num:03d}.py"
-    if not path.exists():
+    py_name = f"task{task_num:03d}.py"
+    def _decode_source(raw: bytes) -> str | None:
+        for enc in ("utf-8", "cp1252", "latin-1"):
+            try:
+                return raw.decode(enc)
+            except UnicodeDecodeError:
+                continue
         return None
 
-    spec = importlib.util.spec_from_file_location(f"golf_keymoon_{task_id}", path)
-    if spec is None or spec.loader is None:
+    sols_dir = root / "sols"
+    path = sols_dir / py_name
+    source: str | None = None
+    if path.is_file():
+        source = _decode_source(path.read_bytes())
+    else:
+        zip_path = root / "submission.zip"
+        if zip_path.is_file():
+            with zipfile.ZipFile(zip_path) as zf:
+                try:
+                    raw = zf.read(py_name)
+                except KeyError:
+                    raw = None
+                if raw is not None:
+                    source = _decode_source(raw)
+    if source is None:
         return None
-    module = importlib.util.module_from_spec(spec)
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", SyntaxWarning)
-        spec.loader.exec_module(module)
+
+    mod_name = f"golf_keymoon_{task_id}"
+    module = ModuleType(mod_name)
+    qual = f"<{mod_name} {py_name}>"
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", SyntaxWarning)
+            exec(compile(source, qual, "exec"), module.__dict__)
+    except Exception:
+        return None
 
     solve_fn = getattr(module, "solve", None)
     if callable(solve_fn):
