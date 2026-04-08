@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, Iterable, List, Optional, Sequence
 from urllib import error, request
 
-from framework.dimensions.classification_distribution import select_verifier_for_task
+from framework.verifier_selection import select_verifier_for_task
 from framework.dimensions.base import (
     DimensionConfig,
     DimensionEvaluator,
@@ -163,11 +163,6 @@ class InversionEvaluator(
             if not task.train_pairs:
                 continue
 
-            picked = select_verifier_for_task(task)
-            if picked is None:
-                continue
-            _slot, verifier = picked
-
             # Primary source: ARC-GEN dynamic pairs.
             sampled_pairs: list[GridPair] = []
             if task.arc_gen_generator is not None:
@@ -184,6 +179,10 @@ class InversionEvaluator(
                 ][:n_per]
 
             for pair in sampled_pairs:
+                picked = select_verifier_for_task(task, dynamic_pairs=[pair])
+                if picked is None:
+                    continue
+                _slot, verifier = picked
                 instances.append(
                     InversionInstance(
                         task_id=task.task_id,

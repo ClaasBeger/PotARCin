@@ -25,6 +25,7 @@ from framework.corruption.verifier_ast import load_and_corrupt_re_arc_verifier
 from framework.grids import GridPair, connected_component_color_flips_on_pair, is_equal_grid, sample_flip_count_favor_one
 from framework.tasks.arc_dataset import load_task
 from framework.tasks.base import ArcTask, Verifier
+from framework.verifier_selection import select_verifier_for_task
 
 Category = Literal[
     "instance_mismatch",
@@ -62,25 +63,25 @@ def verifier_matches_train_test_stable_dynamic50(task: ArcTask, v: Verifier) -> 
     for p in task.train_pairs:
         try:
             out = v(copy.deepcopy(p.input))
+            if not is_equal_grid(out, p.output):
+                return False
         except Exception:
-            return False
-        if not is_equal_grid(out, p.output):
             return False
     n_test = min(len(task.test_inputs), len(task.test_outputs))
     for i in range(n_test):
         try:
             out = v(copy.deepcopy(task.test_inputs[i]))
+            if not is_equal_grid(out, task.test_outputs[i]):
+                return False
         except Exception:
-            return False
-        if not is_equal_grid(out, task.test_outputs[i]):
             return False
     if task.arc_gen_synthetic_pairs:
         for p in task.arc_gen_synthetic_pairs:
             try:
                 out = v(copy.deepcopy(p.input))
+                if not is_equal_grid(out, p.output):
+                    return False
             except Exception:
-                return False
-            if not is_equal_grid(out, p.output):
                 return False
     if task.arc_gen_generator is None:
         return False
@@ -91,34 +92,19 @@ def verifier_matches_train_test_stable_dynamic50(task: ArcTask, v: Verifier) -> 
     for p in dyn:
         try:
             out = v(copy.deepcopy(p.input))
+            if not is_equal_grid(out, p.output):
+                return False
         except Exception:
             return False
-        if not is_equal_grid(out, p.output):
-            return False
     return True
-
-
-def select_verifier_for_task(task: ArcTask) -> Tuple[VerifierSlot, Verifier] | None:
-    """First verifier in priority order that passes train / test / stable / dynamic50."""
-    candidates: List[Tuple[VerifierSlot, Optional[Verifier]]] = [
-        ("re_arc", task.verifier),
-        ("google", task.secondary_verifier),
-        ("keymoon", task.tertiary_verifier),
-        ("neurips", task.quaternary_verifier),
-        ("custom", task.quinary_verifier),
-    ]
-    for name, fn in candidates:
-        if fn is None:
-            continue
-        if verifier_matches_train_test_stable_dynamic50(task, fn):
-            return name, fn
-    return None
 
 
 def valid_verifier_slots_for_task(task: ArcTask) -> List[VerifierSlot]:
     """Every verifier slot that passes :func:`verifier_matches_train_test_stable_dynamic50`.
 
-    Order matches the priority used by :func:`select_verifier_for_task` (re_arc → … → custom).
+    Used for offline CSV generation. Runtime selection uses
+    :func:`framework.verifier_selection.select_verifier_for_task` (CSV order, optional
+    per-instance dynamic pairs).
     """
     candidates: List[Tuple[VerifierSlot, Optional[Verifier]]] = [
         ("re_arc", task.verifier),
@@ -152,17 +138,19 @@ def _sample_demo_pair_for_query(task: ArcTask, rng: random.Random) -> GridPair:
 
 
 def _try_corrupted_pair(task_id: str, task: ArcTask, rng: random.Random) -> GridPair | None:
-    picked = select_verifier_for_task(task)
-    if picked is None:
+    if task.arc_gen_generator is None:
         return None
-    vname, _v = picked
-
     for _ in range(8):
         try:
             pair = copy.deepcopy(task.arc_gen_generator(1)[0])  # type: ignore[misc]
             inp = copy.deepcopy(pair.input)
         except Exception:
             continue
+
+        picked = select_verifier_for_task(task, dynamic_pairs=[pair])
+        if picked is None:
+            continue
+        vname, _v = picked
 
         if vname == "re_arc":
             try:

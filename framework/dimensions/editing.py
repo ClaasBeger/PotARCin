@@ -21,7 +21,7 @@ from framework.dimensions.base import (
     DimensionInstance,
     DimensionResult,
 )
-from framework.dimensions.classification_distribution import select_verifier_for_task
+from framework.verifier_selection import select_verifier_for_task
 from framework.grids import (
     Grid,
     GridPair,
@@ -235,7 +235,10 @@ def run_editing_api_evaluation_once(
     else:
         rail["passed"] = True
 
-    picked = select_verifier_for_task(task)
+    picked = select_verifier_for_task(
+        task,
+        dynamic_pairs=[GridPair(target_pair.input, target_pair.output)],
+    )
     ok = False
     if rail["passed"] and picked is not None:
         _slot, v = picked
@@ -317,16 +320,16 @@ def _try_h_arc_incorrect(task: ArcTask, rng: random.Random) -> tuple[GridPair, G
 def _try_corrupted_verifier(task: ArcTask, rng: random.Random) -> tuple[GridPair, GridPair] | None:
     if task.arc_gen_generator is None:
         return None
-    picked = select_verifier_for_task(task)
-    if picked is None:
-        return None
-    slot, _fn = picked
     for _ in range(10):
         try:
             gold = copy.deepcopy(task.arc_gen_generator(1)[0])
         except Exception:
             continue
         inp = copy.deepcopy(gold.input)
+        picked = select_verifier_for_task(task, dynamic_pairs=[gold])
+        if picked is None:
+            continue
+        slot, _fn = picked
         if slot == "re_arc":
             try:
                 cfn, _, _ = load_and_corrupt_re_arc_verifier(
@@ -513,7 +516,11 @@ class EditingEvaluator(
             except Exception:
                 task = None
             if task is not None:
-                picked = select_verifier_for_task(task)
+                ref = inst.target
+                picked = select_verifier_for_task(
+                    task,
+                    dynamic_pairs=[GridPair(ref.input, ref.output)],
+                )
                 if picked is not None:
                     _slot, v = picked
                     try:

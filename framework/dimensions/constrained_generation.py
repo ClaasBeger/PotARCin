@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, Iterable, List, Optional, Sequence, Tuple
 from urllib import error, request
 
-from framework.dimensions.classification_distribution import select_verifier_for_task
+from framework.verifier_selection import select_verifier_for_task
 from framework.dimensions.base import (
     DimensionConfig,
     DimensionEvaluator,

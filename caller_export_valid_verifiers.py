@@ -1,9 +1,10 @@
 """Export a CSV mapping each ARC task to verifier slots valid at inference time.
 
-Uses the same criterion as ``select_verifier_for_task`` in
+Uses ``valid_verifier_slots_for_task`` in
 ``framework.dimensions.classification_distribution`` (train, test, ARC-GEN stable,
-and 50 dynamic ARC-GEN pairs). Run once offline; at inference, look up slots from
-the CSV instead of re-running checks.
+and 50 dynamic ARC-GEN pairs). Run once offline; at inference,
+``framework.verifier_selection.select_verifier_for_task`` reads this CSV (and may
+re-check instance-specific dynamic pairs).
 
 Example::
 
@@ -17,10 +18,7 @@ import csv
 import sys
 from pathlib import Path
 
-from framework.dimensions.classification_distribution import (
-    select_verifier_for_task,
-    valid_verifier_slots_for_task,
-)
+from framework.dimensions.classification_distribution import valid_verifier_slots_for_task
 from framework.tasks.arc_dataset import iter_tasks
 from framework.tasks.base import TaskSource
 
@@ -64,8 +62,7 @@ def main() -> None:
             if limit is not None and idx >= limit:
                 break
             valid = valid_verifier_slots_for_task(task)
-            picked = select_verifier_for_task(task)
-            selected = picked[0] if picked else ""
+            selected = valid[0] if valid else ""
             row = {
                 "task_id": task.task_id,
                 "valid_verifier_slots": ";".join(valid),
