@@ -184,6 +184,10 @@ def run_rule_definition_api_evaluation(
     1) Infer a natural-language rule from demos + one test input.
     2) Re-apply the saved rule to train/test/stable/dynamic grids *without*
        demonstrations, and evaluate output grids against ground truth.
+
+    ``raw_rule_response`` is always persisted. If stage 2 aborts mid-run, any
+    ``split_raw_apply_responses`` collected so far are kept and ``evaluation_ok``
+    is false with ``error`` set.
     """
     if not task.train_pairs:
         raise ValueError(f"Task {task.task_id} has no training pairs.")
@@ -217,41 +221,10 @@ def run_rule_definition_api_evaluation(
     )
     rule_text = raw_rule_response.strip()
 
-    # Build evaluation sets.
-    eval_sets: dict[str, dict[str, list[Grid]]] = {}
-    eval_sets["train"] = {
-        "inputs": [p.input for p in task.train_pairs],
-        "outputs": [p.output for p in task.train_pairs],
-    }
-    eval_sets["test"] = {
-        "inputs": [task.test_inputs[test_idx]],
-        "outputs": [task.test_outputs[test_idx]],
-    }
-    eval_sets["stable"] = {
-        "inputs": [p.input for p in (task.arc_gen_synthetic_pairs or [])],
-        "outputs": [p.output for p in (task.arc_gen_synthetic_pairs or [])],
-    }
-    if task.arc_gen_generator is not None:
-        dyn = task.arc_gen_generator(dynamic_n)
-        eval_sets["dynamic_n"] = {
-            "inputs": [p.input for p in dyn],
-            "outputs": [p.output for p in dyn],
-        }
-    else:
-        eval_sets["dynamic_n"] = {"inputs": [], "outputs": []}
-
-    eval_sets["re_arc_stable"] = {
-        "inputs": [p.input for p in (task.re_arc_synthetic_pairs or [])],
-        "outputs": [p.output for p in (task.re_arc_synthetic_pairs or [])],
-    }
-    if task.re_arc_generator is not None:
-        dyn = task.re_arc_generator(dynamic_n)
-        eval_sets["re_arc_dynamic_n"] = {
-            "inputs": [p.input for p in dyn],
-            "outputs": [p.output for p in dyn],
-        }
-    else:
-        eval_sets["re_arc_dynamic_n"] = {"inputs": [], "outputs": []}
+    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    out_root = Path(out_dir)
+    out_root.mkdir(parents=True, exist_ok=True)
+    out_path = out_root / f"{task.task_id}_definition_rule_eval_{ts}.json"
 
     result: dict[str, Any] = {
         "task_id": task.task_id,
@@ -264,65 +237,102 @@ def run_rule_definition_api_evaluation(
         "metrics": {},
         "first_failures": {},
         "split_raw_apply_responses": {},
+        "evaluation_ok": False,
     }
 
-    for split_name, payload in eval_sets.items():
-        inputs = payload["inputs"]
-        expected = payload["outputs"]
-        total = len(inputs)
-        ok = 0
-        failure: Optional[dict[str, Any]] = None
-
-        if total == 0:
-            result["metrics"][split_name] = {"ok": 0, "total": 0, "success_rate": 0.0}
-            result["first_failures"][split_name] = None
-            continue
-
-        prompt_apply = build_apply_rule_prompt(rule_text, inputs, label=f"{split_name} inputs")
-        raw_apply = _openai_responses_completion(
-            prompt=prompt_apply,
-            model=model,
-            api_key=effective_key,
-            base_url=effective_base,
-            reasoning_effort=reasoning_effort,
-            tools_enabled=tools_enabled,
-        )
-        result["split_raw_apply_responses"][split_name] = raw_apply
-
-        try:
-            parsed = _extract_json_object(raw_apply)
-            outputs = parsed["outputs"]
-        except Exception as e:
-            failure = {"error": f"Could not parse outputs JSON: {e}"}
-            outputs = None
-
-        if outputs is not None:
-            if not isinstance(outputs, list) or len(outputs) != total:
-                if failure is None:
-                    failure = {
-                        "error": f"Model returned outputs of unexpected shape: len(outputs)={len(outputs) if isinstance(outputs, list) else 'n/a'} expected={total}"
-                    }
-            else:
-                for i in range(total):
-                    got = outputs[i]
-                    exp = expected[i]
-                    if is_equal_grid(got, exp):
-                        ok += 1
-                    elif failure is None:
-                        failure = {"index": i, "input": inputs[i], "expected": exp, "got": got}
-
-        result["metrics"][split_name] = {
-            "ok": ok,
-            "total": total,
-            "success_rate": (ok / total) if total > 0 else 0.0,
+    try:
+        eval_sets: dict[str, dict[str, list[Grid]]] = {}
+        eval_sets["train"] = {
+            "inputs": [p.input for p in task.train_pairs],
+            "outputs": [p.output for p in task.train_pairs],
         }
-        result["first_failures"][split_name] = failure
+        eval_sets["test"] = {
+            "inputs": [task.test_inputs[test_idx]],
+            "outputs": [task.test_outputs[test_idx]],
+        }
+        eval_sets["stable"] = {
+            "inputs": [p.input for p in (task.arc_gen_synthetic_pairs or [])],
+            "outputs": [p.output for p in (task.arc_gen_synthetic_pairs or [])],
+        }
+        if task.arc_gen_generator is not None:
+            dyn = task.arc_gen_generator(dynamic_n)
+            eval_sets["dynamic_n"] = {
+                "inputs": [p.input for p in dyn],
+                "outputs": [p.output for p in dyn],
+            }
+        else:
+            eval_sets["dynamic_n"] = {"inputs": [], "outputs": []}
 
-    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    out_root = Path(out_dir)
-    out_root.mkdir(parents=True, exist_ok=True)
-    out_path = out_root / f"{task.task_id}_definition_rule_eval_{ts}.json"
-    out_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
+        eval_sets["re_arc_stable"] = {
+            "inputs": [p.input for p in (task.re_arc_synthetic_pairs or [])],
+            "outputs": [p.output for p in (task.re_arc_synthetic_pairs or [])],
+        }
+        if task.re_arc_generator is not None:
+            dyn = task.re_arc_generator(dynamic_n)
+            eval_sets["re_arc_dynamic_n"] = {
+                "inputs": [p.input for p in dyn],
+                "outputs": [p.output for p in dyn],
+            }
+        else:
+            eval_sets["re_arc_dynamic_n"] = {"inputs": [], "outputs": []}
+
+        for split_name, payload in eval_sets.items():
+            inputs = payload["inputs"]
+            expected = payload["outputs"]
+            total = len(inputs)
+            ok = 0
+            failure: Optional[dict[str, Any]] = None
+
+            if total == 0:
+                result["metrics"][split_name] = {"ok": 0, "total": 0, "success_rate": 0.0}
+                result["first_failures"][split_name] = None
+                continue
+
+            prompt_apply = build_apply_rule_prompt(rule_text, inputs, label=f"{split_name} inputs")
+            raw_apply = _openai_responses_completion(
+                prompt=prompt_apply,
+                model=model,
+                api_key=effective_key,
+                base_url=effective_base,
+                reasoning_effort=reasoning_effort,
+                tools_enabled=tools_enabled,
+            )
+            result["split_raw_apply_responses"][split_name] = raw_apply
+
+            try:
+                parsed = _extract_json_object(raw_apply)
+                outputs = parsed["outputs"]
+            except Exception as e:
+                failure = {"error": f"Could not parse outputs JSON: {e}"}
+                outputs = None
+
+            if outputs is not None:
+                if not isinstance(outputs, list) or len(outputs) != total:
+                    if failure is None:
+                        failure = {
+                            "error": f"Model returned outputs of unexpected shape: len(outputs)={len(outputs) if isinstance(outputs, list) else 'n/a'} expected={total}"
+                        }
+                else:
+                    for i in range(total):
+                        got = outputs[i]
+                        exp = expected[i]
+                        if is_equal_grid(got, exp):
+                            ok += 1
+                        elif failure is None:
+                            failure = {"index": i, "input": inputs[i], "expected": exp, "got": got}
+
+            result["metrics"][split_name] = {
+                "ok": ok,
+                "total": total,
+                "success_rate": (ok / total) if total > 0 else 0.0,
+            }
+            result["first_failures"][split_name] = failure
+
+        result["evaluation_ok"] = True
+    except Exception as e:
+        result["error"] = str(e)
+
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
     result["result_path"] = str(out_path)
     return result
 

@@ -254,6 +254,17 @@ class ConstrainedGenerationEvaluator(
         )
 
 
+def _cg_zero_metrics() -> dict[str, Any]:
+    return {
+        "success_rate": 0.0,
+        "rejected_as_demo_copy": 0,
+        "rejected_no_change": 0,
+        "rejected_verifier_missing": 0,
+        "rejected_verifier_mismatch": 0,
+        "noted_arc_gen_stable_exact_match": 0,
+    }
+
+
 def run_constrained_generation_api_evaluation_once(
     *,
     task_id: str,
@@ -264,6 +275,13 @@ def run_constrained_generation_api_evaluation_once(
     base_url: Optional[str] = None,
     out_dir: str | Path = "evaluation/constrained_generation_eval_results",
 ) -> dict[str, Any]:
+    """Call the model, parse, score, and write JSON under *out_dir*.
+
+    After a non-empty model response is received, the result file is **always**
+    written (including ``raw_response``), even when parsing or scoring fails.
+    The returned dict includes ``evaluation_ok`` (bool) so batch runners can
+    record ``result_path`` on failure without losing the transcript.
+    """
     task = load_task(task_id)
     if not task.train_pairs:
         raise ValueError(f"Task {task_id} has no training pairs.")
@@ -282,20 +300,11 @@ def run_constrained_generation_api_evaluation_once(
         reasoning_effort=reasoning_effort,
         tools_enabled=tools_enabled,
     )
-    pred = parse_constrained_generation_prediction(raw)
 
-    evaluator = ConstrainedGenerationEvaluator()
-    inst = ConstrainedGenerationInstance(task_id=task_id, input=task.train_pairs, target=None)
-    scored = evaluator.score_predictions([inst], [pred])
-    m = scored.metrics
-    metrics = {
-        "success_rate": m.success_rate,
-        "rejected_as_demo_copy": m.rejected_as_demo_copy,
-        "rejected_no_change": m.rejected_no_change,
-        "rejected_verifier_missing": m.rejected_verifier_missing,
-        "rejected_verifier_mismatch": m.rejected_verifier_mismatch,
-        "noted_arc_gen_stable_exact_match": m.noted_arc_gen_stable_exact_match,
-    }
+    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    out_root = Path(out_dir)
+    out_root.mkdir(parents=True, exist_ok=True)
+    out_path = out_root / f"{task_id}_constrained_generation_eval_{ts}.json"
 
     result: dict[str, Any] = {
         "task_id": task_id,
@@ -305,14 +314,47 @@ def run_constrained_generation_api_evaluation_once(
         "tools_enabled": tools_enabled,
         "prompt": prompt,
         "raw_response": raw,
-        "prediction": {"input": pred[0], "output": pred[1]},
-        "metrics": metrics,
+        "evaluation_ok": False,
     }
-    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    out_root = Path(out_dir)
-    out_root.mkdir(parents=True, exist_ok=True)
-    out_path = out_root / f"{task_id}_constrained_generation_eval_{ts}.json"
-    out_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
+
+    pred: GeneratedPair | None = None
+    parse_error: str | None = None
+    try:
+        pred = parse_constrained_generation_prediction(raw)
+    except Exception as e:
+        parse_error = str(e)
+
+    if pred is None:
+        result["error"] = parse_error or "parse failed"
+        result["prediction"] = None
+        result["metrics"] = _cg_zero_metrics()
+        out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+        result["result_path"] = str(out_path)
+        return result
+
+    result["prediction"] = {"input": pred[0], "output": pred[1]}
+
+    scoring_error: str | None = None
+    try:
+        evaluator = ConstrainedGenerationEvaluator()
+        inst = ConstrainedGenerationInstance(task_id=task_id, input=task.train_pairs, target=None)
+        scored = evaluator.score_predictions([inst], [pred])
+        m = scored.metrics
+        result["metrics"] = {
+            "success_rate": m.success_rate,
+            "rejected_as_demo_copy": m.rejected_as_demo_copy,
+            "rejected_no_change": m.rejected_no_change,
+            "rejected_verifier_missing": m.rejected_verifier_missing,
+            "rejected_verifier_mismatch": m.rejected_verifier_mismatch,
+            "noted_arc_gen_stable_exact_match": m.noted_arc_gen_stable_exact_match,
+        }
+        result["evaluation_ok"] = True
+    except Exception as e:
+        scoring_error = str(e)
+        result["error"] = scoring_error
+        result["metrics"] = _cg_zero_metrics()
+
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
     result["result_path"] = str(out_path)
     return result
 

@@ -1,12 +1,17 @@
+import json
+from pathlib import Path
+
 from framework.dimensions.classification import (
     ClassificationEvaluator,
     ClassificationInstance,
     DistributionClassificationEvaluator,
     DistributionClassificationInstance,
 )
+from framework.dimensions import constrained_generation as cg_mod
 from framework.dimensions.constrained_generation import (
     ConstrainedGenerationEvaluator,
     ConstrainedGenerationInstance,
+    run_constrained_generation_api_evaluation_once,
 )
 from framework.dimensions.definition import (
     DefinitionEvaluator,
@@ -94,6 +99,27 @@ def test_constrained_generation_dimension_roundtrip():
     predictions = [([[0]], [[0]]) for _ in instances]
     result = evaluator.score_predictions(instances, predictions)
     assert result.dimension.value == "constrained_generation"
+
+
+def test_constrained_generation_eval_persists_raw_when_parse_fails(tmp_path, monkeypatch):
+    """Model transcript must be on disk even when the answer is not a valid dict."""
+
+    def _fake_completion(**kwargs):
+        return "sorry, here is prose only — no dict"
+
+    monkeypatch.setattr(cg_mod, "_openai_responses_completion", _fake_completion)
+    res = run_constrained_generation_api_evaluation_once(
+        task_id="a85d4709",
+        api_key="fake-key",
+        out_dir=tmp_path,
+    )
+    assert res.get("evaluation_ok") is False
+    assert res.get("raw_response") == _fake_completion()
+    path = res.get("result_path")
+    assert path
+    saved = json.loads(Path(path).read_text(encoding="utf-8"))
+    assert saved["raw_response"] == _fake_completion()
+    assert saved.get("prediction") is None
 
 
 def test_editing_dimension_roundtrip():

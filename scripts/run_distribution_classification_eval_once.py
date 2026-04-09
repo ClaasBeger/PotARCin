@@ -58,6 +58,11 @@ def main() -> None:
     )
 
     print(f"saved: {result['result_path']}")
+    if not result.get("evaluation_ok", True):
+        print("evaluation_ok: false")
+        if result.get("error"):
+            print("error:", result["error"])
+        sys.exit(1)
     print("metrics:")
     print(json.dumps(result["metrics"], indent=2))
 

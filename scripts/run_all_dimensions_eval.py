@@ -101,9 +101,23 @@ def run_all_dimensions_for_task(
     def _run(name: str, fn: Callable[[], dict[str, Any]]) -> None:
         attempts = max(1, int(dimension_retries) + 1)
         last_err = ""
+        last_result_path: str | None = None
+        last_metrics: Any = None
         for attempt in range(1, attempts + 1):
             try:
                 res = fn()
+                if isinstance(res, dict) and res.get("evaluation_ok") is False:
+                    last_err = str(res.get("error") or "evaluation_ok is false")
+                    last_result_path = res.get("result_path") if isinstance(res.get("result_path"), str) else None
+                    last_metrics = res.get("metrics")
+                    report["dimensions"][name] = {
+                        "ok": False,
+                        "error": last_err,
+                        "result_path": last_result_path,
+                        "metrics": last_metrics,
+                        "attempts": attempt,
+                    }
+                    return
                 report["dimensions"][name] = {
                     "ok": True,
                     "result_path": res.get("result_path"),
@@ -119,6 +133,8 @@ def run_all_dimensions_for_task(
         report["dimensions"][name] = {
             "ok": False,
             "error": last_err,
+            "result_path": last_result_path,
+            "metrics": last_metrics,
             "attempts": attempts,
         }
 

@@ -35,6 +35,11 @@ def main() -> None:
         out_dir=args.out_dir,
     )
     print(f"saved: {res['result_path']}")
+    if not res.get("evaluation_ok", True):
+        print("evaluation_ok: false")
+        if res.get("error"):
+            print("error:", res["error"])
+        sys.exit(1)
     print("metrics:")
     print(json.dumps(res["metrics"], indent=2))
 

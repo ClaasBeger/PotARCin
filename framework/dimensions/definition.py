@@ -300,6 +300,9 @@ def run_definition_api_evaluation(
 ) -> dict[str, Any]:
     """End-to-end Definition evaluation: prompt -> model -> script -> scoring.
 
+    After the model returns, ``raw_response`` is always written to the eval JSON,
+    even if script evaluation crashes (``evaluation_ok`` false, ``error`` set).
+
     Evaluation checks the generated script on:
     - all train pairs
     - selected test example (by test_idx)
@@ -364,22 +367,28 @@ def run_definition_api_evaluation(
         "script_load_error": None,
         "metrics": {},
         "first_failures": {},
+        "evaluation_ok": False,
     }
-    eval_result = evaluate_definition_script_on_task(
-        task=task,
-        script=script,
-        test_idx=test_idx,
-    )
-    result["script_loaded"] = eval_result["script_loaded"]
-    result["script_load_error"] = eval_result["script_load_error"]
-    result["metrics"] = eval_result["metrics"]
-    result["first_failures"] = eval_result["first_failures"]
+    try:
+        eval_result = evaluate_definition_script_on_task(
+            task=task,
+            script=script,
+            test_idx=test_idx,
+        )
+        result["script_loaded"] = eval_result["script_loaded"]
+        result["script_load_error"] = eval_result["script_load_error"]
+        result["metrics"] = eval_result["metrics"]
+        result["first_failures"] = eval_result["first_failures"]
+        result["evaluation_ok"] = True
+    except Exception as e:
+        result["error"] = str(e)
+        result["script_load_error"] = str(e)
 
     ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     out_root = Path(out_dir)
     out_root.mkdir(parents=True, exist_ok=True)
     out_path = out_root / f"{task.task_id}_definition_eval_{ts}.json"
-    out_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
     result["result_path"] = str(out_path)
     return result
 

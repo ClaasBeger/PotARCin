@@ -25,6 +25,8 @@ from framework.verifier_selection import select_verifier_for_task
 from framework.grids import (
     Grid,
     GridPair,
+    assert_int_grid,
+    assert_int_grid_pair,
     connected_component_color_flips_on_pair,
     is_equal_grid,
     normalized_cell_edit_distance_padded,
@@ -57,7 +59,25 @@ class EditingMetrics:
 
 
 def _grid_to_str(grid: Grid) -> str:
+    assert_int_grid(grid, name="grid")
     return "\n".join(" ".join(str(cell) for cell in row) for row in grid)
+
+
+def _same_shape(a: Grid, b: Grid) -> bool:
+    if len(a) != len(b):
+        return False
+    if not a:
+        return not b
+    return all(len(ra) == len(rb) for ra, rb in zip(a, b))
+
+
+def _shape_preserving_pair_edit(a: GridPair, b: GridPair) -> bool:
+    """True when edit can be interpreted as value/color-only changes.
+
+    We intentionally treat any same-shape cell-value edit as "color-only" for this
+    guardrail override: geometry/size did not change, only cell values did.
+    """
+    return _same_shape(a.input, b.input) and _same_shape(a.output, b.output)
 
 
 def build_editing_prompt(
@@ -193,8 +213,25 @@ def run_editing_api_evaluation_once(
     max_norm_edit: float | None = 0.70,
     out_dir: str | Path = "evaluation/editing_eval_results",
 ) -> dict[str, Any]:
+    """Run editing eval; after the model returns, ``raw_response`` is always saved."""
     rng = random.Random(seed)
-    corrupted_pair, target_pair, source = sample_editing_pair(task, rng, include_true=include_true)
+    # Sampling can occasionally hit brittle corruption branches; re-sample on errors.
+    last_sampling_error: Exception | None = None
+    corrupted_pair: GridPair | None = None
+    target_pair: GridPair | None = None
+    source: EditingVariant | None = None
+    for _ in range(16):
+        try:
+            corrupted_pair, target_pair, source = sample_editing_pair(task, rng, include_true=include_true)
+            break
+        except Exception as e:
+            last_sampling_error = e
+            continue
+    if corrupted_pair is None or target_pair is None or source is None:
+        msg = "Editing sampling failed after retries."
+        if last_sampling_error is not None:
+            msg = f"{msg} Last error: {last_sampling_error}"
+        raise RuntimeError(msg)
 
     prompt = build_editing_prompt(
         demonstrations=task.train_pairs,
@@ -216,41 +253,10 @@ def run_editing_api_evaluation_once(
         tools_enabled=tools_enabled,
     )
 
-    pred_pair = parse_editing_prediction(raw)
-
-    rail: dict[str, Any] = {"enabled": max_norm_edit is not None}
-    if max_norm_edit is not None:
-        d_in = normalized_cell_edit_distance_padded(
-            corrupted_pair.input,
-            pred_pair.input,
-        )
-        d_out = normalized_cell_edit_distance_padded(
-            corrupted_pair.output,
-            pred_pair.output,
-        )
-        rail["max_norm_edit"] = max_norm_edit
-        rail["normalized_distance_input"] = d_in
-        rail["normalized_distance_output"] = d_out
-        # Only force a distance failure when both grids exceed the threshold.
-        rail["passed"] = bool(not (d_in > max_norm_edit and d_out > max_norm_edit))
-    else:
-        rail["passed"] = True
-
-    picked = select_verifier_for_task(
-        task,
-        dynamic_pairs=[GridPair(target_pair.input, target_pair.output)],
-    )
-    ok = False
-    if rail["passed"] and picked is not None:
-        _slot, v = picked
-        try:
-            ok = is_equal_grid(v(copy.deepcopy(pred_pair.input)), pred_pair.output)
-        except Exception:
-            ok = False
-    elif rail["passed"]:
-        ok = is_equal_grid(pred_pair.input, target_pair.input) and is_equal_grid(
-            pred_pair.output, target_pair.output
-        )
+    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    out_root = Path(out_dir)
+    out_root.mkdir(parents=True, exist_ok=True)
+    out_path = out_root / f"{task.task_id}_editing_eval_{ts}.json"
 
     result: dict[str, Any] = {
         "task_id": task.task_id,
@@ -265,16 +271,63 @@ def run_editing_api_evaluation_once(
         "raw_response": raw,
         "corrupted_pair": {"input": corrupted_pair.input, "output": corrupted_pair.output},
         "target_pair": {"input": target_pair.input, "output": target_pair.output},
-        "prediction_pair": {"input": pred_pair.input, "output": pred_pair.output},
-        "guardrail": rail,
-        "metrics": {"success": ok},
+        "evaluation_ok": False,
+        "prediction_pair": None,
+        "guardrail": {"enabled": max_norm_edit is not None},
+        "metrics": {"success": False},
     }
+    try:
+        pred_pair = parse_editing_prediction(raw)
 
-    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    out_root = Path(out_dir)
-    out_root.mkdir(parents=True, exist_ok=True)
-    out_path = out_root / f"{task.task_id}_editing_eval_{ts}.json"
-    out_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
+        rail: dict[str, Any] = {"enabled": max_norm_edit is not None}
+        if max_norm_edit is not None:
+            d_in = normalized_cell_edit_distance_padded(
+                corrupted_pair.input,
+                pred_pair.input,
+            )
+            d_out = normalized_cell_edit_distance_padded(
+                corrupted_pair.output,
+                pred_pair.output,
+            )
+            rail["max_norm_edit"] = max_norm_edit
+            rail["normalized_distance_input"] = d_in
+            rail["normalized_distance_output"] = d_out
+            passed = bool(not (d_in > max_norm_edit and d_out > max_norm_edit))
+            if (
+                not passed
+                and source == "color_flip"
+                and _shape_preserving_pair_edit(corrupted_pair, pred_pair)
+            ):
+                passed = True
+                rail["distance_override"] = "color_flip_shape_preserving_edit"
+            rail["passed"] = passed
+        else:
+            rail["passed"] = True
+
+        picked = select_verifier_for_task(
+            task,
+            dynamic_pairs=[GridPair(target_pair.input, target_pair.output)],
+        )
+        ok = False
+        if rail["passed"] and picked is not None:
+            _slot, v = picked
+            try:
+                ok = is_equal_grid(v(copy.deepcopy(pred_pair.input)), pred_pair.output)
+            except Exception:
+                ok = False
+        elif rail["passed"]:
+            ok = is_equal_grid(pred_pair.input, target_pair.input) and is_equal_grid(
+                pred_pair.output, target_pair.output
+            )
+
+        result["prediction_pair"] = {"input": pred_pair.input, "output": pred_pair.output}
+        result["guardrail"] = rail
+        result["metrics"] = {"success": ok}
+        result["evaluation_ok"] = True
+    except Exception as e:
+        result["error"] = str(e)
+
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
     result["result_path"] = str(out_path)
     return result
 
@@ -432,25 +485,51 @@ def sample_editing_pair(
     include_true: bool = False,
 ) -> tuple[GridPair, GridPair, EditingVariant]:
     """Return (corrupted_pair, corrected_pair, source)."""
-    for _ in range(36):
-        src = _sample_editing_variant(rng, include_true=include_true)
-        picked: tuple[GridPair, GridPair] | None = None
-        if src == "h_arc_incorrect":
-            picked = _try_h_arc_incorrect(task, rng)
-        elif src == "corrupted_verifier":
-            picked = _try_corrupted_verifier(task, rng)
-        elif src == "ground_truth":
-            picked = _try_ground_truth_pair(task, rng)
-        else:
-            picked = _try_color_flip(task, rng)
-        if picked is not None:
-            return picked[0], picked[1], src
+    for _ in range(120):
+        try:
+            src = _sample_editing_variant(rng, include_true=include_true)
+            picked: tuple[GridPair, GridPair] | None = None
+            if src == "h_arc_incorrect":
+                picked = _try_h_arc_incorrect(task, rng)
+            elif src == "corrupted_verifier":
+                picked = _try_corrupted_verifier(task, rng)
+            elif src == "ground_truth":
+                picked = _try_ground_truth_pair(task, rng)
+            else:
+                picked = _try_color_flip(task, rng)
+            if picked is None:
+                continue
+            corrupted, target = picked
+            assert_int_grid_pair(corrupted, name="editing corrupted pair")
+            assert_int_grid_pair(target, name="editing target pair")
+            return corrupted, target, src
+        except Exception:
+            # Keep sampling; one broken branch should not fail the entire dimension.
+            continue
 
-    # Last-resort fallback: a color-flip over the first train pair.
-    base = copy.deepcopy(task.train_pairs[0])
-    n_ops = sample_flip_count_favor_one(rng, max_flips=5)
-    corrupted, _ = connected_component_color_flips_on_pair(copy.deepcopy(base), rng, num_ops=n_ops)
-    return corrupted, base, "color_flip"
+    # Last-resort fallback: color flip on any available valid base pair.
+    bases: list[GridPair] = []
+    bases.extend(task.train_pairs)
+    if task.arc_gen_synthetic_pairs:
+        bases.extend(task.arc_gen_synthetic_pairs)
+    if task.arc_gen_generator is not None:
+        try:
+            bases.extend(task.arc_gen_generator(30))
+        except Exception:
+            pass
+    for _ in range(120):
+        if not bases:
+            break
+        try:
+            base = copy.deepcopy(rng.choice(bases))
+            assert_int_grid_pair(base, name="editing fallback base pair")
+            n_ops = sample_flip_count_favor_one(rng, max_flips=5)
+            corrupted, _ = connected_component_color_flips_on_pair(copy.deepcopy(base), rng, num_ops=n_ops)
+            assert_int_grid_pair(corrupted, name="editing fallback corrupted pair")
+            return corrupted, base, "color_flip"
+        except Exception:
+            continue
+    raise RuntimeError(f"{task.task_id}: could not sample a valid editing pair after retries.")
 
 
 class EditingEvaluator(

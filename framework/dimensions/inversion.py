@@ -246,6 +246,7 @@ def run_inversion_api_evaluation_once(
     seed: int = 0,
     out_dir: str | Path = "evaluation/inversion_eval_results",
 ) -> dict[str, Any]:
+    """After the model returns, ``raw_response`` is always written to the eval JSON."""
     task = load_task(task_id)
     evaluator = InversionEvaluator(
         config=DimensionConfig(name=DimensionName.INVERSION, num_instances_per_task=1, random_seed=seed)
@@ -272,8 +273,11 @@ def run_inversion_api_evaluation_once(
         reasoning_effort=reasoning_effort,
         tools_enabled=tools_enabled,
     )
-    pred_input = parse_inversion_prediction(raw)
-    scored = evaluator.score_predictions([inst], [pred_input]).metrics
+
+    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    out_root = Path(out_dir)
+    out_root.mkdir(parents=True, exist_ok=True)
+    out_path = out_root / f"{task_id}_inversion_eval_{ts}.json"
 
     result: dict[str, Any] = {
         "task_id": task_id,
@@ -286,13 +290,19 @@ def run_inversion_api_evaluation_once(
         "raw_response": raw,
         "desired_output": inst.input.desired_output,
         "reference_input": inst.input.reference_input,
-        "prediction_input": pred_input,
-        "metrics": {"success_rate": scored.success_rate},
+        "evaluation_ok": False,
+        "prediction_input": None,
+        "metrics": {"success_rate": 0.0},
     }
-    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    out_root = Path(out_dir)
-    out_root.mkdir(parents=True, exist_ok=True)
-    out_path = out_root / f"{task_id}_inversion_eval_{ts}.json"
-    out_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
+    try:
+        pred_input = parse_inversion_prediction(raw)
+        scored = evaluator.score_predictions([inst], [pred_input]).metrics
+        result["prediction_input"] = pred_input
+        result["metrics"] = {"success_rate": scored.success_rate}
+        result["evaluation_ok"] = True
+    except Exception as e:
+        result["error"] = str(e)
+
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
     result["result_path"] = str(out_path)
     return result

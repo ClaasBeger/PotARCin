@@ -56,6 +56,10 @@ _CATEGORY_WEIGHTS: dict[Category, float] = {
     "color_flip": 0.08 * _NON_POSITIVE_SCALE,
 }
 
+# If a sampled corruption/category cannot yield a valid candidate quickly,
+# stop trying that type and resample category.
+_MAX_SAME_TYPE_TRIES = 10
+
 
 def _sample_category(rng: random.Random, allowed: Sequence[Category]) -> Category:
     cats = list(allowed)
@@ -317,6 +321,12 @@ def _pair_collides_with_items(
     return any(_grid_pairs_equal(pair, it.pair) for it in items)
 
 
+def _input_collides_with_items(
+    pair: GridPair, items: Sequence[DistributionClassificationItem]
+) -> bool:
+    return any(is_equal_grid(pair.input, it.pair.input) for it in items)
+
+
 @dataclass(frozen=True)
 class DistributionClassificationBatch:
     task_id: str
@@ -333,6 +343,25 @@ def _draw_category(
     if retrieval_count >= 2:
         allowed = [c for c in allowed if c != "retrieval"]
     return _sample_category(rng, allowed)
+
+
+def _pair_matches_task_rule(task: ArcTask, pair: GridPair, verifier: Verifier | None = None) -> bool:
+    """True when the pair is accepted by the selected task verifier.
+
+    Used as a safety gate so negative/corrupted classification items are truly
+    inconsistent with the rule.
+    """
+    vf = verifier
+    if vf is None:
+        picked = select_verifier_for_task(task)
+        if picked is None:
+            return False
+        _slot, vf = picked
+    try:
+        out = vf(copy.deepcopy(pair.input))
+    except Exception:
+        return False
+    return is_equal_grid(out, pair.output)
 
 
 def _build_one_item(
@@ -424,6 +453,8 @@ def sample_distribution_classification_batch(
     # Guard: demonstrations should always be valid integer grids; fail fast if not.
     for p in demonstrations:
         assert_int_grid_pair(p, name="demonstration pair")
+    picked_verifier = select_verifier_for_task(task)
+    task_verifier = picked_verifier[1] if picked_verifier is not None else None
     items: List[DistributionClassificationItem] = []
     retrieval_count = 0
 
@@ -434,7 +465,7 @@ def sample_distribution_classification_batch(
             if cat == "retrieval" and retrieval_count >= 2:
                 continue
             # Keep retrying within the same category so collision re-samples preserve type.
-            for _same_cat_try in range(12):
+            for _same_cat_try in range(_MAX_SAME_TYPE_TRIES):
                 rank = retrieval_count if cat == "retrieval" else 0
                 pair, label, meta, used_retrieval = _build_one_item(
                     task_id,
@@ -453,7 +484,15 @@ def sample_distribution_classification_batch(
                     assert_int_grid_pair(pair, name=f"classification item slot {slot}")
                 except Exception:
                     continue
+                # Ensure corruptions are truly corrupt: every negative candidate
+                # must fail verifier consistency, otherwise resample.
+                if not label and _pair_matches_task_rule(task, pair, verifier=task_verifier):
+                    continue
                 if _pair_collides_with_items(pair, items):
+                    continue
+                # Additional uniqueness constraint: do not allow repeated inputs
+                # within the same 5-item batch, regardless of output/category.
+                if _input_collides_with_items(pair, items):
                     continue
                 if used_retrieval:
                     retrieval_count += 1
@@ -469,7 +508,7 @@ def sample_distribution_classification_batch(
 
         if item is None:
             fb_pair: GridPair | None = None
-            for _ in range(120):
+            for _ in range(240):
                 try:
                     cand = copy.deepcopy(task.arc_gen_generator(1)[0])  # type: ignore[misc]
                 except Exception:
@@ -478,9 +517,38 @@ def sample_distribution_classification_batch(
                     assert_int_grid_pair(cand, name=f"fallback classification item slot {slot}")
                 except Exception:
                     continue
+                # Fallback emits dynamic_correct positives; keep this explicit.
+                if not _pair_matches_task_rule(task, cand, verifier=task_verifier):
+                    continue
                 if not _pair_collides_with_items(cand, items):
+                    if _input_collides_with_items(cand, items):
+                        continue
                     fb_pair = cand
                     break
+            # Stronger fallback for strict uniqueness constraints:
+            # sample larger dynamic pools and pick the first non-colliding input/output.
+            if fb_pair is None:
+                for _ in range(24):
+                    try:
+                        pool = task.arc_gen_generator(200)  # type: ignore[misc]
+                    except Exception:
+                        continue
+                    for cand0 in pool:
+                        try:
+                            cand = copy.deepcopy(cand0)
+                            assert_int_grid_pair(
+                                cand, name=f"fallback-pool classification item slot {slot}"
+                            )
+                        except Exception:
+                            continue
+                        if _pair_collides_with_items(cand, items):
+                            continue
+                        if _input_collides_with_items(cand, items):
+                            continue
+                        fb_pair = cand
+                        break
+                    if fb_pair is not None:
+                        break
             if fb_pair is None:
                 raise RuntimeError(
                     f"{task_id}: could not sample a unique classification pair for slot {slot} "

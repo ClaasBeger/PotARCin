@@ -538,7 +538,11 @@ def run_classification_api_evaluation_once(
     seed: int = 0,
     out_dir: str | Path = "evaluation/classification_eval_results",
 ) -> dict[str, Any]:
-    """One-shot classification eval: sample candidates -> prompt -> model -> score."""
+    """One-shot classification eval: sample candidates -> prompt -> model -> score.
+
+    After the model returns, ``raw_response`` is always persisted; parse/score
+    failures set ``evaluation_ok`` false and ``error`` but still write JSON.
+    """
     task = load_task(task_id)
     if not task.train_pairs:
         raise ValueError(f"Task {task_id} has no training pairs.")
@@ -568,17 +572,13 @@ def run_classification_api_evaluation_once(
         tools_enabled=tools_enabled,
     )
 
-    parsed = _extract_json_object(raw)
-    labels = parsed.get("labels")
-    if not isinstance(labels, list):
-        raise ValueError("Model response JSON must contain a list field `labels`.")
-    if len(labels) != len(sampled):
-        raise ValueError(f"Expected {len(sampled)} labels, got {len(labels)}.")
-
     gt = [bool(lbl) for (_p, lbl, _m) in sampled]
-    pred = [bool(x) for x in labels]
-    correct = sum(int(a == b) for a, b in zip(gt, pred))
-    accuracy = correct / len(gt) if gt else 0.0
+    n = len(gt)
+
+    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    out_root = Path(out_dir)
+    out_root.mkdir(parents=True, exist_ok=True)
+    out_path = out_root / f"{task_id}_classification_eval_{ts}.json"
 
     result: dict[str, Any] = {
         "task_id": task_id,
@@ -591,10 +591,7 @@ def run_classification_api_evaluation_once(
         "seed": seed,
         "prompt": prompt,
         "raw_response": raw,
-        "parsed": parsed,
         "ground_truth": gt,
-        "predictions": pred,
-        "metrics": {"accuracy": accuracy, "correct": correct, "total": len(gt)},
         "candidates": [
             {
                 "input": p.input,
@@ -604,13 +601,29 @@ def run_classification_api_evaluation_once(
             }
             for (p, lbl, meta) in sampled
         ],
+        "evaluation_ok": False,
+        "parsed": None,
+        "predictions": None,
+        "metrics": {"accuracy": 0.0, "correct": 0, "total": n},
     }
+    try:
+        parsed = _extract_json_object(raw)
+        labels = parsed.get("labels")
+        if not isinstance(labels, list):
+            raise ValueError("Model response JSON must contain a list field `labels`.")
+        if len(labels) != len(sampled):
+            raise ValueError(f"Expected {len(sampled)} labels, got {len(labels)}.")
+        pred = [bool(x) for x in labels]
+        correct = sum(int(a == b) for a, b in zip(gt, pred))
+        accuracy = correct / n if n else 0.0
+        result["parsed"] = parsed
+        result["predictions"] = pred
+        result["metrics"] = {"accuracy": accuracy, "correct": correct, "total": n}
+        result["evaluation_ok"] = True
+    except Exception as e:
+        result["error"] = str(e)
 
-    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    out_root = Path(out_dir)
-    out_root.mkdir(parents=True, exist_ok=True)
-    out_path = out_root / f"{task_id}_classification_eval_{ts}.json"
-    out_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
     result["result_path"] = str(out_path)
     return result
 
@@ -626,7 +639,11 @@ def run_distribution_classification_api_evaluation_once(
     seed: int = 0,
     out_dir: str | Path = "evaluation/classification_eval_results",
 ) -> dict[str, Any]:
-    """Sample a 5-way distribution batch, prompt the model, parse ``[0/1]×5``, score."""
+    """Sample a 5-way distribution batch, prompt the model, parse ``[0/1]×5``, score.
+
+    After the model returns, ``raw_response`` is always persisted; parse failures
+    set ``evaluation_ok`` false and ``error`` but still write JSON.
+    """
     task = load_task(task_id)
     if not task.train_pairs:
         raise ValueError(f"Task {task_id} has no training pairs.")
@@ -659,11 +676,13 @@ def run_distribution_classification_api_evaluation_once(
         tools_enabled=tools_enabled,
     )
 
-    pred = parse_distribution_classification_prediction(raw)
-    correct = sum(int(bool(a) == bool(b)) for a, b in zip(gt, pred))
-    accuracy = correct / len(gt) if gt else 0.0
-
     test_pairs = [{"input": p.input, "output": p.output} for p in candidates]
+    n_gt = len(gt)
+
+    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    out_root = Path(out_dir)
+    out_root.mkdir(parents=True, exist_ok=True)
+    out_path = out_root / f"{task_id}_distribution_classification_eval_{ts}.json"
 
     result: dict[str, Any] = {
         "task_id": task_id,
@@ -676,20 +695,31 @@ def run_distribution_classification_api_evaluation_once(
         "raw_response": raw,
         "test_pairs": test_pairs,
         "ground_truth": gt,
-        "predictions": pred,
         "item_meta": meta,
+        "evaluation_ok": False,
+        "predictions": None,
         "metrics": {
-            "accuracy": accuracy,
-            "correct": correct,
-            "total": len(gt),
-            "exact_match": int(correct == len(gt)),
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": n_gt,
+            "exact_match": 0,
         },
     }
+    try:
+        pred = parse_distribution_classification_prediction(raw)
+        correct = sum(int(bool(a) == bool(b)) for a, b in zip(gt, pred))
+        accuracy = correct / n_gt if n_gt else 0.0
+        result["predictions"] = pred
+        result["metrics"] = {
+            "accuracy": accuracy,
+            "correct": correct,
+            "total": n_gt,
+            "exact_match": int(correct == n_gt),
+        }
+        result["evaluation_ok"] = True
+    except Exception as e:
+        result["error"] = str(e)
 
-    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    out_root = Path(out_dir)
-    out_root.mkdir(parents=True, exist_ok=True)
-    out_path = out_root / f"{task_id}_distribution_classification_eval_{ts}.json"
     out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
     result["result_path"] = str(out_path)
     return result

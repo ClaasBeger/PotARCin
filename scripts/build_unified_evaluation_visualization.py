@@ -1,6 +1,7 @@
 """Build a single HTML page visualizing all five evaluation dimensions for one task.
 
-Prefers saved eval JSON under ``evaluation/`` when present; otherwise samples from ARC-GEN / samplers.
+Prefers saved eval JSON under ``evaluation/`` when present. Dimensions without a saved eval show
+a short notice only (no synthetic or re-sampled “placeholder” grids).
 
 Usage (from repo root)::
 
@@ -12,9 +13,7 @@ Output defaults to ``Demonstrations/unified_evaluations/<task_id>_unified_evalua
 from __future__ import annotations
 
 import argparse
-import copy
 import json
-import random
 import sys
 from html import escape
 from pathlib import Path
@@ -25,16 +24,11 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from framework.dimensions.classification import parse_distribution_classification_test_pairs_from_prompt
-from framework.dimensions.classification_distribution import (
-    sample_distribution_classification_batch,
-    select_verifier_for_task,
-)
+from framework.dimensions.classification_distribution import select_verifier_for_task
+from framework.dimensions.constrained_generation import build_constrained_generation_prompt
 from framework.dimensions.editing import sample_editing_pair
-from framework.dimensions.inversion import InversionEvaluator
-from framework.dimensions.base import DimensionConfig
 from framework.grids import Grid, GridPair
 from framework.tasks.arc_dataset import load_task
-from framework.tasks.base import DimensionName
 
 _SYMBOL_TO_COLOR = {
     0: "#000000",
@@ -592,27 +586,12 @@ def main() -> None:
             f'<p class="note">File: <code>{escape(str(cls_json_name))}</code>.</p>'
         )
     else:
-        rng_cls = random.Random(0)
-        cls_batch = sample_distribution_classification_batch(task_id, rng_cls)
-        cls_items = list(cls_batch.items)
-        gt = [it.same_distribution for it in cls_items]
-        for i, it in enumerate(cls_items):
-            color = "#2ecc71" if gt[i] else "#e74c3c"
-            try:
-                pair_html = _pair_block("", it.pair, border=color)
-            except (TypeError, ValueError, IndexError) as e:
-                pair_html = (
-                    f'<p class="note">Could not render this pair (bad grid data): {escape(str(e))}</p>'
-                )
-            cls_cards.append(
-                f'<div class="class-item"><div class="badge">Test {i} ({escape(it.category)})</div>'
-                f"{pair_html}</div>"
-            )
-        cls_html = '<div class="class-row">' + "".join(cls_cards) + "</div>"
-        cls_footer = _section_footer(
-            "<p class=\"note\">No classification eval JSON for this task — sample batch with seed <b>0</b> "
-            "(demo only; run a distribution classification eval to record prompts, pairs, and model answers).</p>"
+        cls_html = (
+            "<p class='note'>No classification eval JSON for this task under "
+            "<code>evaluation/classification_eval_results/</code>. "
+            "Run a distribution classification eval to record prompts, pairs, and model answers.</p>"
         )
+        cls_footer = ""
 
     cls_summary = _section_summary(
         _summary_from_prompt(
@@ -653,12 +632,8 @@ def main() -> None:
         if isinstance(pred, dict) and "input" in pred and "output" in pred:
             cg_pair = GridPair(pred["input"], pred["output"])
             cg_footer_inner = f'<p class="note">Source: constrained-generation eval — <code>{escape(cg_json.name)}</code>.</p>'
-    if cg_pair is None and task.arc_gen_generator:
-        try:
-            cg_pair = copy.deepcopy(task.arc_gen_generator(1)[0])
-            cg_footer_inner = '<p class="note">No CG eval JSON; showing one ARC-GEN dynamic pair (same distribution as the task).</p>'
-        except Exception:
-            cg_footer_inner = '<p class="note">Could not sample ARC-GEN dynamic pair.</p>'
+    elif not cg_json and task.train_pairs:
+        cg_prompt = build_constrained_generation_prompt(demonstrations=task.train_pairs)
     cg_summary = _section_summary(
         _summary_from_prompt(
             cg_prompt,
@@ -683,7 +658,12 @@ def main() -> None:
             "</div></div>"
         )
     else:
-        cg_html = "<p class='note'>No pair to show.</p>"
+        cg_html = (
+            "<p class='note'>No constrained-generation eval JSON under "
+            "<code>evaluation/constrained_generation_eval_results/</code> "
+            "(or no valid <code>prediction</code> in the latest file). "
+            "Run a constrained-generation eval to record the model pair and metrics.</p>"
+        )
     if cg_metrics_line:
         cg_footer_inner += f'<div class="metrics">Metrics snapshot: {escape(cg_metrics_line)}</div>'
     cg_block = cg_summary + cg_html + (_section_footer(cg_footer_inner) if cg_footer_inner else "")
@@ -783,36 +763,12 @@ def main() -> None:
                 f'Exact reference-input match: <b>{"yes" if exact_ref_match else "no"}</b>.</p>'
             )
     if not inv_flow:
-        ev = InversionEvaluator(
-            config=DimensionConfig(name=DimensionName.INVERSION, num_instances_per_task=1, random_seed=0)
+        inv_flow = (
+            "<p class='note'>No inversion eval JSON with model output under "
+            "<code>evaluation/inversion_eval_results/</code>. "
+            "Run an inversion eval to record the prompt, reference input, and model prediction.</p>"
         )
-        insts = ev.generate_instances([task])
-        if insts:
-            inst = insts[0]
-            des = inst.input.desired_output
-            ref = inst.target
-            inv_flow = (
-                '<div class="flow">'
-                + _single_grid_card(
-                    title="Corresponding input (reference)",
-                    grid=ref,
-                    border="#2ecc71",
-                    cell_px=inv_cell,
-                    row_label="Input",
-                )
-                + _arrow(points_left=True)
-                + _single_grid_card(
-                    title="Given output (target)",
-                    grid=des,
-                    border="#5c9ded",
-                    cell_px=inv_cell,
-                    row_label="Output",
-                )
-                + "</div>"
-            )
-            inv_footer_inner = "<p class='note'>No inversion eval JSON; sampled ARC-GEN dynamic instance (seed 0).</p>"
-        else:
-            inv_flow = "<p class='note'>Could not build inversion instance.</p>"
+        inv_footer_inner = ""
     inv_summary = _section_summary(
         _summary_from_prompt(
             inv_prompt,
