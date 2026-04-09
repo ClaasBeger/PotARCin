@@ -22,7 +22,13 @@ from framework.corruption.golf_ast import GolfSource, load_and_corrupt_golf_veri
 from framework.corruption.h_arc import load_h_arc_incorrect_outputs_for_task
 from framework.corruption.nearest_inputs import find_nearest_alternative_instances
 from framework.corruption.verifier_ast import load_and_corrupt_re_arc_verifier
-from framework.grids import GridPair, connected_component_color_flips_on_pair, is_equal_grid, sample_flip_count_favor_one
+from framework.grids import (
+    GridPair,
+    assert_int_grid_pair,
+    connected_component_color_flips_on_pair,
+    is_equal_grid,
+    sample_flip_count_favor_one,
+)
 from framework.tasks.arc_dataset import load_task
 from framework.tasks.base import ArcTask, Verifier
 from framework.verifier_selection import select_verifier_for_task
@@ -162,7 +168,12 @@ def _try_corrupted_pair(task_id: str, task: ArcTask, rng: random.Random) -> Grid
                     max_normalized_cell_edit_distance=0.70,
                 )
                 bad = corrupt_fn(copy.deepcopy(inp))
-                return GridPair(inp, bad)
+                pair = GridPair(inp, bad)
+                try:
+                    assert_int_grid_pair(pair, name="corrupted_verifier pair")
+                except Exception:
+                    continue
+                return pair
             except Exception:
                 continue
 
@@ -178,7 +189,12 @@ def _try_corrupted_pair(task_id: str, task: ArcTask, rng: random.Random) -> Grid
                     max_normalized_cell_edit_distance=0.70,
                 )
                 bad = corrupt_fn(copy.deepcopy(inp))
-                return GridPair(inp, bad)
+                pair = GridPair(inp, bad)
+                try:
+                    assert_int_grid_pair(pair, name="corrupted_verifier pair")
+                except Exception:
+                    continue
+                return pair
             except Exception:
                 continue
 
@@ -193,7 +209,12 @@ def _try_corrupted_pair(task_id: str, task: ArcTask, rng: random.Random) -> Grid
                     max_normalized_cell_edit_distance=0.70,
                 )
                 bad = corrupt_fn(copy.deepcopy(inp))
-                return GridPair(inp, bad)
+                pair = GridPair(inp, bad)
+                try:
+                    assert_int_grid_pair(pair, name="corrupted_verifier pair")
+                except Exception:
+                    continue
+                return pair
             except Exception:
                 pass
             for src in ("google", "keymoon", "neurips"):
@@ -208,7 +229,12 @@ def _try_corrupted_pair(task_id: str, task: ArcTask, rng: random.Random) -> Grid
                         max_normalized_cell_edit_distance=0.70,
                     )
                     bad = corrupt_fn(copy.deepcopy(inp))
-                    return GridPair(inp, bad)
+                    pair = GridPair(inp, bad)
+                    try:
+                        assert_int_grid_pair(pair, name="corrupted_verifier pair")
+                    except Exception:
+                        continue
+                    return pair
                 except Exception:
                     continue
     return None
@@ -228,6 +254,10 @@ def _try_color_flip_pair(task: ArcTask, rng: random.Random) -> GridPair | None:
     base = copy.deepcopy(rng.choice(opts))
     n_ops = sample_flip_count_favor_one(rng, max_flips=5)
     flipped, _ = connected_component_color_flips_on_pair(base, rng, num_ops=n_ops)
+    try:
+        assert_int_grid_pair(flipped, name="color_flip pair")
+    except Exception:
+        return None
     return flipped
 
 
@@ -259,7 +289,12 @@ def _try_h_arc_pair(task: ArcTask, rng: random.Random) -> GridPair | None:
     (picked,) = rng.choices(rows, weights=weights, k=1)
     inp = copy.deepcopy(rng.choice(task.test_inputs))
     out = copy.deepcopy(picked.output_grid)
-    return GridPair(inp, out)
+    pair = GridPair(inp, out)
+    try:
+        assert_int_grid_pair(pair, name="h_arc_incorrect pair")
+    except Exception:
+        return None
+    return pair
 
 
 @dataclass(frozen=True)
@@ -270,6 +305,16 @@ class DistributionClassificationItem:
     same_distribution: bool
     category: Category
     meta: dict[str, object]
+
+
+def _grid_pairs_equal(a: GridPair, b: GridPair) -> bool:
+    return is_equal_grid(a.input, b.input) and is_equal_grid(a.output, b.output)
+
+
+def _pair_collides_with_items(
+    pair: GridPair, items: Sequence[DistributionClassificationItem]
+) -> bool:
+    return any(_grid_pairs_equal(pair, it.pair) for it in items)
 
 
 @dataclass(frozen=True)
@@ -376,42 +421,73 @@ def sample_distribution_classification_batch(
         raise ValueError(f"Task {task_id} has no train pairs.")
 
     demonstrations = list(task.train_pairs)
+    # Guard: demonstrations should always be valid integer grids; fail fast if not.
+    for p in demonstrations:
+        assert_int_grid_pair(p, name="demonstration pair")
     items: List[DistributionClassificationItem] = []
     retrieval_count = 0
 
     for slot in range(5):
         item: Optional[DistributionClassificationItem] = None
-        for _attempt in range(36):
+        for _attempt in range(12):
             cat = _draw_category(rng, retrieval_count=retrieval_count)
             if cat == "retrieval" and retrieval_count >= 2:
                 continue
-            rank = retrieval_count if cat == "retrieval" else 0
-            pair, label, meta, used_retrieval = _build_one_item(
-                task_id,
-                task,
-                rng,
-                cat,
-                retrieval_rank=rank,
-                neighbor_dynamic=neighbor_dynamic,
-                cross_pool=cross_pool,
-            )
-            meta["slot"] = slot
-            if pair is None:
-                continue
-            if used_retrieval:
-                retrieval_count += 1
-            item = DistributionClassificationItem(
-                pair=pair,
-                same_distribution=label,
-                category=cat,
-                meta=meta,
-            )
-            break
+            # Keep retrying within the same category so collision re-samples preserve type.
+            for _same_cat_try in range(12):
+                rank = retrieval_count if cat == "retrieval" else 0
+                pair, label, meta, used_retrieval = _build_one_item(
+                    task_id,
+                    task,
+                    rng,
+                    cat,
+                    retrieval_rank=rank,
+                    neighbor_dynamic=neighbor_dynamic,
+                    cross_pool=cross_pool,
+                )
+                meta["slot"] = slot
+                if pair is None:
+                    continue
+                # Hard guard: never let non-int artifacts into prompts / logs.
+                try:
+                    assert_int_grid_pair(pair, name=f"classification item slot {slot}")
+                except Exception:
+                    continue
+                if _pair_collides_with_items(pair, items):
+                    continue
+                if used_retrieval:
+                    retrieval_count += 1
+                item = DistributionClassificationItem(
+                    pair=pair,
+                    same_distribution=label,
+                    category=cat,
+                    meta=meta,
+                )
+                break
+            if item is not None:
+                break
 
         if item is None:
-            pair = copy.deepcopy(task.arc_gen_generator(1)[0])  # type: ignore[misc]
+            fb_pair: GridPair | None = None
+            for _ in range(120):
+                try:
+                    cand = copy.deepcopy(task.arc_gen_generator(1)[0])  # type: ignore[misc]
+                except Exception:
+                    continue
+                try:
+                    assert_int_grid_pair(cand, name=f"fallback classification item slot {slot}")
+                except Exception:
+                    continue
+                if not _pair_collides_with_items(cand, items):
+                    fb_pair = cand
+                    break
+            if fb_pair is None:
+                raise RuntimeError(
+                    f"{task_id}: could not sample a unique classification pair for slot {slot} "
+                    f"after exhausting category attempts and dynamic fallbacks."
+                )
             item = DistributionClassificationItem(
-                pair=pair,
+                pair=fb_pair,
                 same_distribution=True,
                 category="dynamic_correct",
                 meta={"slot": slot, "kind": "fallback_dynamic_correct"},

@@ -24,6 +24,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
+from framework.dimensions.classification import parse_distribution_classification_test_pairs_from_prompt
 from framework.dimensions.classification_distribution import (
     sample_distribution_classification_batch,
     select_verifier_for_task,
@@ -48,21 +49,35 @@ _SYMBOL_TO_COLOR = {
     9: "#870C25",
 }
 
+_INVALID_CELL_BG = "#6a1b9a"
+
+
+def _cell_background(cell: Any) -> str:
+    """ARC cells are ints 0–9; corrupted or bad JSON may nest lists/tuples."""
+    if isinstance(cell, bool):
+        cell = int(cell)
+    if isinstance(cell, int) and 0 <= cell <= 9:
+        return _SYMBOL_TO_COLOR.get(cell, "#000000")
+    return _INVALID_CELL_BG
+
 
 def _grid_html(grid: Grid, *, cell_px: int = 16) -> str:
-    h = len(grid)
-    w = len(grid[0]) if h else 0
-    rows: list[str] = []
-    for r in range(h):
-        cells = []
-        for c in range(w):
-            sym = int(grid[r][c])
-            color = _SYMBOL_TO_COLOR.get(sym, "#000000")
-            cells.append(
-                f'<span class="cell" style="width:{cell_px}px;height:{cell_px}px;background:{color};"></span>'
-            )
-        rows.append('<div class="row">' + "".join(cells) + "</div>")
-    return '<div class="grid">' + "".join(rows) + "</div>"
+    try:
+        h = len(grid)
+        w = len(grid[0]) if h else 0
+        rows: list[str] = []
+        for r in range(h):
+            cells = []
+            row = grid[r]
+            for c in range(w):
+                color = _cell_background(row[c])
+                cells.append(
+                    f'<span class="cell" style="width:{cell_px}px;height:{cell_px}px;background:{color};"></span>'
+                )
+            rows.append('<div class="row">' + "".join(cells) + "</div>")
+        return '<div class="grid">' + "".join(rows) + "</div>"
+    except (TypeError, ValueError, IndexError) as e:
+        return f'<p class="note">Invalid grid for display: {escape(str(e))}</p>'
 
 
 def _pair_block(title: str, pair: GridPair, *, border: str, cell_px: int = 16) -> str:
@@ -308,6 +323,16 @@ section h2 {{
   text-align: center;
   margin-bottom: 0.35rem;
 }}
+.class-answers {{
+  font-size: 0.72rem;
+  text-align: center;
+  margin-bottom: 0.45rem;
+  color: #aeb4bf;
+}}
+.class-answers.class-mismatch {{
+  color: #f5b041;
+  font-weight: 500;
+}}
 .flow {{
   display: flex;
   flex-wrap: wrap;
@@ -431,10 +456,27 @@ def main() -> None:
         def_footer_inner = f'<p class="note">Source: latest definition eval — <code>{escape(str(def_json.name))}</code>. Model: {escape(str(data.get("model", "")))}.</p>'
         m = data.get("metrics", {})
         if m:
-            tr = (m.get("train") or {}).get("success_rate", "—")
-            te = (m.get("test") or {}).get("success_rate", "—")
-            d50 = (m.get("dynamic50") or {}).get("success_rate", "—")
-            def_footer_inner += f"<div class=\"metrics\">Metrics snapshot: train {tr}, test {te}, dynamic50 {d50}</div>"
+            metric_order = (
+                ("train", "train"),
+                ("test", "test"),
+                ("stable", "ARC-GEN stable"),
+                ("dynamic50", "dynamic50"),
+                ("re_arc_stable", "Re-ARC stable"),
+                ("re_arc_dynamic50", "Re-ARC dynamic50"),
+            )
+            parts: list[str] = []
+            for key, label in metric_order:
+                mm = m.get(key)
+                if not isinstance(mm, dict):
+                    continue
+                sr = mm.get("success_rate")
+                if sr is None:
+                    continue
+                parts.append(f"{label} {sr}")
+            if parts:
+                def_footer_inner += (
+                    f"<div class=\"metrics\">Metrics snapshot: {', '.join(parts)}</div>"
+                )
     else:
         picked = select_verifier_for_task(task)
         vhint = ""
@@ -455,25 +497,123 @@ def main() -> None:
     )
     def_block = def_summary + def_body + (_section_footer(def_footer_inner) if def_footer_inner else "")
 
-    # --- Classification: resample with seed from eval if possible ---
+    # --- Classification: exact test pairs + gold / model labels from latest eval JSON when present ---
     cls_prompt: Optional[str] = None
     cls_seed = 0
+    cls_json_name = ""
+    cls_pairs: Optional[list[GridPair]] = None
+    cls_gt: list[bool] = []
+    cls_pred: list[bool] = []
+    cls_meta: list[Any] = []
+    cls_raw = ""
     if cls_json:
         _cj = _load_json(cls_json)
         cls_seed = int(_cj.get("seed", 0))
         cls_prompt = _cj.get("prompt") if isinstance(_cj.get("prompt"), str) else None
-    rng_cls = random.Random(cls_seed)
-    cls_batch = sample_distribution_classification_batch(task_id, rng_cls)
-    cls_items = list(cls_batch.items)
-    gt = [it.same_distribution for it in cls_items]
-    cls_cards = []
-    for i, it in enumerate(cls_items):
-        color = "#2ecc71" if gt[i] else "#e74c3c"
-        cls_cards.append(
-            f'<div class="class-item"><div class="badge">Test {i} ({escape(it.category)})</div>'
-            f'{_pair_block("", it.pair, border=color)}</div>'
+        cls_json_name = cls_json.name
+        _rr = _cj.get("raw_response")
+        cls_raw = _rr if isinstance(_rr, str) else ""
+        _gt = _cj.get("ground_truth")
+        _pr = _cj.get("predictions")
+        if isinstance(_gt, list):
+            cls_gt = [bool(x) for x in _gt]
+        if isinstance(_pr, list):
+            cls_pred = [bool(x) for x in _pr]
+        _im = _cj.get("item_meta")
+        if isinstance(_im, list):
+            cls_meta = _im
+        _tp = _cj.get("test_pairs")
+        if isinstance(_tp, list) and len(_tp) == 5:
+            try:
+                cls_pairs = [GridPair(d["input"], d["output"]) for d in _tp if isinstance(d, dict)]
+                if len(cls_pairs) != 5:
+                    cls_pairs = None
+            except (KeyError, TypeError, ValueError):
+                cls_pairs = None
+        if cls_pairs is None and cls_prompt:
+            try:
+                cls_pairs = parse_distribution_classification_test_pairs_from_prompt(cls_prompt)
+            except ValueError:
+                cls_pairs = None
+
+    cls_cards: list[str] = []
+    if cls_pairs is not None and len(cls_pairs) == 5:
+        for i, it in enumerate(cls_pairs):
+            cat = ""
+            if i < len(cls_meta) and isinstance(cls_meta[i], dict):
+                cat = str(cls_meta[i].get("category", ""))
+            g = cls_gt[i] if i < len(cls_gt) else None
+            pr = cls_pred[i] if i < len(cls_pred) else None
+            border = "#2ecc71" if g else "#e74c3c"
+            if g is None:
+                border = "#7f8c8d"
+            try:
+                pair_html = _pair_block("", it, border=border)
+            except (TypeError, ValueError, IndexError) as e:
+                pair_html = (
+                    f'<p class="note">Could not render this pair (bad grid data): {escape(str(e))}</p>'
+                )
+            g_s = "1" if g else ("0" if g is False else "?")
+            p_s = "1" if pr else ("0" if pr is False else "?")
+            if g is not None and pr is not None:
+                verdict = "✓ match" if g == pr else "✗ mismatch"
+                mismatch_cls = "" if g == pr else " class-mismatch"
+            else:
+                verdict = ""
+                mismatch_cls = ""
+            badge = f"Test {i}" + (f" ({escape(cat)})" if cat else "")
+            cls_cards.append(
+                f'<div class="class-item"><div class="badge">{badge}</div>'
+                f'<div class="class-answers{mismatch_cls}">Gold: <b>{g_s}</b> · Model: <b>{p_s}</b>'
+                f"{(f' · {escape(verdict)}' if verdict else '')}</div>"
+                f"{pair_html}</div>"
+            )
+        cls_html = '<div class="class-row">' + "".join(cls_cards) + "</div>"
+        raw_pre = (
+            f'<p class="note" style="margin-top:0.85rem">Raw model response:</p>'
+            f'<pre class="code">{escape(cls_raw.strip())}</pre>'
+            if cls_raw.strip()
+            else ""
         )
-    cls_html = '<div class="class-row">' + "".join(cls_cards) + "</div>"
+        cls_footer = _section_footer(
+            f'<p class="note">Source: <code>{escape(str(cls_json_name))}</code>. '
+            f"Pairs come from the saved eval (<code>test_pairs</code> if present, otherwise parsed from "
+            f"the logged <code>prompt</code>) — not re-sampled. Eval seed: <b>{cls_seed}</b>. "
+            f"Card border: ground truth same-distribution (green = 1, red = 0).</p>"
+            + raw_pre
+        )
+    elif cls_json:
+        cls_html = (
+            "<p class=\"note\">Could not read the five test pairs from this classification eval file "
+            "(expected <code>test_pairs</code> or a parseable <code>prompt</code>). Re-sampling would "
+            "not match the logged run, so nothing is shown here.</p>"
+        )
+        cls_footer = _section_footer(
+            f'<p class="note">File: <code>{escape(str(cls_json_name))}</code>.</p>'
+        )
+    else:
+        rng_cls = random.Random(0)
+        cls_batch = sample_distribution_classification_batch(task_id, rng_cls)
+        cls_items = list(cls_batch.items)
+        gt = [it.same_distribution for it in cls_items]
+        for i, it in enumerate(cls_items):
+            color = "#2ecc71" if gt[i] else "#e74c3c"
+            try:
+                pair_html = _pair_block("", it.pair, border=color)
+            except (TypeError, ValueError, IndexError) as e:
+                pair_html = (
+                    f'<p class="note">Could not render this pair (bad grid data): {escape(str(e))}</p>'
+                )
+            cls_cards.append(
+                f'<div class="class-item"><div class="badge">Test {i} ({escape(it.category)})</div>'
+                f"{pair_html}</div>"
+            )
+        cls_html = '<div class="class-row">' + "".join(cls_cards) + "</div>"
+        cls_footer = _section_footer(
+            "<p class=\"note\">No classification eval JSON for this task — sample batch with seed <b>0</b> "
+            "(demo only; run a distribution classification eval to record prompts, pairs, and model answers).</p>"
+        )
+
     cls_summary = _section_summary(
         _summary_from_prompt(
             cls_prompt,
@@ -481,20 +621,35 @@ def main() -> None:
             with_post_example_tail=False,
         )
     )
-    cls_footer = _section_footer(
-        f'<p class="note">Sampled with seed <b>{cls_seed}</b> (matches latest classification eval when that file exists). '
-        f"Green border = same distribution; red = not.</p>"
-    )
     cls_block = cls_summary + cls_html + cls_footer
 
     # --- Constrained generation ---
     cg_prompt: Optional[str] = None
     cg_pair: Optional[GridPair] = None
     cg_footer_inner = ""
+    cg_success: Optional[bool] = None
+    cg_metrics_line = ""
     if cg_json:
         d = _load_json(cg_json)
         cg_prompt = d.get("prompt") if isinstance(d.get("prompt"), str) else None
         pred = d.get("prediction")
+        m = d.get("metrics")
+        if isinstance(m, dict):
+            sr = m.get("success_rate")
+            if isinstance(sr, (int, float)):
+                cg_success = float(sr) >= 0.999999
+            metric_parts: list[str] = []
+            for key, label in (
+                ("success_rate", "success_rate"),
+                ("rejected_as_demo_copy", "demo_copy"),
+                ("rejected_no_change", "no_change"),
+                ("rejected_verifier_missing", "verifier_missing"),
+                ("rejected_verifier_mismatch", "verifier_mismatch"),
+            ):
+                if key in m:
+                    metric_parts.append(f"{label}={m[key]}")
+            if metric_parts:
+                cg_metrics_line = ", ".join(metric_parts)
         if isinstance(pred, dict) and "input" in pred and "output" in pred:
             cg_pair = GridPair(pred["input"], pred["output"])
             cg_footer_inner = f'<p class="note">Source: constrained-generation eval — <code>{escape(cg_json.name)}</code>.</p>'
@@ -512,9 +667,25 @@ def main() -> None:
         )
     )
     if cg_pair:
-        cg_html = _constrained_gen_side_by_side(cg_pair, cell_px=28)
+        cg_border = "#5c9ded"
+        cg_title = ""
+        if cg_success is True:
+            cg_border = "#2ecc71"
+            cg_title = '<p class="note" style="text-align:center;margin:0 0 0.75rem">Model pair status: <b>valid under rule</b></p>'
+        elif cg_success is False:
+            cg_border = "#e74c3c"
+            cg_title = '<p class="note" style="text-align:center;margin:0 0 0.75rem">Model pair status: <b>invalid under rule</b></p>'
+        cg_html = cg_title + (
+            '<div class="cg-center">'
+            '<div class="cg-side-by-side">'
+            f'{_single_grid_card(title="Generated input", grid=cg_pair.input, border=cg_border, cell_px=28, row_label="Input")}'
+            f'{_single_grid_card(title="Generated output", grid=cg_pair.output, border=cg_border, cell_px=28, row_label="Output")}'
+            "</div></div>"
+        )
     else:
         cg_html = "<p class='note'>No pair to show.</p>"
+    if cg_metrics_line:
+        cg_footer_inner += f'<div class="metrics">Metrics snapshot: {escape(cg_metrics_line)}</div>'
     cg_block = cg_summary + cg_html + (_section_footer(cg_footer_inner) if cg_footer_inner else "")
 
     # --- Editing ---
@@ -525,29 +696,33 @@ def main() -> None:
         d = _load_json(ed_json)
         ed_prompt = d.get("prompt") if isinstance(d.get("prompt"), str) else None
         cp = d.get("corrupted_pair")
-        tp = d.get("target_pair")
-        if isinstance(cp, dict) and isinstance(tp, dict):
+        pp = d.get("prediction_pair")
+        m = d.get("metrics")
+        success_flag: Optional[bool] = None
+        if isinstance(m, dict) and isinstance(m.get("success"), bool):
+            success_flag = bool(m.get("success"))
+        if isinstance(cp, dict) and isinstance(pp, dict):
             c_pair = GridPair(cp["input"], cp["output"])
-            t_pair = GridPair(tp["input"], tp["output"])
+            p_pair = GridPair(pp["input"], pp["output"])
+            pred_border = "#7f8c8d"
+            pred_tag = ""
+            if success_flag is True:
+                pred_border = "#2ecc71"
+                pred_tag = " (success)"
+            elif success_flag is False:
+                pred_border = "#e74c3c"
+                pred_tag = " (failure)"
             ed_flow = (
                 '<div class="flow">'
                 + _pair_block("Corrupted (candidate)", c_pair, border="#e74c3c")
                 + _arrow()
-                + _pair_block("Corrected (ground truth)", t_pair, border="#2ecc71")
+                + _pair_block(f"Model-corrected pair{pred_tag}", p_pair, border=pred_border)
                 + "</div>"
             )
             ed_footer_inner = f'<p class="note">Source: editing eval — <code>{escape(ed_json.name)}</code>.</p>'
     if not ed_flow:
-        rng_ed = random.Random(0)
-        corrupted, target, src = sample_editing_pair(task, rng_ed, include_true=True)
-        ed_flow = (
-            '<div class="flow">'
-            + _pair_block(f"Corrupted ({src})", corrupted, border="#e74c3c")
-            + _arrow()
-            + _pair_block("Corrected (ground truth)", target, border="#2ecc71")
-            + "</div>"
-        )
-        ed_footer_inner = "<p class='note'>No editing eval JSON; sampled editing pair with <code>include_true=True</code>.</p>"
+        ed_flow = "<p class='note'>No editing eval JSON with model output found for this task.</p>"
+        ed_footer_inner = ""
     ed_summary = _section_summary(
         _summary_from_prompt(
             ed_prompt,
@@ -557,7 +732,7 @@ def main() -> None:
     )
     ed_block = ed_summary + ed_flow + _section_footer(ed_footer_inner)
 
-    # --- Inversion (display: input ← output; arrow points left toward the inferred input) ---
+    # --- Inversion (display: model input ← output; omit reference input card) ---
     inv_prompt: Optional[str] = None
     inv_flow = ""
     inv_footer_inner = ""
@@ -567,27 +742,46 @@ def main() -> None:
         inv_prompt = d.get("prompt") if isinstance(d.get("prompt"), str) else None
         des = d.get("desired_output")
         ref = d.get("reference_input")
-        if des is not None and ref is not None:
-            inv_flow = (
-                '<div class="flow">'
-                + _single_grid_card(
-                    title="Corresponding input (reference)",
-                    grid=ref,
-                    border="#2ecc71",
+        pred = d.get("prediction_input")
+        if des is not None and ref is not None and pred is not None:
+            exact_ref_match = pred == ref
+            inv_metrics = d.get("metrics")
+            inv_success: Optional[bool] = None
+            if isinstance(inv_metrics, dict):
+                if isinstance(inv_metrics.get("success"), bool):
+                    inv_success = bool(inv_metrics.get("success"))
+                elif isinstance(inv_metrics.get("success_rate"), (int, float)):
+                    inv_success = float(inv_metrics.get("success_rate")) >= 0.999999
+            pred_border = "#7f8c8d"
+            pred_title = "Model-generated input"
+            if inv_success is True:
+                pred_border = "#2ecc71"
+                pred_title = "Model-generated input (valid under rule)"
+            elif inv_success is False:
+                pred_border = "#e74c3c"
+                pred_title = "Model-generated input (invalid under rule)"
+            inv_parts = [
+                _single_grid_card(
+                    title=pred_title,
+                    grid=pred,
+                    border=pred_border,
                     cell_px=inv_cell,
                     row_label="Input",
-                )
-                + _arrow(points_left=True)
-                + _single_grid_card(
+                ),
+                _arrow(points_left=True),
+                _single_grid_card(
                     title="Given output (target)",
                     grid=des,
                     border="#5c9ded",
                     cell_px=inv_cell,
                     row_label="Output",
-                )
-                + "</div>"
+                ),
+            ]
+            inv_flow = '<div class="flow">' + "".join(inv_parts) + "</div>"
+            inv_footer_inner = (
+                f'<p class="note">Source: inversion eval — <code>{escape(inv_json.name)}</code>. '
+                f'Exact reference-input match: <b>{"yes" if exact_ref_match else "no"}</b>.</p>'
             )
-            inv_footer_inner = f'<p class="note">Source: inversion eval — <code>{escape(inv_json.name)}</code>.</p>'
     if not inv_flow:
         ev = InversionEvaluator(
             config=DimensionConfig(name=DimensionName.INVERSION, num_instances_per_task=1, random_seed=0)

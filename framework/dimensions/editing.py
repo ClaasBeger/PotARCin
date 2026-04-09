@@ -231,7 +231,8 @@ def run_editing_api_evaluation_once(
         rail["max_norm_edit"] = max_norm_edit
         rail["normalized_distance_input"] = d_in
         rail["normalized_distance_output"] = d_out
-        rail["passed"] = bool(d_in <= max_norm_edit and d_out <= max_norm_edit)
+        # Only force a distance failure when both grids exceed the threshold.
+        rail["passed"] = bool(not (d_in > max_norm_edit and d_out > max_norm_edit))
     else:
         rail["passed"] = True
 

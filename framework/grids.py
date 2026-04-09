@@ -18,6 +18,53 @@ class GridPair:
     output: Grid
 
 
+def is_int_grid(
+    grid: object,
+    *,
+    allow_empty: bool = True,
+    min_color: int = 0,
+    max_color: int = 9,
+) -> bool:
+    """Return True iff *grid* is a list-of-lists of ints in [min_color, max_color]."""
+    if not isinstance(grid, list):
+        return False
+    if not grid:
+        return allow_empty
+    if not all(isinstance(row, list) for row in grid):
+        return False
+    if not all(row for row in grid):
+        # empty rows aren't valid ARC grids
+        return False
+    w = len(grid[0])
+    if w == 0:
+        return False
+    for row in grid:
+        if len(row) != w:
+            return False
+        for cell in row:
+            if not isinstance(cell, int):
+                return False
+            if cell < min_color or cell > max_color:
+                return False
+    return True
+
+
+def is_int_grid_pair(pair: object) -> bool:
+    if not isinstance(pair, GridPair):
+        return False
+    return is_int_grid(pair.input) and is_int_grid(pair.output)
+
+
+def assert_int_grid(grid: object, *, name: str = "grid") -> None:
+    if not is_int_grid(grid):
+        raise ValueError(f"{name} must be a rectangular list-of-lists of ints in [0, 9]")
+
+
+def assert_int_grid_pair(pair: object, *, name: str = "pair") -> None:
+    if not is_int_grid_pair(pair):
+        raise ValueError(f"{name} must contain only integer grids (cells 0–9)")
+
+
 def is_equal_grid(a: Grid, b: Grid) -> bool:
     """Return True if two grids are structurally and element-wise equal."""
     if len(a) != len(b):

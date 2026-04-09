@@ -20,7 +20,7 @@ from framework.dimensions.base import (
 from framework.dimensions.classification_distribution import (
     sample_distribution_classification_batch,
 )
-from framework.grids import Grid, GridPair
+from framework.grids import Grid, GridPair, assert_int_grid
 from framework.tasks.base import ArcTask, DimensionName
 from framework.tasks.arc_dataset import load_task, iter_tasks
 
@@ -223,6 +223,7 @@ def _normalize_five_binary_labels(pred: Sequence[Union[bool, int]]) -> list[bool
 
 
 def _grid_to_str(grid: Grid) -> str:
+    assert_int_grid(grid, name="grid")
     return "\n".join(" ".join(str(cell) for cell in row) for row in grid)
 
 
@@ -309,6 +310,59 @@ def build_distribution_classification_prompt(
         "Output nothing else: no other text, no markdown code fences, and no explanation."
     )
     return "\n".join(lines)
+
+
+def _parse_space_separated_grid(block: str) -> Grid:
+    rows: list[list[int]] = []
+    for line in block.split("\n"):
+        line_st = line.strip()
+        if not line_st:
+            continue
+        rows.append([int(x) for x in line_st.split()])
+    if not rows:
+        raise ValueError("empty grid in prompt fragment")
+    w = len(rows[0])
+    if any(len(r) != w for r in rows):
+        raise ValueError("jagged grid in prompt fragment")
+    return rows
+
+
+def parse_distribution_classification_test_pairs_from_prompt(prompt: str) -> list[GridPair]:
+    """Rebuild the five test pairs from a saved distribution-classification prompt.
+
+    Matches :func:`build_distribution_classification_prompt` (``Test 0``…``Test 4`` blocks
+    between the ``Test pairs`` header and ``Your final answer must``), including prompts
+    that use a Unicode ellipsis (``…``) in the header line.
+    """
+    m = re.search(r"Test pairs \(evaluate each in order, index 0 .{1,5}4\):\s*", prompt)
+    if not m:
+        raise ValueError("distribution classification prompt: missing 'Test pairs' header")
+    tail = "\n\nYour final answer must be"
+    k = prompt.find(tail, m.end())
+    if k < 0:
+        raise ValueError("distribution classification prompt: missing answer tail marker")
+    block = prompt[m.end() : k].strip()
+    chunks = re.split(r"(?=^Test \d+:\s*$)", block, flags=re.MULTILINE)
+    indexed: list[tuple[int, GridPair]] = []
+    for ch in chunks:
+        ch_st = ch.strip()
+        if not ch_st:
+            continue
+        mm = re.match(
+            r"^Test (\d+):\s*\nInput:\s*\n(.*?)\nOutput:\s*\n(.*)$",
+            ch_st,
+            re.DOTALL,
+        )
+        if not mm:
+            raise ValueError(f"distribution classification prompt: bad test block: {ch_st[:80]!r}")
+        idx = int(mm.group(1))
+        inp = _parse_space_separated_grid(mm.group(2).strip())
+        out = _parse_space_separated_grid(mm.group(3).strip())
+        indexed.append((idx, GridPair(inp, out)))
+    indexed.sort(key=lambda t: t[0])
+    if len(indexed) != 5 or [t[0] for t in indexed] != list(range(5)):
+        raise ValueError(f"distribution classification prompt: expected Test 0–4, got {indexed!r}")
+    return [pair for _i, pair in indexed]
 
 
 def _openai_responses_completion(
@@ -609,6 +663,8 @@ def run_distribution_classification_api_evaluation_once(
     correct = sum(int(bool(a) == bool(b)) for a, b in zip(gt, pred))
     accuracy = correct / len(gt) if gt else 0.0
 
+    test_pairs = [{"input": p.input, "output": p.output} for p in candidates]
+
     result: dict[str, Any] = {
         "task_id": task_id,
         "model": model,
@@ -618,6 +674,7 @@ def run_distribution_classification_api_evaluation_once(
         "seed": seed,
         "prompt": prompt,
         "raw_response": raw,
+        "test_pairs": test_pairs,
         "ground_truth": gt,
         "predictions": pred,
         "item_meta": meta,
