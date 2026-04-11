@@ -8,7 +8,7 @@ per-task eval JSONs under ``evaluation/`` are shown (same logic as
 Usage::
 
     python scripts/build_test_run_unified_visualizations.py \\
-        --run-json evaluation/multi_dimension_eval_runs/run_2026-04-08_13-57-30.json \\
+        --run-json evaluation/multi_dimension_eval_runs/Test_Run_2026-04-08/run_2026-04-08_13-57-30.json \\
         --out-dir Demonstrations/Test_Run
 """
 

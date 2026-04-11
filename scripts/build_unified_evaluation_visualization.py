@@ -202,7 +202,11 @@ def _constrained_gen_side_by_side(pair: GridPair, *, cell_px: int = 26) -> str:
 def _latest_json(directory: Path, task_id: str) -> Optional[Path]:
     if not directory.is_dir():
         return None
-    matches = sorted(directory.glob(f"{task_id}_*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+    matches = sorted(
+        directory.rglob(f"{task_id}_*.json"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
     return matches[0] if matches else None
 
 
