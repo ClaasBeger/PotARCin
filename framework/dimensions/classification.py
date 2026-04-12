@@ -493,7 +493,7 @@ def sample_classification_candidates_from_arc_gen_dynamic(
 
     candidates: List[Tuple[GridPair, bool, dict[str, Any]]] = []
 
-    pos_pairs = task.arc_gen_generator(n_pos)
+    pos_pairs = task.arc_gen_generator(n_pos, rng=rng)
     for p in pos_pairs:
         meta = {"source_task_id": task_id, "label": True, "corruption": None}
         candidates.append((p, True, meta))
@@ -508,7 +508,7 @@ def sample_classification_candidates_from_arc_gen_dynamic(
         if ot.arc_gen_generator is None:
             continue
         try:
-            p = ot.arc_gen_generator(1)[0]
+            p = ot.arc_gen_generator(1, rng=rng)[0]
         except Exception:
             continue
         meta = {"source_task_id": oid, "label": False, "corruption": None}

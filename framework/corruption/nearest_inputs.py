@@ -21,7 +21,7 @@ from __future__ import annotations
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterator, List, Tuple
+from typing import Iterator, List, Optional, Tuple
 
 import random
 
@@ -68,7 +68,7 @@ def _iter_arc_gen_stable_task_ids() -> List[str]:
 
 def _collect_dynamic_pairs(
     exclude_task_id: str,
-    rng: random.Random,
+    rng: Optional[random.Random],
     *,
     max_pairs: int,
 ) -> List[Tuple[str, str, str, GridPair]]:
@@ -76,7 +76,8 @@ def _collect_dynamic_pairs(
     tids = sorted(
         p.stem for p in ARC_ORIGINAL_DIR.glob("*.json") if p.stem != exclude_task_id
     )
-    rng.shuffle(tids)
+    if rng is not None:
+        rng.shuffle(tids)
     out: List[Tuple[str, str, str, GridPair]] = []
     for tid in tids:
         if len(out) >= max_pairs:
@@ -85,7 +86,10 @@ def _collect_dynamic_pairs(
         if gen is None:
             continue
         try:
-            pair = gen(1)[0]
+            if rng is not None:
+                pair = gen(1, rng=rng)[0]
+            else:
+                pair = gen(1)[0]
         except Exception:
             continue
         out.append(("arc_gen_dynamic", tid, f"dynamic[{len(out)}]", pair))
@@ -94,7 +98,7 @@ def _collect_dynamic_pairs(
 
 def _iter_pool_rows(
     exclude_task_id: str,
-    rng: random.Random,
+    rng: Optional[random.Random],
     *,
     num_dynamic: int,
 ) -> Iterator[Tuple[str, str, str, GridPair]]:
@@ -122,13 +126,17 @@ def _iter_pool_rows(
 def find_nearest_alternative_instances(
     query: GridPair,
     exclude_task_id: str,
-    rng: random.Random,
+    rng: Optional[random.Random],
     *,
     k: int = 3,
     num_dynamic: int = 50,
     fill: int = -1,
 ) -> List[NeighborInstance]:
-    """Return *k* closest instances by average of normalized padded in/out distances."""
+    """Return *k* closest instances by average of normalized padded in/out distances.
+
+    Pass ``rng=None`` for a **deterministic** pool: ARC-GEN dynamic rows use the
+    default generator sequence (no shuffle of task ids, no random seeds per draw).
+    """
     q_in, q_out = query.input, query.output
     scored: List[NeighborInstance] = []
     for source, tid, detail, pair in _iter_pool_rows(

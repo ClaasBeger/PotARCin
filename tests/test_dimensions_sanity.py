@@ -29,7 +29,7 @@ def _dummy_task() -> ArcTask:
     def _verifier(grid: Grid) -> Grid:
         return [[cell + 1 for cell in row] for row in grid]
 
-    def _arc_gen_generator(n: int) -> list[GridPair]:
+    def _arc_gen_generator(n: int, **_kwargs: object) -> list[GridPair]:
         out: list[GridPair] = []
         for i in range(n):
             inp = [[10 + i]]

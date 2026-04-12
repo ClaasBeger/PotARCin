@@ -60,6 +60,10 @@ _CATEGORY_WEIGHTS: dict[Category, float] = {
 # stop trying that type and resample category.
 _MAX_SAME_TYPE_TRIES = 10
 
+# Retrieval: neighbor ranks ``retrieval_slot + attempt`` capped at 2 (0→1→2).
+# Instance mismatch: mismatch ranks 0→1→2 by sorted output distance. At most three tries.
+_MAX_RANK_LADDER_TRIES = 3
+
 
 def _sample_category(rng: random.Random, allowed: Sequence[Category]) -> Category:
     cats = list(allowed)
@@ -132,19 +136,11 @@ def valid_verifier_slots_for_task(task: ArcTask) -> List[VerifierSlot]:
     return out
 
 
-def _sample_demo_pair_for_query(task: ArcTask, rng: random.Random) -> GridPair:
-    opts: List[GridPair] = []
-    opts.extend(task.train_pairs)
-    if task.arc_gen_synthetic_pairs:
-        opts.extend(task.arc_gen_synthetic_pairs)
-    if task.arc_gen_generator:
-        try:
-            opts.extend(task.arc_gen_generator(50))
-        except Exception:
-            pass
-    if not opts:
-        raise ValueError("No demonstration pairs for retrieval query.")
-    return copy.deepcopy(rng.choice(opts))
+def _deterministic_demo_pair_for_query(task: ArcTask) -> GridPair:
+    """Fixed query pair for retrieval: first training example (deterministic)."""
+    if not task.train_pairs:
+        raise ValueError("No training pairs for retrieval query.")
+    return copy.deepcopy(task.train_pairs[0])
 
 
 def _try_corrupted_pair(task_id: str, task: ArcTask, rng: random.Random) -> GridPair | None:
@@ -152,7 +148,7 @@ def _try_corrupted_pair(task_id: str, task: ArcTask, rng: random.Random) -> Grid
         return None
     for _ in range(8):
         try:
-            pair = copy.deepcopy(task.arc_gen_generator(1)[0])  # type: ignore[misc]
+            pair = copy.deepcopy(task.arc_gen_generator(1, rng=rng)[0])  # type: ignore[misc]
             inp = copy.deepcopy(pair.input)
         except Exception:
             continue
@@ -250,7 +246,7 @@ def _try_color_flip_pair(task: ArcTask, rng: random.Random) -> GridPair | None:
         opts.extend(task.arc_gen_synthetic_pairs)
     if task.arc_gen_generator:
         try:
-            opts.extend(task.arc_gen_generator(50))
+            opts.extend(task.arc_gen_generator(50, rng=rng))
         except Exception:
             pass
     if not opts:
@@ -268,19 +264,28 @@ def _try_color_flip_pair(task: ArcTask, rng: random.Random) -> GridPair | None:
 def _try_instance_mismatch(
     task_id: str,
     task: ArcTask,
+    rng: random.Random,
     *,
     cross_pool: int,
+    mismatch_rank: int,
 ) -> GridPair | None:
-    for _ in range(6):
-        try:
-            anchor = copy.deepcopy(task.arc_gen_generator(1)[0])  # type: ignore[misc]
-            m = find_cross_dynamic_mismatch(task_id, anchor, pool_size=cross_pool)
-        except Exception:
-            m = None
-        if m is None:
-            continue
-        return synthetic_input_borrowed_output_pair(m)
-    return None
+    """Same-task mismatch: random anchor instance; *mismatch_rank*-th best swap in pool."""
+    if task.arc_gen_generator is None:
+        return None
+    try:
+        anchor = copy.deepcopy(task.arc_gen_generator(1, rng=rng)[0])  # type: ignore[misc]
+        m = find_cross_dynamic_mismatch(
+            task_id,
+            anchor,
+            pool_size=cross_pool,
+            rank_index=mismatch_rank,
+            rng=rng,
+        )
+    except Exception:
+        return None
+    if m is None:
+        return None
+    return synthetic_input_borrowed_output_pair(m)
 
 
 def _try_h_arc_pair(task: ArcTask, rng: random.Random) -> GridPair | None:
@@ -370,7 +375,8 @@ def _build_one_item(
     rng: random.Random,
     cat: Category,
     *,
-    retrieval_rank: int,
+    retrieval_neighbor_index: int,
+    mismatch_rank: int,
     neighbor_dynamic: int,
     cross_pool: int,
 ) -> Tuple[Optional[GridPair], bool, dict[str, object], bool]:
@@ -379,14 +385,20 @@ def _build_one_item(
 
     if cat == "dynamic_correct":
         try:
-            pair = copy.deepcopy(task.arc_gen_generator(1)[0])  # type: ignore[misc]
+            pair = copy.deepcopy(task.arc_gen_generator(1, rng=rng)[0])  # type: ignore[misc]
         except Exception:
             return None, False, meta, False
         meta["kind"] = "arc_gen_dynamic_correct"
         return pair, True, meta, False
 
     if cat == "instance_mismatch":
-        pair = _try_instance_mismatch(task_id, task, cross_pool=cross_pool)
+        pair = _try_instance_mismatch(
+            task_id,
+            task,
+            rng,
+            cross_pool=cross_pool,
+            mismatch_rank=mismatch_rank,
+        )
         if pair is None:
             return None, False, meta, False
         meta["kind"] = "same_task_instance_mismatch"
@@ -413,22 +425,22 @@ def _build_one_item(
         meta["kind"] = "h_arc_incorrect_submission"
         return pair, False, meta, False
 
-    # retrieval
+    # retrieval (deterministic query + ranked neighbors; no RNG)
     try:
-        query = _sample_demo_pair_for_query(task, rng)
+        query = _deterministic_demo_pair_for_query(task)
         neigh = find_nearest_alternative_instances(
             query,
             task_id,
-            rng,
+            None,
             k=3,
             num_dynamic=neighbor_dynamic,
         )
-        if retrieval_rank >= len(neigh):
+        if retrieval_neighbor_index >= len(neigh):
             return None, False, meta, False
-        n = neigh[retrieval_rank]
+        n = neigh[retrieval_neighbor_index]
         pair = copy.deepcopy(n.pair)
         meta["kind"] = "retrieval_nearest"
-        meta["rank"] = retrieval_rank
+        meta["rank"] = retrieval_neighbor_index
         meta["query_task"] = n.ref_task_id
         return pair, False, meta, True
     except Exception:
@@ -465,14 +477,28 @@ def sample_distribution_classification_batch(
             if cat == "retrieval" and retrieval_count >= 2:
                 continue
             # Keep retrying within the same category so collision re-samples preserve type.
-            for _same_cat_try in range(_MAX_SAME_TYPE_TRIES):
-                rank = retrieval_count if cat == "retrieval" else 0
+            _max_tries = (
+                _MAX_RANK_LADDER_TRIES
+                if cat in ("retrieval", "instance_mismatch")
+                else _MAX_SAME_TYPE_TRIES
+            )
+            for _same_cat_try in range(_max_tries):
+                if cat == "retrieval":
+                    retrieval_neighbor_index = min(retrieval_count + _same_cat_try, 2)
+                    mismatch_rank = 0
+                elif cat == "instance_mismatch":
+                    retrieval_neighbor_index = 0
+                    mismatch_rank = min(_same_cat_try, 2)
+                else:
+                    retrieval_neighbor_index = 0
+                    mismatch_rank = 0
                 pair, label, meta, used_retrieval = _build_one_item(
                     task_id,
                     task,
                     rng,
                     cat,
-                    retrieval_rank=rank,
+                    retrieval_neighbor_index=retrieval_neighbor_index,
+                    mismatch_rank=mismatch_rank,
                     neighbor_dynamic=neighbor_dynamic,
                     cross_pool=cross_pool,
                 )
@@ -510,7 +536,9 @@ def sample_distribution_classification_batch(
             fb_pair: GridPair | None = None
             for _ in range(240):
                 try:
-                    cand = copy.deepcopy(task.arc_gen_generator(1)[0])  # type: ignore[misc]
+                    cand = copy.deepcopy(
+                        task.arc_gen_generator(1, rng=rng)[0]
+                    )  # type: ignore[misc]
                 except Exception:
                     continue
                 try:
@@ -526,13 +554,14 @@ def sample_distribution_classification_batch(
                     fb_pair = cand
                     break
             # Stronger fallback for strict uniqueness constraints:
-            # sample larger dynamic pools and pick the first non-colliding input/output.
+            # sample larger dynamic pools and pick a random non-colliding input/output.
             if fb_pair is None:
                 for _ in range(24):
                     try:
-                        pool = task.arc_gen_generator(200)  # type: ignore[misc]
+                        pool = task.arc_gen_generator(200, rng=rng)  # type: ignore[misc]
                     except Exception:
                         continue
+                    rng.shuffle(pool)
                     for cand0 in pool:
                         try:
                             cand = copy.deepcopy(cand0)

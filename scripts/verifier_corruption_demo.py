@@ -22,11 +22,10 @@ then takes its 4-connected same-color neighborhood — if it has at least two ce
 the **whole** neighborhood gets one new color; otherwise only that cell. New
 colors are biased away from black.
 
-A **fourth** block (**same-task instance mismatch**) fixes the **task**: it uses
-the anchor ARC-GEN dynamic **input**, then draws many more dynamic pairs for that
-**same** task and picks an **output** from a **different instance** (different
-input grid) whose padded edit distance to the anchor **output** is minimal,
-excluding grid-equal outputs.
+A **fourth** block (**same-task instance mismatch**) uses a random ARC-GEN dynamic
+**anchor**, draws a random dynamic **pool** for that **same** task, then picks the
+**closest** alternate output (by padded edit distance) from a **different**
+instance (different input grid), excluding grid-equal outputs.
 
 Usage (from repo root)::
 
@@ -139,7 +138,7 @@ def sample_demonstration_pair(task: ArcTask, rng: random.Random) -> tuple[GridPa
             options.append((f"arc_gen_stable[{i}]", p))
     if task.arc_gen_generator is not None:
         try:
-            dyn = task.arc_gen_generator(50)
+            dyn = task.arc_gen_generator(50, rng=rng_demo)
             for i, p in enumerate(dyn):
                 options.append((f"arc_gen_dynamic[{i}]", p))
         except Exception:
@@ -158,7 +157,7 @@ def sample_arc_gen_pair_for_color_flips(task: ArcTask, rng: random.Random) -> tu
             opts.append((f"arc_gen_stable[{i}]", p))
     if task.arc_gen_generator is not None:
         try:
-            dyn = task.arc_gen_generator(50)
+            dyn = task.arc_gen_generator(50, rng=rng_demo)
             for i, p in enumerate(dyn):
                 opts.append((f"arc_gen_dynamic[{i}]", p))
         except Exception:
@@ -510,7 +509,7 @@ def main() -> None:
     n_color_flips = 0
 
     for attempt in range(args.max_input_tries):
-        pair = task.arc_gen_generator(1)[0]
+        pair = task.arc_gen_generator(1, rng=rng)[0]
         inp_try = copy.deepcopy(pair.input)
         dynamic_anchor_pair = copy.deepcopy(pair)
         try:
@@ -558,6 +557,8 @@ def main() -> None:
                     args.task_id,
                     dynamic_anchor_pair,
                     pool_size=args.cross_dynamic_pool,
+                    rank_index=0,
+                    rng=rng,
                 )
             break
         except Exception as e:

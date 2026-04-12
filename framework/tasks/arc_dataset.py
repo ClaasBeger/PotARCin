@@ -542,8 +542,18 @@ def verify_arc_gen_90f3ed37_stable_unambiguous_coverage() -> Tuple[int, int, Lis
     return len(pairs) - len(failed), len(pairs), failed
 
 
-def _make_arc_gen_generator(task_id: str) -> Optional[Callable[[int], List[GridPair]]]:
-    """Return a callable that generates ARC-GEN synthetic pairs for a task."""
+def _make_arc_gen_generator(
+    task_id: str,
+) -> Optional[Callable[..., List[GridPair]]]:
+    """Return a callable that generates ARC-GEN synthetic pairs for a task.
+
+    Each example uses ``random.seed(task_num + example_id)`` so repeated calls
+    without an RNG are **reproducible** (same *n* always yields the same list).
+
+    Pass ``rng=`` to draw independent seeds from that :class:`~random.Random`
+    instance so successive examples are **stochastic** but still reproducible
+    when *rng* is seeded (e.g. evaluation batch seed).
+    """
     lookup = _arc_gen_id_to_task_num_and_generator(task_id)
     if lookup is None:
         return None
@@ -579,14 +589,21 @@ def _make_arc_gen_generator(task_id: str) -> Optional[Callable[[int], List[GridP
             # Fall back to the original generator.
             pass
 
-    def gen(num_examples: int) -> List[GridPair]:
+    def gen(
+        num_examples: int,
+        *,
+        rng: Optional[random.Random] = None,
+    ) -> List[GridPair]:
         pairs: List[GridPair] = []
         if task_id == "a64e4611":
             max_attempts = max(2000, num_examples * 120)
             example_id = 0
             attempts = 0
             while len(pairs) < num_examples and attempts < max_attempts:
-                random.seed(task_num + example_id)
+                if rng is not None:
+                    random.seed(rng.randrange(1 << 63))
+                else:
+                    random.seed(task_num + example_id)
                 example = generator()
                 attempts += 1
                 example_id += 1
@@ -601,7 +618,10 @@ def _make_arc_gen_generator(task_id: str) -> Optional[Callable[[int], List[GridP
             return pairs
 
         for example_id in range(num_examples):
-            random.seed(task_num + example_id)
+            if rng is not None:
+                random.seed(rng.randrange(1 << 63))
+            else:
+                random.seed(task_num + example_id)
             example = generator()
             pairs.append(GridPair(example["input"], example["output"]))
         return pairs

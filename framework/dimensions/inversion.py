@@ -163,11 +163,11 @@ class InversionEvaluator(
             if not task.train_pairs:
                 continue
 
-            # Primary source: ARC-GEN dynamic pairs.
+            # Primary source: ARC-GEN dynamic pairs (stochastic draws; seed via config).
             sampled_pairs: list[GridPair] = []
             if task.arc_gen_generator is not None:
                 try:
-                    sampled_pairs = task.arc_gen_generator(n_per)
+                    sampled_pairs = task.arc_gen_generator(n_per, rng=rng)
                 except Exception:
                     sampled_pairs = []
 

@@ -71,7 +71,9 @@ class ArcTask:
     # Generators return new synthetic pairs when called with the desired
     # number of examples.
     re_arc_generator: Optional[Callable[[int], List[GridPair]]] = None
-    arc_gen_generator: Optional[Callable[[int], List[GridPair]]] = None
+    # Optional ``rng=`` keyword seeds each example independently; see
+    # ``framework.tasks.arc_dataset._make_arc_gen_generator``.
+    arc_gen_generator: Optional[Callable[..., List[GridPair]]] = None
 
     # Which evaluation dimensions this task meaningfully supports.
     dimensions: Sequence[DimensionName] = field(
