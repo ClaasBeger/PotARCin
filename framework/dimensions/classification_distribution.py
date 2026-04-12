@@ -369,6 +369,32 @@ def _pair_matches_task_rule(task: ArcTask, pair: GridPair, verifier: Verifier | 
     return is_equal_grid(out, pair.output)
 
 
+def _negative_pair_verified_corrupt(task: ArcTask, pair: GridPair) -> bool:
+    """True iff the task-level verifier disagrees with *pair*'s output on its input.
+
+    Negatives must not satisfy the rule. We use :func:`select_verifier_for_task`
+    **without** ``dynamic_pairs``: passing ``dynamic_pairs=[pair]`` would require
+    a verifier that already agrees with *pair*, which no true negative satisfies.
+    """
+    picked = select_verifier_for_task(task)
+    if picked is None:
+        return False
+    _slot, vf = picked
+    try:
+        out = vf(copy.deepcopy(pair.input))
+    except Exception:
+        return True
+    return not is_equal_grid(out, pair.output)
+
+
+def _positive_pair_matches_selected_verifier(task: ArcTask, pair: GridPair) -> bool:
+    """True when *pair* is consistent with a verifier chosen using ``dynamic_pairs=[pair]``."""
+    picked = select_verifier_for_task(task, dynamic_pairs=[pair])
+    if picked is None:
+        return False
+    return _pair_matches_task_rule(task, pair, verifier=picked[1])
+
+
 def _build_one_item(
     task_id: str,
     task: ArcTask,
@@ -465,8 +491,6 @@ def sample_distribution_classification_batch(
     # Guard: demonstrations should always be valid integer grids; fail fast if not.
     for p in demonstrations:
         assert_int_grid_pair(p, name="demonstration pair")
-    picked_verifier = select_verifier_for_task(task)
-    task_verifier = picked_verifier[1] if picked_verifier is not None else None
     items: List[DistributionClassificationItem] = []
     retrieval_count = 0
 
@@ -510,10 +534,10 @@ def sample_distribution_classification_batch(
                     assert_int_grid_pair(pair, name=f"classification item slot {slot}")
                 except Exception:
                     continue
-                # Ensure corruptions are truly corrupt: every negative candidate
-                # must fail verifier consistency, otherwise resample.
-                if not label and _pair_matches_task_rule(task, pair, verifier=task_verifier):
-                    continue
+                # Every negative must disagree with a verifier selected for this pair.
+                if not label:
+                    if not _negative_pair_verified_corrupt(task, pair):
+                        continue
                 if _pair_collides_with_items(pair, items):
                     continue
                 # Additional uniqueness constraint: do not allow repeated inputs
@@ -545,8 +569,8 @@ def sample_distribution_classification_batch(
                     assert_int_grid_pair(cand, name=f"fallback classification item slot {slot}")
                 except Exception:
                     continue
-                # Fallback emits dynamic_correct positives; keep this explicit.
-                if not _pair_matches_task_rule(task, cand, verifier=task_verifier):
+                # Fallback emits dynamic_correct positives; must match selected verifier.
+                if not _positive_pair_matches_selected_verifier(task, cand):
                     continue
                 if not _pair_collides_with_items(cand, items):
                     if _input_collides_with_items(cand, items):
@@ -573,6 +597,8 @@ def sample_distribution_classification_batch(
                         if _pair_collides_with_items(cand, items):
                             continue
                         if _input_collides_with_items(cand, items):
+                            continue
+                        if not _positive_pair_matches_selected_verifier(task, cand):
                             continue
                         fb_pair = cand
                         break

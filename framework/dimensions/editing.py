@@ -462,6 +462,24 @@ def _try_color_flip(task: ArcTask, rng: random.Random) -> tuple[GridPair, GridPa
     return corrupted, target
 
 
+def _corrupted_pair_fails_gold_verifier(
+    task: ArcTask, corrupted: GridPair, gold: GridPair
+) -> bool:
+    """True iff the verifier chosen with *gold* in context disagrees with *corrupted*.
+
+    Editing negatives must not be accidentally consistent with the task rule.
+    """
+    picked = select_verifier_for_task(task, dynamic_pairs=[gold])
+    if picked is None:
+        return False
+    _slot, v = picked
+    try:
+        out = v(copy.deepcopy(corrupted.input))
+    except Exception:
+        return True
+    return not is_equal_grid(out, corrupted.output)
+
+
 def _try_ground_truth_pair(task: ArcTask, rng: random.Random) -> tuple[GridPair, GridPair] | None:
     opts: list[GridPair] = []
     opts.extend(task.train_pairs)
@@ -502,6 +520,9 @@ def sample_editing_pair(
             corrupted, target = picked
             assert_int_grid_pair(corrupted, name="editing corrupted pair")
             assert_int_grid_pair(target, name="editing target pair")
+            if src != "ground_truth":
+                if not _corrupted_pair_fails_gold_verifier(task, corrupted, target):
+                    continue
             return corrupted, target, src
         except Exception:
             # Keep sampling; one broken branch should not fail the entire dimension.
@@ -526,6 +547,8 @@ def sample_editing_pair(
             n_ops = sample_flip_count_favor_one(rng, max_flips=5)
             corrupted, _ = connected_component_color_flips_on_pair(copy.deepcopy(base), rng, num_ops=n_ops)
             assert_int_grid_pair(corrupted, name="editing fallback corrupted pair")
+            if not _corrupted_pair_fails_gold_verifier(task, corrupted, base):
+                continue
             return corrupted, base, "color_flip"
         except Exception:
             continue
