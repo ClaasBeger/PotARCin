@@ -44,23 +44,24 @@ Category = Literal[
 
 VerifierSlot = Literal["re_arc", "google", "keymoon", "neurips", "custom"]
 
-# Relative sampling weights (sum = 1). P(dynamic_correct)=0.30 => E[# correct in 5] = 1.5.
-# Non-positive categories keep the same relative mix as before, scaled by 0.70/0.84.
-_NON_POSITIVE_SCALE = 0.70 / 0.84  # free mass after fixing P(dynamic_correct)=0.30
+# Relative sampling weights (sum = 1).
 _CATEGORY_WEIGHTS: dict[Category, float] = {
-    "h_arc_incorrect": 0.24 * _NON_POSITIVE_SCALE,
-    "instance_mismatch": 0.24 * _NON_POSITIVE_SCALE,
-    "corrupted_verifier": 0.18 * _NON_POSITIVE_SCALE,
-    "dynamic_correct": 0.30,
-    "retrieval": 0.10 * _NON_POSITIVE_SCALE,
-    "color_flip": 0.08 * _NON_POSITIVE_SCALE,
+    "h_arc_incorrect": 0.235,
+    "instance_mismatch": 0.215,
+    "corrupted_verifier": 0.13,
+    "dynamic_correct": 0.25,
+    "retrieval": 0.10333333333333333,
+    "color_flip": 0.06666666666666667,
 }
+_SECOND_RETRIEVAL_WEIGHT_FACTOR = 0.35
 
 # If a sampled corruption/category cannot yield a valid candidate quickly,
 # stop trying that type and resample category.
 _MAX_SAME_TYPE_TRIES = 10
 
-# Retrieval: neighbor ranks ``retrieval_slot + attempt`` capped at 2 (0→1→2).
+# Retrieval: at most two retrieval items per 5-item batch, and if two are used,
+# they must come from different source tasks. Neighbor ranks ``retrieval_slot +
+# attempt`` are capped at 2 (0→1→2) while building each retrieval slot.
 # Instance mismatch: mismatch ranks 0→1→2 by sorted output distance. At most three tries.
 _MAX_RANK_LADDER_TRIES = 3
 
@@ -347,6 +348,14 @@ def _draw_category(
     allowed: List[Category] = list(_CATEGORY_WEIGHTS.keys())
     if retrieval_count >= 2:
         allowed = [c for c in allowed if c != "retrieval"]
+        return _sample_category(rng, allowed)
+    if retrieval_count >= 1:
+        w = [
+            (_CATEGORY_WEIGHTS[c] * _SECOND_RETRIEVAL_WEIGHT_FACTOR) if c == "retrieval" else _CATEGORY_WEIGHTS[c]
+            for c in allowed
+        ]
+        (picked,) = rng.choices(allowed, weights=w, k=1)
+        return picked
     return _sample_category(rng, allowed)
 
 
@@ -402,6 +411,7 @@ def _build_one_item(
     cat: Category,
     *,
     retrieval_neighbor_index: int,
+    retrieval_exclude_task_ids: Optional[set[str]],
     mismatch_rank: int,
     neighbor_dynamic: int,
     cross_pool: int,
@@ -458,9 +468,12 @@ def _build_one_item(
             query,
             task_id,
             None,
-            k=3,
+            criterion="task_embedding",
+            k=max(12, neighbor_dynamic),
             num_dynamic=neighbor_dynamic,
         )
+        if retrieval_exclude_task_ids:
+            neigh = [n for n in neigh if n.ref_task_id not in retrieval_exclude_task_ids]
         if retrieval_neighbor_index >= len(neigh):
             return None, False, meta, False
         n = neigh[retrieval_neighbor_index]
@@ -493,13 +506,12 @@ def sample_distribution_classification_batch(
         assert_int_grid_pair(p, name="demonstration pair")
     items: List[DistributionClassificationItem] = []
     retrieval_count = 0
+    retrieval_task_ids: set[str] = set()
 
     for slot in range(5):
         item: Optional[DistributionClassificationItem] = None
         for _attempt in range(12):
             cat = _draw_category(rng, retrieval_count=retrieval_count)
-            if cat == "retrieval" and retrieval_count >= 2:
-                continue
             # Keep retrying within the same category so collision re-samples preserve type.
             _max_tries = (
                 _MAX_RANK_LADDER_TRIES
@@ -522,6 +534,7 @@ def sample_distribution_classification_batch(
                     rng,
                     cat,
                     retrieval_neighbor_index=retrieval_neighbor_index,
+                    retrieval_exclude_task_ids=retrieval_task_ids,
                     mismatch_rank=mismatch_rank,
                     neighbor_dynamic=neighbor_dynamic,
                     cross_pool=cross_pool,
@@ -546,6 +559,9 @@ def sample_distribution_classification_batch(
                     continue
                 if used_retrieval:
                     retrieval_count += 1
+                    ref_tid = meta.get("query_task")
+                    if isinstance(ref_tid, str):
+                        retrieval_task_ids.add(ref_tid)
                 item = DistributionClassificationItem(
                     pair=pair,
                     same_distribution=label,

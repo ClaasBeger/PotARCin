@@ -38,8 +38,8 @@ EditingVariant = Literal["h_arc_incorrect", "corrupted_verifier", "ground_truth"
 
 # Noticeable differences with H-ARC most likely.
 _EDITING_BASE_WEIGHTS: dict[Literal["h_arc_incorrect", "corrupted_verifier", "color_flip"], float] = {
-    "h_arc_incorrect": 0.50,
-    "corrupted_verifier": 0.32,
+    "h_arc_incorrect": 0.56,
+    "corrupted_verifier": 0.26,
     "color_flip": 0.18,
 }
 
@@ -341,8 +341,8 @@ def _editing_variant_weights(include_true: bool) -> dict[EditingVariant, float]:
         }
     # include_true=True: ground truth is 3rd most likely (below corrupted_verifier, above color_flip).
     return {
-        "h_arc_incorrect": 0.42,
-        "corrupted_verifier": 0.28,
+        "h_arc_incorrect": 0.48,
+        "corrupted_verifier": 0.22,
         "ground_truth": 0.18,
         "color_flip": 0.12,
     }

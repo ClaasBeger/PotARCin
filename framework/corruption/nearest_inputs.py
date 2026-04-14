@@ -1,4 +1,4 @@
-"""Find closest grid *instances* (pairs from other tasks) to a query *pair*.
+"""Find closest alternative instances for retrieval negatives.
 
 Distance uses padded bounding-box Hamming per grid (handles different sizes). For a
 candidate pair ``(c_in, c_out)`` vs query ``(q_in, q_out)`` we report normalized
@@ -12,16 +12,20 @@ Pool sources (excluding the reference task):
 
 re_arc synthetic pairs are **not** included.
 
-Scanning the full pool can take several minutes; the demo script supports
-``--skip-neighbors`` for a fast corruption-only run.
+Two ranking modes are available:
+
+- ``edit_distance``: original padded in/out grid distance over full instance pool.
+- ``task_embedding``: nearest tasks by precomputed task embeddings (fast path),
+  then pick representative instances from those tasks.
 """
 
 from __future__ import annotations
 
 import zipfile
 from dataclasses import dataclass
+import math
 from pathlib import Path
-from typing import Iterator, List, Optional, Tuple
+from typing import Iterator, List, Literal, Optional, Tuple
 
 import random
 
@@ -40,6 +44,12 @@ from framework.tasks.arc_dataset import (
 )
 
 ARC_GEN_STABLE_ZIP = ROOT_DIR / "external" / "arc_gen_stable.zip"
+TASK_EMBEDDINGS_DIR = ROOT_DIR / "external" / "Task_Embeddings"
+
+DistanceCriterion = Literal["edit_distance", "task_embedding"]
+
+_EMBEDDING_INDEX: list[tuple[str, list[float]]] | None = None
+_EMBEDDING_INDEX_READY = False
 
 
 @dataclass(frozen=True)
@@ -55,6 +65,113 @@ class NeighborInstance:
     normalized_distance_in: float
     normalized_distance_out: float
     normalized_distance_avg: float
+
+
+def _maybe_extract_vector(obj: object) -> Optional[list[float]]:
+    """Best-effort conversion from torch-loaded object to a 1D float list."""
+    # torch tensor path (most common)
+    if hasattr(obj, "detach") and hasattr(obj, "cpu") and hasattr(obj, "flatten"):
+        try:
+            vals = obj.detach().cpu().flatten().tolist()
+            return [float(v) for v in vals]
+        except Exception:
+            return None
+    # nested container paths
+    if isinstance(obj, dict):
+        for key in ("embedding", "task_embedding", "task_token_embed", "vector", "emb"):
+            if key in obj:
+                vec = _maybe_extract_vector(obj[key])
+                if vec:
+                    return vec
+        for v in obj.values():
+            vec = _maybe_extract_vector(v)
+            if vec:
+                return vec
+        return None
+    if isinstance(obj, (list, tuple)):
+        if obj and all(isinstance(x, (int, float)) for x in obj):
+            return [float(x) for x in obj]
+        for v in obj:
+            vec = _maybe_extract_vector(v)
+            if vec:
+                return vec
+        return None
+    return None
+
+
+def _normalize(vec: list[float]) -> Optional[list[float]]:
+    if not vec:
+        return None
+    norm = math.sqrt(sum(v * v for v in vec))
+    if norm <= 0.0:
+        return None
+    return [v / norm for v in vec]
+
+
+def _load_embedding_index() -> list[tuple[str, list[float]]]:
+    """Load and cache normalized task embedding vectors.
+
+    Returns empty list if torch or embedding files are unavailable.
+    """
+    global _EMBEDDING_INDEX, _EMBEDDING_INDEX_READY
+    if _EMBEDDING_INDEX_READY:
+        return _EMBEDDING_INDEX or []
+    _EMBEDDING_INDEX_READY = True
+    _EMBEDDING_INDEX = []
+
+    if not TASK_EMBEDDINGS_DIR.exists():
+        return _EMBEDDING_INDEX
+    try:
+        import torch  # type: ignore[import-not-found]
+    except Exception:
+        return _EMBEDDING_INDEX
+
+    for path in sorted(TASK_EMBEDDINGS_DIR.glob("*_task_token_embed.pt")):
+        task_id = path.stem.replace("_task_token_embed", "")
+        try:
+            obj = torch.load(path, map_location="cpu")
+        except Exception:
+            continue
+        vec = _maybe_extract_vector(obj)
+        if not vec:
+            continue
+        nvec = _normalize(vec)
+        if not nvec:
+            continue
+        _EMBEDDING_INDEX.append((task_id, nvec))
+    return _EMBEDDING_INDEX
+
+
+def _nearest_tasks_by_embedding(
+    query_task_id: str,
+    *,
+    exclude_task_id: str,
+    k: int,
+) -> list[tuple[str, float]]:
+    """Return nearest task ids by cosine distance (smaller is better)."""
+    idx = _load_embedding_index()
+    if not idx:
+        return []
+    qvec: Optional[list[float]] = None
+    for tid, vec in idx:
+        if tid == query_task_id:
+            qvec = vec
+            break
+    if qvec is None:
+        return []
+
+    scored: list[tuple[str, float]] = []
+    qn = len(qvec)
+    for tid, vec in idx:
+        if tid == exclude_task_id:
+            continue
+        if len(vec) != qn:
+            continue
+        cos = sum(a * b for a, b in zip(qvec, vec))
+        dist = 1.0 - cos
+        scored.append((tid, dist))
+    scored.sort(key=lambda x: (x[1], x[0]))
+    return scored[: max(1, k)]
 
 
 def _iter_arc_gen_stable_task_ids() -> List[str]:
@@ -128,15 +245,60 @@ def find_nearest_alternative_instances(
     exclude_task_id: str,
     rng: Optional[random.Random],
     *,
+    criterion: DistanceCriterion = "edit_distance",
     k: int = 3,
     num_dynamic: int = 50,
     fill: int = -1,
 ) -> List[NeighborInstance]:
-    """Return *k* closest instances by average of normalized padded in/out distances.
+    """Return *k* closest instances using configured distance criterion.
 
     Pass ``rng=None`` for a **deterministic** pool: ARC-GEN dynamic rows use the
     default generator sequence (no shuffle of task ids, no random seeds per draw).
     """
+    if criterion == "task_embedding":
+        # Fast path: task-level nearest neighbors in embedding space.
+        nearest = _nearest_tasks_by_embedding(
+            query_task_id=exclude_task_id,
+            exclude_task_id=exclude_task_id,
+            k=max(k * 6, 12),
+        )
+        if nearest:
+            picked: List[NeighborInstance] = []
+            seen: set[
+                tuple[tuple[tuple[int, ...], ...], tuple[tuple[int, ...], ...]]
+            ] = set()
+            for tid, tdist in nearest:
+                try:
+                    train, _, _ = _load_arc_original(tid)
+                except Exception:
+                    continue
+                for i, pair in enumerate(train):
+                    key = (
+                        tuple(tuple(row) for row in pair.input),
+                        tuple(tuple(row) for row in pair.output),
+                    )
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    picked.append(
+                        NeighborInstance(
+                            source="task_embedding",
+                            ref_task_id=tid,
+                            detail=f"embed_train[{i}]",
+                            pair=pair,
+                            cell_edit_distance_in=-1,
+                            cell_edit_distance_out=-1,
+                            normalized_distance_in=tdist,
+                            normalized_distance_out=tdist,
+                            normalized_distance_avg=tdist,
+                        )
+                    )
+                    if len(picked) >= k:
+                        return picked
+            # If embeddings were present but yielded too few candidates, continue
+            # with edit-distance fallback below.
+
+    # Original instance-level edit-distance ranking.
     q_in, q_out = query.input, query.output
     scored: List[NeighborInstance] = []
     for source, tid, detail, pair in _iter_pool_rows(
