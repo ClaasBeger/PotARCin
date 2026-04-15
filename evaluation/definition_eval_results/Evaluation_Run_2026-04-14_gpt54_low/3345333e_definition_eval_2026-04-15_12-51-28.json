@@ -1,0 +1,73 @@
+{
+  "task_id": "3345333e",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 6 6 0 0 6 6 0 0 0 0 0 0 0\n0 0 0 6 6 0 1 1 1 1 0 0 0 0 0 0\n0 0 0 0 6 6 1 1 1 1 0 0 0 0 0 0\n0 0 0 0 0 6 1 1 1 1 0 0 0 0 0 0\n0 0 0 0 0 6 6 0 0 0 0 0 0 0 0 0\n0 0 0 0 6 6 6 6 0 0 0 0 0 0 0 0\n0 0 0 0 6 0 0 6 0 0 0 0 0 0 0 0\n0 0 0 0 6 6 6 6 0 0 0 0 0 0 0 0\n0 0 0 0 0 6 6 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 6 6 0 0 6 6 0 0 0 0 0 0 0\n0 0 0 6 6 0 0 6 6 0 0 0 0 0 0 0\n0 0 0 0 6 6 6 6 0 0 0 0 0 0 0 0\n0 0 0 0 0 6 6 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 6 6 0 0 0 0 0 0 0 0 0\n0 0 0 0 6 6 6 6 0 0 0 0 0 0 0 0\n0 0 0 0 6 0 0 6 0 0 0 0 0 0 0 0\n0 0 0 0 6 6 6 6 0 0 0 0 0 0 0 0\n0 0 0 0 0 6 6 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 0 0 2 0 0 0 0 0 0 0 0 0\n3 3 3 3 2 2 2 2 0 0 0 0 0 0 0 0\n3 3 3 3 2 2 2 2 2 0 0 0 0 0 0 0\n3 3 3 3 2 2 0 2 0 0 0 0 0 0 0 0\n3 3 3 3 0 0 0 2 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 2 0 0 0 0 0 0 0 0\n0 2 2 0 2 2 0 2 2 0 0 0 0 0 0 0\n0 2 2 0 0 0 0 2 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 0 0 2 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 2 0 0 0 0 0 0 0 0\n0 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 2 0 2 2 0 2 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 2 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 2 0 0 0 0 0 0 0 0\n0 2 2 0 2 2 0 2 2 0 0 0 0 0 0 0\n0 2 2 0 0 0 0 2 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 5 0 0 0 5 0 0 0 0\n0 0 0 0 8 8 8 8 5 5 5 0 5 0 0 0\n0 0 0 0 8 8 8 8 0 0 0 0 5 5 0 0\n0 0 0 0 8 8 8 8 5 5 5 5 5 5 0 0\n0 0 0 0 8 8 8 8 0 5 0 0 0 0 0 0\n0 0 0 0 8 8 8 8 5 5 5 5 5 5 0 0\n0 0 0 0 0 0 5 5 0 5 0 5 5 0 0 0\n0 0 0 0 0 0 0 5 0 0 0 5 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    colors = sorted({v for row in grid for v in row if v != 0})\n\n    def cells_of(color):\n        return {(r, c) for r in range(h) for c in range(w) if grid[r][c] == color}\n\n    def is_solid_rectangle(cells):\n        if not cells:\n            return False\n        rs = [r for r, _ in cells]\n        cs = [c for _, c in cells]\n        r1, r2 = min(rs), max(rs)\n        c1, c2 = min(cs), max(cs)\n        return len(cells) == (r2 - r1 + 1) * (c2 - c1 + 1)\n\n    def bbox(cells):\n        rs = [r for r, _ in cells]\n        cs = [c for _, c in cells]\n        return min(rs), max(rs), min(cs), max(cs)\n\n    def eval_vertical(target_cells, occ_cells, axis2):\n        # axis2 = 2 * axis, allowing integer and half-integer axes\n        fills = set()\n        inconsistencies = 0\n        for r, c in target_cells:\n            mc2 = axis2 - c\n            if mc2 % 1 != 0:\n                continue\n            mc = mc2\n            if not (0 <= mc < w):\n                continue\n            pos = (r, mc)\n            if pos in target_cells:\n                continue\n            if pos in occ_cells:\n                fills.add(pos)\n            else:\n                inconsistencies += 1\n        return fills, inconsistencies\n\n    def eval_horizontal(target_cells, occ_cells, axis2):\n        fills = set()\n        inconsistencies = 0\n        for r, c in target_cells:\n            mr2 = axis2 - r\n            if mr2 % 1 != 0:\n                continue\n            mr = mr2\n            if not (0 <= mr < h):\n                continue\n            pos = (mr, c)\n            if pos in target_cells:\n                continue\n            if pos in occ_cells:\n                fills.add(pos)\n            else:\n                inconsistencies += 1\n        return fills, inconsistencies\n\n    # Candidate occluders: colors that form a solid rectangle\n    rect_colors = []\n    for color in colors:\n        cc = cells_of(color)\n        if is_solid_rectangle(cc):\n            rect_colors.append((color, cc))\n\n    best = None\n    # best = (score_tuple, occ_color, target_color, fills)\n    # Prefer zero inconsistencies, more fills\n    for occ_color, occ_cells in rect_colors:\n        for target_color in colors:\n            if target_color == occ_color:\n                continue\n            target_cells = cells_of(target_color)\n\n            # Vertical axes\n            for axis2 in [x / 2 for x in range(0, 2 * w - 1)]:\n                fills, bad = eval_vertical(target_cells, occ_cells, axis2)\n                if fills:\n                    score = (bad == 0, len(fills), -bad)\n                    if best is None or score > best[0]:\n                        best = (score, occ_color, target_color, fills)\n\n            # Horizontal axes\n            for axis2 in [x / 2 for x in range(0, 2 * h - 1)]:\n                fills, bad = eval_horizontal(target_cells, occ_cells, axis2)\n                if fills:\n                    score = (bad == 0, len(fills), -bad)\n                    if best is None or score > best[0]:\n                        best = (score, occ_color, target_color, fills)\n\n    if best is None:\n        return [row[:] for row in grid]\n\n    _, occ_color, target_color, fills = best\n\n    out = [row[:] for row in grid]\n    for r in range(h):\n        for c in range(w):\n            if out[r][c] == occ_color:\n                out[r][c] = 0\n    for r, c in fills:\n        out[r][c] = target_color\n\n    return out",
+  "script": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    colors = sorted({v for row in grid for v in row if v != 0})\n\n    def cells_of(color):\n        return {(r, c) for r in range(h) for c in range(w) if grid[r][c] == color}\n\n    def is_solid_rectangle(cells):\n        if not cells:\n            return False\n        rs = [r for r, _ in cells]\n        cs = [c for _, c in cells]\n        r1, r2 = min(rs), max(rs)\n        c1, c2 = min(cs), max(cs)\n        return len(cells) == (r2 - r1 + 1) * (c2 - c1 + 1)\n\n    def bbox(cells):\n        rs = [r for r, _ in cells]\n        cs = [c for _, c in cells]\n        return min(rs), max(rs), min(cs), max(cs)\n\n    def eval_vertical(target_cells, occ_cells, axis2):\n        # axis2 = 2 * axis, allowing integer and half-integer axes\n        fills = set()\n        inconsistencies = 0\n        for r, c in target_cells:\n            mc2 = axis2 - c\n            if mc2 % 1 != 0:\n                continue\n            mc = mc2\n            if not (0 <= mc < w):\n                continue\n            pos = (r, mc)\n            if pos in target_cells:\n                continue\n            if pos in occ_cells:\n                fills.add(pos)\n            else:\n                inconsistencies += 1\n        return fills, inconsistencies\n\n    def eval_horizontal(target_cells, occ_cells, axis2):\n        fills = set()\n        inconsistencies = 0\n        for r, c in target_cells:\n            mr2 = axis2 - r\n            if mr2 % 1 != 0:\n                continue\n            mr = mr2\n            if not (0 <= mr < h):\n                continue\n            pos = (mr, c)\n            if pos in target_cells:\n                continue\n            if pos in occ_cells:\n                fills.add(pos)\n            else:\n                inconsistencies += 1\n        return fills, inconsistencies\n\n    # Candidate occluders: colors that form a solid rectangle\n    rect_colors = []\n    for color in colors:\n        cc = cells_of(color)\n        if is_solid_rectangle(cc):\n            rect_colors.append((color, cc))\n\n    best = None\n    # best = (score_tuple, occ_color, target_color, fills)\n    # Prefer zero inconsistencies, more fills\n    for occ_color, occ_cells in rect_colors:\n        for target_color in colors:\n            if target_color == occ_color:\n                continue\n            target_cells = cells_of(target_color)\n\n            # Vertical axes\n            for axis2 in [x / 2 for x in range(0, 2 * w - 1)]:\n                fills, bad = eval_vertical(target_cells, occ_cells, axis2)\n                if fills:\n                    score = (bad == 0, len(fills), -bad)\n                    if best is None or score > best[0]:\n                        best = (score, occ_color, target_color, fills)\n\n            # Horizontal axes\n            for axis2 in [x / 2 for x in range(0, 2 * h - 1)]:\n                fills, bad = eval_horizontal(target_cells, occ_cells, axis2)\n                if fills:\n                    score = (bad == 0, len(fills), -bad)\n                    if best is None or score > best[0]:\n                        best = (score, occ_color, target_color, fills)\n\n    if best is None:\n        return [row[:] for row in grid]\n\n    _, occ_color, target_color, fills = best\n\n    out = [row[:] for row in grid]\n    for r in range(h):\n        for c in range(w):\n            if out[r][c] == occ_color:\n                out[r][c] = 0\n    for r, c in fills:\n        out[r][c] = target_color\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 2,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 262,
+      "success_rate": 0.0
+    },
+    "dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "list indices must be integers or slices, not float"
+    },
+    "test": {
+      "index": 0,
+      "error": "list indices must be integers or slices, not float"
+    },
+    "stable": {
+      "index": 0,
+      "error": "list indices must be integers or slices, not float"
+    },
+    "dynamic50": {
+      "index": 0,
+      "error": "list indices must be integers or slices, not float"
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "list indices must be integers or slices, not float"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "'tuple' object does not support item assignment"
+    }
+  },
+  "evaluation_ok": true
+}

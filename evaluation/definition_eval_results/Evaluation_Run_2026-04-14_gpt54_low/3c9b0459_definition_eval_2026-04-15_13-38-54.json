@@ -1,0 +1,55 @@
+{
+  "task_id": "3c9b0459",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n2 2 1\n2 1 2\n2 8 1\nOutput:\n1 8 2\n2 1 2\n1 2 2\n\nExample 2:\n\nInput:\n9 2 4\n2 4 4\n2 9 2\nOutput:\n2 9 2\n4 4 2\n4 2 9\n\nExample 3:\n\nInput:\n8 8 8\n5 5 8\n8 5 5\nOutput:\n5 5 8\n8 5 5\n8 8 8\n\nExample 4:\n\nInput:\n3 2 9\n9 9 9\n2 3 3\nOutput:\n3 3 2\n9 9 9\n9 2 3\n\nBelow is a test input grid.\n\nInput:\n6 4 4\n6 6 4\n4 6 7\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    return [row[::-1] for row in grid[::-1]]",
+  "script": "def solve(grid):\n    return [row[::-1] for row in grid[::-1]]",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 4,
+      "total": 4,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 261,
+      "total": 261,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 1000,
+      "total": 1000,
+      "success_rate": 1.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}
