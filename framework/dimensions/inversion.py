@@ -212,13 +212,14 @@ class InversionEvaluator(
 
         correct = 0
         for inst, pred in zip(instances, predictions):
-            # Inversion should produce an input that maps to the desired output; a
-            # no-change identity (input == output) is treated as invalid.
-            if is_equal_grid(pred, inst.input.desired_output):
-                continue
             # Step 1: exact match with sampled ARC-GEN input can terminate early.
             if is_equal_grid(pred, inst.target):
                 correct += 1
+                continue
+            # Inversion should produce an input that maps to the desired output; a
+            # no-change identity (input == output) is usually invalid, except when
+            # it is also the exact sampled reference input (handled above).
+            if is_equal_grid(pred, inst.input.desired_output):
                 continue
             if inst.verifier is None:
                 continue

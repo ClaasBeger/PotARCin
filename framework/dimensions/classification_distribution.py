@@ -333,6 +333,10 @@ def _input_collides_with_items(
     return any(is_equal_grid(pair.input, it.pair.input) for it in items)
 
 
+def _is_identity_pair(pair: GridPair) -> bool:
+    return is_equal_grid(pair.input, pair.output)
+
+
 @dataclass(frozen=True)
 class DistributionClassificationBatch:
     task_id: str
@@ -547,6 +551,9 @@ def sample_distribution_classification_batch(
                     assert_int_grid_pair(pair, name=f"classification item slot {slot}")
                 except Exception:
                     continue
+                # Skip degenerate cases where input equals output.
+                if _is_identity_pair(pair):
+                    continue
                 # Every negative must disagree with a verifier selected for this pair.
                 if not label:
                     if not _negative_pair_verified_corrupt(task, pair):
@@ -585,6 +592,8 @@ def sample_distribution_classification_batch(
                     assert_int_grid_pair(cand, name=f"fallback classification item slot {slot}")
                 except Exception:
                     continue
+                if _is_identity_pair(cand):
+                    continue
                 # Fallback emits dynamic_correct positives; must match selected verifier.
                 if not _positive_pair_matches_selected_verifier(task, cand):
                     continue
@@ -609,6 +618,8 @@ def sample_distribution_classification_batch(
                                 cand, name=f"fallback-pool classification item slot {slot}"
                             )
                         except Exception:
+                            continue
+                        if _is_identity_pair(cand):
                             continue
                         if _pair_collides_with_items(cand, items):
                             continue

@@ -223,6 +223,11 @@ def run_editing_api_evaluation_once(
     for _ in range(16):
         try:
             corrupted_pair, target_pair, source = sample_editing_pair(task, rng, include_true=include_true)
+            # Reject degenerate identity examples early.
+            if is_equal_grid(corrupted_pair.input, corrupted_pair.output):
+                continue
+            if is_equal_grid(target_pair.input, target_pair.output):
+                continue
             break
         except Exception as e:
             last_sampling_error = e
@@ -278,6 +283,18 @@ def run_editing_api_evaluation_once(
     }
     try:
         pred_pair = parse_editing_prediction(raw)
+        if is_equal_grid(pred_pair.input, pred_pair.output):
+            result["prediction_pair"] = {"input": pred_pair.input, "output": pred_pair.output}
+            result["guardrail"] = {
+                "enabled": max_norm_edit is not None,
+                "identity_rejected": True,
+                "passed": False,
+            }
+            result["metrics"] = {"success": False}
+            result["evaluation_ok"] = True
+            out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+            result["result_path"] = str(out_path)
+            return result
 
         rail: dict[str, Any] = {"enabled": max_norm_edit is not None}
         if max_norm_edit is not None:
