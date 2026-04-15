@@ -67,7 +67,7 @@ def build_inversion_prompt(
         lines.append("Output:")
         lines.append(_grid_to_str(ex.output))
         lines.append("")
-    lines.append("Now infer an input grid that would produce the following output under the same rule.")
+    lines.append("Now infer an input grid that would produce the following output by applying the same rule.")
     lines.append("Desired output:")
     lines.append(_grid_to_str(desired_output))
     lines.append(
