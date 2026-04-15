@@ -65,6 +65,7 @@ def run_all_dimensions_for_task(
     definition_test_idx: int = 0,
     dimension_retries: int = 2,
     retry_backoff_s: float = 1.5,
+    out_dirs: dict[str, Path] | None = None,
 ) -> dict[str, Any]:
     """Run all five dimension evaluations for one task id.
 
@@ -147,6 +148,7 @@ def run_all_dimensions_for_task(
             api_endpoint="responses",
             reasoning_effort=reasoning_effort,
             tools_enabled=tools_enabled,
+            out_dir=out_dirs["definition"] if out_dirs else "evaluation/definition_eval_results",
         ),
     )
     _run(
@@ -157,6 +159,11 @@ def run_all_dimensions_for_task(
             reasoning_effort=reasoning_effort,
             tools_enabled=tools_enabled,
             seed=dim_seeds["classification_distribution"],
+            out_dir=(
+                out_dirs["classification_distribution"]
+                if out_dirs
+                else "evaluation/classification_eval_results"
+            ),
         ),
     )
     _run(
@@ -166,6 +173,11 @@ def run_all_dimensions_for_task(
             model=model,
             reasoning_effort=reasoning_effort,
             tools_enabled=tools_enabled,
+            out_dir=(
+                out_dirs["constrained_generation"]
+                if out_dirs
+                else "evaluation/constrained_generation_eval_results"
+            ),
         ),
     )
     _run(
@@ -176,6 +188,7 @@ def run_all_dimensions_for_task(
             reasoning_effort=reasoning_effort,
             tools_enabled=tools_enabled,
             seed=dim_seeds["editing"],
+            out_dir=out_dirs["editing"] if out_dirs else "evaluation/editing_eval_results",
         ),
     )
     _run(
@@ -186,6 +199,7 @@ def run_all_dimensions_for_task(
             reasoning_effort=reasoning_effort,
             tools_enabled=tools_enabled,
             seed=dim_seeds["inversion"],
+            out_dir=out_dirs["inversion"] if out_dirs else "evaluation/inversion_eval_results",
         ),
     )
     return report
@@ -198,6 +212,35 @@ def _first_n_task_ids(n: int) -> list[str]:
             break
         ids.append(task.task_id)
     return ids
+
+
+def _all_task_ids() -> list[str]:
+    return [t.task_id for t in iter_tasks(split="train", source=TaskSource.ORIGINAL_ARC)]
+
+
+def _has_any_result_for_task(dir_path: Path, task_id: str, suffix: str) -> bool:
+    if not dir_path.is_dir():
+        return False
+    pattern = f"{task_id}_{suffix}_*.json"
+    return any(dir_path.glob(pattern))
+
+
+def _completed_tasks_for_run_tag(all_task_ids: list[str], out_dirs: dict[str, Path]) -> set[str]:
+    completed: set[str] = set()
+    for task_id in all_task_ids:
+        if (
+            _has_any_result_for_task(out_dirs["definition"], task_id, "definition_eval")
+            and _has_any_result_for_task(
+                out_dirs["classification_distribution"], task_id, "distribution_classification_eval"
+            )
+            and _has_any_result_for_task(
+                out_dirs["constrained_generation"], task_id, "constrained_generation_eval"
+            )
+            and _has_any_result_for_task(out_dirs["editing"], task_id, "editing_eval")
+            and _has_any_result_for_task(out_dirs["inversion"], task_id, "inversion_eval")
+        ):
+            completed.add(task_id)
+    return completed
 
 
 def _write_run_summary(path: Path, payload: dict[str, Any]) -> None:
@@ -289,10 +332,13 @@ def main() -> None:
     )
     p.add_argument("--task-id", default=None, help="Run all five dimensions for one task id.")
     p.add_argument(
-        "--first-n",
+        "--batch-size",
         type=int,
         default=50,
-        help="When --task-id is omitted: run first N ARC training tasks (default: 50).",
+        help=(
+            "When --task-id is omitted: run next N pending ARC training tasks "
+            "(default: 50), determined from run-tag output directories."
+        ),
     )
     p.add_argument("--model", default="gpt-5.4", help="Model name")
     p.add_argument(
@@ -329,13 +375,69 @@ def main() -> None:
         default=None,
         help="Optional output path for run summary JSON. Default: evaluation/multi_dimension_eval_runs/<timestamp>.json",
     )
+    p.add_argument(
+        "--run-tag",
+        default=None,
+        help=(
+            "Optional run tag to isolate outputs. When set, per-dimension JSONs are "
+            "written under evaluation/*_eval_results/<run_tag>/ and summary defaults "
+            "to evaluation/multi_dimension_eval_runs/<run_tag>/run_<timestamp>.json"
+        ),
+    )
+    p.add_argument(
+        "--seed-random",
+        action="store_true",
+        help=(
+            "Generate one random base seed (printed + stored in summary) so randomness "
+            "is reproducible across future model runs."
+        ),
+    )
     args = p.parse_args()
+    if args.seed is not None and args.seed_random:
+        raise SystemExit("Use either --seed or --seed-random, not both.")
 
     ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    if args.seed is not None:
+        base_seed: int | None = int(args.seed)
+        seed_mode = "fixed"
+    elif args.seed_random:
+        base_seed = int(random.SystemRandom().randrange(1 << 31))
+        seed_mode = "random_generated"
+    else:
+        base_seed = None
+        seed_mode = "none"
+
+    if args.run_tag:
+        out_dirs: dict[str, Path] = {
+            "definition": ROOT_DIR / "evaluation" / "definition_eval_results" / args.run_tag,
+            "classification_distribution": ROOT_DIR
+            / "evaluation"
+            / "classification_eval_results"
+            / args.run_tag,
+            "constrained_generation": ROOT_DIR
+            / "evaluation"
+            / "constrained_generation_eval_results"
+            / args.run_tag,
+            "editing": ROOT_DIR / "evaluation" / "editing_eval_results" / args.run_tag,
+            "inversion": ROOT_DIR / "evaluation" / "inversion_eval_results" / args.run_tag,
+        }
+    else:
+        out_dirs = {}
+
     summary_path = (
         Path(args.summary_out)
         if args.summary_out
-        else ROOT_DIR / "evaluation" / "multi_dimension_eval_runs" / f"run_{ts}.json"
+        else (
+            (
+                ROOT_DIR
+                / "evaluation"
+                / "multi_dimension_eval_runs"
+                / args.run_tag
+                / f"run_{ts}.json"
+            )
+            if args.run_tag
+            else ROOT_DIR / "evaluation" / "multi_dimension_eval_runs" / f"run_{ts}.json"
+        )
     )
 
     if args.task_id:
@@ -344,25 +446,60 @@ def main() -> None:
             model=args.model,
             reasoning_effort=args.reasoning_effort,
             tools_enabled=args.tools_enabled,
-            seed=args.seed,
+            seed=base_seed,
             definition_test_idx=args.definition_test_idx,
             dimension_retries=args.dimension_retries,
             retry_backoff_s=args.retry_backoff_s,
+            out_dirs=out_dirs or None,
         )
         payload: dict[str, Any] = {
             "mode": "single_task",
             "created_at": ts,
             "task_count": 1,
+            "run_tag": args.run_tag,
+            "seed_mode": seed_mode,
+            "base_seed": base_seed,
             "runs": [run],
         }
         _write_run_summary(summary_path, payload)
         print(f"Summary saved: {summary_path}")
         return
 
-    task_ids = _first_n_task_ids(args.first_n)
+    if not args.run_tag:
+        raise SystemExit("--run-tag is required for batched mode so completed tasks can be discovered.")
+    if args.batch_size <= 0:
+        raise SystemExit("--batch-size must be >= 1")
+
+    all_task_ids = _all_task_ids()
+    completed_before = _completed_tasks_for_run_tag(all_task_ids, out_dirs)
+    pending_task_ids = [tid for tid in all_task_ids if tid not in completed_before]
+    task_ids = pending_task_ids[: args.batch_size]
+
+    last_completed_task_id = None
+    for tid in all_task_ids:
+        if tid in completed_before:
+            last_completed_task_id = tid
+
+    print(
+        f"Run tag '{args.run_tag}': completed={len(completed_before)}, "
+        f"pending={len(pending_task_ids)}, batch_size={args.batch_size}"
+    )
+    if last_completed_task_id is not None:
+        print(f"Last completed task (dataset order): {last_completed_task_id}")
+    else:
+        print("Last completed task (dataset order): none")
+    if not task_ids:
+        print("No pending tasks left for this run tag; nothing to do.")
+        return
+
+    task_index: dict[str, int] = {tid: i for i, tid in enumerate(all_task_ids)}
     runs: list[dict[str, Any]] = []
+    if base_seed is not None:
+        print(f"Using base seed: {base_seed} (mode={seed_mode})")
+    else:
+        print("Using non-reproducible random seeds (mode=none)")
     for i, task_id in enumerate(task_ids):
-        run_seed = (args.seed + i) if args.seed is not None else None
+        run_seed = (base_seed + task_index[task_id]) if base_seed is not None else None
         seed_txt = "random" if run_seed is None else str(run_seed)
         print(f"[{i+1}/{len(task_ids)}] {task_id} (seed={seed_txt})")
         run = run_all_dimensions_for_task(
@@ -374,15 +511,22 @@ def main() -> None:
             definition_test_idx=args.definition_test_idx,
             dimension_retries=args.dimension_retries,
             retry_backoff_s=args.retry_backoff_s,
+            out_dirs=out_dirs or None,
         )
         runs.append(run)
         ok_dims = sum(1 for d in run["dimensions"].values() if d.get("ok"))
         print(f"  -> completed {ok_dims}/5 dimensions")
 
     payload = {
-        "mode": "first_n",
+        "mode": "batch_pending",
         "created_at": ts,
         "task_count": len(runs),
+        "run_tag": args.run_tag,
+        "seed_mode": seed_mode,
+        "base_seed": base_seed,
+        "batch_size": args.batch_size,
+        "completed_before_count": len(completed_before),
+        "last_completed_task_id_before": last_completed_task_id,
         "runs": runs,
     }
     _write_run_summary(summary_path, payload)
