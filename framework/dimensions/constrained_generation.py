@@ -241,15 +241,22 @@ class ConstrainedGenerationEvaluator(
                         expected_alt = alt_verifier(copy.deepcopy(gen_in))
                     except Exception:
                         continue
-                    if is_equal_grid(expected_alt, gen_out):
-                        matched_other = True
-                        break
+                    try:
+                        if is_equal_grid(expected_alt, gen_out):
+                            matched_other = True
+                            break
+                    except Exception:
+                        continue
                 if matched_other:
                     ok += 1
                 else:
                     rej_mismatch += 1
                 continue
-            if is_equal_grid(expected, gen_out):
+            try:
+                matches = is_equal_grid(expected, gen_out)
+            except Exception:
+                matches = False
+            if matches:
                 ok += 1
             else:
                 rej_mismatch += 1

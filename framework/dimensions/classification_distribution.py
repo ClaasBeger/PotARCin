@@ -379,7 +379,10 @@ def _pair_matches_task_rule(task: ArcTask, pair: GridPair, verifier: Verifier | 
         out = vf(copy.deepcopy(pair.input))
     except Exception:
         return False
-    return is_equal_grid(out, pair.output)
+    try:
+        return is_equal_grid(out, pair.output)
+    except Exception:
+        return False
 
 
 def _negative_pair_verified_corrupt(task: ArcTask, pair: GridPair) -> bool:
@@ -397,7 +400,10 @@ def _negative_pair_verified_corrupt(task: ArcTask, pair: GridPair) -> bool:
         out = vf(copy.deepcopy(pair.input))
     except Exception:
         return True
-    return not is_equal_grid(out, pair.output)
+    try:
+        return not is_equal_grid(out, pair.output)
+    except Exception:
+        return True
 
 
 def _positive_pair_matches_selected_verifier(task: ArcTask, pair: GridPair) -> bool:
@@ -417,10 +423,16 @@ def _positive_pair_matches_selected_verifier(task: ArcTask, pair: GridPair) -> b
                 out_alt = alt_verifier(copy.deepcopy(pair.input))
             except Exception:
                 continue
-            if is_equal_grid(out_alt, pair.output):
-                return True
+            try:
+                if is_equal_grid(out_alt, pair.output):
+                    return True
+            except Exception:
+                continue
         return False
-    return is_equal_grid(out, pair.output)
+    try:
+        return is_equal_grid(out, pair.output)
+    except Exception:
+        return False
 
 
 def _build_one_item(

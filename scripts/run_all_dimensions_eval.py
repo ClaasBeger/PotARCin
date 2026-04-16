@@ -104,7 +104,9 @@ def run_all_dimensions_for_task(
         last_err = ""
         last_result_path: str | None = None
         last_metrics: Any = None
+        last_attempt = 0
         for attempt in range(1, attempts + 1):
+            last_attempt = attempt
             try:
                 res = fn()
                 if isinstance(res, dict) and res.get("evaluation_ok") is False:
@@ -136,7 +138,7 @@ def run_all_dimensions_for_task(
             "error": last_err,
             "result_path": last_result_path,
             "metrics": last_metrics,
-            "attempts": attempts,
+            "attempts": last_attempt,
         }
 
     _run(

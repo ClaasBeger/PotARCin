@@ -4,6 +4,7 @@ import copy
 import datetime as dt
 import json
 import os
+import signal
 import traceback
 from dataclasses import dataclass
 from pathlib import Path
@@ -23,6 +24,32 @@ from framework.tasks.base import ArcTask, DimensionName, Verifier
 # In the definition dimension, the prediction is typically a Python program
 # (as a string) or a callable. For now, we keep this abstract as `str`.
 ProgramText = str
+_SOLVE_CALL_TIMEOUT_S = 600
+
+
+def _call_with_timeout(fn: Callable[[Grid], Grid], grid: Grid, timeout_s: int = _SOLVE_CALL_TIMEOUT_S) -> Grid:
+    """Run solve(grid) with a hard timeout to avoid hangs."""
+    if timeout_s <= 0:
+        return fn(grid)
+
+    if os.name != "posix":
+        # Fallback for non-POSIX environments.
+        return fn(grid)
+
+    class _SolveTimeout(Exception):
+        pass
+
+    def _handler(_signum: int, _frame: Any) -> None:
+        raise _SolveTimeout(f"solve() timed out after {timeout_s}s")
+
+    old_handler = signal.getsignal(signal.SIGALRM)
+    signal.signal(signal.SIGALRM, _handler)
+    signal.alarm(timeout_s)
+    try:
+        return fn(grid)
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, old_handler)
 
 def _grid_to_str(grid: Grid) -> str:
     return "\n".join(" ".join(str(cell) for cell in row) for row in grid)
@@ -264,7 +291,7 @@ def evaluate_definition_script_on_task(
         if fn is not None:
             for i, ex in enumerate(pairs):
                 try:
-                    got = fn(copy.deepcopy(ex["input"]))
+                    got = _call_with_timeout(fn, copy.deepcopy(ex["input"]))
                     if is_equal_grid(got, ex["output"]):
                         ok += 1
                     elif failure is None:
