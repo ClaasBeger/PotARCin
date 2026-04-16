@@ -12,7 +12,11 @@ from pathlib import Path
 from typing import Any, Iterable, List, Optional, Sequence
 from urllib import error, request
 
-from framework.verifier_selection import select_verifier_for_task
+from framework.verifier_selection import (
+    VerifierSlot,
+    select_verifier_for_task,
+    valid_verifiers_for_task,
+)
 from framework.dimensions.base import (
     DimensionConfig,
     DimensionEvaluator,
@@ -39,6 +43,7 @@ class InversionInstance(DimensionInstance[InversionPrompt, Grid]):
     """Given demos and desired output, predict an input grid."""
 
     verifier: Verifier | None = None
+    verifier_slot: VerifierSlot | None = None
 
 
 @dataclass
@@ -182,7 +187,7 @@ class InversionEvaluator(
                 picked = select_verifier_for_task(task, dynamic_pairs=[pair])
                 if picked is None:
                     continue
-                _slot, verifier = picked
+                slot, verifier = picked
                 instances.append(
                     InversionInstance(
                         task_id=task.task_id,
@@ -193,6 +198,7 @@ class InversionEvaluator(
                         ),
                         target=copy.deepcopy(pair.input),
                         verifier=verifier,
+                        verifier_slot=slot,
                     )
                 )
         return instances
@@ -226,6 +232,24 @@ class InversionEvaluator(
             try:
                 produced = inst.verifier(copy.deepcopy(pred))
             except Exception:
+                # Fallback: if selected verifier crashes, try other valid verifiers.
+                try:
+                    task = load_task(inst.task_id)
+                except Exception:
+                    continue
+                matched_other = False
+                for slot, verifier in valid_verifiers_for_task(task):
+                    if inst.verifier_slot is not None and slot == inst.verifier_slot:
+                        continue
+                    try:
+                        produced_alt = verifier(copy.deepcopy(pred))
+                    except Exception:
+                        continue
+                    if is_equal_grid(produced_alt, inst.input.desired_output):
+                        matched_other = True
+                        break
+                if matched_other:
+                    correct += 1
                 continue
             if is_equal_grid(produced, inst.input.desired_output):
                 correct += 1

@@ -134,3 +134,30 @@ def select_verifier_for_task(
             continue
         return slot, fn
     return _legacy_select_verifier(task, dynamic_pairs)
+
+
+def valid_verifiers_for_task(
+    task: ArcTask,
+    *,
+    csv_path: Path | None = None,
+) -> list[Tuple[VerifierSlot, Verifier]]:
+    """Return all valid verifiers (train/test/stable/dynamic50), CSV order first."""
+    from framework.dimensions.classification_distribution import (
+        verifier_matches_train_test_stable_dynamic50,
+    )
+
+    out: list[Tuple[VerifierSlot, Verifier]] = []
+    seen: set[VerifierSlot] = set()
+
+    ordered_slots = list(_slots_for_task_id(task.task_id, csv_path)) + list(_PRIORITY)
+    for slot in ordered_slots:
+        if slot in seen:
+            continue
+        seen.add(slot)
+        fn = _callable_for_slot(task, slot)
+        if fn is None:
+            continue
+        if not verifier_matches_train_test_stable_dynamic50(task, fn):
+            continue
+        out.append((slot, fn))
+    return out

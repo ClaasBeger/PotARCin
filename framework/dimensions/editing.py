@@ -21,7 +21,7 @@ from framework.dimensions.base import (
     DimensionInstance,
     DimensionResult,
 )
-from framework.verifier_selection import select_verifier_for_task
+from framework.verifier_selection import select_verifier_for_task, valid_verifiers_for_task
 from framework.grids import (
     Grid,
     GridPair,
@@ -649,7 +649,21 @@ class EditingEvaluator(
                             ok += 1
                         continue
                     except Exception:
-                        pass
+                        # Validation fallback: selected verifier crashed, try others.
+                        matched_other = False
+                        for alt_slot, alt_v in valid_verifiers_for_task(task):
+                            if alt_slot == _slot:
+                                continue
+                            try:
+                                expected_alt = alt_v(copy.deepcopy(pred.input))
+                            except Exception:
+                                continue
+                            if is_equal_grid(expected_alt, pred.output):
+                                matched_other = True
+                                break
+                        if matched_other:
+                            ok += 1
+                            continue
             # Fallback when no verifier available.
             if is_equal_grid(pred.input, inst.target.input) and is_equal_grid(pred.output, inst.target.output):
                 ok += 1

@@ -37,6 +37,72 @@ def _task_ids_from_run(path: Path) -> list[str]:
     return ids
 
 
+def _inject_prev_next_nav(html: str, *, prev_href: str | None, next_href: str | None) -> str:
+    """Inject Prev/Index/Next nav under the subtitle line.
+
+    Idempotent via a marker comment.
+    """
+    marker = "<!-- task-nav-links -->"
+    if marker in html:
+        return html
+    # We insert after the subtitle paragraph, which is stable across builders.
+    needle = "</h1>\n<p class=\"sub\">"
+    k = html.find(needle)
+    if k < 0:
+        return html
+    # Find end of the subtitle paragraph.
+    p_end = html.find("</p>", k)
+    if p_end < 0:
+        return html
+    p_end = html.find("\n", p_end)
+    if p_end < 0:
+        return html
+
+    def _link(href: str, label: str) -> str:
+        return f'<a class="tasknav-link" href="{escape(href)}">{escape(label)}</a>'
+
+    parts: list[str] = []
+    parts.append(marker)
+    parts.append('<nav class="tasknav">')
+    parts.append(_link(prev_href, "← Prev") if prev_href else '<span class="tasknav-disabled">← Prev</span>')
+    parts.append(_link("index.html", "Index"))
+    parts.append(_link(next_href, "Next →") if next_href else '<span class="tasknav-disabled">Next →</span>')
+    parts.append("</nav>")
+    parts.append(
+        """<style>
+.tasknav { display:flex; gap: 12px; align-items:center; margin: 0.75rem 0 1.5rem; }
+.tasknav-link, .tasknav-disabled {
+  display:inline-block;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid #2a3140;
+  background: #12151c;
+  color: #5c9ded;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.tasknav-link:hover { filter: brightness(1.15); }
+.tasknav-disabled { color: #9aa0a6; opacity: 0.65; cursor: not-allowed; }
+</style>
+"""
+    )
+    injection = "\n".join(parts) + "\n"
+    return html[: p_end + 1] + injection + html[p_end + 1 :]
+
+
+def _inject_nav_for_out_dir(out_dir: Path, task_ids: list[str]) -> None:
+    for i, tid in enumerate(task_ids):
+        prev_href = f"{task_ids[i-1]}_unified_evaluation.html" if i > 0 else None
+        next_href = f"{task_ids[i+1]}_unified_evaluation.html" if i + 1 < len(task_ids) else None
+        p = out_dir / f"{tid}_unified_evaluation.html"
+        if not p.is_file():
+            continue
+        html = p.read_text(encoding="utf-8")
+        new_html = _inject_prev_next_nav(html, prev_href=prev_href, next_href=next_href)
+        if new_html != html:
+            p.write_text(new_html, encoding="utf-8")
+
+
 def _write_index(out_dir: Path, task_ids: list[str], run_json: Path) -> None:
     rows = "".join(
         f'<tr><td><a href="{escape(tid)}_unified_evaluation.html">{escape(tid)}</a></td></tr>\n'
@@ -92,6 +158,11 @@ def main() -> None:
         action="store_true",
         help="Only print task ids and paths; do not invoke the builder",
     )
+    p.add_argument(
+        "--inject-nav-only",
+        action="store_true",
+        help="Do not rebuild pages; only inject Prev/Next nav into existing HTML files in --out-dir.",
+    )
     args = p.parse_args()
 
     run_path = args.run_json if args.run_json.is_absolute() else ROOT_DIR / args.run_json
@@ -108,6 +179,12 @@ def main() -> None:
     if args.dry_run:
         for tid in task_ids:
             print(tid, "->", out_dir / f"{tid}_unified_evaluation.html")
+        return
+
+    if args.inject_nav_only:
+        _inject_nav_for_out_dir(out_dir, task_ids)
+        _write_index(out_dir, task_ids, run_path)
+        print(f"Injected Prev/Next nav into pages under {out_dir.resolve()}")
         return
 
     if not BUILD_SCRIPT.is_file():
@@ -140,6 +217,8 @@ def main() -> None:
     print(f"Wrote {ok_n}/{len(task_ids)} pages + index.html under {out_dir.resolve()}")
     if failed:
         raise SystemExit(1)
+
+    _inject_nav_for_out_dir(out_dir, task_ids)
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, Iterable, List, Optional, Sequence, Tuple
 from urllib import error, request
 
-from framework.verifier_selection import select_verifier_for_task
+from framework.verifier_selection import select_verifier_for_task, valid_verifiers_for_task
 from framework.dimensions.base import (
     DimensionConfig,
     DimensionEvaluator,
@@ -232,7 +232,22 @@ class ConstrainedGenerationEvaluator(
             try:
                 expected = verifier(copy.deepcopy(gen_in))
             except Exception:
-                rej_mismatch += 1
+                # Validation fallback: selected verifier crashed, try other valid ones.
+                matched_other = False
+                for alt_slot, alt_verifier in valid_verifiers_for_task(task):
+                    if alt_slot == _slot:
+                        continue
+                    try:
+                        expected_alt = alt_verifier(copy.deepcopy(gen_in))
+                    except Exception:
+                        continue
+                    if is_equal_grid(expected_alt, gen_out):
+                        matched_other = True
+                        break
+                if matched_other:
+                    ok += 1
+                else:
+                    rej_mismatch += 1
                 continue
             if is_equal_grid(expected, gen_out):
                 ok += 1

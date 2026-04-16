@@ -31,7 +31,7 @@ from framework.grids import (
 )
 from framework.tasks.arc_dataset import load_task
 from framework.tasks.base import ArcTask, Verifier
-from framework.verifier_selection import select_verifier_for_task
+from framework.verifier_selection import select_verifier_for_task, valid_verifiers_for_task
 
 Category = Literal[
     "instance_mismatch",
@@ -405,7 +405,22 @@ def _positive_pair_matches_selected_verifier(task: ArcTask, pair: GridPair) -> b
     picked = select_verifier_for_task(task, dynamic_pairs=[pair])
     if picked is None:
         return False
-    return _pair_matches_task_rule(task, pair, verifier=picked[1])
+    slot, verifier = picked
+    try:
+        out = verifier(copy.deepcopy(pair.input))
+    except Exception:
+        # Validation fallback: selected verifier crashed, try other valid ones.
+        for alt_slot, alt_verifier in valid_verifiers_for_task(task):
+            if alt_slot == slot:
+                continue
+            try:
+                out_alt = alt_verifier(copy.deepcopy(pair.input))
+            except Exception:
+                continue
+            if is_equal_grid(out_alt, pair.output):
+                return True
+        return False
+    return is_equal_grid(out, pair.output)
 
 
 def _build_one_item(
