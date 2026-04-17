@@ -644,69 +644,89 @@ def run_distribution_classification_api_evaluation_once(
     After the model returns, ``raw_response`` is always persisted; parse failures
     set ``evaluation_ok`` false and ``error`` but still write JSON.
     """
-    task = load_task(task_id)
-    if not task.train_pairs:
-        raise ValueError(f"Task {task_id} has no training pairs.")
-    if task.arc_gen_generator is None:
-        raise ValueError(f"Task {task_id} has no ARC-GEN dynamic generator.")
-
-    rng = random.Random(seed)
-    batch = sample_distribution_classification_batch(task_id, rng)
-    demos = batch.demonstrations
-    candidates = [it.pair for it in batch.items]
-    meta = [{"category": it.category, "meta": it.meta} for it in batch.items]
-    gt = [it.same_distribution for it in batch.items]
-
-    prompt = build_distribution_classification_prompt(
-        demonstrations=demos,
-        candidates=candidates,
-    )
-
-    effective_key = api_key or os.environ.get("OPENAI_API_KEY")
-    effective_base = base_url or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
-    if not effective_key:
-        raise ValueError("No API key provided. Set `api_key` or OPENAI_API_KEY.")
-
-    raw = _openai_responses_completion(
-        prompt=prompt,
-        model=model,
-        api_key=effective_key,
-        base_url=effective_base,
-        reasoning_effort=reasoning_effort,
-        tools_enabled=tools_enabled,
-    )
-
-    test_pairs = [{"input": p.input, "output": p.output} for p in candidates]
-    n_gt = len(gt)
-
     ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     out_root = Path(out_dir)
     out_root.mkdir(parents=True, exist_ok=True)
     out_path = out_root / f"{task_id}_distribution_classification_eval_{ts}.json"
 
+    # Keep a durable artifact from the start so failures can still be audited.
     result: dict[str, Any] = {
         "task_id": task_id,
         "model": model,
-        "base_url": effective_base,
+        "base_url": base_url or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1"),
         "reasoning_effort": reasoning_effort,
         "tools_enabled": tools_enabled,
         "seed": seed,
-        "prompt": prompt,
-        "raw_response": raw,
-        "test_pairs": test_pairs,
-        "ground_truth": gt,
-        "item_meta": meta,
+        "prompt": None,
+        "raw_response": None,
+        "test_pairs": [],
+        "ground_truth": [],
+        "item_meta": [],
         "evaluation_ok": False,
         "predictions": None,
         "metrics": {
             "accuracy": 0.0,
             "correct": 0,
-            "total": n_gt,
+            "total": 0,
             "exact_match": 0,
         },
+        "stage": "init",
     }
+
+    def _persist() -> None:
+        out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+
     try:
+        task = load_task(task_id)
+        if not task.train_pairs:
+            raise ValueError(f"Task {task_id} has no training pairs.")
+        if task.arc_gen_generator is None:
+            raise ValueError(f"Task {task_id} has no ARC-GEN dynamic generator.")
+
+        result["stage"] = "sampling"
+        rng = random.Random(seed)
+        batch = sample_distribution_classification_batch(task_id, rng)
+        demos = batch.demonstrations
+        candidates = [it.pair for it in batch.items]
+        meta = [{"category": it.category, "meta": it.meta} for it in batch.items]
+        gt = [it.same_distribution for it in batch.items]
+
+        prompt = build_distribution_classification_prompt(
+            demonstrations=demos,
+            candidates=candidates,
+        )
+        result["prompt"] = prompt
+        result["test_pairs"] = [{"input": p.input, "output": p.output} for p in candidates]
+        result["ground_truth"] = gt
+        result["item_meta"] = meta
+        result["metrics"]["total"] = len(gt)
+
+        effective_key = api_key or os.environ.get("OPENAI_API_KEY")
+        effective_base = base_url or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
+        result["base_url"] = effective_base
+        if not effective_key:
+            raise ValueError("No API key provided. Set `api_key` or OPENAI_API_KEY.")
+
+        # Step 1: get model output and persist immediately before parse/score.
+        result["stage"] = "api_call"
+        raw = _openai_responses_completion(
+            prompt=prompt,
+            model=model,
+            api_key=effective_key,
+            base_url=effective_base,
+            reasoning_effort=reasoning_effort,
+            tools_enabled=tools_enabled,
+        )
+        result["raw_response"] = raw
+        result["stage"] = "raw_recorded"
+        _persist()
+
+        # Step 2: parse and score independently from the API call stage.
+        result["stage"] = "parsing"
         pred = parse_distribution_classification_prediction(raw)
+
+        result["stage"] = "scoring"
+        n_gt = len(gt)
         correct = sum(int(bool(a) == bool(b)) for a, b in zip(gt, pred))
         accuracy = correct / n_gt if n_gt else 0.0
         result["predictions"] = pred
@@ -717,10 +737,13 @@ def run_distribution_classification_api_evaluation_once(
             "exact_match": int(correct == n_gt),
         }
         result["evaluation_ok"] = True
+        result["stage"] = "done"
     except Exception as e:
         result["error"] = str(e)
+        if result.get("stage") != "raw_recorded":
+            result["stage"] = f"{result.get('stage', 'unknown')}_failed"
 
-    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+    _persist()
     result["result_path"] = str(out_path)
     return result
 
