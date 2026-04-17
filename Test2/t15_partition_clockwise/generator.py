@@ -124,6 +124,25 @@ def _is_occupancy_cw_closed(shape: set[Pos], cr: int, cc: int) -> bool:
     return True
 
 
+def _is_connected_8(cells: set[Pos]) -> bool:
+    if not cells:
+        return False
+    start = next(iter(cells))
+    stack = [start]
+    seen: set[Pos] = {start}
+    while stack:
+        r, c = stack.pop()
+        for dr in (-1, 0, 1):
+            for dc in (-1, 0, 1):
+                if dr == 0 and dc == 0:
+                    continue
+                nb = (r + dr, c + dc)
+                if nb in cells and nb not in seen:
+                    seen.add(nb)
+                    stack.append(nb)
+    return len(seen) == len(cells)
+
+
 def _add_plus_skeleton(cells: set[Pos], h: int, w: int, cr: int, cc: int, arm: int) -> None:
     for k in range(arm + 1):
         for p in ((cr, cc + k), (cr, cc - k), (cr + k, cc), (cr - k, cc)):
@@ -198,10 +217,13 @@ def generate(
             r0, c0 = cr + dr, cc + dc
             if not _orbit_fully_in_bounds(h, w, cr, cc, r0, c0):
                 continue
-            for r, c in _orbit4(cr, cc, r0, c0):
-                shape.add((r, c))
+            orbit = set(_orbit4(cr, cc, r0, c0))
+            candidate = shape | orbit
+            # Keep the main structure as one 8-connected component.
+            if _is_connected_8(candidate):
+                shape = candidate
 
-        if len(shape) < 8 or not _is_occupancy_cw_closed(shape, cr, cc):
+        if len(shape) < 8 or not _is_occupancy_cw_closed(shape, cr, cc) or not _is_connected_8(shape):
             continue
 
         base_color = rr.randint(1, 9)
