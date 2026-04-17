@@ -143,22 +143,27 @@ def generate(
             inp[r][c] = color
             by_corner[corner].append((r, c, color))
 
+    top_cells = by_corner["tl"] + by_corner["tr"]
+    bot_cells = by_corner["bl"] + by_corner["br"]
+    left_cells = by_corner["tl"] + by_corner["bl"]
+    right_cells = by_corner["tr"] + by_corner["br"]
+
+    top_max_r = max((r for r, _, _ in top_cells), default=half - 1)
+    bot_min_r = min((r for r, _, _ in bot_cells), default=half)
+    left_max_c = max((c for _, c, _ in left_cells), default=half - 1)
+    right_min_c = min((c for _, c, _ in right_cells), default=half)
+
+    dr_top = (half - 1) - top_max_r
+    dr_bot = half - bot_min_r
+    dc_left = (half - 1) - left_max_c
+    dc_right = half - right_min_c
+
     for corner in _CORNERS:
         cells = by_corner[corner]
         if not cells:
             continue
-        rows = [r for r, _, _ in cells]
-        cols = [c for _, c, _ in cells]
-        min_r, max_r = min(rows), max(rows)
-        min_c, max_c = min(cols), max(cols)
-        if corner == "tl":
-            dr, dc = (half - 1) - max_r, (half - 1) - max_c
-        elif corner == "tr":
-            dr, dc = (half - 1) - max_r, half - min_c
-        elif corner == "bl":
-            dr, dc = half - min_r, (half - 1) - max_c
-        else:  # br
-            dr, dc = half - min_r, half - min_c
+        dr = dr_top if corner in ("tl", "tr") else dr_bot
+        dc = dc_left if corner in ("tl", "bl") else dc_right
         for r, c, color in cells:
             out[r + dr][c + dc] = color
 

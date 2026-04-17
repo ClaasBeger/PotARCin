@@ -92,6 +92,34 @@ def _paint_blob_noise(
         free = [rc for rc in free if rc in free_set]
 
 
+def _map_local_to_global(
+    *,
+    r: int,
+    c: int,
+    top: int,
+    left: int,
+    frame_h: int,
+    frame_w: int,
+    grid_h: int,
+    grid_w: int,
+    shift: int,
+    wraps_row: bool,
+) -> tuple[int, int]:
+    """Map local frame coordinates to global grid, allowing wrapped-half shift."""
+    if wraps_row:
+        base_r = top + r
+        if base_r < grid_h:
+            return base_r, left + c
+        # Wrapped top half is shifted horizontally.
+        return base_r - grid_h, left + c + shift
+
+    base_c = left + c
+    if base_c < grid_w:
+        return top + r, base_c
+    # Wrapped left half is shifted vertically.
+    return top + r + shift, base_c - grid_w
+
+
 def generate(
     width: int | None = None,
     height: int | None = None,
@@ -99,7 +127,9 @@ def generate(
     content_height: int | None = None,
     top: int | None = None,
     left: int | None = None,
-    frame_color: int | None = None,
+    frame_color_a: int | None = None,
+    frame_color_b: int | None = None,
+    half_shift: int | None = None,
     noise_cells: int | None = None,
     content: Grid | None = None,
     rng: random.Random | None = None,
@@ -110,82 +140,138 @@ def generate(
     Output: only the rectangle's inner content (outline removed).
     """
     rr = rng if rng is not None else random
-    if width is None:
-        width = rr.randint(8, 14)
-    if height is None:
-        height = rr.randint(8, 14)
-    if width < 7 or height < 7:
-        raise ValueError("width and height must be >= 7")
+    max_attempts = 400
+    for _ in range(max_attempts):
+        w = width if width is not None else rr.randint(8, 14)
+        h = height if height is not None else rr.randint(8, 14)
+        if w < 7 or h < 7:
+            raise ValueError("width and height must be >= 7")
 
-    # Bias toward smaller rectangles for better mimicry.
-    max_cw = min(width - 3, 6)
-    max_ch = min(height - 3, 6)
-    if content_width is None:
-        content_width = rr.randint(2, max_cw)
-    if content_height is None:
-        content_height = rr.randint(2, max_ch)
-    if not (2 <= content_width <= width - 2 and 2 <= content_height <= height - 2):
-        raise ValueError("content size out of range")
+        max_cw = min(w - 3, 6)
+        max_ch = min(h - 3, 6)
+        cw = content_width if content_width is not None else rr.randint(2, max_cw)
+        ch = content_height if content_height is not None else rr.randint(2, max_ch)
+        if not (2 <= cw <= w - 2 and 2 <= ch <= h - 2):
+            raise ValueError("content size out of range")
+        frame_h = ch + 2
+        frame_w = cw + 2
 
-    frame_h = content_height + 2
-    frame_w = content_width + 2
+        color_a = frame_color_a if frame_color_a is not None else rr.randint(1, 9)
+        color_b = frame_color_b if frame_color_b is not None else rr.randint(1, 9)
+        content_grid = (
+            [row[:] for row in content] if content is not None else _random_content(rr, ch, cw, color_a)
+        )
+        if len(content_grid) != ch or any(len(row) != cw for row in content_grid):
+            raise ValueError("content shape must match content size")
 
-    if frame_color is None:
-        frame_color = rr.randint(1, 9)
-    if content is None:
-        content = _random_content(rr, content_height, content_width, frame_color)
-    if len(content) != content_height or any(len(row) != content_width for row in content):
-        raise ValueError("content shape must match content size")
+        if top is None or left is None:
+            wrap_row = rr.choice([True, False])
+            wrap_col = not wrap_row
+            top0 = _pick_wrapped_start(rr, frame_h, h) if wrap_row else rr.randint(0, h - frame_h)
+            left0 = _pick_wrapped_start(rr, frame_w, w) if wrap_col else rr.randint(0, w - frame_w)
+        else:
+            top0, left0 = top, left
 
-    # Exactly one-axis wrap (XOR), with content present on both split halves.
-    if top is None or left is None:
-        wrap_row = rr.choice([True, False])
-        wrap_col = not wrap_row
-        if top is None:
-            if wrap_row:
-                top = _pick_wrapped_start(rr, frame_h, height)
+        wraps_row = (top0 + frame_h - 1) >= h
+        wraps_col = (left0 + frame_w - 1) >= w
+        if wraps_row == wraps_col:
+            if top is not None and left is not None:
+                raise ValueError("rectangle must wrap across exactly one axis")
+            continue
+        if wraps_row:
+            first_len = h - top0
+            second_len = frame_h - first_len
+            if first_len < 2 or second_len < 2:
+                continue
+        if wraps_col:
+            first_len = w - left0
+            second_len = frame_w - first_len
+            if first_len < 2 or second_len < 2:
+                continue
+
+        def _is_contained_shift(shift_val: int) -> bool:
+            if wraps_row:
+                return 0 <= left0 + shift_val and left0 + shift_val + frame_w <= w
+            return 0 <= top0 + shift_val and top0 + shift_val + frame_h <= h
+
+        def _non_overlapping(shift_val: int) -> bool:
+            if not _is_contained_shift(shift_val):
+                return False
+            coords: set[tuple[int, int]] = set()
+            for rr0 in range(frame_h):
+                for cc0 in range(frame_w):
+                    gr, gc = _map_local_to_global(
+                        r=rr0,
+                        c=cc0,
+                        top=top0,
+                        left=left0,
+                        frame_h=frame_h,
+                        frame_w=frame_w,
+                        grid_h=h,
+                        grid_w=w,
+                        shift=shift_val,
+                        wraps_row=wraps_row,
+                    )
+                    coords.add((gr, gc))
+            return len(coords) == frame_h * frame_w
+
+        if half_shift is None:
+            if wraps_row:
+                min_shift = -left0
+                max_shift = w - frame_w - left0
             else:
-                top = rr.randint(0, height - frame_h)
-        if left is None:
-            if wrap_col:
-                left = _pick_wrapped_start(rr, frame_w, width)
-            else:
-                left = rr.randint(0, width - frame_w)
-    assert top is not None and left is not None
+                min_shift = -top0
+                max_shift = h - frame_h - top0
+            shifts = list(range(min_shift, max_shift + 1))
+            rr.shuffle(shifts)
+            shift0 = next((s for s in shifts if _non_overlapping(s)), None)
+            if shift0 is None:
+                continue
+        else:
+            shift0 = half_shift
+            if not _non_overlapping(shift0):
+                if top is not None and left is not None:
+                    raise ValueError("provided half_shift causes frame overlap")
+                continue
 
-    wraps_row = (top + frame_h - 1) >= height
-    wraps_col = (left + frame_w - 1) >= width
-    if wraps_row == wraps_col:
-        raise ValueError("rectangle must wrap across exactly one axis")
-    if wraps_row:
-        first_len = height - top
-        second_len = frame_h - first_len
-        if first_len < 2 or second_len < 2:
-            raise ValueError("row split must leave content on both halves")
-    if wraps_col:
-        first_len = width - left
-        second_len = frame_w - first_len
-        if first_len < 2 or second_len < 2:
-            raise ValueError("column split must leave content on both halves")
+        inp = _empty(h, w)
+        all_rect_cells: set[tuple[int, int]] = set()
 
-    inp = _empty(height, width)
-    frame_cells: set[tuple[int, int]] = set()
-    all_rect_cells: set[tuple[int, int]] = set()
-    for r in range(frame_h):
-        for c in range(frame_w):
-            gr = (top + r) % height
-            gc = (left + c) % width
-            all_rect_cells.add((gr, gc))
-            if r == 0 or c == 0 or r == frame_h - 1 or c == frame_w - 1:
-                inp[gr][gc] = frame_color
-                frame_cells.add((gr, gc))
-            else:
-                inp[gr][gc] = content[r - 1][c - 1]
+        def border_color(r: int, c: int) -> int:
+            if wraps_row:
+                return color_a if (top0 + r) < h else color_b
+            return color_a if (left0 + c) < w else color_b
 
-    # Add post-hoc blob-like noise without touching the rectangle outline.
-    if noise_cells is None:
-        noise_cells = rr.randint((width * height) // 9, (width * height) // 4)
-    protected = set(all_rect_cells)
-    _paint_blob_noise(inp, protected, rr, noise_cells)
+        for rr0 in range(frame_h):
+            for cc0 in range(frame_w):
+                gr, gc = _map_local_to_global(
+                    r=rr0,
+                    c=cc0,
+                    top=top0,
+                    left=left0,
+                    frame_h=frame_h,
+                    frame_w=frame_w,
+                    grid_h=h,
+                    grid_w=w,
+                    shift=shift0,
+                    wraps_row=wraps_row,
+                )
+                all_rect_cells.add((gr, gc))
+                if rr0 == 0 or cc0 == 0 or rr0 == frame_h - 1 or cc0 == frame_w - 1:
+                    inp[gr][gc] = border_color(rr0, cc0)
+                else:
+                    inp[gr][gc] = content_grid[rr0 - 1][cc0 - 1]
 
-    return {"input": inp, "output": [list(row) for row in content]}
+        n_noise = noise_cells if noise_cells is not None else rr.randint((w * h) // 9, (w * h) // 4)
+        _paint_blob_noise(inp, set(all_rect_cells), rr, n_noise)
+
+        # Ensure generator/verifier coherence for ambiguous scenes.
+        from verifier import verify_t3
+
+        out = [row[:] for row in content_grid]
+        if verify_t3(inp) == out:
+            return {"input": inp, "output": out}
+        if top is not None and left is not None and half_shift is not None and content is not None:
+            raise RuntimeError("fixed parameters produce verifier-ambiguous sample")
+
+    raise RuntimeError("failed to sample valid shifted wrapped-rectangle instance")
