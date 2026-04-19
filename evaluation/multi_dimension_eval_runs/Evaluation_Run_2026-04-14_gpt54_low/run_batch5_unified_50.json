@@ -1,14 +1,572 @@
 {
-  "mode": "batch_pending",
-  "created_at": "2026-04-17_20-57-47",
+  "mode": "batch_unified",
+  "created_at": "2026-04-18_20-00-39",
   "task_count": 50,
   "run_tag": "Evaluation_Run_2026-04-14_gpt54_low",
   "seed_mode": "fixed",
   "base_seed": 77,
   "batch_size": 50,
-  "completed_before_count": 206,
-  "last_completed_task_id_before": "88a10436",
+  "batch_index": 5,
+  "batch_slice": "train[200:250]",
+  "completed_before_count": 200,
+  "last_completed_task_id_before": "8403a5d5",
+  "merged_from_sources": [
+    "run_2026-04-14_21-44-23.json",
+    "run_2026-04-15_11-58-09.json",
+    "run_2026-04-16_15-35-32.json",
+    "run_2026-04-17_14-05-27.json",
+    "run_2026-04-17_11-03-06.json",
+    "run_2026-04-17_20-57-47.json",
+    "run_2026-04-18_12-45-09.json"
+  ],
+  "note": "Runs ordered by canonical ORIGINAL_ARC train order; merged from timestamped run JSONs.",
   "runs": [
+    {
+      "task_id": "846bdb03",
+      "model": "gpt-5.4",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 277,
+      "dimension_seeds": {
+        "classification_distribution": 382933377,
+        "editing": 803193102,
+        "inversion": 931529807
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/Evaluation_Run_2026-04-14_gpt54_low/846bdb03_definition_eval_2026-04-17_16-26-07.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 4,
+              "success_rate": 0.5
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 5,
+              "total": 261,
+              "success_rate": 0.019157088122605363
+            },
+            "dynamic50": {
+              "ok": 3,
+              "total": 50,
+              "success_rate": 0.06
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/Evaluation_Run_2026-04-14_gpt54_low/846bdb03_distribution_classification_eval_2026-04-17_16-26-07.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/Evaluation_Run_2026-04-14_gpt54_low/846bdb03_constrained_generation_eval_2026-04-17_16-27-51.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/Evaluation_Run_2026-04-14_gpt54_low/846bdb03_editing_eval_2026-04-17_16-28-33.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/846bdb03_inversion_eval_2026-04-17_16-29-02.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "855e0971",
+      "model": "gpt-5.4",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 278,
+      "dimension_seeds": {
+        "classification_distribution": 1260704232,
+        "editing": 2137548088,
+        "inversion": 1194151880
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/Evaluation_Run_2026-04-14_gpt54_low/855e0971_definition_eval_2026-04-17_16-29-31.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 257,
+              "total": 262,
+              "success_rate": 0.9809160305343512
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 95,
+              "total": 1000,
+              "success_rate": 0.095
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/Evaluation_Run_2026-04-14_gpt54_low/855e0971_distribution_classification_eval_2026-04-17_16-29-31.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/Evaluation_Run_2026-04-14_gpt54_low/855e0971_constrained_generation_eval_2026-04-17_16-30-09.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/Evaluation_Run_2026-04-14_gpt54_low/855e0971_editing_eval_2026-04-17_16-30-38.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/855e0971_inversion_eval_2026-04-17_16-30-58.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "85c4e7cd",
+      "model": "gpt-5.4",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 279,
+      "dimension_seeds": {
+        "classification_distribution": 1762838243,
+        "editing": 1525390712,
+        "inversion": 223949830
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/Evaluation_Run_2026-04-14_gpt54_low/85c4e7cd_definition_eval_2026-04-17_16-31-05.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/Evaluation_Run_2026-04-14_gpt54_low/85c4e7cd_distribution_classification_eval_2026-04-17_16-31-05.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/Evaluation_Run_2026-04-14_gpt54_low/85c4e7cd_constrained_generation_eval_2026-04-17_16-31-24.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/Evaluation_Run_2026-04-14_gpt54_low/85c4e7cd_editing_eval_2026-04-17_16-31-47.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/85c4e7cd_inversion_eval_2026-04-17_16-31-56.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "868de0fa",
+      "model": "gpt-5.4",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 280,
+      "dimension_seeds": {
+        "classification_distribution": 1329658898,
+        "editing": 1921793681,
+        "inversion": 354283675
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/Evaluation_Run_2026-04-14_gpt54_low/868de0fa_definition_eval_2026-04-17_16-32-18.json",
+          "metrics": {
+            "train": {
+              "ok": 5,
+              "total": 5,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 2,
+              "total": 1000,
+              "success_rate": 0.002
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/Evaluation_Run_2026-04-14_gpt54_low/868de0fa_distribution_classification_eval_2026-04-17_16-32-18.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/Evaluation_Run_2026-04-14_gpt54_low/868de0fa_constrained_generation_eval_2026-04-17_16-32-58.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/Evaluation_Run_2026-04-14_gpt54_low/868de0fa_editing_eval_2026-04-17_16-33-28.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/868de0fa_inversion_eval_2026-04-17_16-33-44.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "8731374e",
+      "model": "gpt-5.4",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 281,
+      "dimension_seeds": {
+        "classification_distribution": 85257436,
+        "editing": 1316365298,
+        "inversion": 1084383429
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/Evaluation_Run_2026-04-14_gpt54_low/8731374e_definition_eval_2026-04-17_16-35-20.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/Evaluation_Run_2026-04-14_gpt54_low/8731374e_distribution_classification_eval_2026-04-17_16-35-20.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/Evaluation_Run_2026-04-14_gpt54_low/8731374e_constrained_generation_eval_2026-04-17_16-36-50.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/Evaluation_Run_2026-04-14_gpt54_low/8731374e_editing_eval_2026-04-17_16-37-45.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/8731374e_inversion_eval_2026-04-17_16-38-10.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "88a10436",
+      "model": "gpt-5.4",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 282,
+      "dimension_seeds": {
+        "classification_distribution": 168518733,
+        "editing": 2061488747,
+        "inversion": 1619494662
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/Evaluation_Run_2026-04-14_gpt54_low/88a10436_definition_eval_2026-04-17_16-38-29.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 1,
+              "total": 50,
+              "success_rate": 0.02
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/Evaluation_Run_2026-04-14_gpt54_low/88a10436_distribution_classification_eval_2026-04-17_16-38-29.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/Evaluation_Run_2026-04-14_gpt54_low/88a10436_constrained_generation_eval_2026-04-17_16-39-19.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/Evaluation_Run_2026-04-14_gpt54_low/88a10436_editing_eval_2026-04-17_16-39-33.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/88a10436_inversion_eval_2026-04-17_16-39-56.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
     {
       "task_id": "88a62173",
       "model": "gpt-5.4",
@@ -4006,552 +4564,6 @@
         "inversion": {
           "ok": true,
           "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a48eeaf7_inversion_eval_2026-04-17_22-48-58.json",
-          "metrics": {
-            "success_rate": 1.0
-          },
-          "attempts": 1
-        }
-      }
-    },
-    {
-      "task_id": "a5313dff",
-      "model": "gpt-5.4",
-      "reasoning_effort": "low",
-      "tools_enabled": false,
-      "seed": 327,
-      "dimension_seeds": {
-        "classification_distribution": 252785874,
-        "editing": 1911041795,
-        "inversion": 1405559409
-      },
-      "dimensions": {
-        "definition": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a5313dff_definition_eval_2026-04-17_22-49-06.json",
-          "metrics": {
-            "train": {
-              "ok": 3,
-              "total": 3,
-              "success_rate": 1.0
-            },
-            "test": {
-              "ok": 1,
-              "total": 1,
-              "success_rate": 1.0
-            },
-            "stable": {
-              "ok": 262,
-              "total": 262,
-              "success_rate": 1.0
-            },
-            "dynamic50": {
-              "ok": 50,
-              "total": 50,
-              "success_rate": 1.0
-            },
-            "re_arc_stable": {
-              "ok": 112,
-              "total": 1000,
-              "success_rate": 0.112
-            },
-            "re_arc_dynamic50": {
-              "ok": 0,
-              "total": 50,
-              "success_rate": 0.0
-            }
-          },
-          "attempts": 1
-        },
-        "classification_distribution": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a5313dff_distribution_classification_eval_2026-04-17_22-49-06.json",
-          "metrics": {
-            "accuracy": 1.0,
-            "correct": 5,
-            "total": 5,
-            "exact_match": 1
-          },
-          "attempts": 1
-        },
-        "constrained_generation": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a5313dff_constrained_generation_eval_2026-04-17_22-49-41.json",
-          "metrics": {
-            "success_rate": 0.0,
-            "rejected_as_demo_copy": 0,
-            "rejected_no_change": 0,
-            "rejected_verifier_missing": 0,
-            "rejected_verifier_mismatch": 1,
-            "noted_arc_gen_stable_exact_match": 0
-          },
-          "attempts": 1
-        },
-        "editing": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a5313dff_editing_eval_2026-04-17_22-49-55.json",
-          "metrics": {
-            "success": true
-          },
-          "attempts": 1
-        },
-        "inversion": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a5313dff_inversion_eval_2026-04-17_22-50-01.json",
-          "metrics": {
-            "success_rate": 1.0
-          },
-          "attempts": 1
-        }
-      }
-    },
-    {
-      "task_id": "a5f85a15",
-      "model": "gpt-5.4",
-      "reasoning_effort": "low",
-      "tools_enabled": false,
-      "seed": 328,
-      "dimension_seeds": {
-        "classification_distribution": 1408320976,
-        "editing": 2000409829,
-        "inversion": 2068983477
-      },
-      "dimensions": {
-        "definition": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a5f85a15_definition_eval_2026-04-17_22-50-27.json",
-          "metrics": {
-            "train": {
-              "ok": 3,
-              "total": 3,
-              "success_rate": 1.0
-            },
-            "test": {
-              "ok": 1,
-              "total": 1,
-              "success_rate": 1.0
-            },
-            "stable": {
-              "ok": 262,
-              "total": 262,
-              "success_rate": 1.0
-            },
-            "dynamic50": {
-              "ok": 50,
-              "total": 50,
-              "success_rate": 1.0
-            },
-            "re_arc_stable": {
-              "ok": 104,
-              "total": 1000,
-              "success_rate": 0.104
-            },
-            "re_arc_dynamic50": {
-              "ok": 0,
-              "total": 50,
-              "success_rate": 0.0
-            }
-          },
-          "attempts": 1
-        },
-        "classification_distribution": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a5f85a15_distribution_classification_eval_2026-04-17_22-50-27.json",
-          "metrics": {
-            "accuracy": 1.0,
-            "correct": 5,
-            "total": 5,
-            "exact_match": 1
-          },
-          "attempts": 1
-        },
-        "constrained_generation": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a5f85a15_constrained_generation_eval_2026-04-17_22-50-57.json",
-          "metrics": {
-            "success_rate": 0.0,
-            "rejected_as_demo_copy": 0,
-            "rejected_no_change": 0,
-            "rejected_verifier_missing": 0,
-            "rejected_verifier_mismatch": 1,
-            "noted_arc_gen_stable_exact_match": 0
-          },
-          "attempts": 1
-        },
-        "editing": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a5f85a15_editing_eval_2026-04-17_22-51-36.json",
-          "metrics": {
-            "success": false
-          },
-          "attempts": 1
-        },
-        "inversion": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a5f85a15_inversion_eval_2026-04-17_22-51-51.json",
-          "metrics": {
-            "success_rate": 1.0
-          },
-          "attempts": 1
-        }
-      }
-    },
-    {
-      "task_id": "a61ba2ce",
-      "model": "gpt-5.4",
-      "reasoning_effort": "low",
-      "tools_enabled": false,
-      "seed": 329,
-      "dimension_seeds": {
-        "classification_distribution": 2043497709,
-        "editing": 1326350171,
-        "inversion": 1441647912
-      },
-      "dimensions": {
-        "definition": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a61ba2ce_definition_eval_2026-04-17_22-52-03.json",
-          "metrics": {
-            "train": {
-              "ok": 1,
-              "total": 2,
-              "success_rate": 0.5
-            },
-            "test": {
-              "ok": 0,
-              "total": 1,
-              "success_rate": 0.0
-            },
-            "stable": {
-              "ok": 6,
-              "total": 262,
-              "success_rate": 0.022900763358778626
-            },
-            "dynamic50": {
-              "ok": 4,
-              "total": 50,
-              "success_rate": 0.08
-            },
-            "re_arc_stable": {
-              "ok": 0,
-              "total": 1000,
-              "success_rate": 0.0
-            },
-            "re_arc_dynamic50": {
-              "ok": 0,
-              "total": 50,
-              "success_rate": 0.0
-            }
-          },
-          "attempts": 1
-        },
-        "classification_distribution": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a61ba2ce_distribution_classification_eval_2026-04-17_22-52-03.json",
-          "metrics": {
-            "accuracy": 1.0,
-            "correct": 5,
-            "total": 5,
-            "exact_match": 1
-          },
-          "attempts": 1
-        },
-        "constrained_generation": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a61ba2ce_constrained_generation_eval_2026-04-17_22-52-42.json",
-          "metrics": {
-            "success_rate": 1.0,
-            "rejected_as_demo_copy": 0,
-            "rejected_no_change": 0,
-            "rejected_verifier_missing": 0,
-            "rejected_verifier_mismatch": 0,
-            "noted_arc_gen_stable_exact_match": 0
-          },
-          "attempts": 1
-        },
-        "editing": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a61ba2ce_editing_eval_2026-04-17_22-53-14.json",
-          "metrics": {
-            "success": true
-          },
-          "attempts": 1
-        },
-        "inversion": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a61ba2ce_inversion_eval_2026-04-17_22-53-39.json",
-          "metrics": {
-            "success_rate": 1.0
-          },
-          "attempts": 1
-        }
-      }
-    },
-    {
-      "task_id": "a61f2674",
-      "model": "gpt-5.4",
-      "reasoning_effort": "low",
-      "tools_enabled": false,
-      "seed": 330,
-      "dimension_seeds": {
-        "classification_distribution": 306350020,
-        "editing": 210548925,
-        "inversion": 1726475941
-      },
-      "dimensions": {
-        "definition": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a61f2674_definition_eval_2026-04-17_22-53-50.json",
-          "metrics": {
-            "train": {
-              "ok": 2,
-              "total": 2,
-              "success_rate": 1.0
-            },
-            "test": {
-              "ok": 1,
-              "total": 1,
-              "success_rate": 1.0
-            },
-            "stable": {
-              "ok": 262,
-              "total": 262,
-              "success_rate": 1.0
-            },
-            "dynamic50": {
-              "ok": 50,
-              "total": 50,
-              "success_rate": 1.0
-            },
-            "re_arc_stable": {
-              "ok": 4,
-              "total": 1000,
-              "success_rate": 0.004
-            },
-            "re_arc_dynamic50": {
-              "ok": 0,
-              "total": 50,
-              "success_rate": 0.0
-            }
-          },
-          "attempts": 1
-        },
-        "classification_distribution": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a61f2674_distribution_classification_eval_2026-04-17_22-53-50.json",
-          "metrics": {
-            "accuracy": 1.0,
-            "correct": 5,
-            "total": 5,
-            "exact_match": 1
-          },
-          "attempts": 1
-        },
-        "constrained_generation": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a61f2674_constrained_generation_eval_2026-04-17_22-54-14.json",
-          "metrics": {
-            "success_rate": 1.0,
-            "rejected_as_demo_copy": 0,
-            "rejected_no_change": 0,
-            "rejected_verifier_missing": 0,
-            "rejected_verifier_mismatch": 0,
-            "noted_arc_gen_stable_exact_match": 0
-          },
-          "attempts": 1
-        },
-        "editing": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a61f2674_editing_eval_2026-04-17_22-54-24.json",
-          "metrics": {
-            "success": true
-          },
-          "attempts": 1
-        },
-        "inversion": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a61f2674_inversion_eval_2026-04-17_22-54-33.json",
-          "metrics": {
-            "success_rate": 1.0
-          },
-          "attempts": 1
-        }
-      }
-    },
-    {
-      "task_id": "a64e4611",
-      "model": "gpt-5.4",
-      "reasoning_effort": "low",
-      "tools_enabled": false,
-      "seed": 331,
-      "dimension_seeds": {
-        "classification_distribution": 1379186303,
-        "editing": 735483255,
-        "inversion": 1064842235
-      },
-      "dimensions": {
-        "definition": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a64e4611_definition_eval_2026-04-17_22-56-24.json",
-          "metrics": {
-            "train": {
-              "ok": 0,
-              "total": 3,
-              "success_rate": 0.0
-            },
-            "test": {
-              "ok": 0,
-              "total": 1,
-              "success_rate": 0.0
-            },
-            "stable": {
-              "ok": 0,
-              "total": 261,
-              "success_rate": 0.0
-            },
-            "dynamic50": {
-              "ok": 0,
-              "total": 50,
-              "success_rate": 0.0
-            },
-            "re_arc_stable": {
-              "ok": 0,
-              "total": 1000,
-              "success_rate": 0.0
-            },
-            "re_arc_dynamic50": {
-              "ok": 0,
-              "total": 50,
-              "success_rate": 0.0
-            }
-          },
-          "attempts": 1
-        },
-        "classification_distribution": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a64e4611_distribution_classification_eval_2026-04-17_22-56-24.json",
-          "metrics": {
-            "accuracy": 0.8,
-            "correct": 4,
-            "total": 5,
-            "exact_match": 0
-          },
-          "attempts": 1
-        },
-        "constrained_generation": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a64e4611_constrained_generation_eval_2026-04-17_22-58-32.json",
-          "metrics": {
-            "success_rate": 0.0,
-            "rejected_as_demo_copy": 0,
-            "rejected_no_change": 0,
-            "rejected_verifier_missing": 0,
-            "rejected_verifier_mismatch": 1,
-            "noted_arc_gen_stable_exact_match": 0
-          },
-          "attempts": 1
-        },
-        "editing": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a64e4611_editing_eval_2026-04-17_22-59-58.json",
-          "metrics": {
-            "success": false
-          },
-          "attempts": 1
-        },
-        "inversion": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a64e4611_inversion_eval_2026-04-17_23-00-17.json",
-          "metrics": {
-            "success_rate": 1.0
-          },
-          "attempts": 1
-        }
-      }
-    },
-    {
-      "task_id": "a65b410d",
-      "model": "gpt-5.4",
-      "reasoning_effort": "low",
-      "tools_enabled": false,
-      "seed": 332,
-      "dimension_seeds": {
-        "classification_distribution": 1068738501,
-        "editing": 1799627072,
-        "inversion": 1686694059
-      },
-      "dimensions": {
-        "definition": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a65b410d_definition_eval_2026-04-17_23-00-30.json",
-          "metrics": {
-            "train": {
-              "ok": 3,
-              "total": 3,
-              "success_rate": 1.0
-            },
-            "test": {
-              "ok": 1,
-              "total": 1,
-              "success_rate": 1.0
-            },
-            "stable": {
-              "ok": 262,
-              "total": 262,
-              "success_rate": 1.0
-            },
-            "dynamic50": {
-              "ok": 50,
-              "total": 50,
-              "success_rate": 1.0
-            },
-            "re_arc_stable": {
-              "ok": 38,
-              "total": 1000,
-              "success_rate": 0.038
-            },
-            "re_arc_dynamic50": {
-              "ok": 0,
-              "total": 50,
-              "success_rate": 0.0
-            }
-          },
-          "attempts": 1
-        },
-        "classification_distribution": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a65b410d_distribution_classification_eval_2026-04-17_23-00-30.json",
-          "metrics": {
-            "accuracy": 1.0,
-            "correct": 5,
-            "total": 5,
-            "exact_match": 1
-          },
-          "attempts": 1
-        },
-        "constrained_generation": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a65b410d_constrained_generation_eval_2026-04-17_23-00-54.json",
-          "metrics": {
-            "success_rate": 1.0,
-            "rejected_as_demo_copy": 0,
-            "rejected_no_change": 0,
-            "rejected_verifier_missing": 0,
-            "rejected_verifier_mismatch": 0,
-            "noted_arc_gen_stable_exact_match": 1
-          },
-          "attempts": 1
-        },
-        "editing": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a65b410d_editing_eval_2026-04-17_23-01-07.json",
-          "metrics": {
-            "success": true
-          },
-          "attempts": 1
-        },
-        "inversion": {
-          "ok": true,
-          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/Evaluation_Run_2026-04-14_gpt54_low/a65b410d_inversion_eval_2026-04-17_23-01-18.json",
           "metrics": {
             "success_rate": 1.0
           },
