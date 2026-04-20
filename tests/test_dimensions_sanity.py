@@ -18,7 +18,9 @@ from framework.dimensions.definition import (
     DefinitionInstance,
 )
 from framework.dimensions.editing import EditingEvaluator, EditingInstance
+from framework.dimensions import output_grid_eval as oge_mod
 from framework.dimensions.inversion import InversionEvaluator, InversionInstance
+from framework.dimensions.output_grid_eval import parse_output_grid_response
 from framework.grids import Grid, GridPair
 from framework.tasks.base import ArcTask
 
@@ -130,6 +132,39 @@ def test_editing_dimension_roundtrip():
     predictions: list[GridPair] = [instances[0].target]
     result = evaluator.score_predictions(instances, predictions)
     assert result.dimension.value == "editing"
+
+
+def test_parse_output_grid_response_list_primary():
+    text = "Here: [[5, 6], [7, 8]]"
+    g = parse_output_grid_response(text)
+    assert g == [[5, 6], [7, 8]]
+
+
+def test_parse_output_grid_response_space_separated_fallback():
+    text = 'Some preamble\n0 1\n2 3\n'
+    g = parse_output_grid_response(text)
+    assert g == [[0, 1], [2, 3]]
+
+
+def test_output_grid_eval_persists_raw_when_parse_fails(tmp_path, monkeypatch):
+    """Model transcript must be on disk when the answer is not a valid grid."""
+
+    def _fake_completion(**kwargs):
+        return "not a grid at all"
+
+    monkeypatch.setattr(oge_mod, "_openai_responses_completion", _fake_completion)
+    res = oge_mod.run_output_grid_api_evaluation_once(
+        task_id="a85d4709",
+        api_key="fake-key",
+        out_dir=tmp_path,
+    )
+    assert res.get("evaluation_ok") is False
+    assert res.get("raw_response") == _fake_completion()
+    path = res.get("result_path")
+    assert path
+    saved = json.loads(Path(path).read_text(encoding="utf-8"))
+    assert saved["raw_response"] == _fake_completion()
+    assert saved.get("prediction") is None
 
 
 def test_inversion_dimension_roundtrip():

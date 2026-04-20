@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 import sys
 from html import escape
 from pathlib import Path
@@ -24,7 +25,10 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from framework.dimensions.classification import parse_distribution_classification_test_pairs_from_prompt
-from framework.dimensions.classification_distribution import select_verifier_for_task
+from framework.dimensions.classification_distribution import (
+    sample_distribution_classification_batch,
+    select_verifier_for_task,
+)
 from framework.dimensions.constrained_generation import build_constrained_generation_prompt
 from framework.dimensions.editing import sample_editing_pair
 from framework.grids import Grid, GridPair
@@ -208,6 +212,38 @@ def _latest_json(directory: Path, task_id: str) -> Optional[Path]:
         reverse=True,
     )
     return matches[0] if matches else None
+
+
+def _latest_debug_seed(task_id: str) -> Optional[int]:
+    """Try to recover the classification seed from latest debug_<task_id>.json."""
+    root = ROOT_DIR / "evaluation" / "multi_dimension_eval_runs"
+    if not root.is_dir():
+        return None
+    matches = sorted(
+        root.rglob(f"debug_{task_id}.json"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    for path in matches:
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            runs = payload.get("runs")
+            if not isinstance(runs, list):
+                continue
+            for run in runs:
+                if not isinstance(run, dict):
+                    continue
+                if str(run.get("task_id")) != task_id:
+                    continue
+                dim_seeds = run.get("dimension_seeds")
+                if not isinstance(dim_seeds, dict):
+                    continue
+                s = dim_seeds.get("classification_distribution")
+                if isinstance(s, int):
+                    return s
+        except Exception:
+            continue
+    return None
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -590,12 +626,49 @@ def main() -> None:
             f'<p class="note">File: <code>{escape(str(cls_json_name))}</code>.</p>'
         )
     else:
-        cls_html = (
-            "<p class='note'>No classification eval JSON for this task under "
-            "<code>evaluation/classification_eval_results/</code>. "
-            "Run a distribution classification eval to record prompts, pairs, and model answers.</p>"
-        )
-        cls_footer = ""
+        # Fallback: still show one classification sample with a placeholder prediction.
+        fallback_seed = _latest_debug_seed(task_id)
+        if fallback_seed is None:
+            fallback_seed = 0
+        cls_seed = fallback_seed
+        try:
+            batch = sample_distribution_classification_batch(task_id, random.Random(cls_seed))
+            cls_pairs = [it.pair for it in batch.items]
+            cls_gt = [bool(it.same_distribution) for it in batch.items]
+            cls_pred = [not g for g in cls_gt]  # Placeholder: deliberately all incorrect.
+            cls_meta = [{"category": it.category, "meta": it.meta} for it in batch.items]
+            cls_cards = []
+            for i, it in enumerate(cls_pairs):
+                cat = ""
+                if i < len(cls_meta) and isinstance(cls_meta[i], dict):
+                    cat = str(cls_meta[i].get("category", ""))
+                g = cls_gt[i]
+                pr = cls_pred[i]
+                border = "#2ecc71" if g else "#e74c3c"
+                pair_html = _pair_block("", it, border=border)
+                verdict = "✗ mismatch"
+                badge = f"Test {i}" + (f" ({escape(cat)})" if cat else "")
+                cls_cards.append(
+                    f'<div class="class-item"><div class="badge">{badge}</div>'
+                    f'<div class="class-answers class-mismatch">Gold: <b>{"1" if g else "0"}</b> · '
+                    f'Model: <b>{"1" if pr else "0"}</b> · {escape(verdict)}</div>'
+                    f"{pair_html}</div>"
+                )
+            cls_html = '<div class="class-row">' + "".join(cls_cards) + "</div>"
+            cls_footer = _section_footer(
+                "<p class='note'>No usable classification eval JSON was found for this task, so this section "
+                "uses a deterministic sampled batch with a placeholder model response. "
+                "Placeholder response policy: every label is intentionally incorrect "
+                "(prediction = logical NOT of ground truth). "
+                f"Sampling seed: <b>{cls_seed}</b>.</p>"
+            )
+        except Exception as e:
+            cls_html = (
+                "<p class='note'>No classification eval JSON for this task under "
+                "<code>evaluation/classification_eval_results/</code>, and fallback sampling failed: "
+                f"{escape(str(e))}</p>"
+            )
+            cls_footer = ""
 
     cls_summary = _section_summary(
         _summary_from_prompt(
