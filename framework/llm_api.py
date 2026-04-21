@@ -97,6 +97,7 @@ def request_text_completion(
             model=model,
             api_key=effective_key,
             base_url=effective_base,
+            reasoning_effort=reasoning_effort,
             timeout_s=timeout_s,
         )
     else:
@@ -105,6 +106,7 @@ def request_text_completion(
             model=model,
             api_key=effective_key,
             base_url=effective_base,
+            reasoning_effort=reasoning_effort,
             timeout_s=timeout_s,
         )
     return text.strip(), resolved_provider, effective_base
@@ -161,8 +163,11 @@ def _anthropic_messages_completion(
     model: str,
     api_key: str,
     base_url: str,
+    reasoning_effort: Optional[str] = None,
     timeout_s: int = 180,
 ) -> str:
+    effort = _normalize_reasoning_effort(reasoning_effort)
+
     # Match ConceptARC-Rules first: anthropic SDK client.
     try:
         import anthropic  # type: ignore[import-not-found]
@@ -171,11 +176,14 @@ def _anthropic_messages_completion(
         if base_url.rstrip("/") != "https://api.anthropic.com/v1":
             kwargs["base_url"] = base_url
         client = anthropic.Anthropic(**kwargs)
-        resp = client.messages.create(
-            model=model,
-            max_tokens=4096,
-            messages=[{"role": "user", "content": prompt}],
-        )
+        req: dict[str, Any] = {
+            "model": model,
+            "max_tokens": 4096,
+            "messages": [{"role": "user", "content": prompt}],
+        }
+        if effort is not None:
+            req["output_config"] = {"effort": effort}
+        resp = client.messages.create(**req)
         parts: list[str] = []
         for block in getattr(resp, "content", []) or []:
             txt = getattr(block, "text", None)
@@ -194,6 +202,8 @@ def _anthropic_messages_completion(
         "max_tokens": 4096,
         "messages": [{"role": "user", "content": prompt}],
     }
+    if effort is not None:
+        payload["output_config"] = {"effort": effort}
     body = json.dumps(payload).encode("utf-8")
     req = request.Request(
         url=url,
@@ -235,8 +245,11 @@ def _google_generate_content_completion(
     model: str,
     api_key: str,
     base_url: str,
+    reasoning_effort: Optional[str] = None,
     timeout_s: int = 180,
 ) -> str:
+    thinking_level = _map_google_thinking_level(reasoning_effort)
+
     # Match ConceptARC-Rules first: google genai SDK client.
     try:
         from google import genai  # type: ignore[import-not-found]
@@ -246,10 +259,13 @@ def _google_generate_content_completion(
             kwargs["http_options"] = {"base_url": base_url.rstrip("/")}
         client = genai.Client(**kwargs)
         model_id = model if model.startswith("models/") else f"models/{model}"
-        resp = client.models.generate_content(
-            model=model_id,
-            contents=[prompt],
-        )
+        req: dict[str, Any] = {
+            "model": model_id,
+            "contents": [prompt],
+        }
+        if thinking_level is not None:
+            req["config"] = {"thinking_config": {"thinking_level": thinking_level}}
+        resp = client.models.generate_content(**req)
         txt = getattr(resp, "text", None)
         if isinstance(txt, str) and txt.strip():
             return txt
@@ -263,6 +279,8 @@ def _google_generate_content_completion(
     payload: dict[str, Any] = {
         "contents": [{"parts": [{"text": prompt}]}],
     }
+    if thinking_level is not None:
+        payload["generationConfig"] = {"thinkingConfig": {"thinkingLevel": thinking_level}}
     body = json.dumps(payload).encode("utf-8")
     req = request.Request(
         url=url,
@@ -289,3 +307,22 @@ def _google_generate_content_completion(
     if text:
         return text
     raise ValueError("Google response did not contain any text content.")
+
+
+def _normalize_reasoning_effort(effort: Optional[str]) -> Optional[str]:
+    if effort is None:
+        return None
+    e = effort.strip().lower()
+    if not e:
+        return None
+    allowed = {"low", "medium", "high", "xhigh", "max"}
+    return e if e in allowed else None
+
+
+def _map_google_thinking_level(effort: Optional[str]) -> Optional[str]:
+    normalized = _normalize_reasoning_effort(effort)
+    if normalized is None:
+        return None
+    if normalized == "xhigh" or normalized == "max":
+        return "high"
+    return normalized

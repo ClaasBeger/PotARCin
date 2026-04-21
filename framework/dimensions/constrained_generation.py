@@ -73,16 +73,54 @@ def build_constrained_generation_prompt(*, demonstrations: Sequence[GridPair]) -
     return "\n".join(lines)
 
 
+def _is_grid_like(value: Any) -> bool:
+    if not isinstance(value, list) or not value:
+        return False
+    if not all(isinstance(row, list) and row for row in value):
+        return False
+    return all(all(isinstance(cell, int) for cell in row) for row in value)
+
+
+def _is_prediction_dict(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    inp = value.get("input")
+    out = value.get("output")
+    return _is_grid_like(inp) and _is_grid_like(out)
+
+
 def _extract_first_braced_object(text: str) -> str:
     s = text.strip()
     if "```" in s:
         s = re.sub(r"```(?:python|json)?\s*", "", s, count=1)
         s = s.replace("```", "").strip()
-    start = s.find("{")
-    end = s.rfind("}")
-    if start == -1 or end == -1 or end <= start:
-        raise ValueError("Could not locate dict object in model output.")
-    return s[start : end + 1]
+
+    # Scan balanced braces and choose the first parseable object with
+    # {"input": <grid>, "output": <grid>} shape. Robust to leading prose.
+    starts = [i for i, ch in enumerate(s) if ch == "{"]
+    for start in starts:
+        depth = 0
+        for idx in range(start, len(s)):
+            ch = s[idx]
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    candidate = s[start : idx + 1]
+                    try:
+                        parsed = ast.literal_eval(candidate)
+                    except Exception:
+                        try:
+                            parsed = json.loads(candidate)
+                        except Exception:
+                            continue
+                    if _is_prediction_dict(parsed):
+                        return candidate
+                    break
+            if depth < 0:
+                break
+    raise ValueError("Could not locate prediction dict in model output.")
 
 
 def parse_constrained_generation_prediction(text: str) -> GeneratedPair:

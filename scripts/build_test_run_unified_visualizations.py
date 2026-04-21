@@ -25,16 +25,16 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 BUILD_SCRIPT = ROOT_DIR / "scripts" / "build_unified_evaluation_visualization.py"
 
 
-def _task_ids_from_run(path: Path) -> list[str]:
+def _run_entries(path: Path) -> list[dict]:
     data = json.loads(path.read_text(encoding="utf-8"))
     runs = data.get("runs")
     if not isinstance(runs, list):
         raise ValueError(f"Expected 'runs' list in {path}")
-    ids: list[str] = []
+    rows: list[dict] = []
     for r in runs:
         if isinstance(r, dict) and r.get("task_id"):
-            ids.append(str(r["task_id"]))
-    return ids
+            rows.append(r)
+    return rows
 
 
 def _inject_prev_next_nav(html: str, *, prev_href: str | None, next_href: str | None) -> str:
@@ -169,7 +169,8 @@ def main() -> None:
     if not run_path.is_file():
         raise SystemExit(f"Run JSON not found: {run_path}")
 
-    task_ids = _task_ids_from_run(run_path)
+    entries = _run_entries(run_path)
+    task_ids = [str(e["task_id"]) for e in entries]
     if not task_ids:
         raise SystemExit("No task_id entries found in run JSON")
 
@@ -191,20 +192,43 @@ def main() -> None:
         raise SystemExit(f"Missing builder script: {BUILD_SCRIPT}")
 
     failed: list[str] = []
-    for i, tid in enumerate(task_ids, 1):
+    for i, entry in enumerate(entries, 1):
+        tid = str(entry["task_id"])
         out_html = out_dir / f"{tid}_unified_evaluation.html"
-        print(f"[{i}/{len(task_ids)}] {tid}")
-        proc = subprocess.run(
-            [
-                sys.executable,
-                str(BUILD_SCRIPT),
-                "--task-id",
-                tid,
-                "--out",
-                str(out_html),
-            ],
-            cwd=str(ROOT_DIR),
+        dims = entry.get("dimensions", {}) if isinstance(entry, dict) else {}
+        def_path = ((dims.get("definition") or {}).get("result_path")) if isinstance(dims, dict) else None
+        cls_path = (
+            ((dims.get("classification_distribution") or {}).get("result_path"))
+            if isinstance(dims, dict)
+            else None
         )
+        cg_path = (
+            ((dims.get("constrained_generation") or {}).get("result_path"))
+            if isinstance(dims, dict)
+            else None
+        )
+        ed_path = ((dims.get("editing") or {}).get("result_path")) if isinstance(dims, dict) else None
+        inv_path = ((dims.get("inversion") or {}).get("result_path")) if isinstance(dims, dict) else None
+        print(f"[{i}/{len(task_ids)}] {tid}")
+        cmd = [
+            sys.executable,
+            str(BUILD_SCRIPT),
+            "--task-id",
+            tid,
+            "--out",
+            str(out_html),
+        ]
+        if def_path:
+            cmd += ["--definition-json", str(def_path)]
+        if cls_path:
+            cmd += ["--classification-json", str(cls_path)]
+        if cg_path:
+            cmd += ["--constrained-generation-json", str(cg_path)]
+        if ed_path:
+            cmd += ["--editing-json", str(ed_path)]
+        if inv_path:
+            cmd += ["--inversion-json", str(inv_path)]
+        proc = subprocess.run(cmd, cwd=str(ROOT_DIR))
         if proc.returncode != 0:
             failed.append(tid)
             print(f"  WARNING: builder failed for {tid} (exit {proc.returncode})")

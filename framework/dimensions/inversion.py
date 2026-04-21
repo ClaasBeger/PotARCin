@@ -82,16 +82,47 @@ def build_inversion_prompt(
     return "\n".join(lines)
 
 
+def _is_grid_like(value: Any) -> bool:
+    if not isinstance(value, list) or not value:
+        return False
+    if not all(isinstance(row, list) and row for row in value):
+        return False
+    return all(all(isinstance(cell, int) for cell in row) for row in value)
+
+
 def _extract_first_bracketed_list(text: str) -> str:
     s = text.strip()
     if "```" in s:
         s = re.sub(r"```(?:python|json)?\s*", "", s, count=1)
         s = s.replace("```", "").strip()
-    start = s.find("[")
-    end = s.rfind("]")
-    if start == -1 or end == -1 or end <= start:
-        raise ValueError("Could not locate list grid in model output.")
-    return s[start : end + 1]
+
+    # Scan bracket-balanced spans and return the first one that parses as
+    # a list-of-lists integer grid. This is robust to explanatory prose with
+    # bracketed snippets like "[3, 2, 5]" before the final answer.
+    starts = [i for i, ch in enumerate(s) if ch == "["]
+    for start in starts:
+        depth = 0
+        for idx in range(start, len(s)):
+            ch = s[idx]
+            if ch == "[":
+                depth += 1
+            elif ch == "]":
+                depth -= 1
+                if depth == 0:
+                    candidate = s[start : idx + 1]
+                    try:
+                        parsed = ast.literal_eval(candidate)
+                    except Exception:
+                        try:
+                            parsed = json.loads(candidate)
+                        except Exception:
+                            continue
+                    if _is_grid_like(parsed):
+                        return candidate
+                    break
+            if depth < 0:
+                break
+    raise ValueError("Could not locate list-of-lists grid in model output.")
 
 
 def parse_inversion_prediction(text: str) -> Grid:

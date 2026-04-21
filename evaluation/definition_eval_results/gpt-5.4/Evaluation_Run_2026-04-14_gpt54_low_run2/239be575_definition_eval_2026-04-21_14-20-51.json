@@ -1,0 +1,535 @@
+{
+  "task_id": "239be575",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 8 0 8\n2 2 8 0 0\n2 2 0 0 8\n0 0 0 2 2\n8 8 0 2 2\nOutput:\n0\n\nExample 2:\n\nInput:\n0 8 0 0 0 0 0\n2 2 0 8 8 8 0\n2 2 8 8 0 2 2\n0 0 8 0 0 2 2\n0 8 0 0 8 0 0\nOutput:\n8\n\nExample 3:\n\nInput:\n8 2 2 8 8 0 0\n0 2 2 0 0 0 8\n0 8 8 0 0 8 0\n0 0 8 0 0 0 8\n8 0 8 8 8 2 2\n8 0 0 0 0 2 2\nOutput:\n8\n\nExample 4:\n\nInput:\n8 8 0 0 2 2 0\n0 8 8 0 2 2 8\n0 0 0 8 0 8 0\n8 0 0 0 0 0 0\n0 2 2 0 8 0 8\n0 2 2 8 8 0 8\nOutput:\n0\n\nExample 5:\n\nInput:\n8 0 0 0 0 8 0\n0 0 2 2 0 8 0\n8 0 2 2 0 0 0\n0 0 8 0 0 8 0\n0 0 8 2 2 0 8\n8 0 0 2 2 8 0\nOutput:\n8\n\nExample 6:\n\nInput:\n8 0 0 2 2 8\n8 0 8 2 2 0\n0 0 0 0 8 0\n2 2 8 0 8 0\n2 2 0 0 0 8\n0 8 8 0 8 0\nOutput:\n0\n\nBelow is a test input grid.\n\nInput:\n2 2 8 8 0 8\n2 2 0 8 0 0\n8 8 0 0 0 8\n0 8 8 8 0 0\n8 0 8 0 0 8\n0 0 8 2 2 0\n8 0 0 2 2 0\n0 8 0 0 0 8\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    dirs8 = [(-1, -1), (-1, 0), (-1, 1),\n             (0, -1),           (0, 1),\n             (1, -1),  (1, 0),  (1, 1)]\n\n    # Find the two connected components of color 2\n    seen = [[False] * w for _ in range(h)]\n    two_comps = []\n\n    for r in range(h):\n        for c in range(w):\n            if grid[r][c] == 2 and not seen[r][c]:\n                stack = [(r, c)]\n                seen[r][c] = True\n                comp = set()\n                while stack:\n                    x, y = stack.pop()\n                    comp.add((x, y))\n                    for dx, dy in dirs8:\n                        nx, ny = x + dx, y + dy\n                        if 0 <= nx < h and 0 <= ny < w and not seen[nx][ny] and grid[nx][ny] == 2:\n                            seen[nx][ny] = True\n                            stack.append((nx, ny))\n                two_comps.append(comp)\n\n    if len(two_comps) != 2:\n        return [[0]]\n\n    comp1, comp2 = two_comps\n\n    # All 8-cells adjacent (8-neighbor) to each 2-block\n    start_8 = set()\n    target_8 = set()\n\n    for x, y in comp1:\n        for dx, dy in dirs8:\n            nx, ny = x + dx, y + dy\n            if 0 <= nx < h and 0 <= ny < w and grid[nx][ny] == 8:\n                start_8.add((nx, ny))\n\n    for x, y in comp2:\n        for dx, dy in dirs8:\n            nx, ny = x + dx, y + dy\n            if 0 <= nx < h and 0 <= ny < w and grid[nx][ny] == 8:\n                target_8.add((nx, ny))\n\n    # BFS through 8-cells to see whether an 8-path connects the two blocks\n    stack = list(start_8)\n    visited = set(start_8)\n\n    while stack:\n        x, y = stack.pop()\n        if (x, y) in target_8:\n            return [[8]]\n        for dx, dy in dirs8:\n            nx, ny = x + dx, y + dy\n            if 0 <= nx < h and 0 <= ny < w and grid[nx][ny] == 8 and (nx, ny) not in visited:\n                visited.add((nx, ny))\n                stack.append((nx, ny))\n\n    return [[0]]",
+  "script": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    dirs8 = [(-1, -1), (-1, 0), (-1, 1),\n             (0, -1),           (0, 1),\n             (1, -1),  (1, 0),  (1, 1)]\n\n    # Find the two connected components of color 2\n    seen = [[False] * w for _ in range(h)]\n    two_comps = []\n\n    for r in range(h):\n        for c in range(w):\n            if grid[r][c] == 2 and not seen[r][c]:\n                stack = [(r, c)]\n                seen[r][c] = True\n                comp = set()\n                while stack:\n                    x, y = stack.pop()\n                    comp.add((x, y))\n                    for dx, dy in dirs8:\n                        nx, ny = x + dx, y + dy\n                        if 0 <= nx < h and 0 <= ny < w and not seen[nx][ny] and grid[nx][ny] == 2:\n                            seen[nx][ny] = True\n                            stack.append((nx, ny))\n                two_comps.append(comp)\n\n    if len(two_comps) != 2:\n        return [[0]]\n\n    comp1, comp2 = two_comps\n\n    # All 8-cells adjacent (8-neighbor) to each 2-block\n    start_8 = set()\n    target_8 = set()\n\n    for x, y in comp1:\n        for dx, dy in dirs8:\n            nx, ny = x + dx, y + dy\n            if 0 <= nx < h and 0 <= ny < w and grid[nx][ny] == 8:\n                start_8.add((nx, ny))\n\n    for x, y in comp2:\n        for dx, dy in dirs8:\n            nx, ny = x + dx, y + dy\n            if 0 <= nx < h and 0 <= ny < w and grid[nx][ny] == 8:\n                target_8.add((nx, ny))\n\n    # BFS through 8-cells to see whether an 8-path connects the two blocks\n    stack = list(start_8)\n    visited = set(start_8)\n\n    while stack:\n        x, y = stack.pop()\n        if (x, y) in target_8:\n            return [[8]]\n        for dx, dy in dirs8:\n            nx, ny = x + dx, y + dy\n            if 0 <= nx < h and 0 <= ny < w and grid[nx][ny] == 8 and (nx, ny) not in visited:\n                visited.add((nx, ny))\n                stack.append((nx, ny))\n\n    return [[0]]",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 6,
+      "total": 6,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 535,
+      "total": 1000,
+      "success_rate": 0.535
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 9,
+      "input": [
+        [
+          3,
+          3,
+          0,
+          3,
+          0,
+          3,
+          3,
+          3,
+          3,
+          3,
+          0,
+          0,
+          3,
+          3
+        ],
+        [
+          3,
+          0,
+          0,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          0,
+          3,
+          0
+        ],
+        [
+          4,
+          4,
+          3,
+          3,
+          3,
+          0,
+          3,
+          3,
+          3,
+          4,
+          4,
+          3,
+          3,
+          0
+        ],
+        [
+          4,
+          4,
+          3,
+          0,
+          3,
+          0,
+          3,
+          0,
+          0,
+          4,
+          4,
+          3,
+          0,
+          3
+        ],
+        [
+          3,
+          0,
+          3,
+          3,
+          3,
+          0,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          0,
+          3,
+          0,
+          3,
+          3,
+          0,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3,
+          0,
+          3,
+          0,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          3,
+          3,
+          0,
+          0,
+          3,
+          0
+        ],
+        [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          0,
+          3,
+          3,
+          3,
+          0,
+          3,
+          3
+        ],
+        [
+          0,
+          3,
+          3,
+          0,
+          3,
+          3,
+          0,
+          3,
+          3,
+          3,
+          0,
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          0,
+          3,
+          3,
+          3,
+          3,
+          0,
+          3,
+          3,
+          3,
+          3,
+          3,
+          0,
+          0,
+          3
+        ],
+        [
+          0,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          0,
+          3,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          3
+        ]
+      ],
+      "got": [
+        [
+          0
+        ]
+      ]
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          4,
+          4,
+          1,
+          1,
+          0,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          0,
+          1,
+          1,
+          4,
+          4
+        ],
+        [
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": [
+        [
+          1
+        ]
+      ],
+      "got": [
+        [
+          0
+        ]
+      ]
+    }
+  },
+  "evaluation_ok": true
+}

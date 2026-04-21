@@ -456,6 +456,17 @@ pre.code {{
 def main() -> None:
     p = argparse.ArgumentParser(description="Unified evaluation visualization HTML.")
     p.add_argument("--task-id", default="a85d4709")
+    p.add_argument("--definition-json", default="", help="Optional explicit definition eval JSON path")
+    p.add_argument(
+        "--classification-json", default="", help="Optional explicit classification eval JSON path"
+    )
+    p.add_argument(
+        "--constrained-generation-json",
+        default="",
+        help="Optional explicit constrained generation eval JSON path",
+    )
+    p.add_argument("--editing-json", default="", help="Optional explicit editing eval JSON path")
+    p.add_argument("--inversion-json", default="", help="Optional explicit inversion eval JSON path")
     p.add_argument(
         "--out",
         default="",
@@ -466,11 +477,19 @@ def main() -> None:
     task = load_task(task_id)
 
     eval_root = ROOT_DIR / "evaluation"
-    def_json = _latest_json(eval_root / "definition_eval_results", task_id)
-    cls_json = _latest_json(eval_root / "classification_eval_results", task_id)
-    cg_json = _latest_json(eval_root / "constrained_generation_eval_results", task_id)
-    ed_json = _latest_json(eval_root / "editing_eval_results", task_id)
-    inv_json = _latest_json(eval_root / "inversion_eval_results", task_id)
+    def _explicit_or_latest(explicit: str, eval_dir: str) -> Optional[Path]:
+        if explicit:
+            pth = Path(explicit)
+            if not pth.is_absolute():
+                pth = ROOT_DIR / pth
+            return pth if pth.is_file() else None
+        return _latest_json(eval_root / eval_dir, task_id)
+
+    def_json = _explicit_or_latest(args.definition_json, "definition_eval_results")
+    cls_json = _explicit_or_latest(args.classification_json, "classification_eval_results")
+    cg_json = _explicit_or_latest(args.constrained_generation_json, "constrained_generation_eval_results")
+    ed_json = _explicit_or_latest(args.editing_json, "editing_eval_results")
+    inv_json = _explicit_or_latest(args.inversion_json, "inversion_eval_results")
 
     # --- Section: demos ---
     demo_blocks = []
