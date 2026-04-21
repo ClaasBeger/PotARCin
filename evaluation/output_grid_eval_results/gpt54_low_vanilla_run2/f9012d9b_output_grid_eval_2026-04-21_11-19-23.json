@@ -1,0 +1,51 @@
+{
+  "task_id": "f9012d9b",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "max_train_demos": null,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below.\n\nExample 1\nInput:\n2 1 2 1 2\n1 1 1 1 1\n2 1 2 1 2\n0 0 1 1 1\n0 0 2 1 2\nOutput:\n1 1\n2 1\n\nExample 2\nInput:\n8 6 0 6\n6 8 6 8\n8 6 8 6\n6 8 6 8\nOutput:\n8\n\nExample 3\nInput:\n2 2 5 2 2 5 2\n2 2 5 2 2 5 2\n5 5 5 5 5 5 5\n2 2 5 2 2 5 2\n2 2 5 2 2 5 2\n5 5 5 5 5 0 0\n2 2 5 2 2 0 0\nOutput:\n5 5\n5 2\n\nBelow is a test input grid. Predict the corresponding output grid by applying the rule you found.\nTest Input:\n8 1 8 8 0 0 0\n1 8 8 1 0 0 0\n8 8 1 8 0 0 0\n8 1 8 8 1 8 8\n1 8 8 1 8 8 1\n8 8 1 8 8 1 8\n8 1 8 8 1 8 8\n\nYour final answer must be ONLY a single Python list-of-lists grid for that output:\n[[...], ...]\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "[[1, 8, 8], [8, 8, 1], [8, 1, 8]]",
+  "ground_truth": [
+    [
+      1,
+      8,
+      8
+    ],
+    [
+      8,
+      8,
+      1
+    ],
+    [
+      8,
+      1,
+      8
+    ]
+  ],
+  "evaluation_ok": true,
+  "prediction": [
+    [
+      1,
+      8,
+      8
+    ],
+    [
+      8,
+      8,
+      1
+    ],
+    [
+      8,
+      1,
+      8
+    ]
+  ],
+  "exact_match": true,
+  "metrics": {
+    "exact_match": 1.0
+  }
+}

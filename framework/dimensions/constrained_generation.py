@@ -4,12 +4,10 @@ import ast
 import copy
 import datetime as dt
 import json
-import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, List, Optional, Sequence, Tuple
-from urllib import error, request
 
 from framework.verifier_selection import select_verifier_for_task, valid_verifiers_for_task
 from framework.dimensions.base import (
@@ -19,6 +17,7 @@ from framework.dimensions.base import (
     DimensionResult,
 )
 from framework.grids import Grid, GridPair, is_equal_grid
+from framework.llm_api import request_text_completion, resolve_provider_config
 from framework.tasks.arc_dataset import load_task
 from framework.tasks.base import ArcTask, DimensionName
 
@@ -106,45 +105,24 @@ def _openai_responses_completion(
     *,
     prompt: str,
     model: str,
-    api_key: str,
-    base_url: str,
+    provider: str | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
     reasoning_effort: Optional[str] = None,
     tools_enabled: bool = False,
     timeout_s: int = 180,
 ) -> str:
-    url = base_url.rstrip("/") + "/responses"
-    payload: dict[str, Any] = {"model": model, "input": prompt}
-    if reasoning_effort is not None:
-        payload["reasoning"] = {"effort": reasoning_effort}
-    if tools_enabled:
-        payload["tools"] = [{"type": "code_interpreter", "container": {"type": "auto"}}]
-    body = json.dumps(payload).encode("utf-8")
-    req = request.Request(
-        url=url,
-        data=body,
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        },
-        method="POST",
+    text, _provider, _base = request_text_completion(
+        prompt=prompt,
+        model=model,
+        provider=provider,
+        api_key=api_key,
+        base_url=base_url,
+        reasoning_effort=reasoning_effort,
+        tools_enabled=tools_enabled,
+        timeout_s=timeout_s,
     )
-    try:
-        with request.urlopen(req, timeout=timeout_s) as resp:
-            raw = resp.read().decode("utf-8")
-    except error.HTTPError as e:
-        body_txt = e.read().decode("utf-8", errors="replace")
-        raise ValueError(f"Responses API error {e.code}: {body_txt}") from e
-    parsed = json.loads(raw)
-    out_text = parsed.get("output_text")
-    if isinstance(out_text, str) and out_text.strip():
-        return out_text
-    parts: list[str] = []
-    for item in parsed.get("output", []):
-        for c in item.get("content", []):
-            txt = c.get("text")
-            if isinstance(txt, str) and txt.strip():
-                parts.append(txt)
-    return "\n".join(parts).strip()
+    return text
 
 
 class ConstrainedGenerationEvaluator(
@@ -291,6 +269,7 @@ def run_constrained_generation_api_evaluation_once(
     *,
     task_id: str,
     model: str = "gpt-5.4",
+    provider: str | None = None,
     reasoning_effort: Optional[str] = "low",
     tools_enabled: bool = False,
     api_key: Optional[str] = None,
@@ -309,15 +288,17 @@ def run_constrained_generation_api_evaluation_once(
         raise ValueError(f"Task {task_id} has no training pairs.")
 
     prompt = build_constrained_generation_prompt(demonstrations=task.train_pairs)
-    effective_key = api_key or os.environ.get("OPENAI_API_KEY")
-    effective_base = base_url or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
-    if not effective_key:
-        raise ValueError("No API key provided. Set `api_key` or OPENAI_API_KEY.")
-
+    resolved_provider, _effective_key, effective_base = resolve_provider_config(
+        model=model,
+        provider=provider,
+        api_key=api_key,
+        base_url=base_url,
+    )
     raw = _openai_responses_completion(
         prompt=prompt,
         model=model,
-        api_key=effective_key,
+        provider=resolved_provider,
+        api_key=api_key,
         base_url=effective_base,
         reasoning_effort=reasoning_effort,
         tools_enabled=tools_enabled,
@@ -331,6 +312,7 @@ def run_constrained_generation_api_evaluation_once(
     result: dict[str, Any] = {
         "task_id": task_id,
         "model": model,
+        "provider": resolved_provider,
         "base_url": effective_base,
         "reasoning_effort": reasoning_effort,
         "tools_enabled": tools_enabled,

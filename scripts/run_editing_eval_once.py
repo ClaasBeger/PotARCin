@@ -17,6 +17,12 @@ def main() -> None:
     p = argparse.ArgumentParser(description="Run one Editing-dimension model eval for a single task.")
     p.add_argument("--task-id", default="a85d4709", help="ARC task id")
     p.add_argument("--model", default="gpt-5.4", help="Model name")
+    p.add_argument(
+        "--provider",
+        default=None,
+        choices=["openai", "anthropic", "google"],
+        help="LLM provider (default: infer from --model)",
+    )
     p.add_argument("--reasoning-effort", default="low", help="Reasoning effort for responses API")
     p.add_argument("--tools-enabled", action="store_true", help="Enable code interpreter tool")
     p.add_argument("--seed", type=int, default=0, help="RNG seed for corruption sampling")
@@ -39,6 +45,7 @@ def main() -> None:
     res = run_editing_api_evaluation_once(
         task=task,
         model=args.model,
+        provider=args.provider,
         reasoning_effort=args.reasoning_effort,
         tools_enabled=args.tools_enabled,
         seed=args.seed,

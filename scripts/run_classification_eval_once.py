@@ -16,6 +16,12 @@ def main() -> None:
     p = argparse.ArgumentParser(description="Run one Classification eval call.")
     p.add_argument("--task-id", default="a85d4709")
     p.add_argument("--model", default="gpt-5.4")
+    p.add_argument(
+        "--provider",
+        default=None,
+        choices=["openai", "anthropic", "google"],
+        help="LLM provider (default: infer from --model)",
+    )
     p.add_argument("--reasoning-effort", default="low")
     p.add_argument("--tools-enabled", action="store_true")
     p.add_argument("--n-pos", type=int, default=3)
@@ -27,6 +33,7 @@ def main() -> None:
     res = run_classification_api_evaluation_once(
         task_id=args.task_id,
         model=args.model,
+        provider=args.provider,
         reasoning_effort=args.reasoning_effort,
         tools_enabled=args.tools_enabled,
         n_pos=args.n_pos,

@@ -21,6 +21,12 @@ def main() -> None:
     parser.add_argument("--test-idx", type=int, default=0, help="Test input index")
     parser.add_argument("--model", default="gpt-5.4", help="Model name")
     parser.add_argument(
+        "--provider",
+        default=None,
+        choices=["openai", "anthropic", "google"],
+        help="LLM provider (default: infer from --model)",
+    )
+    parser.add_argument(
         "--api-endpoint",
         default="responses",
         choices=["responses", "chat_completions"],
@@ -48,6 +54,7 @@ def main() -> None:
         task=task,
         test_idx=args.test_idx,
         model=args.model,
+        provider=args.provider,
         api_endpoint=args.api_endpoint,
         reasoning_effort=args.reasoning_effort,
         tools_enabled=args.tools_enabled,

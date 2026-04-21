@@ -20,6 +20,12 @@ def main() -> None:
     parser.add_argument("--test-idx", type=int, default=0, help="Which test example to use")
     parser.add_argument("--model", default="gpt-5.4", help="Model name")
     parser.add_argument(
+        "--provider",
+        default=None,
+        choices=["openai", "anthropic", "google"],
+        help="LLM provider (default: infer from --model)",
+    )
+    parser.add_argument(
         "--reasoning-effort",
         default="low",
         help="Reasoning effort for responses API (e.g. low/medium/high)",
@@ -46,6 +52,7 @@ def main() -> None:
         task_id=args.task_id,
         test_idx=args.test_idx,
         model=args.model,
+        provider=args.provider,
         reasoning_effort=args.reasoning_effort,
         tools_enabled=args.tools_enabled,
         max_train_demos=args.max_train_demos,

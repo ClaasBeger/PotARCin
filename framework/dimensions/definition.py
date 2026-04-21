@@ -18,6 +18,7 @@ from framework.dimensions.base import (
     DimensionResult,
 )
 from framework.grids import Grid, GridPair, is_equal_grid
+from framework.llm_api import request_text_completion, resolve_provider_config
 from framework.tasks.base import ArcTask, DimensionName, Verifier
 
 
@@ -142,54 +143,25 @@ def _openai_responses_completion(
     *,
     prompt: str,
     model: str,
-    api_key: str,
-    base_url: str,
+    provider: str | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
     reasoning_effort: Optional[str] = None,
     tools_enabled: bool = False,
     timeout_s: int = 180,
 ) -> str:
-    """Send a prompt to OpenAI-compatible `/responses` endpoint."""
-    url = base_url.rstrip("/") + "/responses"
-    payload: dict[str, Any] = {
-        "model": model,
-        "input": prompt,
-    }
-    if reasoning_effort is not None:
-        payload["reasoning"] = {"effort": reasoning_effort}
-    if tools_enabled:
-        payload["tools"] = [{"type": "code_interpreter", "container": {"type": "auto"}}]
-
-    body = json.dumps(payload).encode("utf-8")
-    req = request.Request(
-        url=url,
-        data=body,
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        },
-        method="POST",
+    """Send a prompt to provider-native completion endpoint."""
+    text, _provider, _base = request_text_completion(
+        prompt=prompt,
+        model=model,
+        provider=provider,
+        api_key=api_key,
+        base_url=base_url,
+        reasoning_effort=reasoning_effort,
+        tools_enabled=tools_enabled,
+        timeout_s=timeout_s,
     )
-    try:
-        with request.urlopen(req, timeout=timeout_s) as resp:
-            raw = resp.read().decode("utf-8")
-    except error.HTTPError as e:
-        body_txt = e.read().decode("utf-8", errors="replace")
-        raise ValueError(
-            f"Responses API error {e.code}: {body_txt}"
-        ) from e
-    parsed = json.loads(raw)
-
-    out_text = parsed.get("output_text")
-    if isinstance(out_text, str) and out_text.strip():
-        return out_text
-
-    parts: list[str] = []
-    for item in parsed.get("output", []):
-        for c in item.get("content", []):
-            txt = c.get("text")
-            if isinstance(txt, str) and txt.strip():
-                parts.append(txt)
-    return "\n".join(parts).strip()
+    return text
 
 
 def _extract_python_script(text: str) -> str:
@@ -318,6 +290,7 @@ def run_definition_api_evaluation(
     task: ArcTask,
     test_idx: int = 0,
     model: str = "o3",
+    provider: str | None = None,
     reasoning_effort: Optional[str] = None,
     tools_enabled: bool = False,
     api_endpoint: str = "responses",
@@ -351,21 +324,27 @@ def run_definition_api_evaluation(
         model=model,
     )
 
-    effective_key = api_key or os.environ.get("OPENAI_API_KEY")
-    effective_base = base_url or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
-    if not effective_key:
-        raise ValueError("No API key provided. Set `api_key` or OPENAI_API_KEY.")
-
+    resolved_provider: str | None = None
+    effective_base: str | None = None
     if api_endpoint == "responses":
-        raw_response = _openai_responses_completion(
+        raw_response, resolved_provider, effective_base = request_text_completion(
             prompt=prompt,
             model=model,
-            api_key=effective_key,
-            base_url=effective_base,
+            provider=provider,
+            api_key=api_key,
+            base_url=base_url,
             reasoning_effort=reasoning_effort,
             tools_enabled=tools_enabled,
         )
     elif api_endpoint == "chat_completions":
+        resolved_provider, effective_key, effective_base = resolve_provider_config(
+            model=model,
+            provider=provider,
+            api_key=api_key,
+            base_url=base_url,
+        )
+        if resolved_provider != "openai":
+            raise ValueError("api_endpoint='chat_completions' is only supported for provider='openai'.")
         raw_response = _openai_compatible_chat_completion(
             prompt=prompt,
             model=model,
@@ -383,6 +362,7 @@ def run_definition_api_evaluation(
         "task_id": task.task_id,
         "test_idx": test_idx,
         "model": model,
+        "provider": resolved_provider,
         "base_url": effective_base,
         "api_endpoint": api_endpoint,
         "reasoning_effort": reasoning_effort,

@@ -59,6 +59,7 @@ def run_all_dimensions_for_task(
     *,
     task_id: str,
     model: str = "gpt-5.4",
+    provider: str | None = None,
     reasoning_effort: str = "low",
     tools_enabled: bool = False,
     seed: int | None = None,
@@ -90,6 +91,7 @@ def run_all_dimensions_for_task(
     report: dict[str, Any] = {
         "task_id": task_id,
         "model": model,
+        "provider": provider,
         "reasoning_effort": reasoning_effort,
         "tools_enabled": tools_enabled,
         "seed": seed,
@@ -147,6 +149,7 @@ def run_all_dimensions_for_task(
             task=task,
             test_idx=definition_test_idx,
             model=model,
+            provider=provider,
             api_endpoint="responses",
             reasoning_effort=reasoning_effort,
             tools_enabled=tools_enabled,
@@ -158,6 +161,7 @@ def run_all_dimensions_for_task(
         lambda: run_distribution_classification_api_evaluation_once(
             task_id=task_id,
             model=model,
+            provider=provider,
             reasoning_effort=reasoning_effort,
             tools_enabled=tools_enabled,
             seed=dim_seeds["classification_distribution"],
@@ -173,6 +177,7 @@ def run_all_dimensions_for_task(
         lambda: run_constrained_generation_api_evaluation_once(
             task_id=task_id,
             model=model,
+            provider=provider,
             reasoning_effort=reasoning_effort,
             tools_enabled=tools_enabled,
             out_dir=(
@@ -187,6 +192,7 @@ def run_all_dimensions_for_task(
         lambda: run_editing_api_evaluation_once(
             task=task,
             model=model,
+            provider=provider,
             reasoning_effort=reasoning_effort,
             tools_enabled=tools_enabled,
             seed=dim_seeds["editing"],
@@ -198,6 +204,7 @@ def run_all_dimensions_for_task(
         lambda: run_inversion_api_evaluation_once(
             task_id=task_id,
             model=model,
+            provider=provider,
             reasoning_effort=reasoning_effort,
             tools_enabled=tools_enabled,
             seed=dim_seeds["inversion"],
@@ -344,6 +351,12 @@ def main() -> None:
     )
     p.add_argument("--model", default="gpt-5.4", help="Model name")
     p.add_argument(
+        "--provider",
+        default=None,
+        choices=["openai", "anthropic", "google"],
+        help="LLM provider (default: infer from --model)",
+    )
+    p.add_argument(
         "--reasoning-effort",
         default="low",
         help="Reasoning effort for responses API (e.g. low/medium/high)",
@@ -446,6 +459,7 @@ def main() -> None:
         run = run_all_dimensions_for_task(
             task_id=args.task_id,
             model=args.model,
+            provider=args.provider,
             reasoning_effort=args.reasoning_effort,
             tools_enabled=args.tools_enabled,
             seed=base_seed,
@@ -507,6 +521,7 @@ def main() -> None:
         run = run_all_dimensions_for_task(
             task_id=task_id,
             model=args.model,
+            provider=args.provider,
             reasoning_effort=args.reasoning_effort,
             tools_enabled=args.tools_enabled,
             seed=run_seed,

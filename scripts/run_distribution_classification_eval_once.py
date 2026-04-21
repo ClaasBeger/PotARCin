@@ -3,7 +3,7 @@
 Uses the prompt from ``framework.dimensions.classification.build_distribution_classification_prompt``
 (via ``run_distribution_classification_api_evaluation_once``).
 
-From repo root (requires ``OPENAI_API_KEY``)::
+From repo root (requires matching provider key, e.g. ``OPENAI_API_KEY``)::
 
     python scripts/run_distribution_classification_eval_once.py --task-id a85d4709 --seed 0
 
@@ -31,6 +31,12 @@ def main() -> None:
     parser.add_argument("--task-id", default="a85d4709", help="ARC task id")
     parser.add_argument("--model", default="gpt-5.4", help="Model name")
     parser.add_argument(
+        "--provider",
+        default=None,
+        choices=["openai", "anthropic", "google"],
+        help="LLM provider (default: infer from --model)",
+    )
+    parser.add_argument(
         "--reasoning-effort",
         default="low",
         help="Reasoning effort for responses API (e.g. low/medium/high)",
@@ -51,6 +57,7 @@ def main() -> None:
     result = run_distribution_classification_api_evaluation_once(
         task_id=args.task_id,
         model=args.model,
+        provider=args.provider,
         reasoning_effort=args.reasoning_effort,
         tools_enabled=args.tools_enabled,
         seed=args.seed,
