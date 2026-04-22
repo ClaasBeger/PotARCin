@@ -131,11 +131,38 @@ def _extract_first_braced_object(text: str) -> str:
     if "```" in s:
         s = re.sub(r"```(?:python|json)?\s*", "", s, count=1)
         s = s.replace("```", "").strip()
-    start = s.find("{")
-    end = s.rfind("}")
-    if start == -1 or end == -1 or end <= start:
+    candidates: list[str] = []
+    for start, ch in enumerate(s):
+        if ch != "{":
+            continue
+        depth = 0
+        for idx in range(start, len(s)):
+            c = s[idx]
+            if c == "{":
+                depth += 1
+            elif c == "}":
+                depth -= 1
+                if depth == 0:
+                    cand = s[start : idx + 1]
+                    try:
+                        obj = ast.literal_eval(cand)
+                    except Exception:
+                        try:
+                            obj = json.loads(cand)
+                        except Exception:
+                            break
+                    if isinstance(obj, dict) and isinstance(obj.get("input"), list) and isinstance(
+                        obj.get("output"), list
+                    ):
+                        candidates.append(cand)
+                    break
+            if depth < 0:
+                break
+    if not candidates:
         raise ValueError("Could not locate dict object in model output.")
-    return s[start : end + 1]
+    # Prefer the last valid object so self-corrections like
+    # \"Wait, let me reconsider... {better answer}\" are retained.
+    return candidates[-1]
 
 
 def parse_editing_prediction(text: str) -> GridPair:
@@ -151,7 +178,25 @@ def parse_editing_prediction(text: str) -> GridPair:
     out = obj.get("output")
     if not isinstance(inp, list) or not isinstance(out, list):
         raise ValueError("Prediction dict must have list fields `input` and `output`.")
-    return GridPair(inp, out)  # type: ignore[arg-type]
+    def _to_int_grid(g: Any) -> Grid:
+        if not isinstance(g, list):
+            raise ValueError("Grid must be a list-of-lists.")
+        out_rows: Grid = []
+        for row in g:
+            if not isinstance(row, list):
+                raise ValueError("Grid rows must be lists.")
+            out_row: list[int] = []
+            for cell in row:
+                if isinstance(cell, int):
+                    out_row.append(cell)
+                elif isinstance(cell, str) and cell.strip().isdigit():
+                    out_row.append(int(cell.strip()))
+                else:
+                    raise ValueError("Grid cells must be integers (or numeric strings).")
+            out_rows.append(out_row)
+        return out_rows
+
+    return GridPair(_to_int_grid(inp), _to_int_grid(out))
 
 
 def _openai_responses_completion(

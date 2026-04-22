@@ -12,6 +12,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
+from framework.eval_paths import output_grid_run_dir
 from framework.dimensions.output_grid_eval import run_output_grid_api_evaluation_once
 from framework.tasks.arc_dataset import iter_tasks
 from framework.tasks.base import TaskSource
@@ -59,11 +60,11 @@ def _has_logged_result(out_dir: Path, task_id: str) -> bool:
     return any(out_dir.glob(f"{task_id}_output_grid_eval_*.json"))
 
 
-def _resolve_out_dir(out_dir: Path, run_tag: str | None) -> Path:
+def _resolve_out_dir(out_dir: Path, run_tag: str | None, model: str) -> Path:
     if not out_dir.is_absolute():
         out_dir = ROOT_DIR / out_dir
     if run_tag:
-        out_dir = out_dir / run_tag
+        out_dir = output_grid_run_dir(root_dir=ROOT_DIR, model=model, run_tag=run_tag)
     return out_dir
 
 
@@ -150,8 +151,8 @@ def main() -> None:
         "--run-tag",
         default=None,
         help=(
-            "Optional subdirectory under --out-dir so separate runs do not mix result files "
-            "(e.g. evaluation/output_grid_eval_results/my_experiment/). "
+            "Optional run tag for scoped output. Files are written to "
+            "evaluation/output_grid_eval_results/<ModelAlias>/<Run1|Run2>/<run_tag>/. "
             "Resume discovery only sees JSONs under this directory."
         ),
     )
@@ -254,7 +255,7 @@ def main() -> None:
     else:
         task_ids = _all_train_task_ids()
 
-    out_dir = _resolve_out_dir(args.out_dir, args.run_tag)
+    out_dir = _resolve_out_dir(args.out_dir, args.run_tag, args.model)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     ordered_count = len(task_ids)

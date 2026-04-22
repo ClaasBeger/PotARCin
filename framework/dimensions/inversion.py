@@ -87,7 +87,10 @@ def _is_grid_like(value: Any) -> bool:
         return False
     if not all(isinstance(row, list) and row for row in value):
         return False
-    return all(all(isinstance(cell, int) for cell in row) for row in value)
+    return all(
+        all(isinstance(cell, int) or (isinstance(cell, str) and cell.strip().isdigit()) for cell in row)
+        for row in value
+    )
 
 
 def _extract_first_bracketed_list(text: str) -> str:
@@ -100,6 +103,7 @@ def _extract_first_bracketed_list(text: str) -> str:
     # a list-of-lists integer grid. This is robust to explanatory prose with
     # bracketed snippets like "[3, 2, 5]" before the final answer.
     starts = [i for i, ch in enumerate(s) if ch == "["]
+    candidates: list[str] = []
     for start in starts:
         depth = 0
         for idx in range(start, len(s)):
@@ -110,19 +114,32 @@ def _extract_first_bracketed_list(text: str) -> str:
                 depth -= 1
                 if depth == 0:
                     candidate = s[start : idx + 1]
+                    candidate_to_return = candidate
                     try:
                         parsed = ast.literal_eval(candidate)
                     except Exception:
                         try:
                             parsed = json.loads(candidate)
                         except Exception:
-                            continue
+                            normalized = re.sub(r"(?<=\d)\s+(?=\d)", ", ", candidate)
+                            try:
+                                parsed = ast.literal_eval(normalized)
+                                candidate_to_return = normalized
+                            except Exception:
+                                try:
+                                    parsed = json.loads(normalized)
+                                    candidate_to_return = normalized
+                                except Exception:
+                                    continue
                     if _is_grid_like(parsed):
-                        return candidate
+                        candidates.append(candidate_to_return)
                     break
             if depth < 0:
                 break
-    raise ValueError("Could not locate list-of-lists grid in model output.")
+    if not candidates:
+        raise ValueError("Could not locate list-of-lists grid in model output.")
+    # Prefer the last valid list so explicit model self-corrections win.
+    return candidates[-1]
 
 
 def parse_inversion_prediction(text: str) -> Grid:
@@ -134,7 +151,20 @@ def parse_inversion_prediction(text: str) -> Grid:
         obj = json.loads(raw_obj)
     if not isinstance(obj, list):
         raise ValueError("Prediction must be a list-of-lists grid.")
-    return obj  # type: ignore[return-value]
+    out_rows: Grid = []
+    for row in obj:
+        if not isinstance(row, list):
+            raise ValueError("Prediction must be a list-of-lists grid.")
+        out_row: list[int] = []
+        for cell in row:
+            if isinstance(cell, int):
+                out_row.append(cell)
+            elif isinstance(cell, str) and cell.strip().isdigit():
+                out_row.append(int(cell.strip()))
+            else:
+                raise ValueError("Grid cells must be integers (or numeric strings).")
+        out_rows.append(out_row)
+    return out_rows
 
 
 def _openai_responses_completion(

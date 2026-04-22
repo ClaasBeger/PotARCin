@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import concurrent.futures
 import json
 import os
+import time
 from typing import Any, Literal, Optional
 from urllib import error, parse, request
 
@@ -249,9 +251,10 @@ def _google_generate_content_completion(
     timeout_s: int = 180,
 ) -> str:
     thinking_level = _map_google_thinking_level(reasoning_effort)
+    sdk_timeout_s = max(timeout_s, 900)  # keep Gemini requests generous by default (15 min minimum)
+    max_attempts = 3
 
-    # Match ConceptARC-Rules first: google genai SDK client.
-    try:
+    def _sdk_call() -> str:
         from google import genai  # type: ignore[import-not-found]
 
         kwargs: dict[str, Any] = {"api_key": api_key}
@@ -259,18 +262,29 @@ def _google_generate_content_completion(
             kwargs["http_options"] = {"base_url": base_url.rstrip("/")}
         client = genai.Client(**kwargs)
         model_id = model if model.startswith("models/") else f"models/{model}"
-        req: dict[str, Any] = {
-            "model": model_id,
-            "contents": [prompt],
-        }
+        req_sdk: dict[str, Any] = {"model": model_id, "contents": [prompt]}
         if thinking_level is not None:
-            req["config"] = {"thinking_config": {"thinking_level": thinking_level}}
-        resp = client.models.generate_content(**req)
+            req_sdk["config"] = {"thinking_config": {"thinking_level": thinking_level}}
+        resp = client.models.generate_content(**req_sdk)
         txt = getattr(resp, "text", None)
         if isinstance(txt, str) and txt.strip():
             return txt
-    except Exception:
-        pass
+        raise ValueError("Google SDK response did not contain any text content.")
+
+    last_sdk_error: Exception | None = None
+    for attempt in range(1, max_attempts + 1):
+        try:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                fut = pool.submit(_sdk_call)
+                return fut.result(timeout=sdk_timeout_s)
+        except concurrent.futures.TimeoutError:
+            last_sdk_error = TimeoutError(
+                f"Google SDK call timed out after {sdk_timeout_s}s (attempt {attempt}/{max_attempts})."
+            )
+        except Exception as e:
+            last_sdk_error = e
+        if attempt < max_attempts:
+            time.sleep(min(4, attempt))
 
     # Fallback: raw HTTP.
     model_path = model if model.startswith("models/") else f"models/{model}"
@@ -289,11 +303,15 @@ def _google_generate_content_completion(
         method="POST",
     )
     try:
-        with request.urlopen(req, timeout=timeout_s) as resp:
+        with request.urlopen(req, timeout=sdk_timeout_s) as resp:
             raw = resp.read().decode("utf-8")
     except error.HTTPError as e:
         body_txt = e.read().decode("utf-8", errors="replace")
-        raise ValueError(f"Google GenerateContent API error {e.code}: {body_txt}") from e
+        raise ValueError(
+            f"Google SDK failed ({last_sdk_error}); fallback HTTP API error {e.code}: {body_txt}"
+        ) from e
+    except Exception as e:
+        raise ValueError(f"Google SDK failed ({last_sdk_error}); fallback HTTP failed: {e}") from e
 
     parsed = json.loads(raw)
     parts: list[str] = []
@@ -306,7 +324,7 @@ def _google_generate_content_completion(
     text = "\n".join(parts).strip()
     if text:
         return text
-    raise ValueError("Google response did not contain any text content.")
+    raise ValueError(f"Google SDK failed ({last_sdk_error}); fallback HTTP had no text content.")
 
 
 def _normalize_reasoning_effort(effort: Optional[str]) -> Optional[str]:

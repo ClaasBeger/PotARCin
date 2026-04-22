@@ -22,6 +22,7 @@ from framework.dimensions.constrained_generation import (
 from framework.dimensions.definition import run_definition_api_evaluation
 from framework.dimensions.editing import run_editing_api_evaluation_once
 from framework.dimensions.inversion import run_inversion_api_evaluation_once
+from framework.eval_paths import dimension_out_dirs, multi_run_summary_dir
 from framework.tasks.arc_dataset import iter_tasks, load_task
 from framework.tasks.base import TaskSource
 
@@ -231,7 +232,26 @@ def _has_any_result_for_task(dir_path: Path, task_id: str, suffix: str) -> bool:
     if not dir_path.is_dir():
         return False
     pattern = f"{task_id}_{suffix}_*.json"
-    return any(dir_path.glob(pattern))
+    matches = sorted(dir_path.glob(pattern))
+    if not matches:
+        return False
+    # Treat a task as complete for this dimension only when at least one
+    # recorded attempt was successful. This avoids "sticky" failed files
+    # (e.g. network outage writes) blocking retries forever.
+    for p in matches:
+        try:
+            payload = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            # Legacy/corrupt files: preserve backward compatibility by counting
+            # presence as complete instead of hard-failing discovery.
+            return True
+        ok = payload.get("evaluation_ok")
+        if ok is True:
+            return True
+        if ok is None:
+            # Older files may not have evaluation_ok; treat as complete.
+            return True
+    return False
 
 
 def _completed_tasks_for_run_tag(all_task_ids: list[str], out_dirs: dict[str, Path]) -> set[str]:
@@ -395,8 +415,9 @@ def main() -> None:
         default=None,
         help=(
             "Optional run tag to isolate outputs. When set, per-dimension JSONs are "
-            "written under evaluation/*_eval_results/<run_tag>/ and summary defaults "
-            "to evaluation/multi_dimension_eval_runs/<run_tag>/run_<timestamp>.json"
+            "written under evaluation/*_eval_results/<ModelAlias>/<Run1|Run2>/<run_tag>/, and "
+            "summary defaults to "
+            "evaluation/multi_dimension_eval_runs/<ModelAlias>/<Run1|Run2>/<run_tag>/run_<timestamp>.json"
         ),
     )
     p.add_argument(
@@ -423,19 +444,7 @@ def main() -> None:
         seed_mode = "none"
 
     if args.run_tag:
-        out_dirs: dict[str, Path] = {
-            "definition": ROOT_DIR / "evaluation" / "definition_eval_results" / args.run_tag,
-            "classification_distribution": ROOT_DIR
-            / "evaluation"
-            / "classification_eval_results"
-            / args.run_tag,
-            "constrained_generation": ROOT_DIR
-            / "evaluation"
-            / "constrained_generation_eval_results"
-            / args.run_tag,
-            "editing": ROOT_DIR / "evaluation" / "editing_eval_results" / args.run_tag,
-            "inversion": ROOT_DIR / "evaluation" / "inversion_eval_results" / args.run_tag,
-        }
+        out_dirs = dimension_out_dirs(root_dir=ROOT_DIR, model=args.model, run_tag=args.run_tag)
     else:
         out_dirs = {}
 
@@ -444,10 +453,7 @@ def main() -> None:
         if args.summary_out
         else (
             (
-                ROOT_DIR
-                / "evaluation"
-                / "multi_dimension_eval_runs"
-                / args.run_tag
+                multi_run_summary_dir(root_dir=ROOT_DIR, model=args.model, run_tag=args.run_tag)
                 / f"run_{ts}.json"
             )
             if args.run_tag

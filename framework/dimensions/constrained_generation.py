@@ -78,7 +78,10 @@ def _is_grid_like(value: Any) -> bool:
         return False
     if not all(isinstance(row, list) and row for row in value):
         return False
-    return all(all(isinstance(cell, int) for cell in row) for row in value)
+    return all(
+        all(isinstance(cell, int) or (isinstance(cell, str) and cell.strip().isdigit()) for cell in row)
+        for row in value
+    )
 
 
 def _is_prediction_dict(value: Any) -> bool:
@@ -98,6 +101,7 @@ def _extract_first_braced_object(text: str) -> str:
     # Scan balanced braces and choose the first parseable object with
     # {"input": <grid>, "output": <grid>} shape. Robust to leading prose.
     starts = [i for i, ch in enumerate(s) if ch == "{"]
+    candidates: list[str] = []
     for start in starts:
         depth = 0
         for idx in range(start, len(s)):
@@ -116,11 +120,14 @@ def _extract_first_braced_object(text: str) -> str:
                         except Exception:
                             continue
                     if _is_prediction_dict(parsed):
-                        return candidate
+                        candidates.append(candidate)
                     break
             if depth < 0:
                 break
-    raise ValueError("Could not locate prediction dict in model output.")
+    if not candidates:
+        raise ValueError("Could not locate prediction dict in model output.")
+    # Prefer the last valid object so explicit model self-corrections win.
+    return candidates[-1]
 
 
 def parse_constrained_generation_prediction(text: str) -> GeneratedPair:
@@ -136,7 +143,25 @@ def parse_constrained_generation_prediction(text: str) -> GeneratedPair:
     out = obj.get("output")
     if not isinstance(inp, list) or not isinstance(out, list):
         raise ValueError("Prediction dict must have list fields `input` and `output`.")
-    return inp, out  # type: ignore[return-value]
+    def _to_int_grid(g: Any) -> Grid:
+        if not isinstance(g, list):
+            raise ValueError("Grid must be a list-of-lists.")
+        out_rows: Grid = []
+        for row in g:
+            if not isinstance(row, list):
+                raise ValueError("Grid rows must be lists.")
+            out_row: list[int] = []
+            for cell in row:
+                if isinstance(cell, int):
+                    out_row.append(cell)
+                elif isinstance(cell, str) and cell.strip().isdigit():
+                    out_row.append(int(cell.strip()))
+                else:
+                    raise ValueError("Grid cells must be integers (or numeric strings).")
+            out_rows.append(out_row)
+        return out_rows
+
+    return _to_int_grid(inp), _to_int_grid(out)
 
 
 def _openai_responses_completion(
