@@ -754,12 +754,21 @@ def main() -> None:
             "</div></div>"
         )
     else:
-        cg_html = (
-            "<p class='note'>No constrained-generation eval JSON under "
-            "<code>evaluation/constrained_generation_eval_results/</code> "
-            "(or no valid <code>prediction</code> in the latest file). "
-            "Run a constrained-generation eval to record the model pair and metrics.</p>"
-        )
+        if cg_json:
+            d = _load_json(cg_json)
+            err = d.get("error")
+            err_txt = f" Error: <code>{escape(str(err))}</code>." if err else ""
+            cg_html = (
+                "<p class='note'>Constrained-generation eval JSON exists, but the latest result is invalid "
+                "(no valid <code>prediction</code> could be parsed). "
+                f"File: <code>{escape(cg_json.name)}</code>.{err_txt}</p>"
+            )
+        else:
+            cg_html = (
+                "<p class='note'>No constrained-generation eval JSON under "
+                "<code>evaluation/constrained_generation_eval_results/</code>. "
+                "Run a constrained-generation eval to record the model pair and metrics.</p>"
+            )
     if cg_metrics_line:
         cg_footer_inner += f'<div class="metrics">Metrics snapshot: {escape(cg_metrics_line)}</div>'
     cg_block = cg_summary + cg_html + (_section_footer(cg_footer_inner) if cg_footer_inner else "")
@@ -797,8 +806,19 @@ def main() -> None:
             )
             ed_footer_inner = f'<p class="note">Source: editing eval — <code>{escape(ed_json.name)}</code>.</p>'
     if not ed_flow:
-        ed_flow = "<p class='note'>No editing eval JSON with model output found for this task.</p>"
-        ed_footer_inner = ""
+        if ed_json:
+            d = _load_json(ed_json)
+            err = d.get("error")
+            err_txt = f" Error: <code>{escape(str(err))}</code>." if err else ""
+            ed_flow = (
+                "<p class='note'>Editing eval JSON exists, but the model output is invalid "
+                "(prediction could not be parsed/validated). "
+                f"File: <code>{escape(ed_json.name)}</code>.{err_txt}</p>"
+            )
+            ed_footer_inner = f'<p class="note">Source: editing eval — <code>{escape(ed_json.name)}</code>.</p>'
+        else:
+            ed_flow = "<p class='note'>No editing eval JSON with model output found for this task.</p>"
+            ed_footer_inner = ""
     ed_summary = _section_summary(
         _summary_from_prompt(
             ed_prompt,
@@ -859,12 +879,23 @@ def main() -> None:
                 f'Exact reference-input match: <b>{"yes" if exact_ref_match else "no"}</b>.</p>'
             )
     if not inv_flow:
-        inv_flow = (
-            "<p class='note'>No inversion eval JSON with model output under "
-            "<code>evaluation/inversion_eval_results/</code>. "
-            "Run an inversion eval to record the prompt, reference input, and model prediction.</p>"
-        )
-        inv_footer_inner = ""
+        if inv_json:
+            d = _load_json(inv_json)
+            err = d.get("error")
+            err_txt = f" Error: <code>{escape(str(err))}</code>." if err else ""
+            inv_flow = (
+                "<p class='note'>Inversion eval JSON exists, but the model output is invalid "
+                "(required fields could not be parsed). "
+                f"File: <code>{escape(inv_json.name)}</code>.{err_txt}</p>"
+            )
+            inv_footer_inner = f'<p class="note">Source: inversion eval — <code>{escape(inv_json.name)}</code>.</p>'
+        else:
+            inv_flow = (
+                "<p class='note'>No inversion eval JSON with model output under "
+                "<code>evaluation/inversion_eval_results/</code>. "
+                "Run an inversion eval to record the prompt, reference input, and model prediction.</p>"
+            )
+            inv_footer_inner = ""
     inv_summary = _section_summary(
         _summary_from_prompt(
             inv_prompt,

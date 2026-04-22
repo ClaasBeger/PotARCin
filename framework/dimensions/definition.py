@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import datetime as dt
 import json
+import multiprocessing as mp
 import os
 import signal
 import traceback
@@ -51,6 +52,40 @@ def _call_with_timeout(fn: Callable[[Grid], Grid], grid: Grid, timeout_s: int = 
     finally:
         signal.alarm(0)
         signal.signal(signal.SIGALRM, old_handler)
+
+
+def _run_script_worker(script: str, grid: Grid, q: mp.Queue) -> None:
+    """Child process worker: load script, run solve, and report result/error."""
+    try:
+        fn = _load_script_callable(script)
+        got = fn(grid)
+        q.put({"ok": True, "got": got})
+    except Exception as e:
+        q.put({"ok": False, "error": str(e)})
+
+
+def _call_script_with_hard_timeout(script: str, grid: Grid, timeout_s: int = _SOLVE_CALL_TIMEOUT_S) -> Grid:
+    """Run generated script in a separate process with a hard wall-clock timeout."""
+    if timeout_s <= 0:
+        fn = _load_script_callable(script)
+        return fn(grid)
+    ctx = mp.get_context("spawn")
+    q: mp.Queue = ctx.Queue(maxsize=1)
+    proc = ctx.Process(target=_run_script_worker, args=(script, grid, q))
+    proc.start()
+    proc.join(timeout_s)
+    if proc.is_alive():
+        proc.terminate()
+        proc.join(timeout=2)
+        raise TimeoutError(f"solve() timed out after {timeout_s}s")
+    if q.empty():
+        raise RuntimeError("solve() subprocess exited without returning a result")
+    msg = q.get()
+    if not isinstance(msg, dict):
+        raise RuntimeError("solve() subprocess returned malformed payload")
+    if msg.get("ok") is True:
+        return msg.get("got")
+    raise RuntimeError(str(msg.get("error") or "unknown solve() subprocess error"))
 
 def _grid_to_str(grid: Grid) -> str:
     return "\n".join(" ".join(str(cell) for cell in row) for row in grid)
@@ -263,7 +298,8 @@ def evaluate_definition_script_on_task(
         if fn is not None:
             for i, ex in enumerate(pairs):
                 try:
-                    got = _call_with_timeout(fn, copy.deepcopy(ex["input"]))
+                    # Use a hard process-level timeout to avoid hangs that ignore SIGALRM.
+                    got = _call_script_with_hard_timeout(script, copy.deepcopy(ex["input"]))
                     if is_equal_grid(got, ex["output"]):
                         ok += 1
                     elif failure is None:
@@ -376,6 +412,14 @@ def run_definition_api_evaluation(
         "first_failures": {},
         "evaluation_ok": False,
     }
+    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    out_root = Path(out_dir)
+    out_root.mkdir(parents=True, exist_ok=True)
+    out_path = out_root / f"{task.task_id}_definition_eval_{ts}.json"
+    # Persist immediately after model response/script extraction so interrupted
+    # script evaluation still leaves a recoverable artifact on disk.
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+
     try:
         eval_result = evaluate_definition_script_on_task(
             task=task,
@@ -391,10 +435,6 @@ def run_definition_api_evaluation(
         result["error"] = str(e)
         result["script_load_error"] = str(e)
 
-    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    out_root = Path(out_dir)
-    out_root.mkdir(parents=True, exist_ok=True)
-    out_path = out_root / f"{task.task_id}_definition_eval_{ts}.json"
     out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
     result["result_path"] = str(out_path)
     return result

@@ -235,22 +235,32 @@ def _has_any_result_for_task(dir_path: Path, task_id: str, suffix: str) -> bool:
     matches = sorted(dir_path.glob(pattern))
     if not matches:
         return False
-    # Treat a task as complete for this dimension only when at least one
-    # recorded attempt was successful. This avoids "sticky" failed files
-    # (e.g. network outage writes) blocking retries forever.
-    for p in matches:
-        try:
-            payload = json.loads(p.read_text(encoding="utf-8"))
-        except Exception:
-            # Legacy/corrupt files: preserve backward compatibility by counting
-            # presence as complete instead of hard-failing discovery.
-            return True
-        ok = payload.get("evaluation_ok")
-        if ok is True:
-            return True
-        if ok is None:
-            # Older files may not have evaluation_ok; treat as complete.
-            return True
+    # Use latest-only semantics per task+dimension within this run-tag path:
+    # older attempts for the same task id are ignored.
+    latest = matches[-1]
+    try:
+        payload = json.loads(latest.read_text(encoding="utf-8"))
+    except Exception:
+        # Legacy/corrupt files: preserve backward compatibility by counting
+        # presence as complete instead of hard-failing discovery.
+        return True
+    ok = payload.get("evaluation_ok")
+    if ok is True:
+        return True
+    if ok is None:
+        # Older files may not have evaluation_ok; treat as complete.
+        return True
+
+    # evaluation_ok=False can still mean "dimension attempt completed":
+    # if the model response was received but later parse/verification failed,
+    # treat this as complete (incorrect), not pending.
+    raw = payload.get("raw_response")
+    if isinstance(raw, str) and raw.strip():
+        return True
+    if raw is not None:
+        return True
+
+    # No model output recorded -> genuinely incomplete and should be retried.
     return False
 
 

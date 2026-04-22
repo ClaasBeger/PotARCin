@@ -1,0 +1,62 @@
+{
+  "task_id": "47c1f68c",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 2 0 0 0 0 0\n0 1 0 0 0 2 0 0 0 0 0\n1 1 0 0 0 2 0 0 0 0 0\n0 1 1 0 0 2 0 0 0 0 0\n0 0 0 0 0 2 0 0 0 0 0\n2 2 2 2 2 2 2 2 2 2 2\n0 0 0 0 0 2 0 0 0 0 0\n0 0 0 0 0 2 0 0 0 0 0\n0 0 0 0 0 2 0 0 0 0 0\n0 0 0 0 0 2 0 0 0 0 0\n0 0 0 0 0 2 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 2 0 0 0 0 0 0 2 0\n2 2 0 0 0 0 0 0 2 2\n0 2 2 0 0 0 0 2 2 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 2 2 0 0 0 0 2 2 0\n2 2 0 0 0 0 0 0 2 2\n0 2 0 0 0 0 0 0 2 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n3 0 3 0 8 0 0 0 0\n3 3 0 0 8 0 0 0 0\n3 0 0 0 8 0 0 0 0\n0 0 0 0 8 0 0 0 0\n8 8 8 8 8 8 8 8 8\n0 0 0 0 8 0 0 0 0\n0 0 0 0 8 0 0 0 0\n0 0 0 0 8 0 0 0 0\n0 0 0 0 8 0 0 0 0\nOutput:\n8 0 8 0 0 8 0 8\n8 8 0 0 0 0 8 8\n8 0 0 0 0 0 0 8\n0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0\n8 0 0 0 0 0 0 8\n8 8 0 0 0 0 8 8\n8 0 8 0 0 8 0 8\n\nExample 3:\n\nInput:\n2 0 0 4 0 0 0\n0 2 2 4 0 0 0\n0 2 0 4 0 0 0\n4 4 4 4 4 4 4\n0 0 0 4 0 0 0\n0 0 0 4 0 0 0\n0 0 0 4 0 0 0\nOutput:\n4 0 0 0 0 4\n0 4 4 4 4 0\n0 4 0 0 4 0\n0 4 0 0 4 0\n0 4 4 4 4 0\n4 0 0 0 0 4\n\nBelow is a test input grid.\n\nInput:\n0 0 8 0 0 0 3 0 0 0 0 0 0\n0 8 0 0 0 0 3 0 0 0 0 0 0\n8 0 8 0 0 0 3 0 0 0 0 0 0\n0 0 8 0 0 0 3 0 0 0 0 0 0\n0 0 8 8 0 0 3 0 0 0 0 0 0\n0 0 0 0 0 0 3 0 0 0 0 0 0\n3 3 3 3 3 3 3 3 3 3 3 3 3\n0 0 0 0 0 0 3 0 0 0 0 0 0\n0 0 0 0 0 0 3 0 0 0 0 0 0\n0 0 0 0 0 0 3 0 0 0 0 0 0\n0 0 0 0 0 0 3 0 0 0 0 0 0\n0 0 0 0 0 0 3 0 0 0 0 0 0\n0 0 0 0 0 0 3 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    rows, cols = len(grid), len(grid[0])\n    \n    # Find divider color and position\n    # Find horizontal and vertical divider lines\n    h_div = None\n    v_div = None\n    \n    for r in range(rows):\n        if all(grid[r][c] != 0 for c in range(cols)):\n            h_div = r\n            break\n    \n    for c in range(cols):\n        if all(grid[r][c] != 0 for r in range(rows)):\n            v_div = c\n            break\n    \n    div_color = grid[h_div][v_div]\n    \n    # Extract pattern from top-left quadrant\n    tl = []\n    for r in range(h_div):\n        row = []\n        for c in range(v_div):\n            row.append(grid[r][c])\n        tl.append(row)\n    \n    h = len(tl)\n    w = len(tl[0])\n    \n    # Replace non-zero with div_color\n    def convert(pat):\n        return [[div_color if v != 0 else 0 for v in row] for row in pat]\n    \n    tl_c = convert(tl)\n    \n    # Mirror horizontally\n    tr_c = [row[::-1] for row in tl_c]\n    \n    # Mirror vertically\n    bl_c = tl_c[::-1]\n    \n    # Mirror both\n    br_c = [row[::-1] for row in bl_c]\n    \n    # Build output: 4 quadrants\n    out_h = h * 2\n    out_w = w * 2\n    result = [[0]*out_w for _ in range(out_h)]\n    \n    for r in range(h):\n        for c in range(w):\n            result[r][c] = tl_c[r][c]\n            result[r][w+c] = tr_c[r][c]\n            result[h+r][c] = bl_c[r][c]\n            result[h+r][w+c] = br_c[r][c]\n    \n    return result",
+  "script": "def solve(grid):\n    rows, cols = len(grid), len(grid[0])\n    \n    # Find divider color and position\n    # Find horizontal and vertical divider lines\n    h_div = None\n    v_div = None\n    \n    for r in range(rows):\n        if all(grid[r][c] != 0 for c in range(cols)):\n            h_div = r\n            break\n    \n    for c in range(cols):\n        if all(grid[r][c] != 0 for r in range(rows)):\n            v_div = c\n            break\n    \n    div_color = grid[h_div][v_div]\n    \n    # Extract pattern from top-left quadrant\n    tl = []\n    for r in range(h_div):\n        row = []\n        for c in range(v_div):\n            row.append(grid[r][c])\n        tl.append(row)\n    \n    h = len(tl)\n    w = len(tl[0])\n    \n    # Replace non-zero with div_color\n    def convert(pat):\n        return [[div_color if v != 0 else 0 for v in row] for row in pat]\n    \n    tl_c = convert(tl)\n    \n    # Mirror horizontally\n    tr_c = [row[::-1] for row in tl_c]\n    \n    # Mirror vertically\n    bl_c = tl_c[::-1]\n    \n    # Mirror both\n    br_c = [row[::-1] for row in bl_c]\n    \n    # Build output: 4 quadrants\n    out_h = h * 2\n    out_w = w * 2\n    result = [[0]*out_w for _ in range(out_h)]\n    \n    for r in range(h):\n        for c in range(w):\n            result[r][c] = tl_c[r][c]\n            result[r][w+c] = tr_c[r][c]\n            result[h+r][c] = bl_c[r][c]\n            result[h+r][w+c] = br_c[r][c]\n    \n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "list index out of range"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "list index out of range"
+    }
+  },
+  "evaluation_ok": true
+}

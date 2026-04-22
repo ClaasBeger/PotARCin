@@ -1,0 +1,132 @@
+{
+  "task_id": "5582e5ca",
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 2069194818,
+  "include_true": false,
+  "corruption_source": "color_flip",
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n4 4 8\n6 4 3\n6 3 0\nOutput:\n4 4 4\n4 4 4\n4 4 4\n\nExample 2:\nInput:\n6 8 9\n1 8 1\n9 4 9\nOutput:\n9 9 9\n9 9 9\n9 9 9\n\nExample 3:\nInput:\n4 6 9\n6 4 1\n8 8 6\nOutput:\n6 6 6\n6 6 6\n6 6 6\n\nThe following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.\n\nCandidate pair:\nInput:\n8 8 4\n8 4 3\n1 9 5\nOutput:\n6 6 6\n6 6 6\n6 6 6\n\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "{\"input\": [[8 ,8, 4], [8, 4, 3], [1, 9, 5]], \"output\": [[8, 8, 8], [8, 8, 8], [8, 8, 8]]}",
+  "corrupted_pair": {
+    "input": [
+      [
+        8,
+        8,
+        4
+      ],
+      [
+        8,
+        4,
+        3
+      ],
+      [
+        1,
+        9,
+        5
+      ]
+    ],
+    "output": [
+      [
+        6,
+        6,
+        6
+      ],
+      [
+        6,
+        6,
+        6
+      ],
+      [
+        6,
+        6,
+        6
+      ]
+    ]
+  },
+  "target_pair": {
+    "input": [
+      [
+        8,
+        8,
+        4
+      ],
+      [
+        8,
+        4,
+        3
+      ],
+      [
+        1,
+        9,
+        5
+      ]
+    ],
+    "output": [
+      [
+        8,
+        8,
+        8
+      ],
+      [
+        8,
+        8,
+        8
+      ],
+      [
+        8,
+        8,
+        8
+      ]
+    ]
+  },
+  "evaluation_ok": true,
+  "prediction_pair": {
+    "input": [
+      [
+        8,
+        8,
+        4
+      ],
+      [
+        8,
+        4,
+        3
+      ],
+      [
+        1,
+        9,
+        5
+      ]
+    ],
+    "output": [
+      [
+        8,
+        8,
+        8
+      ],
+      [
+        8,
+        8,
+        8
+      ],
+      [
+        8,
+        8,
+        8
+      ]
+    ]
+  },
+  "guardrail": {
+    "enabled": true,
+    "max_norm_edit": 0.7,
+    "normalized_distance_input": 0.0,
+    "normalized_distance_output": 1.0,
+    "passed": true
+  },
+  "metrics": {
+    "success": true
+  }
+}

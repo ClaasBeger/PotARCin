@@ -1,0 +1,359 @@
+{
+  "task_id": "4c4377d9",
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 1603466699,
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0\u20134). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as the training examples (1 = same distribution / consistent, 0 = not).\n\nTraining example 1:\nInput:\n9 9 5 9\n5 5 9 9\n9 5 9 9\nOutput:\n9 5 9 9\n5 5 9 9\n9 9 5 9\n9 9 5 9\n5 5 9 9\n9 5 9 9\n\nTraining example 2:\nInput:\n4 1 1 4\n1 1 1 1\n4 4 4 1\nOutput:\n4 4 4 1\n1 1 1 1\n4 1 1 4\n4 1 1 4\n1 1 1 1\n4 4 4 1\n\nTraining example 3:\nInput:\n9 4 9 4\n9 9 4 4\n4 4 4 4\nOutput:\n4 4 4 4\n9 9 4 4\n9 4 9 4\n9 4 9 4\n9 9 4 4\n4 4 4 4\n\nTraining example 4:\nInput:\n3 3 5 5\n3 5 5 3\n5 5 3 3\nOutput:\n5 5 3 3\n3 5 5 3\n3 3 5 5\n3 3 5 5\n3 5 5 3\n5 5 3 3\n\nTest pairs (evaluate each in order, index 0 \u2026 4):\n\nTest 0:\nInput:\n4 4 9 9\n4 4 4 4\n4 4 9 9\nOutput:\n4 0 0 9\n4 4 4 4\n4 0 9 9\n\nTest 1:\nInput:\n3 3 3 1\n3 3 1 3\n3 1 1 3\nOutput:\n1 1 1 3\n3 3 1 3\n1 3 3 3\n1 3 3 3\n3 3 1 3\n1 1 1 3\n\nTest 2:\nInput:\n2 1 1 1\n2 2 2 1\n2 2 1 1\nOutput:\n2 2 1 1\n2 2 2 1\n2 1 1 1\n2 1 1 1\n2 2 2 1\n2 2 1 1\n\nTest 3:\nInput:\n5 5 5 5\n7 5 7 5\n7 7 5 5\nOutput:\n5 5 4 5\n5 5 5 5\n5 4 5 5\n5 4 5 5\n5 5 5 5\n5 5 4 5\n\nTest 4:\nInput:\n5 5 8 5\n8 5 8 5\n5 8 5 8\nOutput:\n5 8 5 8\n8 5 8 5\n5 5 8 5\n5 5 8 5\n8 5 8 5\n5 8 5 8\n\nYour final answer must be only a single Python list of exactly five integers, each 0 or 1, in order for test 0 through test 4, for example [1, 0, 1, 1, 0]. Output nothing else: no other text, no markdown code fences, and no explanation.",
+  "raw_response": "[0, 0, 1, 0, 1]",
+  "test_pairs": [
+    {
+      "input": [
+        [
+          4,
+          4,
+          9,
+          9
+        ],
+        [
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          9,
+          9
+        ]
+      ],
+      "output": [
+        [
+          4,
+          0,
+          0,
+          9
+        ],
+        [
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          0,
+          9,
+          9
+        ]
+      ]
+    },
+    {
+      "input": [
+        [
+          3,
+          3,
+          3,
+          1
+        ],
+        [
+          3,
+          3,
+          1,
+          3
+        ],
+        [
+          3,
+          1,
+          1,
+          3
+        ]
+      ],
+      "output": [
+        [
+          1,
+          1,
+          1,
+          3
+        ],
+        [
+          3,
+          3,
+          1,
+          3
+        ],
+        [
+          1,
+          3,
+          3,
+          3
+        ],
+        [
+          1,
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          1,
+          3
+        ],
+        [
+          1,
+          1,
+          1,
+          3
+        ]
+      ]
+    },
+    {
+      "input": [
+        [
+          2,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          2,
+          1,
+          1
+        ]
+      ],
+      "output": [
+        [
+          2,
+          2,
+          1,
+          1
+        ],
+        [
+          2,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          2,
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "input": [
+        [
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          7,
+          5,
+          7,
+          5
+        ],
+        [
+          7,
+          7,
+          5,
+          5
+        ]
+      ],
+      "output": [
+        [
+          5,
+          5,
+          4,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          4,
+          5,
+          5
+        ],
+        [
+          5,
+          4,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          4,
+          5
+        ]
+      ]
+    },
+    {
+      "input": [
+        [
+          5,
+          5,
+          8,
+          5
+        ],
+        [
+          8,
+          5,
+          8,
+          5
+        ],
+        [
+          5,
+          8,
+          5,
+          8
+        ]
+      ],
+      "output": [
+        [
+          5,
+          8,
+          5,
+          8
+        ],
+        [
+          8,
+          5,
+          8,
+          5
+        ],
+        [
+          5,
+          5,
+          8,
+          5
+        ],
+        [
+          5,
+          5,
+          8,
+          5
+        ],
+        [
+          8,
+          5,
+          8,
+          5
+        ],
+        [
+          5,
+          8,
+          5,
+          8
+        ]
+      ]
+    }
+  ],
+  "ground_truth": [
+    false,
+    false,
+    true,
+    false,
+    true
+  ],
+  "item_meta": [
+    {
+      "category": "h_arc_incorrect",
+      "meta": {
+        "category": "h_arc_incorrect",
+        "kind": "h_arc_incorrect_submission",
+        "slot": 1
+      }
+    },
+    {
+      "category": "instance_mismatch",
+      "meta": {
+        "category": "instance_mismatch",
+        "kind": "same_task_instance_mismatch",
+        "slot": 4
+      }
+    },
+    {
+      "category": "dynamic_correct",
+      "meta": {
+        "category": "dynamic_correct",
+        "kind": "arc_gen_dynamic_correct",
+        "slot": 2
+      }
+    },
+    {
+      "category": "instance_mismatch",
+      "meta": {
+        "category": "instance_mismatch",
+        "kind": "same_task_instance_mismatch",
+        "slot": 0
+      }
+    },
+    {
+      "category": "dynamic_correct",
+      "meta": {
+        "category": "dynamic_correct",
+        "kind": "arc_gen_dynamic_correct",
+        "slot": 3
+      }
+    }
+  ],
+  "evaluation_ok": true,
+  "predictions": [
+    false,
+    false,
+    true,
+    false,
+    true
+  ],
+  "metrics": {
+    "accuracy": 1.0,
+    "correct": 5,
+    "total": 5,
+    "exact_match": 1
+  },
+  "stage": "done"
+}

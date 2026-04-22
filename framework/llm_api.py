@@ -169,9 +169,11 @@ def _anthropic_messages_completion(
     timeout_s: int = 180,
 ) -> str:
     effort = _normalize_reasoning_effort(reasoning_effort)
+    sdk_timeout_s = max(timeout_s, 900)  # keep Claude requests generous by default (15 min minimum)
+    max_attempts = 3
 
     # Match ConceptARC-Rules first: anthropic SDK client.
-    try:
+    def _sdk_call() -> str:
         import anthropic  # type: ignore[import-not-found]
 
         kwargs: dict[str, Any] = {"api_key": api_key}
@@ -194,8 +196,22 @@ def _anthropic_messages_completion(
         text = "\n".join(parts).strip()
         if text:
             return text
-    except Exception:
-        pass
+        raise ValueError("Anthropic SDK response did not contain any text content.")
+
+    last_sdk_error: Exception | None = None
+    for attempt in range(1, max_attempts + 1):
+        try:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                fut = pool.submit(_sdk_call)
+                return fut.result(timeout=sdk_timeout_s)
+        except concurrent.futures.TimeoutError:
+            last_sdk_error = TimeoutError(
+                f"Anthropic SDK call timed out after {sdk_timeout_s}s (attempt {attempt}/{max_attempts})."
+            )
+        except Exception as e:
+            last_sdk_error = e
+        if attempt < max_attempts:
+            time.sleep(min(4, attempt))
 
     # Fallback: raw HTTP.
     url = base_url.rstrip("/") + "/messages"
@@ -218,11 +234,15 @@ def _anthropic_messages_completion(
         method="POST",
     )
     try:
-        with request.urlopen(req, timeout=timeout_s) as resp:
+        with request.urlopen(req, timeout=sdk_timeout_s) as resp:
             raw = resp.read().decode("utf-8")
     except error.HTTPError as e:
         body_txt = e.read().decode("utf-8", errors="replace")
-        raise ValueError(f"Anthropic Messages API error {e.code}: {body_txt}") from e
+        raise ValueError(
+            f"Anthropic SDK failed ({last_sdk_error}); fallback HTTP API error {e.code}: {body_txt}"
+        ) from e
+    except Exception as e:
+        raise ValueError(f"Anthropic SDK failed ({last_sdk_error}); fallback HTTP failed: {e}") from e
 
     parsed = json.loads(raw)
     blocks = parsed.get("content")
@@ -238,7 +258,7 @@ def _anthropic_messages_completion(
     text = "\n".join(parts).strip()
     if text:
         return text
-    raise ValueError("Anthropic response did not contain any text content.")
+    raise ValueError(f"Anthropic SDK failed ({last_sdk_error}); fallback HTTP had no text content.")
 
 
 def _google_generate_content_completion(
