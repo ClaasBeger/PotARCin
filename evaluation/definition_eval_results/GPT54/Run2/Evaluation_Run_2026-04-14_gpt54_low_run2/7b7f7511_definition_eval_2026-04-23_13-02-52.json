@@ -1,0 +1,167 @@
+{
+  "task_id": "7b7f7511",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n1 1 3 2 1 1 3 2\n1 1 3 3 1 1 3 3\n3 3 1 1 3 3 1 1\n2 3 1 1 2 3 1 1\nOutput:\n1 1 3 2\n1 1 3 3\n3 3 1 1\n2 3 1 1\n\nExample 2:\n\nInput:\n4 4 4 4 4 4\n6 4 8 6 4 8\n6 6 8 6 6 8\nOutput:\n4 4 4\n6 4 8\n6 6 8\n\nExample 3:\n\nInput:\n2 3\n3 2\n4 4\n2 3\n3 2\n4 4\nOutput:\n2 3\n3 2\n4 4\n\nBelow is a test input grid.\n\nInput:\n5 4 5\n4 5 4\n6 6 4\n2 6 2\n5 4 5\n4 5 4\n6 6 4\n2 6 2\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    def find_row_period():\n        for pr in range(1, h + 1):\n            if h % pr != 0:\n                continue\n            ok = True\n            for r in range(h):\n                if grid[r] != grid[r % pr]:\n                    ok = False\n                    break\n            if ok:\n                return pr\n        return h\n\n    def find_col_period():\n        for pc in range(1, w + 1):\n            if w % pc != 0:\n                continue\n            ok = True\n            for r in range(h):\n                for c in range(w):\n                    if grid[r][c] != grid[r][c % pc]:\n                        ok = False\n                        break\n                if not ok:\n                    break\n            if ok:\n                return pc\n        return w\n\n    pr = find_row_period()\n    pc = find_col_period()\n\n    return [row[:pc] for row in grid[:pr]]",
+  "script": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    def find_row_period():\n        for pr in range(1, h + 1):\n            if h % pr != 0:\n                continue\n            ok = True\n            for r in range(h):\n                if grid[r] != grid[r % pr]:\n                    ok = False\n                    break\n            if ok:\n                return pr\n        return h\n\n    def find_col_period():\n        for pc in range(1, w + 1):\n            if w % pc != 0:\n                continue\n            ok = True\n            for r in range(h):\n                for c in range(w):\n                    if grid[r][c] != grid[r][c % pc]:\n                        ok = False\n                        break\n                if not ok:\n                    break\n            if ok:\n                return pc\n        return w\n\n    pr = find_row_period()\n    pc = find_col_period()\n\n    return [row[:pc] for row in grid[:pr]]",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 256,
+      "total": 262,
+      "success_rate": 0.9770992366412213
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 997,
+      "total": 1000,
+      "success_rate": 0.997
+    },
+    "re_arc_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": {
+      "index": 13,
+      "input": [
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "expected": [
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "got": [
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 661,
+      "input": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "got": [
+        [
+          1
+        ]
+      ]
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

@@ -33,7 +33,7 @@ def main() -> None:
     parser.add_argument(
         "--provider",
         default=None,
-        choices=["openai", "anthropic", "google"],
+        choices=["openai", "anthropic", "google", "together"],
         help="LLM provider (default: infer from --model)",
     )
     parser.add_argument(

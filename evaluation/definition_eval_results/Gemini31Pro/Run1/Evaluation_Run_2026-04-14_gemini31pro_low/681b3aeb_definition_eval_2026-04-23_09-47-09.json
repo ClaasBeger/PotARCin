@@ -1,0 +1,62 @@
+{
+  "task_id": "681b3aeb",
+  "test_idx": 0,
+  "model": "gemini-3.1-pro-preview",
+  "provider": "google",
+  "base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 3 3 0 0 0 0 0 0 0\n0 3 0 0 0 0 0 0 0 0\n0 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 7\n0 0 0 0 0 0 0 0 7 7\n0 0 0 0 0 0 0 0 7 7\nOutput:\n3 3 7\n3 7 7\n3 7 7\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 4 0\n0 0 0 0 0 0 0 0 4 4\n0 0 0 6 6 6 0 0 0 0\n0 0 0 0 6 6 0 0 0 0\n0 0 0 0 0 6 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n6 6 6\n4 6 6\n4 4 6\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 3 0 0 0 0 0\n0 0 0 3 3 3 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 1 1 1 0 0 0 0 0 0\n0 1 0 1 0 0 0 0 0 0\nOutput:\n1 1 1\n1 3 1\n3 3 3\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 8 8 0\n0 0 0 0 0 0 0 8 0 0\n0 0 0 0 0 0 0 8 8 8\n0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    colors = {}\n    for r in range(len(grid)):\n        for c in range(len(grid[r])):\n            val = grid[r][c]\n            if val != 0:\n                if val not in colors:\n                    colors[val] = []\n                colors[val].append((r, c))\n    \n    shapes = list(colors.items())\n    \n    valid_placements = []\n    for val, pts in shapes:\n        placements = []\n        for dr in range(-20, 20):\n            for dc in range(-20, 20):\n                shifted = [(r + dr, c + dc) for r, c in pts]\n                if all(0 <= r < 3 and 0 <= c < 3 for r, c in shifted):\n                    placements.append((val, shifted))\n        valid_placements.append(placements)\n        \n    import itertools\n    for combo in itertools.product(*valid_placements):\n        all_pts = []\n        for val, pts in combo:\n            all_pts.extend(pts)\n        if len(all_pts) == 9 and len(set(all_pts)) == 9:\n            out = [[0]*3 for _ in range(3)]\n            for val, pts in combo:\n                for r, c in pts:\n                    out[r][c] = val\n            return out\n```",
+  "script": "def solve(grid):\n    colors = {}\n    for r in range(len(grid)):\n        for c in range(len(grid[r])):\n            val = grid[r][c]\n            if val != 0:\n                if val not in colors:\n                    colors[val] = []\n                colors[val].append((r, c))\n    \n    shapes = list(colors.items())\n    \n    valid_placements = []\n    for val, pts in shapes:\n        placements = []\n        for dr in range(-20, 20):\n            for dc in range(-20, 20):\n                shifted = [(r + dr, c + dc) for r, c in pts]\n                if all(0 <= r < 3 and 0 <= c < 3 for r, c in shifted):\n                    placements.append((val, shifted))\n        valid_placements.append(placements)\n        \n    import itertools\n    for combo in itertools.product(*valid_placements):\n        all_pts = []\n        for val, pts in combo:\n            all_pts.extend(pts)\n        if len(all_pts) == 9 and len(set(all_pts)) == 9:\n            out = [[0]*3 for _ in range(3)]\n            for val, pts in combo:\n                for r, c in pts:\n                    out[r][c] = val\n            return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 261,
+      "total": 261,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 11,
+      "total": 1000,
+      "success_rate": 0.011
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "object of type 'NoneType' has no len()"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "object of type 'NoneType' has no len()"
+    }
+  },
+  "evaluation_ok": true
+}

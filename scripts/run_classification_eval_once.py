@@ -19,7 +19,7 @@ def main() -> None:
     p.add_argument(
         "--provider",
         default=None,
-        choices=["openai", "anthropic", "google"],
+        choices=["openai", "anthropic", "google", "together"],
         help="LLM provider (default: infer from --model)",
     )
     p.add_argument("--reasoning-effort", default="low")

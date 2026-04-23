@@ -1,15 +1,53 @@
 from __future__ import annotations
 
 import concurrent.futures
+import datetime as dt
 import json
 import os
 import time
+from pathlib import Path
 from typing import Any, Literal, Optional
 from urllib import error, parse, request
 
-Provider = Literal["openai", "anthropic", "google"]
+Provider = Literal["openai", "anthropic", "google", "together"]
 
-_VALID_PROVIDERS: tuple[Provider, ...] = ("openai", "anthropic", "google")
+_VALID_PROVIDERS: tuple[Provider, ...] = ("openai", "anthropic", "google", "together")
+
+
+def _full_response_debug_enabled() -> bool:
+    v = os.environ.get("POTARCIN_DEBUG_FULL_RESPONSE", "")
+    return v.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _together_max_tokens() -> int:
+    raw = os.environ.get("POTARCIN_TOGETHER_MAX_TOKENS", "131072").strip()
+    try:
+        val = int(raw)
+    except Exception:
+        val = 131072
+    # Together/OpenAI-compatible APIs expect a positive integer.
+    # Clamp to a sane upper bound instead of using undocumented sentinels like -1.
+    if val <= 0:
+        return 131072
+    return min(val, 262144)
+
+
+def _dump_full_response_debug(*, provider: str, model: str, payload: Any) -> str:
+    raw = json.dumps(payload, ensure_ascii=False, indent=2)
+    print("=== FULL_API_RESPONSE_START ===")
+    print(raw)
+    print("=== FULL_API_RESPONSE_END ===")
+    try:
+        ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        out_dir = Path("evaluation") / "raw_api_debug"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        safe_model = "".join(ch for ch in model if ch.isalnum() or ch in {"-", "_"})
+        out_path = out_dir / f"{ts}_{provider}_{safe_model}.json"
+        out_path.write_text(raw + "\n", encoding="utf-8")
+        print(f"Saved full API response: {out_path}")
+    except Exception as e:
+        print(f"Warning: failed to save full API response debug dump: {e}")
+    return raw
 
 
 def infer_provider(*, model: str, provider: Optional[str] = None) -> Provider:
@@ -22,6 +60,8 @@ def infer_provider(*, model: str, provider: Optional[str] = None) -> Provider:
         )
 
     m = model.strip().lower()
+    if m.startswith("moonshotai/") or m.startswith("kimi"):
+        return "together"
     if m.startswith("claude") or m.startswith("anthropic/claude"):
         return "anthropic"
     if m.startswith("gemini") or m.startswith("models/gemini"):
@@ -45,6 +85,10 @@ def resolve_provider_config(
         env_key_name = "ANTHROPIC_API_KEY"
         env_base_name = "ANTHROPIC_BASE_URL"
         default_base = "https://api.anthropic.com/v1"
+    elif resolved_provider == "together":
+        env_key_name = "TOGETHER_API_KEY"
+        env_base_name = "TOGETHER_BASE_URL"
+        default_base = "https://api.together.xyz/v1"
     else:
         # Keep parity with ConceptARC-Rules: accept either GEMINI_API_KEY or GOOGLE_API_KEY.
         env_key_name = "GEMINI_API_KEY"
@@ -100,6 +144,14 @@ def request_text_completion(
             api_key=effective_key,
             base_url=effective_base,
             reasoning_effort=reasoning_effort,
+            timeout_s=timeout_s,
+        )
+    elif resolved_provider == "together":
+        text = _together_chat_completions_completion(
+            prompt=prompt,
+            model=model,
+            api_key=effective_key,
+            base_url=effective_base,
             timeout_s=timeout_s,
         )
     else:
@@ -345,6 +397,177 @@ def _google_generate_content_completion(
     if text:
         return text
     raise ValueError(f"Google SDK failed ({last_sdk_error}); fallback HTTP had no text content.")
+
+
+def _together_chat_completions_completion(
+    *,
+    prompt: str,
+    model: str,
+    api_key: str,
+    base_url: str,
+    timeout_s: int = 180,
+) -> str:
+    sdk_error: Exception | None = None
+    max_tokens = _together_max_tokens()
+
+    def _extract_text_from_content(content: Any) -> str:
+        if isinstance(content, str) and content.strip():
+            return content.strip()
+        if isinstance(content, list):
+            parts: list[str] = []
+            for item in content:
+                if isinstance(item, str) and item.strip():
+                    parts.append(item.strip())
+                    continue
+                if isinstance(item, dict):
+                    txt = item.get("text")
+                    if isinstance(txt, str) and txt.strip():
+                        parts.append(txt.strip())
+                        continue
+                    nested = item.get("content")
+                    if isinstance(nested, str) and nested.strip():
+                        parts.append(nested.strip())
+            if parts:
+                return "\n".join(parts)
+        if isinstance(content, dict):
+            txt = content.get("text")
+            if isinstance(txt, str) and txt.strip():
+                return txt.strip()
+            nested = content.get("content")
+            if isinstance(nested, str) and nested.strip():
+                return nested.strip()
+        return ""
+
+    def _extract_text_from_payload(payload: Any) -> str:
+        if not isinstance(payload, dict):
+            return ""
+        # OpenAI-compatible surface
+        choices = payload.get("choices")
+        if isinstance(choices, list):
+            for choice in choices:
+                if not isinstance(choice, dict):
+                    continue
+                txt = _extract_text_from_content(choice.get("message"))
+                if txt:
+                    return txt
+                txt2 = _extract_text_from_content(choice.get("text"))
+                if txt2:
+                    return txt2
+        # Responses-like surface
+        out_text = payload.get("output_text")
+        if isinstance(out_text, str) and out_text.strip():
+            return out_text.strip()
+        output = payload.get("output")
+        if isinstance(output, list):
+            parts: list[str] = []
+            for item in output:
+                if not isinstance(item, dict):
+                    continue
+                txt = _extract_text_from_content(item.get("content"))
+                if txt:
+                    parts.append(txt)
+            if parts:
+                return "\n".join(parts)
+        return ""
+
+    # Prefer Together SDK: this matches user-verified behavior for Kimi.
+    try:
+        from together import Together  # type: ignore[import-not-found]
+
+        client_kwargs: dict[str, Any] = {"api_key": api_key}
+        if base_url.rstrip("/") != "https://api.together.xyz/v1":
+            client_kwargs["base_url"] = base_url.rstrip("/")
+        client = Together(**client_kwargs)
+        resp = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            reasoning={"enabled": True},
+            temperature=1.0,
+            top_p=0.95,
+            max_tokens=max_tokens,
+        )
+        choices = getattr(resp, "choices", None)
+        if isinstance(choices, list):
+            for choice in choices:
+                msg = getattr(choice, "message", None)
+                txt = _extract_text_from_content(getattr(msg, "content", None))
+                if txt:
+                    return txt
+                # Some SDK responses expose text on the choice directly.
+                txt2 = _extract_text_from_content(getattr(choice, "text", None))
+                if txt2:
+                    return txt2
+        # Some SDK versions expose full payload via model_dump()/dict().
+        dumped: dict[str, Any] | None = None
+        if hasattr(resp, "model_dump"):
+            try:
+                dumped = resp.model_dump()  # type: ignore[assignment, attr-defined]
+            except Exception:
+                dumped = None
+        if dumped is None and hasattr(resp, "dict"):
+            try:
+                dumped = resp.dict()  # type: ignore[assignment, attr-defined]
+            except Exception:
+                dumped = None
+        if dumped is not None and _full_response_debug_enabled():
+            # Special debug mode: return full payload unmodified (no extraction).
+            return _dump_full_response_debug(
+                provider="together_sdk",
+                model=model,
+                payload=dumped,
+            )
+        if dumped is not None:
+            txt3 = _extract_text_from_payload(dumped)
+            if txt3:
+                return txt3
+    except Exception as e:
+        sdk_error = e
+        # Fall through to HTTP fallback for environments without together SDK.
+        pass
+
+    url = base_url.rstrip("/") + "/chat/completions"
+    payload: dict[str, Any] = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+        "reasoning": {"enabled": True},
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "max_tokens": max_tokens,
+    }
+    body = json.dumps(payload).encode("utf-8")
+    req = request.Request(
+        url=url,
+        data=body,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+            "User-Agent": "PotARCin/1.0",
+        },
+        method="POST",
+    )
+    try:
+        with request.urlopen(req, timeout=timeout_s) as resp:
+            raw = resp.read().decode("utf-8")
+    except error.HTTPError as e:
+        body_txt = e.read().decode("utf-8", errors="replace")
+        raise ValueError(f"Together Chat Completions API error {e.code}: {body_txt}") from e
+
+    parsed = json.loads(raw)
+    if _full_response_debug_enabled():
+        # Special debug mode: return full payload unmodified (no extraction).
+        return _dump_full_response_debug(
+            provider="together_http",
+            model=model,
+            payload=parsed,
+        )
+    txt = _extract_text_from_payload(parsed)
+    if txt:
+        return txt
+    parsed_keys = list(parsed.keys()) if isinstance(parsed, dict) else []
+    raise ValueError(
+        "Together Chat Completions response did not contain any text content. "
+        f"sdk_error={sdk_error!r}; response_keys={parsed_keys}"
+    )
 
 
 def _normalize_reasoning_effort(effort: Optional[str]) -> Optional[str]:

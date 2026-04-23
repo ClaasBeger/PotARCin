@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import copy
+import io
 import datetime as dt
 import json
 import multiprocessing as mp
 import os
 import signal
 import traceback
+from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable, List, Optional, Sequence
@@ -57,8 +59,11 @@ def _call_with_timeout(fn: Callable[[Grid], Grid], grid: Grid, timeout_s: int = 
 def _run_script_worker(script: str, grid: Grid, q: mp.Queue) -> None:
     """Child process worker: load script, run solve, and report result/error."""
     try:
-        fn = _load_script_callable(script)
-        got = fn(grid)
+        # Suppress any model-generated print()/stderr noise from script top-level
+        # code or solve() execution so evaluation logs remain readable.
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            fn = _load_script_callable(script)
+            got = fn(grid)
         q.put({"ok": True, "got": got})
     except Exception as e:
         q.put({"ok": False, "error": str(e)})
