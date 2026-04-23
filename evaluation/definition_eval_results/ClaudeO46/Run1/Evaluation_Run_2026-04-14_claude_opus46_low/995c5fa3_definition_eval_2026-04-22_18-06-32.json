@@ -1,0 +1,470 @@
+{
+  "task_id": "995c5fa3",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 5 0 0 5 0 0 5 5 0\n5 5 5 5 0 5 0 0 5 0 0 5 5 0\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\nOutput:\n2 2 2\n8 8 8\n3 3 3\n\nExample 2:\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n0 5 5 0 0 5 5 5 5 0 5 5 5 5\n0 5 5 0 0 5 0 0 5 0 5 5 5 5\n5 5 5 5 0 5 0 0 5 0 5 5 5 5\nOutput:\n3 3 3\n4 4 4\n2 2 2\n\nExample 3:\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 0 0 5 0 5 5 5 5 0 5 5 5 5\n5 0 0 5 0 5 5 5 5 0 5 0 0 5\n5 5 5 5 0 5 5 5 5 0 5 0 0 5\nOutput:\n8 8 8\n2 2 2\n4 4 4\n\nExample 4:\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 5 0 0 5 0 5 5 5 5\n5 5 5 5 0 5 0 0 5 0 5 5 5 5\nOutput:\n2 2 2\n4 4 4\n2 2 2\n\nBelow is a test input grid.\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 0 5 5 0 0 5 0 0 5\n5 0 0 5 0 0 5 5 0 0 5 0 0 5\n5 0 0 5 0 5 5 5 5 0 5 5 5 5\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    # Split into 3 blocks of 4x4, find where 0s are in each block\n    blocks = []\n    for col_start in [0, 5, 10]:\n        block = []\n        for r in range(4):\n            row = []\n            for c in range(col_start, col_start+4):\n                row.append(grid[r][c])\n            block.append(row)\n        blocks.append(block)\n    \n    # For each block, find position of 2x2 hole (0s among the 5s)\n    # Map position to a value\n    def get_position(block):\n        # Check for 0s that aren't column separators\n        for r in range(3):\n            for c in range(3):\n                if block[r][c] == 0 and block[r][c+1] == 0 and block[r+1][c] == 0 and block[r+1][c+1] == 0:\n                    return (r, c)\n        return None\n    \n    # Positions: top-left(0,0), top-mid(0,1), top-right(0,2), mid-left(1,0), mid-mid(1,1), mid-right(1,2), bot-left(2,0), bot-mid(2,1), bot-right(2,2)\n    # None means no hole\n    \n    positions = [get_position(b) for b in blocks]\n    \n    # From examples, map position to number:\n    # (1,1) center -> 8\n    # (2,1) bottom-center -> 4  \n    # (1,0) left-middle -> 3\n    # None -> 2\n    # (0,1) top-center -> ?\n    # (1,2) right -> ?\n    \n    pos_map = {\n        None: 2,\n        (1, 1): 8,\n        (2, 1): 4,\n        (1, 0): 3,\n        (0, 1): 3,  # guess based on symmetry\n        (2, 2): 4,\n        (0, 0): 3,\n        (2, 0): 4,\n        (0, 2): 3,\n        (1, 2): 8,\n    }\n    \n    # Re-examine: looking at examples more carefully\n    # Example1: blocks positions: None, (1,1), (1,0) -> 2,8,3 \u2713 wait (1,0)? block3 has 0s at rows1-2,cols0 -> col0 in block is col10.. grid[1][10]=0,grid[1][11]=5 no\n    # Let me recheck block indexing with the 0-separator columns\n    \n    # Actually columns with 0 are separators at col4 and col9\n    # Block1: cols 0-3, Block2: cols 5-8, Block3: cols 10-13\n    \n    # Example1 block2: row1=[5,0,0,5], row2=[5,0,0,5] -> position (1,1)\n    # Example1 block3: row1=[0,5,5,0], row2=[0,5,5,0] -> not a 2x2 of 0s\n    # Hmm, those are individual 0s at corners, not 2x2 block\n    \n    # Maybe count non-5-non-separator 0s\n    def count_zeros(block):\n        return sum(1 for r in range(4) for c in range(4) if block[r][c] == 0)\n    \n    # Ex1: block1=0, block2=4, block3=4 -> 2,8,3... not obvious by count alone\n    # Position matters. block3 ex1: 0s at (1,0),(1,3),(2,0),(2,3) = edges\n    # block2: 0s at (1,1),(1,2),(2,1),(2,2) = center\n    \n    # center->8, edges->3, none->2, bottom->4\n    \n    def classify(block):\n        z = [(r,c) for r in range(4) for c in range(4) if block[r][c]==0]\n        if not z:\n            return 2\n        rs = [r for r,c in z]\n        cs = [c for r,c in z]\n        avg_r = sum(rs)/len(rs)\n        avg_c = sum(cs)/len(cs)\n        if avg_r <= 1.0:\n            return 3\n        if avg_r >= 2.0 and abs(avg_c-1.5)<0.6:\n            return 4\n        if abs(avg_r-1.5)<0.6 and abs(avg_c-1.5)<0.6:\n            return 8\n        if abs(avg_c-1.5)>0.6:\n            return 3\n        return 4\n\n    values = [classify(b) for b in blocks]\n    return [[v]*3 for v in values]",
+  "script": "def solve(grid):\n    # Split into 3 blocks of 4x4, find where 0s are in each block\n    blocks = []\n    for col_start in [0, 5, 10]:\n        block = []\n        for r in range(4):\n            row = []\n            for c in range(col_start, col_start+4):\n                row.append(grid[r][c])\n            block.append(row)\n        blocks.append(block)\n    \n    # For each block, find position of 2x2 hole (0s among the 5s)\n    # Map position to a value\n    def get_position(block):\n        # Check for 0s that aren't column separators\n        for r in range(3):\n            for c in range(3):\n                if block[r][c] == 0 and block[r][c+1] == 0 and block[r+1][c] == 0 and block[r+1][c+1] == 0:\n                    return (r, c)\n        return None\n    \n    # Positions: top-left(0,0), top-mid(0,1), top-right(0,2), mid-left(1,0), mid-mid(1,1), mid-right(1,2), bot-left(2,0), bot-mid(2,1), bot-right(2,2)\n    # None means no hole\n    \n    positions = [get_position(b) for b in blocks]\n    \n    # From examples, map position to number:\n    # (1,1) center -> 8\n    # (2,1) bottom-center -> 4  \n    # (1,0) left-middle -> 3\n    # None -> 2\n    # (0,1) top-center -> ?\n    # (1,2) right -> ?\n    \n    pos_map = {\n        None: 2,\n        (1, 1): 8,\n        (2, 1): 4,\n        (1, 0): 3,\n        (0, 1): 3,  # guess based on symmetry\n        (2, 2): 4,\n        (0, 0): 3,\n        (2, 0): 4,\n        (0, 2): 3,\n        (1, 2): 8,\n    }\n    \n    # Re-examine: looking at examples more carefully\n    # Example1: blocks positions: None, (1,1), (1,0) -> 2,8,3 \u2713 wait (1,0)? block3 has 0s at rows1-2,cols0 -> col0 in block is col10.. grid[1][10]=0,grid[1][11]=5 no\n    # Let me recheck block indexing with the 0-separator columns\n    \n    # Actually columns with 0 are separators at col4 and col9\n    # Block1: cols 0-3, Block2: cols 5-8, Block3: cols 10-13\n    \n    # Example1 block2: row1=[5,0,0,5], row2=[5,0,0,5] -> position (1,1)\n    # Example1 block3: row1=[0,5,5,0], row2=[0,5,5,0] -> not a 2x2 of 0s\n    # Hmm, those are individual 0s at corners, not 2x2 block\n    \n    # Maybe count non-5-non-separator 0s\n    def count_zeros(block):\n        return sum(1 for r in range(4) for c in range(4) if block[r][c] == 0)\n    \n    # Ex1: block1=0, block2=4, block3=4 -> 2,8,3... not obvious by count alone\n    # Position matters. block3 ex1: 0s at (1,0),(1,3),(2,0),(2,3) = edges\n    # block2: 0s at (1,1),(1,2),(2,1),(2,2) = center\n    \n    # center->8, edges->3, none->2, bottom->4\n    \n    def classify(block):\n        z = [(r,c) for r in range(4) for c in range(4) if block[r][c]==0]\n        if not z:\n            return 2\n        rs = [r for r,c in z]\n        cs = [c for r,c in z]\n        avg_r = sum(rs)/len(rs)\n        avg_c = sum(cs)/len(cs)\n        if avg_r <= 1.0:\n            return 3\n        if avg_r >= 2.0 and abs(avg_c-1.5)<0.6:\n            return 4\n        if abs(avg_r-1.5)<0.6 and abs(avg_c-1.5)<0.6:\n            return 8\n        if abs(avg_c-1.5)>0.6:\n            return 3\n        return 4\n\n    values = [classify(b) for b in blocks]\n    return [[v]*3 for v in values]",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 2,
+      "total": 4,
+      "success_rate": 0.5
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 27,
+      "total": 64,
+      "success_rate": 0.421875
+    },
+    "dynamic50": {
+      "ok": 31,
+      "total": 50,
+      "success_rate": 0.62
+    },
+    "re_arc_stable": {
+      "ok": 14,
+      "total": 1000,
+      "success_rate": 0.014
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "input": [
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ]
+      ],
+      "expected": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ],
+      "got": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          8,
+          8
+        ]
+      ]
+    },
+    "test": {
+      "index": 0,
+      "input": [
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5
+        ],
+        [
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5
+        ],
+        [
+          5,
+          0,
+          0,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          4,
+          4
+        ],
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          8,
+          8,
+          8
+        ]
+      ],
+      "got": [
+        [
+          4,
+          4,
+          4
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          8,
+          8
+        ]
+      ]
+    },
+    "stable": {
+      "index": 0,
+      "input": [
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ]
+      ],
+      "expected": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ],
+      "got": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          8,
+          8
+        ]
+      ]
+    },
+    "dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          4,
+          4
+        ],
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ],
+      "got": [
+        [
+          4,
+          4,
+          4
+        ],
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          8,
+          8,
+          8
+        ]
+      ]
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "list index out of range"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "tuple index out of range"
+    }
+  },
+  "evaluation_ok": true
+}
