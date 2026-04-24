@@ -1,0 +1,62 @@
+{
+  "task_id": "b190f7f5",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n2 0 4 0 8 0\n0 3 0 8 8 8\n0 0 0 0 8 0\nOutput:\n0 2 0 0 0 0 0 4 0\n2 2 2 0 0 0 4 4 4\n0 2 0 0 0 0 0 4 0\n0 0 0 0 3 0 0 0 0\n0 0 0 3 3 3 0 0 0\n0 0 0 0 3 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 8 0 4 0\n8 0 0 1 2 4\n8 8 0 0 1 0\nOutput:\n0 0 0 0 0 4 0 0 0\n0 0 0 4 0 0 0 0 0\n0 0 0 4 4 0 0 0 0\n0 0 1 0 0 2 0 0 4\n1 0 0 2 0 0 4 0 0\n1 1 0 2 2 0 4 4 0\n0 0 0 0 0 1 0 0 0\n0 0 0 1 0 0 0 0 0\n0 0 0 1 1 0 0 0 0\n\nExample 3:\n\nInput:\n2 0 0 4 0 0 8 0\n0 2 4 0 8 8 8 8\n0 4 2 0 0 0 8 0\n4 0 0 2 0 0 8 0\nOutput:\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 4 0\n2 2 2 2 0 0 0 0 0 0 0 0 4 4 4 4\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 4 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 4 0\n0 0 0 0 0 0 2 0 0 0 4 0 0 0 0 0\n0 0 0 0 2 2 2 2 4 4 4 4 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 4 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 4 0 0 0 0 0\n0 0 0 0 0 0 4 0 0 0 2 0 0 0 0 0\n0 0 0 0 4 4 4 4 2 2 2 2 0 0 0 0\n0 0 0 0 0 0 4 0 0 0 2 0 0 0 0 0\n0 0 0 0 0 0 4 0 0 0 2 0 0 0 0 0\n0 0 4 0 0 0 0 0 0 0 0 0 0 0 2 0\n4 4 4 4 0 0 0 0 0 0 0 0 2 2 2 2\n0 0 4 0 0 0 0 0 0 0 0 0 0 0 2 0\n0 0 4 0 0 0 0 0 0 0 0 0 0 0 2 0\n\nBelow is a test input grid.\n\nInput:\n3 0 0 1\n0 2 2 0\n0 2 2 0\n3 0 0 3\n0 8 8 0\n8 8 8 8\n8 0 0 8\n8 8 8 8\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0])\n\n    def is_template(part):\n        return all(v in (0, 8) for row in part for v in row)\n\n    def has_no_8(part):\n        return all(v != 8 for row in part for v in row)\n\n    pattern = None\n    colors = None\n\n    if w % 2 == 0:\n        mid = w // 2\n        left = [row[:mid] for row in grid]\n        right = [row[mid:] for row in grid]\n        if is_template(left) and has_no_8(right):\n            pattern, colors = left, right\n        elif is_template(right) and has_no_8(left):\n            pattern, colors = right, left\n\n    if pattern is None and h % 2 == 0:\n        mid = h // 2\n        top = grid[:mid]\n        bottom = grid[mid:]\n        if is_template(top) and has_no_8(bottom):\n            pattern, colors = top, bottom\n        elif is_template(bottom) and has_no_8(top):\n            pattern, colors = bottom, top\n\n    ph, pw = len(pattern), len(pattern[0])\n    ch, cw = len(colors), len(colors[0])\n\n    out = [[0 for _ in range(cw * pw)] for _ in range(ch * ph)]\n\n    for i in range(ch):\n        for j in range(cw):\n            color = colors[i][j]\n            if color == 0:\n                continue\n            for r in range(ph):\n                for c in range(pw):\n                    if pattern[r][c] == 8:\n                        out[i * ph + r][j * pw + c] = color\n\n    return out",
+  "script": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0])\n\n    def is_template(part):\n        return all(v in (0, 8) for row in part for v in row)\n\n    def has_no_8(part):\n        return all(v != 8 for row in part for v in row)\n\n    pattern = None\n    colors = None\n\n    if w % 2 == 0:\n        mid = w // 2\n        left = [row[:mid] for row in grid]\n        right = [row[mid:] for row in grid]\n        if is_template(left) and has_no_8(right):\n            pattern, colors = left, right\n        elif is_template(right) and has_no_8(left):\n            pattern, colors = right, left\n\n    if pattern is None and h % 2 == 0:\n        mid = h // 2\n        top = grid[:mid]\n        bottom = grid[mid:]\n        if is_template(top) and has_no_8(bottom):\n            pattern, colors = top, bottom\n        elif is_template(bottom) and has_no_8(top):\n            pattern, colors = bottom, top\n\n    ph, pw = len(pattern), len(pattern[0])\n    ch, cw = len(colors), len(colors[0])\n\n    out = [[0 for _ in range(cw * pw)] for _ in range(ch * ph)]\n\n    for i in range(ch):\n        for j in range(cw):\n            color = colors[i][j]\n            if color == 0:\n                continue\n            for r in range(ph):\n                for c in range(pw):\n                    if pattern[r][c] == 8:\n                        out[i * ph + r][j * pw + c] = color\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 11,
+      "total": 1000,
+      "success_rate": 0.011
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "object of type 'NoneType' has no len()"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "object of type 'NoneType' has no len()"
+    }
+  },
+  "evaluation_ok": true
+}

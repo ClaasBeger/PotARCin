@@ -1,0 +1,69 @@
+{
+  "task_id": "e9afcf9a",
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 820966050,
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n3 3 3 3 3 3\n9 9 9 9 9 9\nOutput:\n3 9 3 9 3 9\n9 3 9 3 9 3\n\nExample 2:\nInput:\n4 4 4 4 4 4\n8 8 8 8 8 8\nOutput:\n4 8 4 8 4 8\n8 4 8 4 8 4\n\nNow infer an input grid that would produce the following output by applying the same rule.\nDesired output:\n8 4 8 4 8 4\n4 8 4 8 4 8\n\nYour final answer must be ONLY a single Python list-of-lists grid:\n[[...], ...]\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "[[8,8,8,8,8,8],[4,4,4,4,4,4]]",
+  "desired_output": [
+    [
+      8,
+      4,
+      8,
+      4,
+      8,
+      4
+    ],
+    [
+      4,
+      8,
+      4,
+      8,
+      4,
+      8
+    ]
+  ],
+  "reference_input": [
+    [
+      8,
+      8,
+      8,
+      8,
+      8,
+      8
+    ],
+    [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ]
+  ],
+  "evaluation_ok": true,
+  "prediction_input": [
+    [
+      8,
+      8,
+      8,
+      8,
+      8,
+      8
+    ],
+    [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ]
+  ],
+  "metrics": {
+    "success_rate": 1.0
+  }
+}

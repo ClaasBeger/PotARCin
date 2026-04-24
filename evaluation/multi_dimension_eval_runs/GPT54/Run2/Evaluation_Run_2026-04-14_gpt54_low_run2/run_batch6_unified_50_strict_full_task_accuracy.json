@@ -1,0 +1,83 @@
+{
+  "task_count": 50,
+  "source_run_json": "evaluation/multi_dimension_eval_runs/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/run_batch6_unified_50.json",
+  "criteria": {
+    "definition": "train/test/stable/dynamic50 success_rate == 1.0",
+    "classification": "accuracy == 1.0",
+    "constrained_generation": "success_rate == 1.0",
+    "editing": "success == true (or success_rate == 1.0)",
+    "inversion": "success_rate == 1.0"
+  },
+  "by_dimension": {
+    "definition": {
+      "strict_full_task_pass": 42,
+      "files_found": 50,
+      "strict_accuracy": 0.84,
+      "example_fail_task_ids": [
+        "a61ba2ce",
+        "a64e4611",
+        "a78176bb",
+        "a8c38be5",
+        "a8d7556c",
+        "aba27056",
+        "b230c067",
+        "b775ac94"
+      ]
+    },
+    "classification_distribution": {
+      "strict_full_task_pass": 42,
+      "files_found": 50,
+      "strict_accuracy": 0.84,
+      "example_fail_task_ids": [
+        "a64e4611",
+        "a68b268e",
+        "a78176bb",
+        "a8d7556c",
+        "b775ac94",
+        "b782dc8a",
+        "b9b7f026",
+        "be94b721"
+      ]
+    },
+    "constrained_generation": {
+      "strict_full_task_pass": 37,
+      "files_found": 50,
+      "strict_accuracy": 0.74,
+      "example_fail_task_ids": [
+        "a64e4611",
+        "a68b268e",
+        "a78176bb",
+        "a87f7484",
+        "a8d7556c",
+        "ac0a08a4",
+        "ae3edfdc",
+        "aedd82e4",
+        "b0c4d837",
+        "b2862040",
+        "b527c5c6",
+        "b775ac94"
+      ]
+    },
+    "editing": {
+      "strict_full_task_pass": 45,
+      "files_found": 50,
+      "strict_accuracy": 0.9,
+      "example_fail_task_ids": [
+        "a61ba2ce",
+        "a64e4611",
+        "aba27056",
+        "b2862040",
+        "b775ac94"
+      ]
+    },
+    "inversion": {
+      "strict_full_task_pass": 48,
+      "files_found": 50,
+      "strict_accuracy": 0.96,
+      "example_fail_task_ids": [
+        "a61ba2ce",
+        "b94a9452"
+      ]
+    }
+  }
+}

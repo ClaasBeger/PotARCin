@@ -1,0 +1,108 @@
+{
+  "task_count": 50,
+  "source_run_json": "evaluation/multi_dimension_eval_runs/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/run_batch8_unified_50.json",
+  "criteria": {
+    "definition": "train/test/stable/dynamic50 success_rate == 1.0",
+    "classification": "accuracy == 1.0",
+    "constrained_generation": "success_rate == 1.0",
+    "editing": "success == true (or success_rate == 1.0)",
+    "inversion": "success_rate == 1.0"
+  },
+  "by_dimension": {
+    "definition": {
+      "strict_full_task_pass": 19,
+      "files_found": 50,
+      "strict_accuracy": 0.38,
+      "example_fail_task_ids": [
+        "dc1df850",
+        "de1cd16c",
+        "ded97339",
+        "e179c5f4",
+        "e26a3af2",
+        "e40b9e2f",
+        "e5062a87",
+        "e509e548",
+        "e50d258f",
+        "e6721834",
+        "e73095fd",
+        "e8dc4411"
+      ]
+    },
+    "classification_distribution": {
+      "strict_full_task_pass": 30,
+      "files_found": 50,
+      "strict_accuracy": 0.6,
+      "example_fail_task_ids": [
+        "dc0a314f",
+        "e40b9e2f",
+        "e48d4e1a",
+        "e5062a87",
+        "e509e548",
+        "e50d258f",
+        "e73095fd",
+        "e8dc4411",
+        "eb281b96",
+        "ecdecbb3",
+        "ef135b50",
+        "f1cefba8"
+      ]
+    },
+    "constrained_generation": {
+      "strict_full_task_pass": 28,
+      "files_found": 50,
+      "strict_accuracy": 0.56,
+      "example_fail_task_ids": [
+        "dc1df850",
+        "e21d9049",
+        "e3497940",
+        "e40b9e2f",
+        "e48d4e1a",
+        "e5062a87",
+        "e509e548",
+        "e6721834",
+        "e73095fd",
+        "e8593010",
+        "e8dc4411",
+        "eb281b96"
+      ]
+    },
+    "editing": {
+      "strict_full_task_pass": 31,
+      "files_found": 50,
+      "strict_accuracy": 0.62,
+      "example_fail_task_ids": [
+        "dc433765",
+        "ded97339",
+        "e21d9049",
+        "e3497940",
+        "e40b9e2f",
+        "e509e548",
+        "e6721834",
+        "e8593010",
+        "e8dc4411",
+        "eb281b96",
+        "ec883f72",
+        "ecdecbb3"
+      ]
+    },
+    "inversion": {
+      "strict_full_task_pass": 33,
+      "files_found": 50,
+      "strict_accuracy": 0.66,
+      "example_fail_task_ids": [
+        "dc0a314f",
+        "ded97339",
+        "e21d9049",
+        "e3497940",
+        "e40b9e2f",
+        "e48d4e1a",
+        "e5062a87",
+        "ecdecbb3",
+        "ed36ccf7",
+        "f15e1fac",
+        "f25ffba3",
+        "f5b8619d"
+      ]
+    }
+  }
+}

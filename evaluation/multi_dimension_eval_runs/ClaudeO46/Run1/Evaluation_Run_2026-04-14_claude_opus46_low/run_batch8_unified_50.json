@@ -1,0 +1,4564 @@
+{
+  "mode": "batch_unified",
+  "created_at": "2026-04-24_17-27-01",
+  "task_count": 50,
+  "run_tag": "Evaluation_Run_2026-04-14_claude_opus46_low",
+  "seed_mode": "fixed",
+  "base_seed": 77,
+  "batch_size": 50,
+  "batch_index": 8,
+  "batch_slice": "train[350:400]",
+  "completed_before_count": 350,
+  "last_completed_task_id_before": "dbc1a6ce",
+  "merged_from_sources": [
+    "run_2026-04-24_14-43-11.json (40-task intermediate summary; merged then removed)",
+    "assembled_from_latest_dimension_json_for_10_tasks_in_train[350:400)_not_in_that_summary"
+  ],
+  "runs": [
+    {
+      "task_id": "dc0a314f",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": null,
+      "dimension_seeds": {},
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc0a314f_definition_eval_2026-04-23_20-57-49.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc0a314f_distribution_classification_eval_2026-04-23_20-59-15.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc0a314f_constrained_generation_eval_2026-04-23_20-59-41.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc0a314f_editing_eval_2026-04-23_21-00-30.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc0a314f_inversion_eval_2026-04-23_21-00-52.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        }
+      }
+    },
+    {
+      "task_id": "dc1df850",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": null,
+      "dimension_seeds": {},
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc1df850_definition_eval_2026-04-23_21-01-20.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 201,
+              "total": 262,
+              "success_rate": 0.767175572519084
+            },
+            "dynamic50": {
+              "ok": 41,
+              "total": 50,
+              "success_rate": 0.82
+            },
+            "re_arc_stable": {
+              "ok": 22,
+              "total": 1000,
+              "success_rate": 0.022
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc1df850_distribution_classification_eval_2026-04-23_21-02-50.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc1df850_constrained_generation_eval_2026-04-23_21-03-05.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc1df850_editing_eval_2026-04-23_21-03-32.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc1df850_inversion_eval_2026-04-23_21-03-37.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        }
+      }
+    },
+    {
+      "task_id": "dc433765",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": null,
+      "dimension_seeds": {},
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc433765_definition_eval_2026-04-23_21-03-44.json",
+          "metrics": {
+            "train": {
+              "ok": 7,
+              "total": 7,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 14,
+              "total": 1000,
+              "success_rate": 0.014
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc433765_distribution_classification_eval_2026-04-23_21-05-14.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc433765_constrained_generation_eval_2026-04-23_21-05-25.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc433765_editing_eval_2026-04-23_21-05-32.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/dc433765_inversion_eval_2026-04-23_21-05-39.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        }
+      }
+    },
+    {
+      "task_id": "ddf7fa4f",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": null,
+      "dimension_seeds": {},
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ddf7fa4f_definition_eval_2026-04-23_21-05-48.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ddf7fa4f_distribution_classification_eval_2026-04-23_21-07-17.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ddf7fa4f_constrained_generation_eval_2026-04-23_21-07-39.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ddf7fa4f_editing_eval_2026-04-23_21-07-49.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ddf7fa4f_inversion_eval_2026-04-23_21-07-55.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        }
+      }
+    },
+    {
+      "task_id": "de1cd16c",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": null,
+      "dimension_seeds": {},
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/de1cd16c_definition_eval_2026-04-23_21-08-07.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 4,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/de1cd16c_distribution_classification_eval_2026-04-23_21-09-34.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/de1cd16c_constrained_generation_eval_2026-04-23_21-09-49.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/de1cd16c_editing_eval_2026-04-23_21-10-22.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/de1cd16c_inversion_eval_2026-04-23_21-10-31.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        }
+      }
+    },
+    {
+      "task_id": "ded97339",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": null,
+      "dimension_seeds": {},
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "evaluation_ok is false",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ded97339_definition_eval_2026-04-23_21-10-54.json",
+          "metrics": {},
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ded97339_distribution_classification_eval_2026-04-24_14-20-31.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ded97339_constrained_generation_eval_2026-04-24_14-20-50.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ded97339_editing_eval_2026-04-24_14-20-58.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ded97339_inversion_eval_2026-04-24_14-21-05.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        }
+      }
+    },
+    {
+      "task_id": "e179c5f4",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": null,
+      "dimension_seeds": {},
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e179c5f4_definition_eval_2026-04-24_14-21-12.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 1,
+              "total": 9,
+              "success_rate": 0.1111111111111111
+            },
+            "dynamic50": {
+              "ok": 2,
+              "total": 50,
+              "success_rate": 0.04
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e179c5f4_distribution_classification_eval_2026-04-24_14-22-13.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e179c5f4_constrained_generation_eval_2026-04-24_14-22-37.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e179c5f4_editing_eval_2026-04-24_14-22-45.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e179c5f4_inversion_eval_2026-04-24_14-22-50.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        }
+      }
+    },
+    {
+      "task_id": "e21d9049",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": null,
+      "dimension_seeds": {},
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e21d9049_definition_eval_2026-04-24_14-23-10.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 13,
+              "total": 1000,
+              "success_rate": 0.013
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e21d9049_distribution_classification_eval_2026-04-24_14-24-33.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e21d9049_constrained_generation_eval_2026-04-24_14-24-49.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e21d9049_editing_eval_2026-04-24_14-25-15.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e21d9049_inversion_eval_2026-04-24_14-25-23.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        }
+      }
+    },
+    {
+      "task_id": "e26a3af2",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": null,
+      "dimension_seeds": {},
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e26a3af2_definition_eval_2026-04-24_14-25-46.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 196,
+              "total": 262,
+              "success_rate": 0.7480916030534351
+            },
+            "dynamic50": {
+              "ok": 32,
+              "total": 50,
+              "success_rate": 0.64
+            },
+            "re_arc_stable": {
+              "ok": 314,
+              "total": 1000,
+              "success_rate": 0.314
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e26a3af2_distribution_classification_eval_2026-04-24_14-27-10.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e26a3af2_constrained_generation_eval_2026-04-24_14-27-21.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e26a3af2_editing_eval_2026-04-24_14-27-34.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e26a3af2_inversion_eval_2026-04-24_14-27-44.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        }
+      }
+    },
+    {
+      "task_id": "e3497940",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": null,
+      "dimension_seeds": {},
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e3497940_definition_eval_2026-04-24_14-27-52.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 29,
+              "total": 1000,
+              "success_rate": 0.029
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e3497940_distribution_classification_eval_2026-04-24_14-29-19.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e3497940_constrained_generation_eval_2026-04-24_14-29-32.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e3497940_editing_eval_2026-04-24_14-29-50.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e3497940_inversion_eval_2026-04-24_14-29-55.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1,
+          "skipped_rerun": true
+        }
+      }
+    },
+    {
+      "task_id": "e40b9e2f",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 437,
+      "dimension_seeds": {
+        "classification_distribution": 1217560692,
+        "editing": 424189974,
+        "inversion": 118779975
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e40b9e2f_definition_eval_2026-04-24_14-43-38.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 3,
+              "success_rate": 0.3333333333333333
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 8,
+              "total": 262,
+              "success_rate": 0.030534351145038167
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 1,
+              "total": 1000,
+              "success_rate": 0.001
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e40b9e2f_distribution_classification_eval_2026-04-24_14-46-22.json",
+          "metrics": {
+            "accuracy": 0.4,
+            "correct": 2,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e40b9e2f_constrained_generation_eval_2026-04-24_14-46-37.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e40b9e2f_editing_eval_2026-04-24_14-46-55.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e40b9e2f_inversion_eval_2026-04-24_14-47-04.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "e48d4e1a",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 438,
+      "dimension_seeds": {
+        "classification_distribution": 893599179,
+        "editing": 357640012,
+        "inversion": 1225602126
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e48d4e1a_definition_eval_2026-04-24_14-47-14.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 2,
+              "total": 1000,
+              "success_rate": 0.002
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e48d4e1a_distribution_classification_eval_2026-04-24_14-48-36.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e48d4e1a_constrained_generation_eval_2026-04-24_14-48-49.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e48d4e1a_editing_eval_2026-04-24_14-49-02.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e48d4e1a_inversion_eval_2026-04-24_14-49-09.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "e5062a87",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 439,
+      "dimension_seeds": {
+        "classification_distribution": 1734377507,
+        "editing": 1413241109,
+        "inversion": 1337391126
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e5062a87_definition_eval_2026-04-24_14-49-21.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 3,
+              "success_rate": 0.3333333333333333
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 190,
+              "total": 261,
+              "success_rate": 0.7279693486590039
+            },
+            "dynamic50": {
+              "ok": 37,
+              "total": 50,
+              "success_rate": 0.74
+            },
+            "re_arc_stable": {
+              "ok": 49,
+              "total": 1000,
+              "success_rate": 0.049
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e5062a87_distribution_classification_eval_2026-04-24_14-52-01.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e5062a87_constrained_generation_eval_2026-04-24_14-52-26.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e5062a87_editing_eval_2026-04-24_14-52-47.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e5062a87_inversion_eval_2026-04-24_14-52-55.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "e509e548",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 440,
+      "dimension_seeds": {
+        "classification_distribution": 533684232,
+        "editing": 355443360,
+        "inversion": 1293686248
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e509e548_definition_eval_2026-04-24_14-53-23.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e509e548_distribution_classification_eval_2026-04-24_14-55-45.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e509e548_constrained_generation_eval_2026-04-24_14-56-20.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e509e548_editing_eval_2026-04-24_14-56-43.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e509e548_inversion_eval_2026-04-24_14-56-53.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "e50d258f",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 441,
+      "dimension_seeds": {
+        "classification_distribution": 763558326,
+        "editing": 1724113451,
+        "inversion": 655778484
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e50d258f_definition_eval_2026-04-24_14-57-03.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 3,
+              "success_rate": 0.3333333333333333
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 94,
+              "total": 262,
+              "success_rate": 0.35877862595419846
+            },
+            "dynamic50": {
+              "ok": 25,
+              "total": 50,
+              "success_rate": 0.5
+            },
+            "re_arc_stable": {
+              "ok": 51,
+              "total": 1000,
+              "success_rate": 0.051
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e50d258f_distribution_classification_eval_2026-04-24_14-58-31.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e50d258f_constrained_generation_eval_2026-04-24_15-01-32.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e50d258f_editing_eval_2026-04-24_15-02-05.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e50d258f_inversion_eval_2026-04-24_15-02-14.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "e6721834",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 442,
+      "dimension_seeds": {
+        "classification_distribution": 1573709185,
+        "editing": 1911871096,
+        "inversion": 1935455761
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e6721834_definition_eval_2026-04-24_15-02-43.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 27,
+              "total": 262,
+              "success_rate": 0.10305343511450382
+            },
+            "dynamic50": {
+              "ok": 4,
+              "total": 50,
+              "success_rate": 0.08
+            },
+            "re_arc_stable": {
+              "ok": 5,
+              "total": 1000,
+              "success_rate": 0.005
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e6721834_distribution_classification_eval_2026-04-24_15-09-01.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e6721834_constrained_generation_eval_2026-04-24_15-09-22.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e6721834_editing_eval_2026-04-24_15-09-33.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e6721834_inversion_eval_2026-04-24_15-09-52.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "e73095fd",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 443,
+      "dimension_seeds": {
+        "classification_distribution": 541231060,
+        "editing": 91412810,
+        "inversion": 1148453776
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e73095fd_definition_eval_2026-04-24_15-10-03.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 3,
+              "success_rate": 0.3333333333333333
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 116,
+              "total": 262,
+              "success_rate": 0.44274809160305345
+            },
+            "dynamic50": {
+              "ok": 19,
+              "total": 50,
+              "success_rate": 0.38
+            },
+            "re_arc_stable": {
+              "ok": 12,
+              "total": 1000,
+              "success_rate": 0.012
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e73095fd_distribution_classification_eval_2026-04-24_15-11-36.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e73095fd_constrained_generation_eval_2026-04-24_15-11-58.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e73095fd_editing_eval_2026-04-24_15-12-09.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e73095fd_inversion_eval_2026-04-24_15-12-18.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "e76a88a6",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 444,
+      "dimension_seeds": {
+        "classification_distribution": 1326692461,
+        "editing": 1236154736,
+        "inversion": 56854717
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e76a88a6_definition_eval_2026-04-24_15-13-20.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 10,
+              "total": 1000,
+              "success_rate": 0.01
+            },
+            "re_arc_dynamic50": {
+              "ok": 2,
+              "total": 50,
+              "success_rate": 0.04
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e76a88a6_distribution_classification_eval_2026-04-24_15-14-48.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e76a88a6_constrained_generation_eval_2026-04-24_15-15-00.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e76a88a6_editing_eval_2026-04-24_15-15-08.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e76a88a6_inversion_eval_2026-04-24_15-15-15.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "e8593010",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 445,
+      "dimension_seeds": {
+        "classification_distribution": 1818846186,
+        "editing": 1073240351,
+        "inversion": 343102648
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e8593010_definition_eval_2026-04-24_15-15-24.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 147,
+              "total": 1000,
+              "success_rate": 0.147
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e8593010_distribution_classification_eval_2026-04-24_15-18-13.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e8593010_constrained_generation_eval_2026-04-24_15-18-45.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e8593010_editing_eval_2026-04-24_15-19-01.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e8593010_inversion_eval_2026-04-24_15-19-08.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "e8dc4411",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 446,
+      "dimension_seeds": {
+        "classification_distribution": 2048481060,
+        "editing": 923744642,
+        "inversion": 805196516
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e8dc4411_definition_eval_2026-04-24_15-19-32.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 129,
+              "total": 262,
+              "success_rate": 0.49236641221374045
+            },
+            "dynamic50": {
+              "ok": 29,
+              "total": 50,
+              "success_rate": 0.58
+            },
+            "re_arc_stable": {
+              "ok": 13,
+              "total": 1000,
+              "success_rate": 0.013
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e8dc4411_distribution_classification_eval_2026-04-24_15-20-59.json",
+          "metrics": {
+            "accuracy": 0.4,
+            "correct": 2,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e8dc4411_constrained_generation_eval_2026-04-24_15-21-18.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e8dc4411_editing_eval_2026-04-24_15-21-43.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e8dc4411_inversion_eval_2026-04-24_15-21-54.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "e9614598",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 447,
+      "dimension_seeds": {
+        "classification_distribution": 1765315863,
+        "editing": 66234054,
+        "inversion": 1617230033
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e9614598_definition_eval_2026-04-24_15-22-01.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 93,
+              "total": 1000,
+              "success_rate": 0.093
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e9614598_distribution_classification_eval_2026-04-24_15-23-32.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e9614598_constrained_generation_eval_2026-04-24_15-23-47.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e9614598_editing_eval_2026-04-24_15-23-57.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e9614598_inversion_eval_2026-04-24_15-24-03.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "e98196ab",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 448,
+      "dimension_seeds": {
+        "classification_distribution": 1204205451,
+        "editing": 1069756396,
+        "inversion": 506709693
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e98196ab_definition_eval_2026-04-24_15-24-11.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 4,
+              "total": 1000,
+              "success_rate": 0.004
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e98196ab_distribution_classification_eval_2026-04-24_15-25-37.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e98196ab_constrained_generation_eval_2026-04-24_15-25-50.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e98196ab_editing_eval_2026-04-24_15-25-58.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e98196ab_inversion_eval_2026-04-24_15-26-07.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "e9afcf9a",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 449,
+      "dimension_seeds": {
+        "classification_distribution": 818149144,
+        "editing": 899636802,
+        "inversion": 820966050
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e9afcf9a_definition_eval_2026-04-24_15-26-12.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 72,
+              "total": 72,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 7,
+              "total": 1000,
+              "success_rate": 0.007
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e9afcf9a_distribution_classification_eval_2026-04-24_15-27-27.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e9afcf9a_constrained_generation_eval_2026-04-24_15-27-41.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e9afcf9a_editing_eval_2026-04-24_15-27-46.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/e9afcf9a_inversion_eval_2026-04-24_15-27-51.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ea32f347",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 450,
+      "dimension_seeds": {
+        "classification_distribution": 413781929,
+        "editing": 2120406917,
+        "inversion": 622758219
+      },
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Cannot choose from an empty sequence",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ea32f347_definition_eval_2026-04-24_15-28-01.json",
+          "metrics": {},
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ea32f347_distribution_classification_eval_2026-04-24_15-28-01.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ea32f347_constrained_generation_eval_2026-04-24_15-28-14.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ea32f347_editing_eval_2026-04-24_15-28-22.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ea32f347_inversion_eval_2026-04-24_15-28-28.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ea786f4a",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 451,
+      "dimension_seeds": {
+        "classification_distribution": 173535981,
+        "editing": 552623216,
+        "inversion": 2050374853
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ea786f4a_definition_eval_2026-04-24_15-28-35.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 54,
+              "total": 54,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 7,
+              "total": 1000,
+              "success_rate": 0.007
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ea786f4a_distribution_classification_eval_2026-04-24_15-29-51.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ea786f4a_constrained_generation_eval_2026-04-24_15-30-05.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 1
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ea786f4a_editing_eval_2026-04-24_15-30-13.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ea786f4a_inversion_eval_2026-04-24_15-30-20.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "eb281b96",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 452,
+      "dimension_seeds": {
+        "classification_distribution": 1465717005,
+        "editing": 1594818867,
+        "inversion": 1309362040
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/eb281b96_definition_eval_2026-04-24_15-30-26.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 2,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 36,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/eb281b96_distribution_classification_eval_2026-04-24_15-31-38.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/eb281b96_constrained_generation_eval_2026-04-24_15-32-09.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/eb281b96_editing_eval_2026-04-24_15-32-18.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/eb281b96_inversion_eval_2026-04-24_15-32-24.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "eb5a1d5d",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 453,
+      "dimension_seeds": {
+        "classification_distribution": 1018277948,
+        "editing": 1717154182,
+        "inversion": 2075845315
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/eb5a1d5d_definition_eval_2026-04-24_15-32-42.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/eb5a1d5d_distribution_classification_eval_2026-04-24_15-35-16.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Anthropic SDK failed (No module named 'anthropic'); fallback HTTP failed: Remote end closed connection without response",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/eb5a1d5d_editing_eval_2026-04-24_15-36-52.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/eb5a1d5d_inversion_eval_2026-04-24_15-37-05.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ec883f72",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 454,
+      "dimension_seeds": {
+        "classification_distribution": 1301966998,
+        "editing": 1399940089,
+        "inversion": 1129318928
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ec883f72_definition_eval_2026-04-24_15-37-26.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 4,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ec883f72_distribution_classification_eval_2026-04-24_15-38-55.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ec883f72_constrained_generation_eval_2026-04-24_15-39-08.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ec883f72_editing_eval_2026-04-24_15-39-15.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ec883f72_inversion_eval_2026-04-24_15-39-22.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ecdecbb3",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 455,
+      "dimension_seeds": {
+        "classification_distribution": 107536531,
+        "editing": 1641869025,
+        "inversion": 997866103
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ecdecbb3_definition_eval_2026-04-24_15-39-39.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 3,
+              "success_rate": 0.3333333333333333
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 200,
+              "total": 262,
+              "success_rate": 0.7633587786259542
+            },
+            "dynamic50": {
+              "ok": 36,
+              "total": 50,
+              "success_rate": 0.72
+            },
+            "re_arc_stable": {
+              "ok": 5,
+              "total": 1000,
+              "success_rate": 0.005
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ecdecbb3_distribution_classification_eval_2026-04-24_15-41-13.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ecdecbb3_constrained_generation_eval_2026-04-24_15-41-27.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ecdecbb3_editing_eval_2026-04-24_15-41-53.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ecdecbb3_inversion_eval_2026-04-24_15-42-02.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ed36ccf7",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 456,
+      "dimension_seeds": {
+        "classification_distribution": 1930224276,
+        "editing": 2002321318,
+        "inversion": 1869209800
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ed36ccf7_definition_eval_2026-04-24_15-42-10.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ed36ccf7_distribution_classification_eval_2026-04-24_15-44-53.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ed36ccf7_constrained_generation_eval_2026-04-24_15-45-29.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ed36ccf7_editing_eval_2026-04-24_15-45-35.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ed36ccf7_inversion_eval_2026-04-24_15-45-40.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ef135b50",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 457,
+      "dimension_seeds": {
+        "classification_distribution": 784339655,
+        "editing": 1470691753,
+        "inversion": 1156236573
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ef135b50_definition_eval_2026-04-24_15-45-57.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 3,
+              "success_rate": 0.3333333333333333
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 61,
+              "total": 261,
+              "success_rate": 0.23371647509578544
+            },
+            "dynamic50": {
+              "ok": 12,
+              "total": 50,
+              "success_rate": 0.24
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ef135b50_distribution_classification_eval_2026-04-24_15-48-42.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ef135b50_constrained_generation_eval_2026-04-24_15-49-03.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ef135b50_editing_eval_2026-04-24_15-49-19.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ef135b50_inversion_eval_2026-04-24_15-49-26.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f15e1fac",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 458,
+      "dimension_seeds": {
+        "classification_distribution": 306134055,
+        "editing": 1887091465,
+        "inversion": 282088403
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f15e1fac_definition_eval_2026-04-24_15-49-54.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 3,
+              "success_rate": 0.3333333333333333
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 35,
+              "total": 262,
+              "success_rate": 0.13358778625954199
+            },
+            "dynamic50": {
+              "ok": 10,
+              "total": 50,
+              "success_rate": 0.2
+            },
+            "re_arc_stable": {
+              "ok": 1,
+              "total": 1000,
+              "success_rate": 0.001
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f15e1fac_distribution_classification_eval_2026-04-24_15-51-22.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f15e1fac_constrained_generation_eval_2026-04-24_15-51-45.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f15e1fac_editing_eval_2026-04-24_15-52-10.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f15e1fac_inversion_eval_2026-04-24_15-52-19.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f1cefba8",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 459,
+      "dimension_seeds": {
+        "classification_distribution": 643283140,
+        "editing": 1719517368,
+        "inversion": 73528775
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f1cefba8_definition_eval_2026-04-24_15-52-52.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f1cefba8_distribution_classification_eval_2026-04-24_15-54-23.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f1cefba8_constrained_generation_eval_2026-04-24_15-54-44.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f1cefba8_editing_eval_2026-04-24_15-55-08.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f1cefba8_inversion_eval_2026-04-24_15-55-33.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f25fbde4",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 460,
+      "dimension_seeds": {
+        "classification_distribution": 1280874903,
+        "editing": 2068236750,
+        "inversion": 68463761
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f25fbde4_definition_eval_2026-04-24_15-55-40.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 99,
+              "total": 1000,
+              "success_rate": 0.099
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f25fbde4_distribution_classification_eval_2026-04-24_15-57-12.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f25fbde4_constrained_generation_eval_2026-04-24_15-57-33.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f25fbde4_editing_eval_2026-04-24_15-57-40.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f25fbde4_inversion_eval_2026-04-24_15-57-46.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f25ffba3",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 461,
+      "dimension_seeds": {
+        "classification_distribution": 1344025257,
+        "editing": 286130530,
+        "inversion": 1800652142
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f25ffba3_definition_eval_2026-04-24_15-57-51.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 2,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f25ffba3_distribution_classification_eval_2026-04-24_15-59-15.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f25ffba3_constrained_generation_eval_2026-04-24_15-59-27.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f25ffba3_editing_eval_2026-04-24_15-59-33.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f25ffba3_inversion_eval_2026-04-24_15-59-39.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f2829549",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 462,
+      "dimension_seeds": {
+        "classification_distribution": 319381487,
+        "editing": 1660057002,
+        "inversion": 787875816
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f2829549_definition_eval_2026-04-24_15-59-46.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 5,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f2829549_distribution_classification_eval_2026-04-24_16-01-19.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f2829549_constrained_generation_eval_2026-04-24_16-01-31.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f2829549_editing_eval_2026-04-24_16-01-38.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f2829549_inversion_eval_2026-04-24_16-01-58.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f35d900a",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 463,
+      "dimension_seeds": {
+        "classification_distribution": 875640961,
+        "editing": 2024883001,
+        "inversion": 353123860
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f35d900a_definition_eval_2026-04-24_16-02-12.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 4,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 261,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f35d900a_distribution_classification_eval_2026-04-24_16-03-38.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f35d900a_constrained_generation_eval_2026-04-24_16-03-54.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f35d900a_editing_eval_2026-04-24_16-04-09.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f35d900a_inversion_eval_2026-04-24_16-04-18.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f5b8619d",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 464,
+      "dimension_seeds": {
+        "classification_distribution": 1167892615,
+        "editing": 705109047,
+        "inversion": 1025629616
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f5b8619d_definition_eval_2026-04-24_16-04-26.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 31,
+              "total": 262,
+              "success_rate": 0.1183206106870229
+            },
+            "dynamic50": {
+              "ok": 4,
+              "total": 50,
+              "success_rate": 0.08
+            },
+            "re_arc_stable": {
+              "ok": 12,
+              "total": 1000,
+              "success_rate": 0.012
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f5b8619d_distribution_classification_eval_2026-04-24_16-07-19.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f5b8619d_constrained_generation_eval_2026-04-24_16-07-36.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f5b8619d_editing_eval_2026-04-24_16-07-42.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f5b8619d_inversion_eval_2026-04-24_16-07-47.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f76d97a5",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 465,
+      "dimension_seeds": {
+        "classification_distribution": 823246593,
+        "editing": 951923818,
+        "inversion": 263553704
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f76d97a5_definition_eval_2026-04-24_16-07-52.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 3,
+              "success_rate": 0.6666666666666666
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 163,
+              "total": 262,
+              "success_rate": 0.6221374045801527
+            },
+            "dynamic50": {
+              "ok": 28,
+              "total": 50,
+              "success_rate": 0.56
+            },
+            "re_arc_stable": {
+              "ok": 516,
+              "total": 1000,
+              "success_rate": 0.516
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f76d97a5_distribution_classification_eval_2026-04-24_16-09-18.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f76d97a5_constrained_generation_eval_2026-04-24_16-09-29.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f76d97a5_editing_eval_2026-04-24_16-09-41.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f76d97a5_inversion_eval_2026-04-24_16-09-46.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f8a8fe49",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 466,
+      "dimension_seeds": {
+        "classification_distribution": 226815043,
+        "editing": 527185241,
+        "inversion": 1255862428
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8a8fe49_definition_eval_2026-04-24_16-09-59.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8a8fe49_distribution_classification_eval_2026-04-24_16-11-31.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8a8fe49_constrained_generation_eval_2026-04-24_16-11-50.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8a8fe49_editing_eval_2026-04-24_16-12-15.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8a8fe49_inversion_eval_2026-04-24_16-12-24.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f8b3ba0a",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 467,
+      "dimension_seeds": {
+        "classification_distribution": 1084374273,
+        "editing": 2057295413,
+        "inversion": 1731756822
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8b3ba0a_definition_eval_2026-04-24_16-12-32.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 187,
+              "total": 1000,
+              "success_rate": 0.187
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8b3ba0a_distribution_classification_eval_2026-04-24_16-13-59.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8b3ba0a_constrained_generation_eval_2026-04-24_16-14-15.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8b3ba0a_editing_eval_2026-04-24_16-14-42.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8b3ba0a_inversion_eval_2026-04-24_16-14-56.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f8c80d96",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 468,
+      "dimension_seeds": {
+        "classification_distribution": 880261983,
+        "editing": 1635318346,
+        "inversion": 250684330
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8c80d96_definition_eval_2026-04-24_16-15-10.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 19,
+              "total": 262,
+              "success_rate": 0.07251908396946564
+            },
+            "dynamic50": {
+              "ok": 4,
+              "total": 50,
+              "success_rate": 0.08
+            },
+            "re_arc_stable": {
+              "ok": 32,
+              "total": 1000,
+              "success_rate": 0.032
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8c80d96_distribution_classification_eval_2026-04-24_16-16-37.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8c80d96_constrained_generation_eval_2026-04-24_16-16-55.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8c80d96_editing_eval_2026-04-24_16-17-07.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8c80d96_inversion_eval_2026-04-24_16-17-17.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f8ff0b80",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 469,
+      "dimension_seeds": {
+        "classification_distribution": 1140460067,
+        "editing": 1282539257,
+        "inversion": 1093407447
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8ff0b80_definition_eval_2026-04-24_16-17-23.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 22,
+              "total": 1000,
+              "success_rate": 0.022
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8ff0b80_distribution_classification_eval_2026-04-24_16-18-49.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8ff0b80_constrained_generation_eval_2026-04-24_16-19-08.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8ff0b80_editing_eval_2026-04-24_16-19-16.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f8ff0b80_inversion_eval_2026-04-24_16-19-27.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "f9012d9b",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 470,
+      "dimension_seeds": {
+        "classification_distribution": 177264759,
+        "editing": 1486412158,
+        "inversion": 781815971
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f9012d9b_definition_eval_2026-04-24_16-19-42.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 248,
+              "total": 262,
+              "success_rate": 0.9465648854961832
+            },
+            "dynamic50": {
+              "ok": 47,
+              "total": 50,
+              "success_rate": 0.94
+            },
+            "re_arc_stable": {
+              "ok": 992,
+              "total": 1000,
+              "success_rate": 0.992
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f9012d9b_distribution_classification_eval_2026-04-24_16-21-16.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f9012d9b_constrained_generation_eval_2026-04-24_16-21-55.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f9012d9b_editing_eval_2026-04-24_16-22-01.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/f9012d9b_inversion_eval_2026-04-24_16-22-07.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "fafffa47",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 471,
+      "dimension_seeds": {
+        "classification_distribution": 288057393,
+        "editing": 1275460293,
+        "inversion": 1988214959
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fafffa47_definition_eval_2026-04-24_16-22-13.json",
+          "metrics": {
+            "train": {
+              "ok": 5,
+              "total": 5,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 67,
+              "total": 1000,
+              "success_rate": 0.067
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fafffa47_distribution_classification_eval_2026-04-24_16-23-42.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fafffa47_constrained_generation_eval_2026-04-24_16-23-54.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fafffa47_editing_eval_2026-04-24_16-23-59.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fafffa47_inversion_eval_2026-04-24_16-24-06.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "fcb5c309",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 472,
+      "dimension_seeds": {
+        "classification_distribution": 664013571,
+        "editing": 839563961,
+        "inversion": 1951933760
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fcb5c309_definition_eval_2026-04-24_16-39-24.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 42,
+              "total": 1000,
+              "success_rate": 0.042
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 2
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fcb5c309_distribution_classification_eval_2026-04-24_16-40-48.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fcb5c309_constrained_generation_eval_2026-04-24_16-41-09.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fcb5c309_editing_eval_2026-04-24_16-41-20.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fcb5c309_inversion_eval_2026-04-24_16-41-35.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "fcc82909",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 473,
+      "dimension_seeds": {
+        "classification_distribution": 1444519411,
+        "editing": 1472150767,
+        "inversion": 231194317
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fcc82909_definition_eval_2026-04-24_16-41-58.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fcc82909_distribution_classification_eval_2026-04-24_16-41-58.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fcc82909_constrained_generation_eval_2026-04-24_16-42-25.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fcc82909_editing_eval_2026-04-24_16-42-55.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/fcc82909_inversion_eval_2026-04-24_16-43-02.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "feca6190",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 474,
+      "dimension_seeds": {
+        "classification_distribution": 299014183,
+        "editing": 211012765,
+        "inversion": 1751186407
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/feca6190_definition_eval_2026-04-24_16-43-09.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 5,
+              "success_rate": 0.4
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 82,
+              "total": 262,
+              "success_rate": 0.31297709923664124
+            },
+            "dynamic50": {
+              "ok": 20,
+              "total": 50,
+              "success_rate": 0.4
+            },
+            "re_arc_stable": {
+              "ok": 356,
+              "total": 1000,
+              "success_rate": 0.356
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/feca6190_distribution_classification_eval_2026-04-24_16-44-39.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/feca6190_constrained_generation_eval_2026-04-24_16-44-54.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/feca6190_editing_eval_2026-04-24_16-45-03.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/feca6190_inversion_eval_2026-04-24_16-45-08.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ff28f65a",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 475,
+      "dimension_seeds": {
+        "classification_distribution": 278441317,
+        "editing": 1646878,
+        "inversion": 1895919245
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ff28f65a_definition_eval_2026-04-24_16-45-14.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 8,
+              "success_rate": 0.125
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 23,
+              "total": 262,
+              "success_rate": 0.08778625954198473
+            },
+            "dynamic50": {
+              "ok": 4,
+              "total": 50,
+              "success_rate": 0.08
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ff28f65a_distribution_classification_eval_2026-04-24_16-46-40.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ff28f65a_constrained_generation_eval_2026-04-24_16-46-52.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ff28f65a_editing_eval_2026-04-24_16-46-59.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ff28f65a_inversion_eval_2026-04-24_16-47-04.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ff805c23",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 476,
+      "dimension_seeds": {
+        "classification_distribution": 2138710386,
+        "editing": 1183251867,
+        "inversion": 1536579346
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ff805c23_definition_eval_2026-04-24_16-47-23.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ff805c23_distribution_classification_eval_2026-04-24_16-48-55.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ff805c23_constrained_generation_eval_2026-04-24_16-55-52.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ff805c23_editing_eval_2026-04-24_16-56-21.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-14_claude_opus46_low/ff805c23_inversion_eval_2026-04-24_16-56-52.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    }
+  ],
+  "visualization_source_note": "HTML: Demonstrations/Evaluation_Run_2026-04-14_claude_opus46_low_batch8/ (scripts/build_test_run_unified_visualizations.py). Train slice [350:400): 40 tasks from removed intermediate run_2026-04-24_14-43-11.json; 10 tasks from latest per-dimension JSONs only."
+}

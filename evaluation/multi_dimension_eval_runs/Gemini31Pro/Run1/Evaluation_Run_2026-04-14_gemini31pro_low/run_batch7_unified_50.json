@@ -1,0 +1,4618 @@
+{
+  "mode": "batch_unified",
+  "created_at": "2026-04-24_17-39-14",
+  "task_count": 50,
+  "run_tag": "Evaluation_Run_2026-04-14_gemini31pro_low",
+  "seed_mode": "fixed",
+  "base_seed": 77,
+  "batch_size": 50,
+  "batch_index": 7,
+  "batch_slice": "train[300:350]",
+  "completed_before_count": 300,
+  "last_completed_task_id_before": "be94b721",
+  "merged_from_sources": [
+    "run_2026-04-24_14-23-16.json (intermediate summary; merged into this batch then removed)"
+  ],
+  "runs": [
+    {
+      "task_id": "beb8660c",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 377,
+      "dimension_seeds": {
+        "classification_distribution": 1033605897,
+        "editing": 405289729,
+        "inversion": 1045288851
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/beb8660c_definition_eval_2026-04-24_14-23-50.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 30,
+              "total": 1000,
+              "success_rate": 0.03
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "Google SDK failed (No module named 'google'); fallback HTTP API error 503: {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"The service is currently unavailable.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/beb8660c_distribution_classification_eval_2026-04-24_14-25-13.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/beb8660c_constrained_generation_eval_2026-04-24_14-25-31.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/beb8660c_editing_eval_2026-04-24_14-25-52.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/beb8660c_inversion_eval_2026-04-24_14-26-18.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 2
+        }
+      }
+    },
+    {
+      "task_id": "c0f76784",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 378,
+      "dimension_seeds": {
+        "classification_distribution": 97632248,
+        "editing": 1244780823,
+        "inversion": 1743417273
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c0f76784_definition_eval_2026-04-24_14-26-52.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 138,
+              "total": 1000,
+              "success_rate": 0.138
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c0f76784_distribution_classification_eval_2026-04-24_14-28-17.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c0f76784_constrained_generation_eval_2026-04-24_14-28-49.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c0f76784_editing_eval_2026-04-24_14-29-07.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c0f76784_inversion_eval_2026-04-24_14-29-20.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "c1d99e64",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 379,
+      "dimension_seeds": {
+        "classification_distribution": 134040292,
+        "editing": 840855531,
+        "inversion": 1413033797
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c1d99e64_definition_eval_2026-04-24_14-29-32.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 102,
+              "total": 1000,
+              "success_rate": 0.102
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c1d99e64_distribution_classification_eval_2026-04-24_14-30-55.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c1d99e64_constrained_generation_eval_2026-04-24_14-32-08.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c1d99e64_editing_eval_2026-04-24_14-32-56.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c1d99e64_inversion_eval_2026-04-24_14-33-16.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "c3e719e8",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 380,
+      "dimension_seeds": {
+        "classification_distribution": 569858386,
+        "editing": 1417041045,
+        "inversion": 1747914073
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c3e719e8_definition_eval_2026-04-24_14-33-34.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c3e719e8_distribution_classification_eval_2026-04-24_14-35-00.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c3e719e8_constrained_generation_eval_2026-04-24_14-35-40.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c3e719e8_editing_eval_2026-04-24_14-35-59.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c3e719e8_inversion_eval_2026-04-24_14-36-12.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "c3f564a4",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 381,
+      "dimension_seeds": {
+        "classification_distribution": 2058972892,
+        "editing": 2024314109,
+        "inversion": 118826370
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c3f564a4_definition_eval_2026-04-24_14-36-24.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c3f564a4_distribution_classification_eval_2026-04-24_14-37-51.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c3f564a4_constrained_generation_eval_2026-04-24_14-38-22.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c3f564a4_editing_eval_2026-04-24_14-38-47.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c3f564a4_inversion_eval_2026-04-24_14-39-13.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "c444b776",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 382,
+      "dimension_seeds": {
+        "classification_distribution": 243494585,
+        "editing": 1134435962,
+        "inversion": 592750999
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c444b776_definition_eval_2026-04-24_14-39-44.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 45,
+              "total": 1000,
+              "success_rate": 0.045
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c444b776_distribution_classification_eval_2026-04-24_14-41-04.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c444b776_constrained_generation_eval_2026-04-24_14-41-57.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c444b776_editing_eval_2026-04-24_14-42-45.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c444b776_inversion_eval_2026-04-24_14-43-08.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "c59eb873",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 383,
+      "dimension_seeds": {
+        "classification_distribution": 1733235933,
+        "editing": 622533417,
+        "inversion": 997378543
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c59eb873_definition_eval_2026-04-24_14-43-18.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c59eb873_distribution_classification_eval_2026-04-24_14-44-59.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c59eb873_constrained_generation_eval_2026-04-24_14-45-27.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c59eb873_editing_eval_2026-04-24_14-45-39.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c59eb873_inversion_eval_2026-04-24_14-45-48.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "c8cbb738",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 384,
+      "dimension_seeds": {
+        "classification_distribution": 1647925416,
+        "editing": 205981150,
+        "inversion": 106745096
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c8cbb738_definition_eval_2026-04-24_14-46-15.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 229,
+              "total": 1000,
+              "success_rate": 0.229
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c8cbb738_distribution_classification_eval_2026-04-24_14-47-45.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c8cbb738_constrained_generation_eval_2026-04-24_14-48-18.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c8cbb738_editing_eval_2026-04-24_14-48-47.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c8cbb738_inversion_eval_2026-04-24_14-49-14.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "c8f0f002",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 385,
+      "dimension_seeds": {
+        "classification_distribution": 279099318,
+        "editing": 2135589374,
+        "inversion": 1697931380
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c8f0f002_definition_eval_2026-04-24_14-49-21.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c8f0f002_distribution_classification_eval_2026-04-24_14-51-19.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c8f0f002_constrained_generation_eval_2026-04-24_14-51-36.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c8f0f002_editing_eval_2026-04-24_14-51-46.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c8f0f002_inversion_eval_2026-04-24_14-51-55.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "c909285e",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 386,
+      "dimension_seeds": {
+        "classification_distribution": 1280618127,
+        "editing": 1728520469,
+        "inversion": 1898603806
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c909285e_definition_eval_2026-04-24_14-52-23.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c909285e_distribution_classification_eval_2026-04-24_14-53-53.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c909285e_constrained_generation_eval_2026-04-24_14-54-44.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c909285e_editing_eval_2026-04-24_14-55-12.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c909285e_inversion_eval_2026-04-24_14-55-45.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "c9e6f938",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 387,
+      "dimension_seeds": {
+        "classification_distribution": 1890642445,
+        "editing": 876570603,
+        "inversion": 171749180
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c9e6f938_definition_eval_2026-04-24_14-55-55.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c9e6f938_distribution_classification_eval_2026-04-24_14-57-23.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c9e6f938_constrained_generation_eval_2026-04-24_14-57-55.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 1
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c9e6f938_editing_eval_2026-04-24_14-58-08.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c9e6f938_inversion_eval_2026-04-24_14-58-16.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "c9f8e694",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 388,
+      "dimension_seeds": {
+        "classification_distribution": 1584067699,
+        "editing": 1492715802,
+        "inversion": 1561272895
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c9f8e694_definition_eval_2026-04-24_14-58-27.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 21,
+              "total": 1000,
+              "success_rate": 0.021
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c9f8e694_distribution_classification_eval_2026-04-24_15-00-01.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c9f8e694_constrained_generation_eval_2026-04-24_15-00-23.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c9f8e694_editing_eval_2026-04-24_15-00-42.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": false,
+          "error": "Google SDK failed (No module named 'google'); fallback HTTP failed: Remote end closed connection without response",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "caa06a1f",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 389,
+      "dimension_seeds": {
+        "classification_distribution": 1512124329,
+        "editing": 1782088675,
+        "inversion": 939793914
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/caa06a1f_definition_eval_2026-04-24_15-02-26.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 253,
+              "total": 262,
+              "success_rate": 0.9656488549618321
+            },
+            "dynamic50": {
+              "ok": 49,
+              "total": 50,
+              "success_rate": 0.98
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/caa06a1f_distribution_classification_eval_2026-04-24_15-04-21.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/caa06a1f_constrained_generation_eval_2026-04-24_15-04-45.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/caa06a1f_editing_eval_2026-04-24_15-05-27.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/caa06a1f_inversion_eval_2026-04-24_15-05-48.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "cbded52d",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 390,
+      "dimension_seeds": {
+        "classification_distribution": 380760464,
+        "editing": 1949154301,
+        "inversion": 58402247
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cbded52d_definition_eval_2026-04-24_15-06-18.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 4,
+              "total": 1000,
+              "success_rate": 0.004
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cbded52d_distribution_classification_eval_2026-04-24_15-08-25.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cbded52d_constrained_generation_eval_2026-04-24_15-09-09.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cbded52d_editing_eval_2026-04-24_15-09-32.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cbded52d_inversion_eval_2026-04-24_15-09-51.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "cce03e0d",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 391,
+      "dimension_seeds": {
+        "classification_distribution": 2116648335,
+        "editing": 726745752,
+        "inversion": 1039772740
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cce03e0d_definition_eval_2026-04-24_15-10-03.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 120,
+              "total": 1000,
+              "success_rate": 0.12
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cce03e0d_distribution_classification_eval_2026-04-24_15-11-35.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cce03e0d_constrained_generation_eval_2026-04-24_15-12-04.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cce03e0d_editing_eval_2026-04-24_15-12-17.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cce03e0d_inversion_eval_2026-04-24_15-12-31.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "cdecee7f",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 392,
+      "dimension_seeds": {
+        "classification_distribution": 1947764904,
+        "editing": 1976217135,
+        "inversion": 879892386
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cdecee7f_definition_eval_2026-04-24_15-12-49.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 119,
+              "total": 1000,
+              "success_rate": 0.119
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cdecee7f_distribution_classification_eval_2026-04-24_15-14-17.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cdecee7f_constrained_generation_eval_2026-04-24_15-15-00.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cdecee7f_editing_eval_2026-04-24_15-15-17.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cdecee7f_inversion_eval_2026-04-24_15-15-43.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ce22a75a",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 393,
+      "dimension_seeds": {
+        "classification_distribution": 1605873076,
+        "editing": 1350751966,
+        "inversion": 724583110
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce22a75a_definition_eval_2026-04-24_15-15-52.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 16,
+              "total": 1000,
+              "success_rate": 0.016
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce22a75a_distribution_classification_eval_2026-04-24_15-17-49.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce22a75a_constrained_generation_eval_2026-04-24_15-18-19.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce22a75a_editing_eval_2026-04-24_15-18-34.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce22a75a_inversion_eval_2026-04-24_15-18-46.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ce4f8723",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 394,
+      "dimension_seeds": {
+        "classification_distribution": 1024827958,
+        "editing": 1057902815,
+        "inversion": 1503292993
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce4f8723_definition_eval_2026-04-24_15-18-57.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce4f8723_distribution_classification_eval_2026-04-24_15-20-25.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce4f8723_constrained_generation_eval_2026-04-24_15-20-55.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce4f8723_editing_eval_2026-04-24_15-21-07.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce4f8723_inversion_eval_2026-04-24_15-21-23.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ce602527",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 395,
+      "dimension_seeds": {
+        "classification_distribution": 1592058403,
+        "editing": 1445912638,
+        "inversion": 90357282
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce602527_definition_eval_2026-04-24_15-21-48.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 4,
+              "success_rate": 0.25
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 101,
+              "total": 262,
+              "success_rate": 0.38549618320610685
+            },
+            "dynamic50": {
+              "ok": 18,
+              "total": 50,
+              "success_rate": 0.36
+            },
+            "re_arc_stable": {
+              "ok": 510,
+              "total": 1000,
+              "success_rate": 0.51
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce602527_distribution_classification_eval_2026-04-24_15-23-19.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce602527_constrained_generation_eval_2026-04-24_15-24-10.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce602527_editing_eval_2026-04-24_15-26-45.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce602527_inversion_eval_2026-04-24_15-27-08.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ce9e57f2",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 396,
+      "dimension_seeds": {
+        "classification_distribution": 216785055,
+        "editing": 1202389606,
+        "inversion": 1120669345
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce9e57f2_definition_eval_2026-04-24_15-29-35.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 3,
+              "total": 1000,
+              "success_rate": 0.003
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce9e57f2_distribution_classification_eval_2026-04-24_15-31-04.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce9e57f2_constrained_generation_eval_2026-04-24_15-31-35.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce9e57f2_editing_eval_2026-04-24_15-32-01.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/ce9e57f2_inversion_eval_2026-04-24_15-32-20.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "cf98881b",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 397,
+      "dimension_seeds": {
+        "classification_distribution": 518412084,
+        "editing": 387762856,
+        "inversion": 1695136084
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cf98881b_definition_eval_2026-04-24_15-32-42.json",
+          "metrics": {
+            "train": {
+              "ok": 5,
+              "total": 5,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 2,
+              "total": 1000,
+              "success_rate": 0.002
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cf98881b_distribution_classification_eval_2026-04-24_15-34-29.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cf98881b_constrained_generation_eval_2026-04-24_15-35-09.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": false,
+          "error": "Google SDK failed (No module named 'google'); fallback HTTP failed: Remote end closed connection without response",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cf98881b_inversion_eval_2026-04-24_15-36-57.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d037b0a7",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 398,
+      "dimension_seeds": {
+        "classification_distribution": 1741666020,
+        "editing": 1837662978,
+        "inversion": 1014809627
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d037b0a7_definition_eval_2026-04-24_15-37-08.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 91,
+              "total": 1000,
+              "success_rate": 0.091
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d037b0a7_distribution_classification_eval_2026-04-24_15-38-34.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d037b0a7_constrained_generation_eval_2026-04-24_15-41-22.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d037b0a7_editing_eval_2026-04-24_15-41-38.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d037b0a7_inversion_eval_2026-04-24_15-41-51.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d06dbe63",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 399,
+      "dimension_seeds": {
+        "classification_distribution": 151302460,
+        "editing": 671909550,
+        "inversion": 69200480
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d06dbe63_definition_eval_2026-04-24_15-42-19.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 169,
+              "total": 169,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 6,
+              "total": 1000,
+              "success_rate": 0.006
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d06dbe63_distribution_classification_eval_2026-04-24_15-44-07.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d06dbe63_constrained_generation_eval_2026-04-24_15-45-02.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 1
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d06dbe63_editing_eval_2026-04-24_15-45-27.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d06dbe63_inversion_eval_2026-04-24_15-45-40.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d07ae81c",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 400,
+      "dimension_seeds": {
+        "classification_distribution": 1321503535,
+        "editing": 1090044930,
+        "inversion": 398559301
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d07ae81c_definition_eval_2026-04-24_15-46-12.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d07ae81c_distribution_classification_eval_2026-04-24_15-48-12.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d07ae81c_constrained_generation_eval_2026-04-24_15-48-58.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d07ae81c_editing_eval_2026-04-24_15-49-26.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d07ae81c_inversion_eval_2026-04-24_15-50-10.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d0f5fe59",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 401,
+      "dimension_seeds": {
+        "classification_distribution": 2137546878,
+        "editing": 435203504,
+        "inversion": 1836896095
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d0f5fe59_definition_eval_2026-04-24_15-50-32.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 103,
+              "total": 1000,
+              "success_rate": 0.103
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d0f5fe59_distribution_classification_eval_2026-04-24_15-52-03.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d0f5fe59_constrained_generation_eval_2026-04-24_15-52-29.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d0f5fe59_editing_eval_2026-04-24_15-52-51.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d0f5fe59_inversion_eval_2026-04-24_15-53-07.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d10ecb37",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 402,
+      "dimension_seeds": {
+        "classification_distribution": 2103068741,
+        "editing": 417968458,
+        "inversion": 1793407325
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d10ecb37_definition_eval_2026-04-24_15-53-15.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d10ecb37_distribution_classification_eval_2026-04-24_15-54-47.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d10ecb37_constrained_generation_eval_2026-04-24_15-55-11.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d10ecb37_editing_eval_2026-04-24_15-55-23.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d10ecb37_inversion_eval_2026-04-24_15-55-36.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d13f3404",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 403,
+      "dimension_seeds": {
+        "classification_distribution": 1072204709,
+        "editing": 1468702756,
+        "inversion": 152720988
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d13f3404_definition_eval_2026-04-24_15-55-54.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 3,
+              "success_rate": 0.3333333333333333
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 54,
+              "total": 261,
+              "success_rate": 0.20689655172413793
+            },
+            "dynamic50": {
+              "ok": 9,
+              "total": 50,
+              "success_rate": 0.18
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d13f3404_distribution_classification_eval_2026-04-24_15-57-27.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d13f3404_constrained_generation_eval_2026-04-24_15-58-18.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d13f3404_editing_eval_2026-04-24_15-58-39.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d13f3404_inversion_eval_2026-04-24_15-58-59.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d22278a0",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 404,
+      "dimension_seeds": {
+        "classification_distribution": 375579342,
+        "editing": 1743070153,
+        "inversion": 13962645
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d22278a0_definition_eval_2026-04-24_15-59-35.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 4,
+              "success_rate": 0.5
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 209,
+              "total": 262,
+              "success_rate": 0.7977099236641222
+            },
+            "dynamic50": {
+              "ok": 34,
+              "total": 50,
+              "success_rate": 0.68
+            },
+            "re_arc_stable": {
+              "ok": 26,
+              "total": 1000,
+              "success_rate": 0.026
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d22278a0_distribution_classification_eval_2026-04-24_16-01-06.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d22278a0_constrained_generation_eval_2026-04-24_16-01-50.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d22278a0_editing_eval_2026-04-24_16-02-33.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d22278a0_inversion_eval_2026-04-24_16-02-52.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d23f8c26",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 405,
+      "dimension_seeds": {
+        "classification_distribution": 186959822,
+        "editing": 792747878,
+        "inversion": 1973362397
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d23f8c26_definition_eval_2026-04-24_16-03-03.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 93,
+              "total": 1000,
+              "success_rate": 0.093
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d23f8c26_distribution_classification_eval_2026-04-24_16-04-32.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d23f8c26_constrained_generation_eval_2026-04-24_16-04-56.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d23f8c26_editing_eval_2026-04-24_16-05-11.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d23f8c26_inversion_eval_2026-04-24_16-05-23.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d2abd087",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 406,
+      "dimension_seeds": {
+        "classification_distribution": 1808252224,
+        "editing": 1790739894,
+        "inversion": 1698244393
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d2abd087_definition_eval_2026-04-24_16-05-49.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 121,
+              "total": 1000,
+              "success_rate": 0.121
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d2abd087_distribution_classification_eval_2026-04-24_16-07-43.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d2abd087_constrained_generation_eval_2026-04-24_16-08-42.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d2abd087_editing_eval_2026-04-24_16-09-13.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d2abd087_inversion_eval_2026-04-24_16-09-32.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d364b489",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 407,
+      "dimension_seeds": {
+        "classification_distribution": 445083012,
+        "editing": 1231116051,
+        "inversion": 1741219696
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d364b489_definition_eval_2026-04-24_16-09-41.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 153,
+              "total": 1000,
+              "success_rate": 0.153
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d364b489_distribution_classification_eval_2026-04-24_16-11-12.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d364b489_constrained_generation_eval_2026-04-24_16-11-50.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d364b489_editing_eval_2026-04-24_16-12-21.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d364b489_inversion_eval_2026-04-24_16-12-36.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d406998b",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 408,
+      "dimension_seeds": {
+        "classification_distribution": 1891571895,
+        "editing": 1138190913,
+        "inversion": 1015699863
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d406998b_definition_eval_2026-04-24_16-13-04.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 21,
+              "total": 1000,
+              "success_rate": 0.021
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d406998b_distribution_classification_eval_2026-04-24_16-14-33.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d406998b_constrained_generation_eval_2026-04-24_16-15-12.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d406998b_editing_eval_2026-04-24_16-15-54.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d406998b_inversion_eval_2026-04-24_16-16-05.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d43fd935",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 409,
+      "dimension_seeds": {
+        "classification_distribution": 2057960126,
+        "editing": 644618411,
+        "inversion": 1800219535
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d43fd935_definition_eval_2026-04-24_16-16-36.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 3,
+              "total": 50,
+              "success_rate": 0.06
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d43fd935_distribution_classification_eval_2026-04-24_16-18-03.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d43fd935_constrained_generation_eval_2026-04-24_16-18-51.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d43fd935_editing_eval_2026-04-24_16-19-16.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d43fd935_inversion_eval_2026-04-24_16-19-29.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d4469b4b",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 410,
+      "dimension_seeds": {
+        "classification_distribution": 631721248,
+        "editing": 1334122788,
+        "inversion": 75759285
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4469b4b_definition_eval_2026-04-24_16-19-41.json",
+          "metrics": {
+            "train": {
+              "ok": 7,
+              "total": 7,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 575,
+              "total": 1000,
+              "success_rate": 0.575
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4469b4b_distribution_classification_eval_2026-04-24_16-21-15.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4469b4b_constrained_generation_eval_2026-04-24_16-21-41.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4469b4b_editing_eval_2026-04-24_16-21-53.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4469b4b_inversion_eval_2026-04-24_16-22-04.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d4a91cb9",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 411,
+      "dimension_seeds": {
+        "classification_distribution": 929779631,
+        "editing": 111798243,
+        "inversion": 1404233005
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4a91cb9_definition_eval_2026-04-24_16-22-19.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4a91cb9_distribution_classification_eval_2026-04-24_16-23-48.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4a91cb9_constrained_generation_eval_2026-04-24_16-39-23.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 2
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4a91cb9_editing_eval_2026-04-24_16-39-46.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4a91cb9_inversion_eval_2026-04-24_16-40-05.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d4f3cd78",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 412,
+      "dimension_seeds": {
+        "classification_distribution": 1234741657,
+        "editing": 249251317,
+        "inversion": 457550439
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4f3cd78_definition_eval_2026-04-24_16-40-26.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 28,
+              "total": 28,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 12,
+              "total": 1000,
+              "success_rate": 0.012
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4f3cd78_distribution_classification_eval_2026-04-24_16-41-42.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4f3cd78_constrained_generation_eval_2026-04-24_16-42-10.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4f3cd78_editing_eval_2026-04-24_16-42-28.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d4f3cd78_inversion_eval_2026-04-24_16-42-41.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d511f180",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 413,
+      "dimension_seeds": {
+        "classification_distribution": 2010255284,
+        "editing": 780548623,
+        "inversion": 347816323
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d511f180_definition_eval_2026-04-24_16-42-51.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d511f180_distribution_classification_eval_2026-04-24_16-44-18.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d511f180_constrained_generation_eval_2026-04-24_16-45-11.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d511f180_editing_eval_2026-04-24_16-45-28.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d511f180_inversion_eval_2026-04-24_16-45-39.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d5d6de2d",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 414,
+      "dimension_seeds": {
+        "classification_distribution": 1814147306,
+        "editing": 1496892736,
+        "inversion": 1005024874
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d5d6de2d_definition_eval_2026-04-24_16-46-08.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 114,
+              "total": 1000,
+              "success_rate": 0.114
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d5d6de2d_distribution_classification_eval_2026-04-24_16-47-34.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d5d6de2d_constrained_generation_eval_2026-04-24_16-48-43.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d5d6de2d_editing_eval_2026-04-24_16-49-22.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d5d6de2d_inversion_eval_2026-04-24_16-49-39.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d631b094",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 415,
+      "dimension_seeds": {
+        "classification_distribution": 1456900314,
+        "editing": 1059357628,
+        "inversion": 1192264462
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d631b094_definition_eval_2026-04-24_16-49-48.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d631b094_distribution_classification_eval_2026-04-24_16-51-20.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d631b094_constrained_generation_eval_2026-04-24_16-51-39.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d631b094_editing_eval_2026-04-24_16-51-55.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d631b094_inversion_eval_2026-04-24_16-52-03.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d687bc17",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 416,
+      "dimension_seeds": {
+        "classification_distribution": 1089155142,
+        "editing": 33510106,
+        "inversion": 1259385216
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d687bc17_definition_eval_2026-04-24_16-52-25.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 54,
+              "total": 1000,
+              "success_rate": 0.054
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d687bc17_distribution_classification_eval_2026-04-24_16-53-59.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d687bc17_constrained_generation_eval_2026-04-24_16-54-38.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d687bc17_editing_eval_2026-04-24_16-55-14.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d687bc17_inversion_eval_2026-04-24_16-55-36.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d6ad076f",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 417,
+      "dimension_seeds": {
+        "classification_distribution": 343405428,
+        "editing": 171943864,
+        "inversion": 1666057009
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d6ad076f_definition_eval_2026-04-24_16-56-02.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 105,
+              "total": 1000,
+              "success_rate": 0.105
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d6ad076f_distribution_classification_eval_2026-04-24_16-57-34.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d6ad076f_constrained_generation_eval_2026-04-24_16-58-12.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d6ad076f_editing_eval_2026-04-24_16-58-37.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d6ad076f_inversion_eval_2026-04-24_16-58-54.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d89b689b",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 418,
+      "dimension_seeds": {
+        "classification_distribution": 1385521993,
+        "editing": 1522278026,
+        "inversion": 485340634
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d89b689b_definition_eval_2026-04-24_16-59-10.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 15,
+              "total": 1000,
+              "success_rate": 0.015
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d89b689b_distribution_classification_eval_2026-04-24_17-00-34.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d89b689b_constrained_generation_eval_2026-04-24_17-01-05.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d89b689b_editing_eval_2026-04-24_17-01-22.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d89b689b_inversion_eval_2026-04-24_17-01-41.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d8c310e9",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 419,
+      "dimension_seeds": {
+        "classification_distribution": 545223674,
+        "editing": 557246812,
+        "inversion": 1215565017
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d8c310e9_definition_eval_2026-04-24_17-02-17.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 258,
+              "total": 262,
+              "success_rate": 0.9847328244274809
+            },
+            "dynamic50": {
+              "ok": 49,
+              "total": 50,
+              "success_rate": 0.98
+            },
+            "re_arc_stable": {
+              "ok": 20,
+              "total": 1000,
+              "success_rate": 0.02
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d8c310e9_distribution_classification_eval_2026-04-24_17-03-40.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d8c310e9_constrained_generation_eval_2026-04-24_17-04-16.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d8c310e9_editing_eval_2026-04-24_17-04-42.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d8c310e9_inversion_eval_2026-04-24_17-05-16.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d90796e8",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 420,
+      "dimension_seeds": {
+        "classification_distribution": 113143961,
+        "editing": 1565504994,
+        "inversion": 1170835515
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d90796e8_definition_eval_2026-04-24_17-05-34.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 108,
+              "total": 1000,
+              "success_rate": 0.108
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d90796e8_distribution_classification_eval_2026-04-24_17-07-02.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d90796e8_constrained_generation_eval_2026-04-24_17-07-32.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d90796e8_editing_eval_2026-04-24_17-07-52.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d90796e8_inversion_eval_2026-04-24_17-08-08.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d9f24cd1",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 421,
+      "dimension_seeds": {
+        "classification_distribution": 1092769217,
+        "editing": 2121566241,
+        "inversion": 2097959878
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d9f24cd1_definition_eval_2026-04-24_17-08-31.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 6,
+              "total": 1000,
+              "success_rate": 0.006
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d9f24cd1_distribution_classification_eval_2026-04-24_17-10-00.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d9f24cd1_constrained_generation_eval_2026-04-24_17-10-44.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d9f24cd1_editing_eval_2026-04-24_17-11-12.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d9f24cd1_inversion_eval_2026-04-24_17-11-34.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d9fac9be",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 422,
+      "dimension_seeds": {
+        "classification_distribution": 1657666412,
+        "editing": 1254730508,
+        "inversion": 26580807
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d9fac9be_definition_eval_2026-04-24_17-11-48.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 488,
+              "total": 1000,
+              "success_rate": 0.488
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d9fac9be_distribution_classification_eval_2026-04-24_17-13-17.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d9fac9be_constrained_generation_eval_2026-04-24_17-13-43.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d9fac9be_editing_eval_2026-04-24_17-14-03.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/d9fac9be_inversion_eval_2026-04-24_17-14-14.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "dae9d2b5",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 423,
+      "dimension_seeds": {
+        "classification_distribution": 1387351880,
+        "editing": 702148225,
+        "inversion": 1850270781
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/dae9d2b5_definition_eval_2026-04-24_17-14-27.json",
+          "metrics": {
+            "train": {
+              "ok": 5,
+              "total": 5,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 65,
+              "total": 1000,
+              "success_rate": 0.065
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/dae9d2b5_distribution_classification_eval_2026-04-24_17-16-00.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/dae9d2b5_constrained_generation_eval_2026-04-24_17-16-24.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/dae9d2b5_editing_eval_2026-04-24_17-16-37.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/dae9d2b5_inversion_eval_2026-04-24_17-16-52.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "db3e9e38",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 424,
+      "dimension_seeds": {
+        "classification_distribution": 1996258231,
+        "editing": 596172730,
+        "inversion": 260030188
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/db3e9e38_definition_eval_2026-04-24_17-17-12.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 12,
+              "total": 1000,
+              "success_rate": 0.012
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/db3e9e38_distribution_classification_eval_2026-04-24_17-18-43.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/db3e9e38_constrained_generation_eval_2026-04-24_17-19-17.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/db3e9e38_editing_eval_2026-04-24_17-19-33.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/db3e9e38_inversion_eval_2026-04-24_17-19-48.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "db93a21d",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 425,
+      "dimension_seeds": {
+        "classification_distribution": 1799659161,
+        "editing": 384547922,
+        "inversion": 738085436
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/db93a21d_definition_eval_2026-04-24_17-20-18.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 19,
+              "total": 1000,
+              "success_rate": 0.019
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/db93a21d_distribution_classification_eval_2026-04-24_17-21-50.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/db93a21d_constrained_generation_eval_2026-04-24_17-23-03.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/db93a21d_editing_eval_2026-04-24_17-23-56.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/db93a21d_inversion_eval_2026-04-24_17-24-35.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "dbc1a6ce",
+      "model": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 426,
+      "dimension_seeds": {
+        "classification_distribution": 701551849,
+        "editing": 1431110832,
+        "inversion": 1508841029
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/dbc1a6ce_definition_eval_2026-04-24_17-25-00.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 17,
+              "total": 1000,
+              "success_rate": 0.017
+            },
+            "re_arc_dynamic50": {
+              "ok": 6,
+              "total": 50,
+              "success_rate": 0.12
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/dbc1a6ce_distribution_classification_eval_2026-04-24_17-26-36.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/dbc1a6ce_constrained_generation_eval_2026-04-24_17-27-12.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/dbc1a6ce_editing_eval_2026-04-24_17-28-03.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/dbc1a6ce_inversion_eval_2026-04-24_17-28-18.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    }
+  ],
+  "visualization_source_note": "Train[300:350) from finished all-dimensions run 2026-04-24_14-23-16; HTML under Demonstrations/Evaluation_Run_2026-04-14_gemini31pro_low_batch7/"
+}

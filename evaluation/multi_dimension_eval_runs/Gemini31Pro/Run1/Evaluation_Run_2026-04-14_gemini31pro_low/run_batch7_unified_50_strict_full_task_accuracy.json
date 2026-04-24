@@ -1,0 +1,84 @@
+{
+  "task_count": 50,
+  "source_run_json": "evaluation/multi_dimension_eval_runs/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/run_batch7_unified_50.json",
+  "criteria": {
+    "definition": "train/test/stable/dynamic50 success_rate == 1.0",
+    "classification": "accuracy == 1.0",
+    "constrained_generation": "success_rate == 1.0",
+    "editing": "success == true (or success_rate == 1.0)",
+    "inversion": "success_rate == 1.0"
+  },
+  "by_dimension": {
+    "definition": {
+      "strict_full_task_pass": 44,
+      "files_found": 50,
+      "strict_accuracy": 0.88,
+      "example_fail_task_ids": [
+        "caa06a1f",
+        "ce602527",
+        "d07ae81c",
+        "d13f3404",
+        "d22278a0",
+        "d8c310e9"
+      ]
+    },
+    "classification_distribution": {
+      "strict_full_task_pass": 40,
+      "files_found": 50,
+      "strict_accuracy": 0.8,
+      "example_fail_task_ids": [
+        "beb8660c",
+        "c1d99e64",
+        "c8cbb738",
+        "ce9e57f2",
+        "d07ae81c",
+        "d22278a0",
+        "d406998b",
+        "d4f3cd78",
+        "d687bc17",
+        "db93a21d"
+      ]
+    },
+    "constrained_generation": {
+      "strict_full_task_pass": 46,
+      "files_found": 50,
+      "strict_accuracy": 0.92,
+      "example_fail_task_ids": [
+        "ce602527",
+        "d07ae81c",
+        "d22278a0",
+        "d406998b"
+      ]
+    },
+    "editing": {
+      "strict_full_task_pass": 42,
+      "files_found": 50,
+      "strict_accuracy": 0.84,
+      "example_fail_task_ids": [
+        "c8cbb738",
+        "caa06a1f",
+        "cf98881b",
+        "d07ae81c",
+        "d13f3404",
+        "d22278a0",
+        "d406998b",
+        "db93a21d"
+      ]
+    },
+    "inversion": {
+      "strict_full_task_pass": 42,
+      "files_found": 50,
+      "strict_accuracy": 0.84,
+      "example_fail_task_ids": [
+        "c9f8e694",
+        "caa06a1f",
+        "ce602527",
+        "d07ae81c",
+        "d10ecb37",
+        "d23f8c26",
+        "d687bc17",
+        "d8c310e9"
+      ]
+    }
+  }
+}
