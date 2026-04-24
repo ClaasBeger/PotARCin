@@ -68,8 +68,14 @@ def run_all_dimensions_for_task(
     dimension_retries: int = 2,
     retry_backoff_s: float = 1.5,
     out_dirs: dict[str, Path] | None = None,
+    skip_completed_dimensions: bool | None = None,
 ) -> dict[str, Any]:
     """Run all five dimension evaluations for one task id.
+
+    When ``out_dirs`` is set (run-tag layout) and ``skip_completed_dimensions`` is
+    not overridden to False, dimensions that already have a durable artifact under
+    ``out_dirs`` are not re-called: latest JSON per dimension is re-used if it is
+    "complete" (same rules as batch task discovery — see ``_has_any_result_for_task``).
 
     Returns a per-dimension report with success flag, result path and metrics/error.
     """
@@ -99,6 +105,9 @@ def run_all_dimensions_for_task(
         "dimension_seeds": dim_seeds,
         "dimensions": {},
     }
+
+    if skip_completed_dimensions is None:
+        skip_completed_dimensions = bool(out_dirs)
 
     task = load_task(task_id)
 
@@ -144,8 +153,29 @@ def run_all_dimensions_for_task(
             "attempts": last_attempt,
         }
 
-    _run(
+    def _maybe_rerun_dimension(
+        dim_name: str,
+        out_dir_key: str,
+        file_suffix: str,
+        fn: Callable[[], dict[str, Any]],
+    ) -> None:
+        if skip_completed_dimensions and out_dirs:
+            latest_path, payload = _read_latest_dimension_json(
+                out_dirs[out_dir_key], task_id, file_suffix
+            )
+            if latest_path is not None and (
+                payload is None or _payload_indicates_dimension_complete(payload)
+            ):
+                report["dimensions"][dim_name] = _report_from_saved_dimension(
+                    payload, latest_path
+                )
+                return
+        _run(dim_name, fn)
+
+    _maybe_rerun_dimension(
         "definition",
+        "definition",
+        "definition_eval",
         lambda: run_definition_api_evaluation(
             task=task,
             test_idx=definition_test_idx,
@@ -157,8 +187,10 @@ def run_all_dimensions_for_task(
             out_dir=out_dirs["definition"] if out_dirs else "evaluation/definition_eval_results",
         ),
     )
-    _run(
+    _maybe_rerun_dimension(
         "classification_distribution",
+        "classification_distribution",
+        "distribution_classification_eval",
         lambda: run_distribution_classification_api_evaluation_once(
             task_id=task_id,
             model=model,
@@ -173,8 +205,10 @@ def run_all_dimensions_for_task(
             ),
         ),
     )
-    _run(
+    _maybe_rerun_dimension(
         "constrained_generation",
+        "constrained_generation",
+        "constrained_generation_eval",
         lambda: run_constrained_generation_api_evaluation_once(
             task_id=task_id,
             model=model,
@@ -188,8 +222,10 @@ def run_all_dimensions_for_task(
             ),
         ),
     )
-    _run(
+    _maybe_rerun_dimension(
         "editing",
+        "editing",
+        "editing_eval",
         lambda: run_editing_api_evaluation_once(
             task=task,
             model=model,
@@ -200,8 +236,10 @@ def run_all_dimensions_for_task(
             out_dir=out_dirs["editing"] if out_dirs else "evaluation/editing_eval_results",
         ),
     )
-    _run(
+    _maybe_rerun_dimension(
         "inversion",
+        "inversion",
+        "inversion_eval",
         lambda: run_inversion_api_evaluation_once(
             task_id=task_id,
             model=model,
@@ -228,40 +266,77 @@ def _all_task_ids() -> list[str]:
     return [t.task_id for t in iter_tasks(split="train", source=TaskSource.ORIGINAL_ARC)]
 
 
-def _has_any_result_for_task(dir_path: Path, task_id: str, suffix: str) -> bool:
+def _read_latest_dimension_json(
+    dir_path: Path, task_id: str, suffix: str
+) -> tuple[Path | None, dict[str, Any] | None]:
+    """Latest JSON path and payload for ``task_id`` in ``dir_path``, or ``(None, None)``."""
     if not dir_path.is_dir():
-        return False
-    pattern = f"{task_id}_{suffix}_*.json"
-    matches = sorted(dir_path.glob(pattern))
+        return None, None
+    matches = sorted(dir_path.glob(f"{task_id}_{suffix}_*.json"))
     if not matches:
-        return False
-    # Use latest-only semantics per task+dimension within this run-tag path:
-    # older attempts for the same task id are ignored.
+        return None, None
     latest = matches[-1]
     try:
-        payload = json.loads(latest.read_text(encoding="utf-8"))
+        return latest, json.loads(latest.read_text(encoding="utf-8"))
     except Exception:
-        # Legacy/corrupt files: preserve backward compatibility by counting
-        # presence as complete instead of hard-failing discovery.
-        return True
+        return latest, None
+
+
+def _payload_indicates_dimension_complete(payload: dict[str, Any]) -> bool:
+    """True when this dimension should not be re-executed (matches batch discovery)."""
     ok = payload.get("evaluation_ok")
     if ok is True:
         return True
     if ok is None:
-        # Older files may not have evaluation_ok; treat as complete.
         return True
-
-    # evaluation_ok=False can still mean "dimension attempt completed":
-    # if the model response was received but later parse/verification failed,
-    # treat this as complete (incorrect), not pending.
     raw = payload.get("raw_response")
     if isinstance(raw, str) and raw.strip():
         return True
     if raw is not None:
         return True
-
-    # No model output recorded -> genuinely incomplete and should be retried.
     return False
+
+
+def _report_from_saved_dimension(
+    payload: dict[str, Any] | None, latest_path: Path
+) -> dict[str, Any]:
+    """Build a per-dimension report entry from an on-disk artifact (no new API call)."""
+    path_s = str(latest_path)
+    if payload is None:
+        return {
+            "ok": True,
+            "result_path": path_s,
+            "metrics": None,
+            "attempts": 0,
+            "skipped_rerun": True,
+        }
+    if payload.get("evaluation_ok") is False:
+        return {
+            "ok": False,
+            "error": str(payload.get("error") or "evaluation_ok is false"),
+            "result_path": path_s,
+            "metrics": payload.get("metrics"),
+            "attempts": 0,
+            "skipped_rerun": True,
+        }
+    return {
+        "ok": True,
+        "result_path": path_s,
+        "metrics": payload.get("metrics"),
+        "attempts": 0,
+        "skipped_rerun": True,
+    }
+
+
+def _has_any_result_for_task(dir_path: Path, task_id: str, suffix: str) -> bool:
+    latest, payload = _read_latest_dimension_json(dir_path, task_id, suffix)
+    if latest is None:
+        return False
+    if payload is None:
+        # Legacy/corrupt files: preserve backward compatibility by counting
+        # presence as complete instead of hard-failing discovery.
+        return True
+    return _payload_indicates_dimension_complete(payload)
 
 
 def _completed_tasks_for_run_tag(all_task_ids: list[str], out_dirs: dict[str, Path]) -> set[str]:
@@ -431,6 +506,14 @@ def main() -> None:
         ),
     )
     p.add_argument(
+        "--force-all-dimensions",
+        action="store_true",
+        help=(
+            "With --run-tag, re-call the model for every dimension even when a complete "
+            "artifact already exists (default: skip completed dimensions and only re-run failures)."
+        ),
+    )
+    p.add_argument(
         "--seed-random",
         action="store_true",
         help=(
@@ -471,6 +554,8 @@ def main() -> None:
         )
     )
 
+    skip_completed = bool(out_dirs) and not args.force_all_dimensions
+
     if args.task_id:
         run = run_all_dimensions_for_task(
             task_id=args.task_id,
@@ -483,6 +568,7 @@ def main() -> None:
             dimension_retries=args.dimension_retries,
             retry_backoff_s=args.retry_backoff_s,
             out_dirs=out_dirs or None,
+            skip_completed_dimensions=skip_completed,
         )
         payload: dict[str, Any] = {
             "mode": "single_task",
@@ -545,10 +631,13 @@ def main() -> None:
             dimension_retries=args.dimension_retries,
             retry_backoff_s=args.retry_backoff_s,
             out_dirs=out_dirs or None,
+            skip_completed_dimensions=skip_completed,
         )
         runs.append(run)
         ok_dims = sum(1 for d in run["dimensions"].values() if d.get("ok"))
-        print(f"  -> completed {ok_dims}/5 dimensions")
+        skipped = sum(1 for d in run["dimensions"].values() if d.get("skipped_rerun"))
+        ran = 5 - skipped
+        print(f"  -> ok {ok_dims}/5 dimensions ({ran} re-run, {skipped} reused from disk)")
 
     payload = {
         "mode": "batch_pending",

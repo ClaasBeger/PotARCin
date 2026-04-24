@@ -1,0 +1,63 @@
+{
+  "task_count": 50,
+  "source_run_json": "evaluation/multi_dimension_eval_runs/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/run_batch5_unified_50.json",
+  "criteria": {
+    "definition": "train/test/stable/dynamic50 success_rate == 1.0",
+    "classification": "accuracy == 1.0",
+    "constrained_generation": "success_rate == 1.0",
+    "editing": "success == true (or success_rate == 1.0)",
+    "inversion": "success_rate == 1.0"
+  },
+  "by_dimension": {
+    "definition": {
+      "strict_full_task_pass": 41,
+      "files_found": 50,
+      "strict_accuracy": 0.82,
+      "example_fail_task_ids": [
+        "846bdb03",
+        "8a004b2b",
+        "90f3ed37"
+      ]
+    },
+    "classification": {
+      "strict_full_task_pass": 39,
+      "files_found": 50,
+      "strict_accuracy": 0.78,
+      "example_fail_task_ids": [
+        "8731374e",
+        "890034e9",
+        "8a004b2b"
+      ]
+    },
+    "constrained_generation": {
+      "strict_full_task_pass": 43,
+      "files_found": 50,
+      "strict_accuracy": 0.86,
+      "example_fail_task_ids": [
+        "8731374e",
+        "890034e9",
+        "8a004b2b"
+      ]
+    },
+    "editing": {
+      "strict_full_task_pass": 43,
+      "files_found": 50,
+      "strict_accuracy": 0.86,
+      "example_fail_task_ids": [
+        "846bdb03",
+        "8731374e",
+        "890034e9"
+      ]
+    },
+    "inversion": {
+      "strict_full_task_pass": 43,
+      "files_found": 50,
+      "strict_accuracy": 0.86,
+      "example_fail_task_ids": [
+        "8731374e",
+        "90c28cc7",
+        "91714a58"
+      ]
+    }
+  }
+}

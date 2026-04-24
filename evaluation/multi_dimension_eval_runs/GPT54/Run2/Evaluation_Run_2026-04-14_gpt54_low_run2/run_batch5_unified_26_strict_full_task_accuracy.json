@@ -1,0 +1,63 @@
+{
+  "task_count": 26,
+  "source_run_json": "evaluation/multi_dimension_eval_runs/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/run_batch5_unified_26.json",
+  "criteria": {
+    "definition": "train/test/stable/dynamic50 success_rate == 1.0",
+    "classification": "accuracy == 1.0",
+    "constrained_generation": "success_rate == 1.0",
+    "editing": "success == true (or success_rate == 1.0)",
+    "inversion": "success_rate == 1.0"
+  },
+  "by_dimension": {
+    "definition": {
+      "strict_full_task_pass": 20,
+      "files_found": 26,
+      "strict_accuracy": 0.7692307692307693,
+      "example_fail_task_ids": [
+        "941d9a10",
+        "9565186b",
+        "97a05b5b"
+      ]
+    },
+    "classification": {
+      "strict_full_task_pass": 23,
+      "files_found": 26,
+      "strict_accuracy": 0.8846153846153846,
+      "example_fail_task_ids": [
+        "9aec4887",
+        "9edfc990",
+        "a48eeaf7"
+      ]
+    },
+    "constrained_generation": {
+      "strict_full_task_pass": 17,
+      "files_found": 26,
+      "strict_accuracy": 0.6538461538461539,
+      "example_fail_task_ids": [
+        "95990924",
+        "97a05b5b",
+        "98cf29f8"
+      ]
+    },
+    "editing": {
+      "strict_full_task_pass": 22,
+      "files_found": 26,
+      "strict_accuracy": 0.8461538461538461,
+      "example_fail_task_ids": [
+        "93b581b8",
+        "9aec4887",
+        "9d9215db"
+      ]
+    },
+    "inversion": {
+      "strict_full_task_pass": 21,
+      "files_found": 26,
+      "strict_accuracy": 0.8076923076923077,
+      "example_fail_task_ids": [
+        "94f9d214",
+        "97a05b5b",
+        "98cf29f8"
+      ]
+    }
+  }
+}

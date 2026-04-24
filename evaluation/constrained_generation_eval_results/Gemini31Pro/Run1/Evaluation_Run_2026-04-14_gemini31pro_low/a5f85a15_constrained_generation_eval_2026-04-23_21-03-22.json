@@ -1,0 +1,73 @@
+{
+  "task_id": "a5f85a15",
+  "model": "gemini-3.1-pro-preview",
+  "provider": "google",
+  "base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n2 0 0\n0 2 0\n0 0 2\nOutput:\n2 0 0\n0 4 0\n0 0 2\n\nExample 2:\nInput:\n0 0 9 0 0 0 0 0\n0 0 0 9 0 0 0 0\n0 0 0 0 9 0 0 0\n0 0 0 0 0 9 0 0\n9 0 0 0 0 0 9 0\n0 9 0 0 0 0 0 9\n0 0 9 0 0 0 0 0\n0 0 0 9 0 0 0 0\nOutput:\n0 0 9 0 0 0 0 0\n0 0 0 4 0 0 0 0\n0 0 0 0 9 0 0 0\n0 0 0 0 0 4 0 0\n9 0 0 0 0 0 9 0\n0 4 0 0 0 0 0 4\n0 0 9 0 0 0 0 0\n0 0 0 4 0 0 0 0\n\nExample 3:\nInput:\n0 0 3 0 0 0\n0 0 0 3 0 0\n0 0 0 0 3 0\n3 0 0 0 0 3\n0 3 0 0 0 0\n0 0 3 0 0 0\nOutput:\n0 0 3 0 0 0\n0 0 0 4 0 0\n0 0 0 0 3 0\n3 0 0 0 0 4\n0 4 0 0 0 0\n0 0 3 0 0 0\n\nGenerate one NEW input/output pair that follows the same transformation rule.\n- Do NOT copy any demonstration pair exactly.\n- The generated input and output must be different (non-trivial transformation).\n- Your pair must be consistent with the same underlying rule.\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "```json\n{\"input\": [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], \"output\": [[1, 0, 0, 0], [0, 4, 0, 0], [0, 0, 1, 0], [0, 0, 0, 4]]}\n```",
+  "evaluation_ok": true,
+  "prediction": {
+    "input": [
+      [
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "output": [
+      [
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        4,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        4
+      ]
+    ]
+  },
+  "metrics": {
+    "success_rate": 1.0,
+    "rejected_as_demo_copy": 0,
+    "rejected_no_change": 0,
+    "rejected_verifier_missing": 0,
+    "rejected_verifier_mismatch": 0,
+    "noted_arc_gen_stable_exact_match": 1
+  }
+}

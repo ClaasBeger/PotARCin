@@ -4,6 +4,7 @@ import concurrent.futures
 import datetime as dt
 import json
 import os
+import random
 import time
 from pathlib import Path
 from typing import Any, Literal, Optional
@@ -30,6 +31,106 @@ def _together_max_tokens() -> int:
     if val <= 0:
         return 131072
     return min(val, 262144)
+
+
+def _env_bool(name: str, default: bool) -> bool:
+    v = os.environ.get(name)
+    if v is None or not str(v).strip():
+        return default
+    return str(v).strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _is_kimi_together_model(model: str) -> bool:
+    """Kimi (Moonshot on Together) — used for Kimi-only speed/safety toggles."""
+    m = model.strip().lower()
+    return m.startswith("moonshotai/") or "kimi" in m
+
+
+def _kimi_fast_preset() -> bool:
+    return os.environ.get("POTARCIN_KIMI_PRESET", "").strip().lower() == "fast"
+
+
+def _together_effective_max_tokens(*, model: str) -> int:
+    """
+    Kimi-only tuning (other Together models use POTARCIN_TOGETHER_MAX_TOKENS only):
+    - POTARCIN_KIMI_PRESET=fast: lower default max_tokens (faster, less reasoning spam).
+    - POTARCIN_KIMI_MAX_TOKENS: explicit cap for Kimi (overrides generic TOGETHER default).
+    """
+    if _is_kimi_together_model(model) and _kimi_fast_preset():
+        raw = os.environ.get("POTARCIN_KIMI_FAST_MAX_TOKENS", "32768").strip()
+        try:
+            v = int(raw)
+        except Exception:
+            v = 32768
+        return min(max(1024, v), 262144)
+    if _is_kimi_together_model(model):
+        raw = os.environ.get("POTARCIN_KIMI_MAX_TOKENS", "").strip()
+        if raw:
+            try:
+                v = int(raw)
+            except Exception:
+                v = _together_max_tokens()
+            return min(max(1, v), 262144)
+    return _together_max_tokens()
+
+
+def _together_kimi_reasoning_param(*, model: str) -> dict[str, bool]:
+    if not _is_kimi_together_model(model):
+        return {"enabled": True}
+    if _kimi_fast_preset():
+        return {"enabled": _env_bool("POTARCIN_KIMI_FAST_REASONING", False)}
+    return {"enabled": _env_bool("POTARCIN_KIMI_REASONING_ENABLED", True)}
+
+
+def _together_transient_error(exc: BaseException) -> bool:
+    if isinstance(
+        exc,
+        (
+            TimeoutError,
+            BrokenPipeError,
+            ConnectionError,
+            ConnectionAbortedError,
+            ConnectionResetError,
+        ),
+    ):
+        return True
+    if isinstance(exc, error.URLError):
+        return True
+    msg = str(exc).lower()
+    if "503" in msg or "502" in msg or "429" in msg or "504" in msg:
+        return True
+    for phrase in (
+        "service unavailable",
+        "rate limit",
+        "overloaded",
+        "connection reset",
+        "connection aborted",
+        "temporarily unavailable",
+    ):
+        if phrase in msg:
+            return True
+    if "time" in msg and ("out" in msg or "timed" in msg):
+        return True
+    return False
+
+
+def _together_retry_count() -> int:
+    try:
+        n = int(os.environ.get("POTARCIN_TOGETHER_MAX_RETRIES", "4").strip())
+    except Exception:
+        n = 4
+    return min(max(1, n), 8)
+
+
+def _together_sdk_wall_timeout_s(*, timeout_s: int) -> int:
+    try:
+        extra = int(os.environ.get("POTARCIN_TOGETHER_SDK_TIMEOUT_S", "0").strip() or 0)
+    except Exception:
+        extra = 0
+    if extra > 0:
+        return extra
+    # Long generations + reasoning: avoid hung SDK calls without a ceiling.
+    return max(timeout_s, 900)
 
 
 def _dump_full_response_debug(*, provider: str, model: str, payload: Any) -> str:
@@ -147,6 +248,15 @@ def request_text_completion(
             timeout_s=timeout_s,
         )
     elif resolved_provider == "together":
+        try:
+            to = int(os.environ.get("POTARCIN_TOGETHER_TIMEOUT_S", "0").strip() or 0)
+        except Exception:
+            to = 0
+        if to > 0:
+            timeout_s = to
+        elif _is_kimi_together_model(model):
+            # Default dimension timeout is 180s; Kimi requests often need more time.
+            timeout_s = max(timeout_s, 600)
         text = _together_chat_completions_completion(
             prompt=prompt,
             model=model,
@@ -407,8 +517,44 @@ def _together_chat_completions_completion(
     base_url: str,
     timeout_s: int = 180,
 ) -> str:
+    max_tokens = _together_effective_max_tokens(model=model)
+    reasoning_cfg = _together_kimi_reasoning_param(model=model)
+    last_err: Exception | None = None
+    n_attempts = _together_retry_count()
+    for attempt in range(1, n_attempts + 1):
+        try:
+            return _together_chat_completions_completion_once(
+                prompt=prompt,
+                model=model,
+                api_key=api_key,
+                base_url=base_url,
+                timeout_s=timeout_s,
+                max_tokens=max_tokens,
+                reasoning_cfg=reasoning_cfg,
+            )
+        except Exception as e:
+            last_err = e
+            if attempt >= n_attempts or not _together_transient_error(e):
+                break
+            delay = min(60.0, (2.0 ** (attempt - 1)) + random.random())
+            time.sleep(delay)
+    if last_err is None:
+        raise RuntimeError("Together: retry loop finished without a stored error (internal bug).")
+    raise last_err
+
+
+def _together_chat_completions_completion_once(
+    *,
+    prompt: str,
+    model: str,
+    api_key: str,
+    base_url: str,
+    timeout_s: int = 180,
+    max_tokens: int,
+    reasoning_cfg: dict[str, bool],
+) -> str:
     sdk_error: Exception | None = None
-    max_tokens = _together_max_tokens()
+    sdk_wall_s = _together_sdk_wall_timeout_s(timeout_s=timeout_s)
 
     def _extract_text_from_content(content: Any) -> str:
         if isinstance(content, str) and content.strip():
@@ -478,14 +624,25 @@ def _together_chat_completions_completion(
         if base_url.rstrip("/") != "https://api.together.xyz/v1":
             client_kwargs["base_url"] = base_url.rstrip("/")
         client = Together(**client_kwargs)
-        resp = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            reasoning={"enabled": True},
-            temperature=1.0,
-            top_p=0.95,
-            max_tokens=max_tokens,
-        )
+
+        def _sdk_create() -> Any:
+            return client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                reasoning=reasoning_cfg,
+                temperature=1.0,
+                top_p=0.95,
+                max_tokens=max_tokens,
+            )
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+            fut = pool.submit(_sdk_create)
+            try:
+                resp = fut.result(timeout=sdk_wall_s)
+            except concurrent.futures.TimeoutError as te:
+                raise TimeoutError(
+                    f"Together SDK call timed out after {sdk_wall_s}s (model={model!r})."
+                ) from te
         choices = getattr(resp, "choices", None)
         if isinstance(choices, list):
             for choice in choices:
@@ -525,11 +682,12 @@ def _together_chat_completions_completion(
         # Fall through to HTTP fallback for environments without together SDK.
         pass
 
+    http_read_s = max(timeout_s, 120)
     url = base_url.rstrip("/") + "/chat/completions"
     payload: dict[str, Any] = {
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
-        "reasoning": {"enabled": True},
+        "reasoning": reasoning_cfg,
         "temperature": 1.0,
         "top_p": 0.95,
         "max_tokens": max_tokens,
@@ -546,7 +704,7 @@ def _together_chat_completions_completion(
         method="POST",
     )
     try:
-        with request.urlopen(req, timeout=timeout_s) as resp:
+        with request.urlopen(req, timeout=http_read_s) as resp:
             raw = resp.read().decode("utf-8")
     except error.HTTPError as e:
         body_txt = e.read().decode("utf-8", errors="replace")
