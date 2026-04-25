@@ -122,6 +122,11 @@ def _extract_first_bracketed_list(text: str) -> str:
                             parsed = json.loads(candidate)
                         except Exception:
                             normalized = re.sub(r"(?<=\d)\s+(?=\d)", ", ", candidate)
+                            # Handle list rows written as:
+                            # [[...]
+                            #  [...]]
+                            # without commas between row lists.
+                            normalized = re.sub(r"\]\s*\[", "], [", normalized)
                             try:
                                 parsed = ast.literal_eval(normalized)
                                 candidate_to_return = normalized

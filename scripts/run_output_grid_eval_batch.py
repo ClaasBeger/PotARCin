@@ -39,6 +39,27 @@ def _is_transient_error(msg: str) -> bool:
     return any(tok in s for tok in transient_markers)
 
 
+def _is_retryable_eval_failure(row: dict[str, Any]) -> bool:
+    """Whether an evaluation result should be retried as likely transient/format issue."""
+    if row.get("evaluation_ok") is True:
+        return False
+    err = str(row.get("error") or "").lower()
+    # Output-grid runs commonly fail due to response formatting/parsing; retry those.
+    parse_markers = (
+        "parse failed",
+        "no space-separated grid rows found",
+        "could not locate list-of-lists grid",
+        "prediction must be a list-of-lists grid",
+        "grid cells must be integers",
+        "jagged grid in space-separated output",
+        "no text content",
+    )
+    if any(tok in err for tok in parse_markers):
+        return True
+    # Conservative fallback: retry generic evaluation_ok=false once budget permits.
+    return True
+
+
 def _all_train_task_ids() -> list[str]:
     return [t.task_id for t in iter_tasks(split="train", source=TaskSource.ORIGINAL_ARC)]
 
@@ -80,6 +101,7 @@ def _run_one_task(
     out_dir: Path,
     retries: int,
     retry_backoff_s: float,
+    retry_eval_failures: bool,
 ) -> dict[str, Any]:
     """Call the API with retries on transient failures; returns a result row dict."""
     attempts = max(1, retries + 1)
@@ -95,7 +117,7 @@ def _run_one_task(
                 max_train_demos=max_train_demos,
                 out_dir=out_dir,
             )
-            return {
+            row = {
                 "task_id": task_id,
                 "attempts": attempt,
                 "result_path": res.get("result_path"),
@@ -104,6 +126,14 @@ def _run_one_task(
                 "metrics": res.get("metrics"),
                 "error": res.get("error"),
             }
+            if (
+                retry_eval_failures
+                and attempt < attempts
+                and _is_retryable_eval_failure(row)
+            ):
+                time.sleep(retry_backoff_s * attempt)
+                continue
+            return row
         except Exception as e:
             msg = str(e)
             if attempt < attempts and _is_transient_error(msg):
@@ -241,6 +271,15 @@ def main() -> None:
         help="Linear backoff base in seconds: sleep backoff * attempt between retries",
     )
     parser.add_argument(
+        "--retry-eval-failures",
+        default=True,
+        action=argparse.BooleanOptionalAction,
+        help=(
+            "Retry tasks when evaluation_ok is false (e.g. parse/format failures) "
+            "within the same --retries budget (default: retry)"
+        ),
+    )
+    parser.add_argument(
         "--continue-on-error",
         default=True,
         action=argparse.BooleanOptionalAction,
@@ -303,6 +342,7 @@ def main() -> None:
         "delay_s": args.delay_s,
         "retries": args.retries,
         "retry_backoff_s": args.retry_backoff_s,
+        "retry_eval_failures": args.retry_eval_failures,
     }
 
     print(
@@ -330,6 +370,7 @@ def main() -> None:
             out_dir=out_dir,
             retries=args.retries,
             retry_backoff_s=args.retry_backoff_s,
+            retry_eval_failures=args.retry_eval_failures,
         )
         results.append(row)
         if row.get("evaluation_ok"):

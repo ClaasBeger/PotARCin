@@ -1,6 +1,6 @@
 {
-  "mode": "batch_pending",
-  "created_at": "2026-04-24_23-45-38",
+  "mode": "batch_unified",
+  "created_at": "2026-04-25_13-48-22",
   "task_count": 50,
   "run_tag": "Evaluation_Run_2026-04-14_gpt54_low_run2",
   "seed_mode": "fixed",
@@ -9,157 +9,4580 @@
   "batch_index": 8,
   "batch_slice": "train[350:400]",
   "completed_before_count": 350,
-  "last_completed_task_id_before": "dbc1a6ce",
+  "last_completed_task_id_before": "cdecee7f",
+  "merged_from_sources": [
+    "run_2026-04-25_09-38-30.json (50-task run)",
+    "filled_from_latest_dimension_artifacts_for_any_non-overlap"
+  ],
   "runs": [
     {
-      "task_id": "dc0a314f"
+      "task_id": "dc0a314f",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 427,
+      "dimension_seeds": {
+        "classification_distribution": 702945833,
+        "editing": 2095718966,
+        "inversion": 1551600250
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc0a314f_definition_eval_2026-04-25_09-39-46.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 2,
+              "total": 1000,
+              "success_rate": 0.002
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc0a314f_distribution_classification_eval_2026-04-25_09-40-59.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc0a314f_constrained_generation_eval_2026-04-25_09-43-43.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc0a314f_editing_eval_2026-04-25_09-45-45.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc0a314f_inversion_eval_2026-04-25_09-46-58.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "dc1df850"
+      "task_id": "dc1df850",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 428,
+      "dimension_seeds": {
+        "classification_distribution": 1094816935,
+        "editing": 221813086,
+        "inversion": 1944965627
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc1df850_definition_eval_2026-04-25_09-47-07.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 131,
+              "total": 1000,
+              "success_rate": 0.131
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc1df850_distribution_classification_eval_2026-04-25_09-48-24.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc1df850_constrained_generation_eval_2026-04-25_09-48-53.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc1df850_editing_eval_2026-04-25_09-49-17.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc1df850_inversion_eval_2026-04-25_09-49-27.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "dc433765"
+      "task_id": "dc433765",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 429,
+      "dimension_seeds": {
+        "classification_distribution": 527226272,
+        "editing": 86932922,
+        "inversion": 1471587219
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc433765_definition_eval_2026-04-25_09-49-36.json",
+          "metrics": {
+            "train": {
+              "ok": 7,
+              "total": 7,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 14,
+              "total": 1000,
+              "success_rate": 0.014
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc433765_distribution_classification_eval_2026-04-25_09-50-56.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc433765_constrained_generation_eval_2026-04-25_09-51-14.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 1
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc433765_editing_eval_2026-04-25_09-51-23.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/dc433765_inversion_eval_2026-04-25_09-51-31.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "ddf7fa4f"
+      "task_id": "ddf7fa4f",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 430,
+      "dimension_seeds": {
+        "classification_distribution": 1168014881,
+        "editing": 591033763,
+        "inversion": 129909120
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ddf7fa4f_definition_eval_2026-04-25_09-51-40.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ddf7fa4f_distribution_classification_eval_2026-04-25_09-53-00.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ddf7fa4f_constrained_generation_eval_2026-04-25_09-53-32.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ddf7fa4f_editing_eval_2026-04-25_09-53-53.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ddf7fa4f_inversion_eval_2026-04-25_09-54-03.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "de1cd16c"
+      "task_id": "de1cd16c",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 431,
+      "dimension_seeds": {
+        "classification_distribution": 1255853040,
+        "editing": 102636503,
+        "inversion": 148369259
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/de1cd16c_definition_eval_2026-04-25_09-54-27.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 517,
+              "total": 1000,
+              "success_rate": 0.517
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/de1cd16c_distribution_classification_eval_2026-04-25_09-55-45.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/de1cd16c_constrained_generation_eval_2026-04-25_09-56-21.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/de1cd16c_editing_eval_2026-04-25_09-57-02.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/de1cd16c_inversion_eval_2026-04-25_09-57-12.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "ded97339"
+      "task_id": "ded97339",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 432,
+      "dimension_seeds": {
+        "classification_distribution": 2092511605,
+        "editing": 274867140,
+        "inversion": 1660223269
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ded97339_definition_eval_2026-04-25_09-57-23.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 188,
+              "total": 262,
+              "success_rate": 0.7175572519083969
+            },
+            "dynamic50": {
+              "ok": 42,
+              "total": 50,
+              "success_rate": 0.84
+            },
+            "re_arc_stable": {
+              "ok": 270,
+              "total": 1000,
+              "success_rate": 0.27
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ded97339_distribution_classification_eval_2026-04-25_09-58-42.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ded97339_constrained_generation_eval_2026-04-25_09-59-30.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ded97339_editing_eval_2026-04-25_10-00-03.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ded97339_inversion_eval_2026-04-25_10-00-17.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e179c5f4"
+      "task_id": "e179c5f4",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 433,
+      "dimension_seeds": {
+        "classification_distribution": 855264938,
+        "editing": 2133964783,
+        "inversion": 323882453
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e179c5f4_definition_eval_2026-04-25_10-00-31.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 9,
+              "total": 9,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e179c5f4_distribution_classification_eval_2026-04-25_10-01-34.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e179c5f4_constrained_generation_eval_2026-04-25_10-02-00.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 1
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e179c5f4_editing_eval_2026-04-25_10-02-10.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e179c5f4_inversion_eval_2026-04-25_10-02-21.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e21d9049"
+      "task_id": "e21d9049",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 434,
+      "dimension_seeds": {
+        "classification_distribution": 1554207020,
+        "editing": 297778926,
+        "inversion": 844137344
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e21d9049_definition_eval_2026-04-25_10-02-47.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 13,
+              "total": 1000,
+              "success_rate": 0.013
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e21d9049_distribution_classification_eval_2026-04-25_10-04-06.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e21d9049_constrained_generation_eval_2026-04-25_10-05-26.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e21d9049_editing_eval_2026-04-25_10-06-26.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e21d9049_inversion_eval_2026-04-25_10-07-19.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e26a3af2"
+      "task_id": "e26a3af2",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 435,
+      "dimension_seeds": {
+        "classification_distribution": 828035738,
+        "editing": 2088847768,
+        "inversion": 1334977752
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e26a3af2_definition_eval_2026-04-25_10-07-33.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 989,
+              "total": 1000,
+              "success_rate": 0.989
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e26a3af2_distribution_classification_eval_2026-04-25_10-08-55.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e26a3af2_constrained_generation_eval_2026-04-25_10-09-23.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e26a3af2_editing_eval_2026-04-25_10-09-45.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e26a3af2_inversion_eval_2026-04-25_10-09-55.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e3497940"
+      "task_id": "e3497940",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 436,
+      "dimension_seeds": {
+        "classification_distribution": 1641638299,
+        "editing": 2064118743,
+        "inversion": 1710493012
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e3497940_definition_eval_2026-04-25_10-10-08.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 212,
+              "total": 1000,
+              "success_rate": 0.212
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e3497940_distribution_classification_eval_2026-04-25_10-11-27.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e3497940_constrained_generation_eval_2026-04-25_10-12-17.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e3497940_editing_eval_2026-04-25_10-12-39.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e3497940_inversion_eval_2026-04-25_10-12-54.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e40b9e2f"
+      "task_id": "e40b9e2f",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 437,
+      "dimension_seeds": {
+        "classification_distribution": 1217560692,
+        "editing": 424189974,
+        "inversion": 118779975
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e40b9e2f_definition_eval_2026-04-25_10-15-06.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 242,
+              "total": 262,
+              "success_rate": 0.9236641221374046
+            },
+            "dynamic50": {
+              "ok": 39,
+              "total": 50,
+              "success_rate": 0.78
+            },
+            "re_arc_stable": {
+              "ok": 88,
+              "total": 1000,
+              "success_rate": 0.088
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e40b9e2f_distribution_classification_eval_2026-04-25_10-16-28.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e40b9e2f_constrained_generation_eval_2026-04-25_10-18-51.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e40b9e2f_editing_eval_2026-04-25_10-20-35.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e40b9e2f_inversion_eval_2026-04-25_10-21-42.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e48d4e1a"
+      "task_id": "e48d4e1a",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 438,
+      "dimension_seeds": {
+        "classification_distribution": 893599179,
+        "editing": 357640012,
+        "inversion": 1225602126
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e48d4e1a_definition_eval_2026-04-25_10-21-53.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 2,
+              "total": 1000,
+              "success_rate": 0.002
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e48d4e1a_distribution_classification_eval_2026-04-25_10-23-11.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e48d4e1a_constrained_generation_eval_2026-04-25_10-23-38.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e48d4e1a_editing_eval_2026-04-25_10-23-51.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e48d4e1a_inversion_eval_2026-04-25_10-24-03.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e5062a87"
+      "task_id": "e5062a87",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 439,
+      "dimension_seeds": {
+        "classification_distribution": 1734377507,
+        "editing": 1413241109,
+        "inversion": 1337391126
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e5062a87_definition_eval_2026-04-25_10-25-19.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 3,
+              "success_rate": 0.3333333333333333
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 11,
+              "total": 1000,
+              "success_rate": 0.011
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e5062a87_distribution_classification_eval_2026-04-25_10-26-37.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e5062a87_constrained_generation_eval_2026-04-25_10-29-00.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e5062a87_editing_eval_2026-04-25_10-30-12.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e5062a87_inversion_eval_2026-04-25_10-31-31.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e509e548"
+      "task_id": "e509e548",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 440,
+      "dimension_seeds": {
+        "classification_distribution": 533684232,
+        "editing": 355443360,
+        "inversion": 1293686248
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e509e548_definition_eval_2026-04-25_10-32-05.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 15,
+              "total": 1000,
+              "success_rate": 0.015
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e509e548_distribution_classification_eval_2026-04-25_10-33-26.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e509e548_constrained_generation_eval_2026-04-25_10-35-55.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e509e548_editing_eval_2026-04-25_10-37-04.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e509e548_inversion_eval_2026-04-25_10-37-47.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e50d258f"
+      "task_id": "e50d258f",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 441,
+      "dimension_seeds": {
+        "classification_distribution": 763558326,
+        "editing": 1724113451,
+        "inversion": 655778484
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e50d258f_definition_eval_2026-04-25_10-38-36.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 169,
+              "total": 262,
+              "success_rate": 0.6450381679389313
+            },
+            "dynamic50": {
+              "ok": 29,
+              "total": 50,
+              "success_rate": 0.58
+            },
+            "re_arc_stable": {
+              "ok": 79,
+              "total": 1000,
+              "success_rate": 0.079
+            },
+            "re_arc_dynamic50": {
+              "ok": 5,
+              "total": 50,
+              "success_rate": 0.1
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e50d258f_distribution_classification_eval_2026-04-25_10-39-54.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e50d258f_constrained_generation_eval_2026-04-25_10-43-27.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e50d258f_editing_eval_2026-04-25_10-44-46.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e50d258f_inversion_eval_2026-04-25_10-45-05.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e6721834"
+      "task_id": "e6721834",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 442,
+      "dimension_seeds": {
+        "classification_distribution": 1573709185,
+        "editing": 1911871096,
+        "inversion": 1935455761
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e6721834_definition_eval_2026-04-25_10-45-54.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 3,
+              "success_rate": 0.6666666666666666
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 48,
+              "total": 262,
+              "success_rate": 0.183206106870229
+            },
+            "dynamic50": {
+              "ok": 14,
+              "total": 50,
+              "success_rate": 0.28
+            },
+            "re_arc_stable": {
+              "ok": 179,
+              "total": 1000,
+              "success_rate": 0.179
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e6721834_distribution_classification_eval_2026-04-25_10-47-13.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e6721834_constrained_generation_eval_2026-04-25_10-48-32.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e6721834_editing_eval_2026-04-25_10-49-05.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e6721834_inversion_eval_2026-04-25_10-49-38.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e73095fd"
+      "task_id": "e73095fd",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 443,
+      "dimension_seeds": {
+        "classification_distribution": 541231060,
+        "editing": 91412810,
+        "inversion": 1148453776
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e73095fd_definition_eval_2026-04-25_10-49-46.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 108,
+              "total": 262,
+              "success_rate": 0.4122137404580153
+            },
+            "dynamic50": {
+              "ok": 19,
+              "total": 50,
+              "success_rate": 0.38
+            },
+            "re_arc_stable": {
+              "ok": 87,
+              "total": 1000,
+              "success_rate": 0.087
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e73095fd_distribution_classification_eval_2026-04-25_10-51-10.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e73095fd_constrained_generation_eval_2026-04-25_10-52-10.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e73095fd_editing_eval_2026-04-25_10-52-49.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e73095fd_inversion_eval_2026-04-25_10-52-58.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e76a88a6"
+      "task_id": "e76a88a6",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 444,
+      "dimension_seeds": {
+        "classification_distribution": 1326692461,
+        "editing": 1236154736,
+        "inversion": 56854717
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e76a88a6_definition_eval_2026-04-25_10-53-13.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 12,
+              "total": 1000,
+              "success_rate": 0.012
+            },
+            "re_arc_dynamic50": {
+              "ok": 2,
+              "total": 50,
+              "success_rate": 0.04
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e76a88a6_distribution_classification_eval_2026-04-25_10-54-38.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e76a88a6_constrained_generation_eval_2026-04-25_10-55-09.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e76a88a6_editing_eval_2026-04-25_10-55-23.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e76a88a6_inversion_eval_2026-04-25_10-55-40.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e8593010"
+      "task_id": "e8593010",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 445,
+      "dimension_seeds": {
+        "classification_distribution": 1818846186,
+        "editing": 1073240351,
+        "inversion": 343102648
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e8593010_definition_eval_2026-04-25_10-56-01.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 147,
+              "total": 1000,
+              "success_rate": 0.147
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e8593010_distribution_classification_eval_2026-04-25_10-57-20.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e8593010_constrained_generation_eval_2026-04-25_10-58-21.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e8593010_editing_eval_2026-04-25_10-59-10.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e8593010_inversion_eval_2026-04-25_10-59-50.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e8dc4411"
+      "task_id": "e8dc4411",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 446,
+      "dimension_seeds": {
+        "classification_distribution": 2048481060,
+        "editing": 923744642,
+        "inversion": 805196516
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e8dc4411_definition_eval_2026-04-25_11-00-55.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 96,
+              "total": 1000,
+              "success_rate": 0.096
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e8dc4411_distribution_classification_eval_2026-04-25_11-02-13.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e8dc4411_constrained_generation_eval_2026-04-25_11-04-02.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e8dc4411_editing_eval_2026-04-25_11-05-28.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e8dc4411_inversion_eval_2026-04-25_11-06-50.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e9614598"
+      "task_id": "e9614598",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 447,
+      "dimension_seeds": {
+        "classification_distribution": 1765315863,
+        "editing": 66234054,
+        "inversion": 1617230033
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e9614598_definition_eval_2026-04-25_11-06-56.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 12,
+              "total": 1000,
+              "success_rate": 0.012
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e9614598_distribution_classification_eval_2026-04-25_11-08-14.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e9614598_constrained_generation_eval_2026-04-25_11-08-47.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 1
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e9614598_editing_eval_2026-04-25_11-09-02.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e9614598_inversion_eval_2026-04-25_11-09-08.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e98196ab"
+      "task_id": "e98196ab",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 448,
+      "dimension_seeds": {
+        "classification_distribution": 1204205451,
+        "editing": 1069756396,
+        "inversion": 506709693
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e98196ab_definition_eval_2026-04-25_11-09-19.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 4,
+              "total": 1000,
+              "success_rate": 0.004
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e98196ab_distribution_classification_eval_2026-04-25_11-10-38.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e98196ab_constrained_generation_eval_2026-04-25_11-11-16.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e98196ab_editing_eval_2026-04-25_11-11-43.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e98196ab_inversion_eval_2026-04-25_11-12-00.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "e9afcf9a"
+      "task_id": "e9afcf9a",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 449,
+      "dimension_seeds": {
+        "classification_distribution": 818149144,
+        "editing": 899636802,
+        "inversion": 820966050
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e9afcf9a_definition_eval_2026-04-25_11-12-05.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 72,
+              "total": 72,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 10,
+              "total": 1000,
+              "success_rate": 0.01
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e9afcf9a_distribution_classification_eval_2026-04-25_11-13-12.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e9afcf9a_constrained_generation_eval_2026-04-25_11-13-21.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 1
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e9afcf9a_editing_eval_2026-04-25_11-13-25.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/e9afcf9a_inversion_eval_2026-04-25_11-13-28.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "ea32f347"
+      "task_id": "ea32f347",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 450,
+      "dimension_seeds": {
+        "classification_distribution": 413781929,
+        "editing": 2120406917,
+        "inversion": 622758219
+      },
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ea32f347_definition_eval_2026-04-25_11-13-36.json",
+          "metrics": {},
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ea32f347_distribution_classification_eval_2026-04-25_11-13-36.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ea32f347_constrained_generation_eval_2026-04-25_11-14-06.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ea32f347_editing_eval_2026-04-25_11-14-18.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ea32f347_inversion_eval_2026-04-25_11-14-26.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "ea786f4a"
+      "task_id": "ea786f4a",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 451,
+      "dimension_seeds": {
+        "classification_distribution": 173535981,
+        "editing": 552623216,
+        "inversion": 2050374853
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ea786f4a_definition_eval_2026-04-25_11-14-31.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 54,
+              "total": 54,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 100,
+              "total": 1000,
+              "success_rate": 0.1
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ea786f4a_distribution_classification_eval_2026-04-25_11-15-38.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ea786f4a_constrained_generation_eval_2026-04-25_11-15-51.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 1
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ea786f4a_editing_eval_2026-04-25_11-16-02.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ea786f4a_inversion_eval_2026-04-25_11-16-10.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "eb281b96"
+      "task_id": "eb281b96",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 452,
+      "dimension_seeds": {
+        "classification_distribution": 1465717005,
+        "editing": 1594818867,
+        "inversion": 1309362040
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/eb281b96_definition_eval_2026-04-25_11-16-31.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 36,
+              "total": 36,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 101,
+              "total": 1000,
+              "success_rate": 0.101
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/eb281b96_distribution_classification_eval_2026-04-25_11-17-37.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/eb281b96_constrained_generation_eval_2026-04-25_11-21-35.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/eb281b96_editing_eval_2026-04-25_11-22-11.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/eb281b96_inversion_eval_2026-04-25_11-22-28.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "eb5a1d5d"
+      "task_id": "eb5a1d5d",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 453,
+      "dimension_seeds": {
+        "classification_distribution": 1018277948,
+        "editing": 1717154182,
+        "inversion": 2075845315
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/eb5a1d5d_definition_eval_2026-04-25_11-22-48.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/eb5a1d5d_distribution_classification_eval_2026-04-25_11-24-06.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/eb5a1d5d_constrained_generation_eval_2026-04-25_11-24-32.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/eb5a1d5d_editing_eval_2026-04-25_11-24-58.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/eb5a1d5d_inversion_eval_2026-04-25_11-25-05.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "ec883f72"
+      "task_id": "ec883f72",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 454,
+      "dimension_seeds": {
+        "classification_distribution": 1301966998,
+        "editing": 1399940089,
+        "inversion": 1129318928
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ec883f72_definition_eval_2026-04-25_11-25-54.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 4,
+              "success_rate": 0.75
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 218,
+              "total": 262,
+              "success_rate": 0.8320610687022901
+            },
+            "dynamic50": {
+              "ok": 43,
+              "total": 50,
+              "success_rate": 0.86
+            },
+            "re_arc_stable": {
+              "ok": 49,
+              "total": 1000,
+              "success_rate": 0.049
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ec883f72_distribution_classification_eval_2026-04-25_11-27-13.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ec883f72_constrained_generation_eval_2026-04-25_11-28-31.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ec883f72_editing_eval_2026-04-25_11-29-21.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ec883f72_inversion_eval_2026-04-25_11-29-42.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "ecdecbb3"
+      "task_id": "ecdecbb3",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 455,
+      "dimension_seeds": {
+        "classification_distribution": 107536531,
+        "editing": 1641869025,
+        "inversion": 997866103
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ecdecbb3_definition_eval_2026-04-25_11-30-11.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 6,
+              "total": 1000,
+              "success_rate": 0.006
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ecdecbb3_distribution_classification_eval_2026-04-25_11-31-29.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ecdecbb3_constrained_generation_eval_2026-04-25_11-32-52.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ecdecbb3_editing_eval_2026-04-25_11-33-50.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ecdecbb3_inversion_eval_2026-04-25_11-34-32.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "ed36ccf7"
+      "task_id": "ed36ccf7",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 456,
+      "dimension_seeds": {
+        "classification_distribution": 1930224276,
+        "editing": 2002321318,
+        "inversion": 1869209800
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ed36ccf7_definition_eval_2026-04-25_11-34-51.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ed36ccf7_distribution_classification_eval_2026-04-25_11-36-09.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ed36ccf7_constrained_generation_eval_2026-04-25_11-36-38.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ed36ccf7_editing_eval_2026-04-25_11-36-50.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ed36ccf7_inversion_eval_2026-04-25_11-37-01.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "ef135b50"
+      "task_id": "ef135b50",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 457,
+      "dimension_seeds": {
+        "classification_distribution": 784339655,
+        "editing": 1470691753,
+        "inversion": 1156236573
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ef135b50_definition_eval_2026-04-25_11-37-21.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 3,
+              "success_rate": 0.3333333333333333
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 61,
+              "total": 261,
+              "success_rate": 0.23371647509578544
+            },
+            "dynamic50": {
+              "ok": 12,
+              "total": 50,
+              "success_rate": 0.24
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ef135b50_distribution_classification_eval_2026-04-25_11-38-41.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ef135b50_constrained_generation_eval_2026-04-25_11-40-09.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ef135b50_editing_eval_2026-04-25_11-40-32.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ef135b50_inversion_eval_2026-04-25_11-40-43.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f15e1fac"
+      "task_id": "f15e1fac",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 458,
+      "dimension_seeds": {
+        "classification_distribution": 306134055,
+        "editing": 1887091465,
+        "inversion": 282088403
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f15e1fac_definition_eval_2026-04-25_11-41-31.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 108,
+              "total": 262,
+              "success_rate": 0.4122137404580153
+            },
+            "dynamic50": {
+              "ok": 29,
+              "total": 50,
+              "success_rate": 0.58
+            },
+            "re_arc_stable": {
+              "ok": 6,
+              "total": 1000,
+              "success_rate": 0.006
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f15e1fac_distribution_classification_eval_2026-04-25_11-42-49.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f15e1fac_constrained_generation_eval_2026-04-25_11-43-36.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f15e1fac_editing_eval_2026-04-25_11-44-22.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f15e1fac_inversion_eval_2026-04-25_11-45-11.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f1cefba8"
+      "task_id": "f1cefba8",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 459,
+      "dimension_seeds": {
+        "classification_distribution": 643283140,
+        "editing": 1719517368,
+        "inversion": 73528775
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f1cefba8_definition_eval_2026-04-25_11-45-59.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 122,
+              "total": 262,
+              "success_rate": 0.46564885496183206
+            },
+            "dynamic50": {
+              "ok": 27,
+              "total": 50,
+              "success_rate": 0.54
+            },
+            "re_arc_stable": {
+              "ok": 19,
+              "total": 1000,
+              "success_rate": 0.019
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f1cefba8_distribution_classification_eval_2026-04-25_11-47-17.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f1cefba8_constrained_generation_eval_2026-04-25_11-48-27.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f1cefba8_editing_eval_2026-04-25_11-49-11.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f1cefba8_inversion_eval_2026-04-25_11-49-41.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f25fbde4"
+      "task_id": "f25fbde4",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 460,
+      "dimension_seeds": {
+        "classification_distribution": 1280874903,
+        "editing": 2068236750,
+        "inversion": 68463761
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f25fbde4_definition_eval_2026-04-25_11-49-53.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 98,
+              "total": 1000,
+              "success_rate": 0.098
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f25fbde4_distribution_classification_eval_2026-04-25_11-51-11.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f25fbde4_constrained_generation_eval_2026-04-25_11-51-48.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f25fbde4_editing_eval_2026-04-25_11-52-10.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f25fbde4_inversion_eval_2026-04-25_11-52-26.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f25ffba3"
+      "task_id": "f25ffba3",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 461,
+      "dimension_seeds": {
+        "classification_distribution": 1344025257,
+        "editing": 286130530,
+        "inversion": 1800652142
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f25ffba3_definition_eval_2026-04-25_11-52-33.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f25ffba3_distribution_classification_eval_2026-04-25_11-53-52.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f25ffba3_constrained_generation_eval_2026-04-25_11-54-16.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f25ffba3_editing_eval_2026-04-25_11-54-27.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f25ffba3_inversion_eval_2026-04-25_11-54-37.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f2829549"
+      "task_id": "f2829549",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 462,
+      "dimension_seeds": {
+        "classification_distribution": 319381487,
+        "editing": 1660057002,
+        "inversion": 787875816
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f2829549_definition_eval_2026-04-25_11-55-25.json",
+          "metrics": {
+            "train": {
+              "ok": 5,
+              "total": 5,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 6,
+              "total": 1000,
+              "success_rate": 0.006
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f2829549_distribution_classification_eval_2026-04-25_11-56-44.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f2829549_constrained_generation_eval_2026-04-25_11-57-55.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f2829549_editing_eval_2026-04-25_11-58-26.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f2829549_inversion_eval_2026-04-25_11-59-46.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f35d900a"
+      "task_id": "f35d900a",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 463,
+      "dimension_seeds": {
+        "classification_distribution": 875640961,
+        "editing": 2024883001,
+        "inversion": 353123860
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f35d900a_definition_eval_2026-04-25_12-00-32.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 4,
+              "success_rate": 0.5
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 99,
+              "total": 261,
+              "success_rate": 0.3793103448275862
+            },
+            "dynamic50": {
+              "ok": 13,
+              "total": 50,
+              "success_rate": 0.26
+            },
+            "re_arc_stable": {
+              "ok": 47,
+              "total": 1000,
+              "success_rate": 0.047
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f35d900a_distribution_classification_eval_2026-04-25_12-01-50.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f35d900a_constrained_generation_eval_2026-04-25_12-02-39.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f35d900a_editing_eval_2026-04-25_12-03-19.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f35d900a_inversion_eval_2026-04-25_12-03-38.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f5b8619d"
+      "task_id": "f5b8619d",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 464,
+      "dimension_seeds": {
+        "classification_distribution": 1167892615,
+        "editing": 705109047,
+        "inversion": 1025629616
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f5b8619d_definition_eval_2026-04-25_12-03-56.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 126,
+              "total": 1000,
+              "success_rate": 0.126
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f5b8619d_distribution_classification_eval_2026-04-25_12-05-18.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f5b8619d_constrained_generation_eval_2026-04-25_12-06-04.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f5b8619d_editing_eval_2026-04-25_12-06-21.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f5b8619d_inversion_eval_2026-04-25_12-06-32.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f76d97a5"
+      "task_id": "f76d97a5",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 465,
+      "dimension_seeds": {
+        "classification_distribution": 823246593,
+        "editing": 951923818,
+        "inversion": 263553704
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f76d97a5_definition_eval_2026-04-25_12-06-39.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 3,
+              "success_rate": 0.6666666666666666
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 195,
+              "total": 262,
+              "success_rate": 0.7442748091603053
+            },
+            "dynamic50": {
+              "ok": 41,
+              "total": 50,
+              "success_rate": 0.82
+            },
+            "re_arc_stable": {
+              "ok": 540,
+              "total": 1000,
+              "success_rate": 0.54
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f76d97a5_distribution_classification_eval_2026-04-25_12-08-03.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f76d97a5_constrained_generation_eval_2026-04-25_12-08-19.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f76d97a5_editing_eval_2026-04-25_12-08-34.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f76d97a5_inversion_eval_2026-04-25_12-08-39.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f8a8fe49"
+      "task_id": "f8a8fe49",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 466,
+      "dimension_seeds": {
+        "classification_distribution": 226815043,
+        "editing": 527185241,
+        "inversion": 1255862428
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8a8fe49_definition_eval_2026-04-25_12-09-07.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1,
+              "total": 1000,
+              "success_rate": 0.001
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8a8fe49_distribution_classification_eval_2026-04-25_12-10-31.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8a8fe49_constrained_generation_eval_2026-04-25_12-11-49.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8a8fe49_editing_eval_2026-04-25_12-12-39.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8a8fe49_inversion_eval_2026-04-25_12-13-39.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f8b3ba0a"
+      "task_id": "f8b3ba0a",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 467,
+      "dimension_seeds": {
+        "classification_distribution": 1084374273,
+        "editing": 2057295413,
+        "inversion": 1731756822
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8b3ba0a_definition_eval_2026-04-25_12-13-56.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 139,
+              "total": 1000,
+              "success_rate": 0.139
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8b3ba0a_distribution_classification_eval_2026-04-25_12-15-16.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8b3ba0a_constrained_generation_eval_2026-04-25_12-16-08.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8b3ba0a_editing_eval_2026-04-25_12-16-35.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8b3ba0a_inversion_eval_2026-04-25_12-17-04.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f8c80d96"
+      "task_id": "f8c80d96",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 468,
+      "dimension_seeds": {
+        "classification_distribution": 880261983,
+        "editing": 1635318346,
+        "inversion": 250684330
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8c80d96_definition_eval_2026-04-25_12-18-52.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8c80d96_distribution_classification_eval_2026-04-25_12-20-25.json",
+          "metrics": {
+            "accuracy": 0.2,
+            "correct": 1,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8c80d96_constrained_generation_eval_2026-04-25_12-22-44.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8c80d96_editing_eval_2026-04-25_12-23-43.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8c80d96_inversion_eval_2026-04-25_12-25-15.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f8ff0b80"
+      "task_id": "f8ff0b80",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 469,
+      "dimension_seeds": {
+        "classification_distribution": 1140460067,
+        "editing": 1282539257,
+        "inversion": 1093407447
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8ff0b80_definition_eval_2026-04-25_12-25-23.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 22,
+              "total": 1000,
+              "success_rate": 0.022
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8ff0b80_distribution_classification_eval_2026-04-25_12-26-41.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8ff0b80_constrained_generation_eval_2026-04-25_12-27-05.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8ff0b80_editing_eval_2026-04-25_12-27-19.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f8ff0b80_inversion_eval_2026-04-25_12-27-33.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "f9012d9b"
+      "task_id": "f9012d9b",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 470,
+      "dimension_seeds": {
+        "classification_distribution": 177264759,
+        "editing": 1486412158,
+        "inversion": 781815971
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f9012d9b_definition_eval_2026-04-25_12-28-02.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f9012d9b_distribution_classification_eval_2026-04-25_12-29-23.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f9012d9b_constrained_generation_eval_2026-04-25_12-30-44.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f9012d9b_editing_eval_2026-04-25_12-31-07.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/f9012d9b_inversion_eval_2026-04-25_12-31-19.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "fafffa47"
+      "task_id": "fafffa47",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 471,
+      "dimension_seeds": {
+        "classification_distribution": 288057393,
+        "editing": 1275460293,
+        "inversion": 1988214959
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fafffa47_definition_eval_2026-04-25_12-31-30.json",
+          "metrics": {
+            "train": {
+              "ok": 5,
+              "total": 5,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 67,
+              "total": 1000,
+              "success_rate": 0.067
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fafffa47_distribution_classification_eval_2026-04-25_12-32-49.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fafffa47_constrained_generation_eval_2026-04-25_12-33-18.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fafffa47_editing_eval_2026-04-25_12-33-32.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fafffa47_inversion_eval_2026-04-25_12-33-42.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "fcb5c309"
+      "task_id": "fcb5c309",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 472,
+      "dimension_seeds": {
+        "classification_distribution": 664013571,
+        "editing": 839563961,
+        "inversion": 1951933760
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fcb5c309_definition_eval_2026-04-25_12-34-34.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 34,
+              "total": 1000,
+              "success_rate": 0.034
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fcb5c309_distribution_classification_eval_2026-04-25_12-35-54.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fcb5c309_constrained_generation_eval_2026-04-25_12-37-39.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fcb5c309_editing_eval_2026-04-25_12-38-14.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fcb5c309_inversion_eval_2026-04-25_12-38-38.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "fcc82909"
+      "task_id": "fcc82909",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 473,
+      "dimension_seeds": {
+        "classification_distribution": 1444519411,
+        "editing": 1472150767,
+        "inversion": 231194317
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fcc82909_definition_eval_2026-04-25_12-39-22.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 121,
+              "total": 1000,
+              "success_rate": 0.121
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fcc82909_distribution_classification_eval_2026-04-25_12-40-41.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fcc82909_constrained_generation_eval_2026-04-25_12-42-01.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fcc82909_editing_eval_2026-04-25_12-42-43.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/fcc82909_inversion_eval_2026-04-25_12-43-16.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "feca6190"
+      "task_id": "feca6190",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 474,
+      "dimension_seeds": {
+        "classification_distribution": 299014183,
+        "editing": 211012765,
+        "inversion": 1751186407
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/feca6190_definition_eval_2026-04-25_12-43-34.json",
+          "metrics": {
+            "train": {
+              "ok": 5,
+              "total": 5,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/feca6190_distribution_classification_eval_2026-04-25_12-44-52.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/feca6190_constrained_generation_eval_2026-04-25_12-45-34.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/feca6190_editing_eval_2026-04-25_12-45-53.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/feca6190_inversion_eval_2026-04-25_12-46-01.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "ff28f65a"
+      "task_id": "ff28f65a",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 475,
+      "dimension_seeds": {
+        "classification_distribution": 278441317,
+        "editing": 1646878,
+        "inversion": 1895919245
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ff28f65a_definition_eval_2026-04-25_12-47-00.json",
+          "metrics": {
+            "train": {
+              "ok": 8,
+              "total": 8,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 136,
+              "total": 1000,
+              "success_rate": 0.136
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ff28f65a_distribution_classification_eval_2026-04-25_12-48-18.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ff28f65a_constrained_generation_eval_2026-04-25_12-49-34.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ff28f65a_editing_eval_2026-04-25_12-50-46.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ff28f65a_inversion_eval_2026-04-25_12-51-34.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
     },
     {
-      "task_id": "ff805c23"
+      "task_id": "ff805c23",
+      "model": "gpt-5.4",
+      "provider": null,
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 476,
+      "dimension_seeds": {
+        "classification_distribution": 2138710386,
+        "editing": 1183251867,
+        "inversion": 1536579346
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ff805c23_definition_eval_2026-04-25_12-53-14.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 3,
+              "success_rate": 0.6666666666666666
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 82,
+              "total": 262,
+              "success_rate": 0.31297709923664124
+            },
+            "dynamic50": {
+              "ok": 13,
+              "total": 50,
+              "success_rate": 0.26
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ff805c23_distribution_classification_eval_2026-04-25_12-54-33.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "evaluation/constrained_generation_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ff805c23_constrained_generation_eval_2026-04-25_13-02-56.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ff805c23_editing_eval_2026-04-25_13-03-59.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/ff805c23_inversion_eval_2026-04-25_13-05-23.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
     }
   ]
 }

@@ -1,0 +1,141 @@
+{
+  "task_id": "3f7978a0",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "max_train_demos": null,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below.\n\nExample 1\nInput:\n0 0 0 0 0 0 0 0 0\n0 8 0 0 0 8 0 0 8\n0 5 0 0 0 5 0 0 0\n0 5 0 8 0 5 0 8 0\n0 5 0 0 0 5 0 0 0\n0 8 0 0 0 8 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 8 0 0 0 8 0\n0 8 0 0 0 0 0 0 0\nOutput:\n8 0 0 0 8\n5 0 0 0 5\n5 0 8 0 5\n5 0 0 0 5\n8 0 0 0 8\n\nExample 2\nInput:\n0 8 0 0 0 0 0 0 0 0 0\n0 0 8 0 0 0 8 0 0 0 8\n0 0 0 0 0 0 0 0 0 8 8\n0 0 8 0 0 0 0 0 8 0 0\n8 0 5 0 0 0 0 0 5 0 0\n0 0 5 0 0 8 8 0 5 0 0\n0 0 5 0 0 0 0 0 5 0 0\n0 0 8 0 8 0 0 0 8 0 0\n0 8 0 0 0 0 0 0 8 8 0\nOutput:\n8 0 0 0 0 0 8\n5 0 0 0 0 0 5\n5 0 0 8 8 0 5\n5 0 0 0 0 0 5\n8 0 8 0 0 0 8\n\nExample 3\nInput:\n0 0 0 0 0 0 0 0 0 8 8 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 8 0 0 0 8 0 0 0 0 0\n0 0 0 5 0 0 0 5 0 8 0 0 0\n0 0 8 5 0 8 0 5 0 0 0 0 0\n0 0 0 5 0 0 0 5 8 0 0 0 0\n0 0 8 5 0 8 0 5 0 0 0 0 0\n0 0 0 8 0 0 0 8 0 0 8 0 0\n0 0 0 0 0 0 0 0 0 0 8 0 0\n0 0 8 8 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 0 0 0 8 0 0 0 0\nOutput:\n8 0 0 0 8\n5 0 0 0 5\n5 0 8 0 5\n5 0 0 0 5\n5 0 8 0 5\n8 0 0 0 8\n\nBelow is a test input grid. Predict the corresponding output grid by applying the rule you found.\nTest Input:\n8 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 8 0 0 0 0\n8 0 0 8 0 0 0 0 0 0 0 0 0\n5 8 0 5 0 0 0 0 0 0 0 0 8\n5 0 0 5 0 0 0 0 0 0 0 0 0\n5 0 0 5 0 0 0 0 0 0 0 0 0\n5 0 0 5 0 0 8 0 0 8 0 0 0\n5 0 8 5 8 0 0 0 0 0 0 0 8\n5 0 0 5 0 8 0 0 0 0 0 0 0\n5 8 0 5 0 0 0 0 0 0 8 0 8\n5 0 0 5 0 0 0 8 0 0 0 0 0\n8 0 0 8 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 8\n\nYour final answer must be ONLY a single Python list-of-lists grid for that output:\n[[...], ...]\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "[[8, 0, 0, 8], [5, 8, 0, 5], [5, 0, 0, 5], [5, 0, 0, 5], [5, 0, 0, 5], [5, 0, 8, 5], [5, 0, 0, 5], [5, 8, 0, 5], [5, 0, 0, 5], [8, 0, 0, 8]]",
+  "ground_truth": [
+    [
+      8,
+      0,
+      0,
+      8
+    ],
+    [
+      5,
+      8,
+      0,
+      5
+    ],
+    [
+      5,
+      0,
+      0,
+      5
+    ],
+    [
+      5,
+      0,
+      0,
+      5
+    ],
+    [
+      5,
+      0,
+      0,
+      5
+    ],
+    [
+      5,
+      0,
+      8,
+      5
+    ],
+    [
+      5,
+      0,
+      0,
+      5
+    ],
+    [
+      5,
+      8,
+      0,
+      5
+    ],
+    [
+      5,
+      0,
+      0,
+      5
+    ],
+    [
+      8,
+      0,
+      0,
+      8
+    ]
+  ],
+  "evaluation_ok": true,
+  "prediction": [
+    [
+      8,
+      0,
+      0,
+      8
+    ],
+    [
+      5,
+      8,
+      0,
+      5
+    ],
+    [
+      5,
+      0,
+      0,
+      5
+    ],
+    [
+      5,
+      0,
+      0,
+      5
+    ],
+    [
+      5,
+      0,
+      0,
+      5
+    ],
+    [
+      5,
+      0,
+      8,
+      5
+    ],
+    [
+      5,
+      0,
+      0,
+      5
+    ],
+    [
+      5,
+      8,
+      0,
+      5
+    ],
+    [
+      5,
+      0,
+      0,
+      5
+    ],
+    [
+      8,
+      0,
+      0,
+      8
+    ]
+  ],
+  "exact_match": true,
+  "metrics": {
+    "exact_match": 1.0
+  }
+}
