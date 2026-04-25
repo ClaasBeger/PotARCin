@@ -6,45 +6,85 @@
     "classification": "accuracy == 1.0",
     "constrained_generation": "success_rate == 1.0",
     "editing": "success == true (or success_rate == 1.0)",
-    "inversion": "success_rate == 1.0",
-    "full_task": "all five dimension criteria must pass"
+    "inversion": "success_rate == 1.0"
   },
-  "strict_per_dimension_pass_counts": {
-    "definition": 34,
-    "classification": 45,
-    "constrained_generation": 41,
-    "editing": 40,
-    "inversion": 44
-  },
-  "strict_per_dimension_accuracy": {
-    "definition": 0.68,
-    "classification": 0.9,
-    "constrained_generation": 0.82,
-    "editing": 0.8,
-    "inversion": 0.88
-  },
-  "full_task_pass_all_5": 21,
-  "full_task_accuracy": 0.42,
-  "example_failed_task_ids": [
-    "6855a6e4",
-    "6a1e5592",
-    "6aa20dc0",
-    "6b9890af",
-    "6cf79266",
-    "6d0160f0",
-    "6d58a25d",
-    "6d75e8bb",
-    "6e02f1e3",
-    "6e19193c",
-    "6e82a1ae",
-    "6ecd11f4",
-    "72322fa7",
-    "72ca375d",
-    "73251a56",
-    "7468f01a",
-    "746b3537",
-    "760b3cac",
-    "776ffc46",
-    "7837ac64"
-  ]
+  "by_dimension": {
+    "definition": {
+      "strict_full_task_pass": 34,
+      "files_found": 50,
+      "strict_accuracy": 0.68,
+      "example_fail_task_ids": [
+        "6a1e5592",
+        "6aa20dc0",
+        "6cf79266",
+        "6d58a25d",
+        "6d75e8bb",
+        "6e19193c",
+        "6e82a1ae",
+        "72322fa7",
+        "72ca375d",
+        "760b3cac",
+        "7b7f7511",
+        "7df24a62"
+      ]
+    },
+    "classification_distribution": {
+      "strict_full_task_pass": 45,
+      "files_found": 50,
+      "strict_accuracy": 0.9,
+      "example_fail_task_ids": [
+        "6aa20dc0",
+        "72ca375d",
+        "7c008303",
+        "7df24a62",
+        "80af3007"
+      ]
+    },
+    "constrained_generation": {
+      "strict_full_task_pass": 41,
+      "files_found": 50,
+      "strict_accuracy": 0.82,
+      "example_fail_task_ids": [
+        "6855a6e4",
+        "6e82a1ae",
+        "73251a56",
+        "7468f01a",
+        "746b3537",
+        "760b3cac",
+        "7837ac64",
+        "83302e8f",
+        "834ec97d"
+      ]
+    },
+    "editing": {
+      "strict_full_task_pass": 40,
+      "files_found": 50,
+      "strict_accuracy": 0.8,
+      "example_fail_task_ids": [
+        "6aa20dc0",
+        "6b9890af",
+        "6e02f1e3",
+        "6e19193c",
+        "6ecd11f4",
+        "73251a56",
+        "776ffc46",
+        "7df24a62",
+        "7fe24cdd",
+        "83302e8f"
+      ]
+    },
+    "inversion": {
+      "strict_full_task_pass": 44,
+      "files_found": 50,
+      "strict_accuracy": 0.88,
+      "example_fail_task_ids": [
+        "6d0160f0",
+        "73251a56",
+        "7468f01a",
+        "746b3537",
+        "7df24a62",
+        "7e0986d6"
+      ]
+    }
+  }
 }

@@ -11,7 +11,8 @@
   "completed_before_count": 300,
   "last_completed_task_id_before": "be94b721",
   "merged_from_sources": [
-    "run_2026-04-24_14-23-16.json (intermediate summary; merged into this batch then removed)"
+    "run_2026-04-24_14-23-16.json (intermediate summary; merged into this batch then removed)",
+    "updated_with_run_2026-04-24_20-29-19.json_for_missing_tasks"
   ],
   "runs": [
     {
@@ -62,17 +63,17 @@
               "success_rate": 0.0
             }
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "classification_distribution": {
-          "ok": false,
-          "error": "Google SDK failed (No module named 'google'); fallback HTTP API error 503: {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"The service is currently unavailable.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
-          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/beb8660c_distribution_classification_eval_2026-04-24_14-25-13.json",
+          "ok": true,
+          "result_path": "evaluation/classification_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/beb8660c_distribution_classification_eval_2026-04-24_20-29-34.json",
           "metrics": {
-            "accuracy": 0.0,
-            "correct": 0,
+            "accuracy": 1.0,
+            "correct": 5,
             "total": 5,
-            "exact_match": 0
+            "exact_match": 1
           },
           "attempts": 1
         },
@@ -87,7 +88,8 @@
             "rejected_verifier_mismatch": 0,
             "noted_arc_gen_stable_exact_match": 0
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "editing": {
           "ok": true,
@@ -95,7 +97,8 @@
           "metrics": {
             "success": true
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "inversion": {
           "ok": true,
@@ -103,7 +106,8 @@
           "metrics": {
             "success_rate": 1.0
           },
-          "attempts": 2
+          "attempts": 0,
+          "skipped_rerun": true
         }
       }
     },
@@ -1075,7 +1079,8 @@
               "success_rate": 0.0
             }
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "classification_distribution": {
           "ok": true,
@@ -1086,7 +1091,8 @@
             "total": 5,
             "exact_match": 1
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "constrained_generation": {
           "ok": true,
@@ -1099,7 +1105,8 @@
             "rejected_verifier_mismatch": 0,
             "noted_arc_gen_stable_exact_match": 0
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "editing": {
           "ok": true,
@@ -1107,13 +1114,15 @@
           "metrics": {
             "success": true
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "inversion": {
-          "ok": false,
-          "error": "Google SDK failed (No module named 'google'); fallback HTTP failed: Remote end closed connection without response",
-          "result_path": null,
-          "metrics": null,
+          "ok": true,
+          "result_path": "evaluation/inversion_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/c9f8e694_inversion_eval_2026-04-24_20-30-04.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
           "attempts": 1
         }
       }
@@ -1902,7 +1911,8 @@
               "success_rate": 0.0
             }
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "classification_distribution": {
           "ok": true,
@@ -1913,7 +1923,8 @@
             "total": 5,
             "exact_match": 1
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "constrained_generation": {
           "ok": true,
@@ -1926,13 +1937,15 @@
             "rejected_verifier_mismatch": 0,
             "noted_arc_gen_stable_exact_match": 0
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "editing": {
-          "ok": false,
-          "error": "Google SDK failed (No module named 'google'); fallback HTTP failed: Remote end closed connection without response",
-          "result_path": null,
-          "metrics": null,
+          "ok": true,
+          "result_path": "evaluation/editing_eval_results/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/cf98881b_editing_eval_2026-04-24_20-30-29.json",
+          "metrics": {
+            "success": true
+          },
           "attempts": 1
         },
         "inversion": {
@@ -1941,7 +1954,8 @@
           "metrics": {
             "success_rate": 1.0
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         }
       }
     },
@@ -4614,5 +4628,5 @@
       }
     }
   ],
-  "visualization_source_note": "Train[300:350) from finished all-dimensions run 2026-04-24_14-23-16; HTML under Demonstrations/Evaluation_Run_2026-04-14_gemini31pro_low_batch7/"
+  "visualization_source_note": "Updated with latest completed task artifacts; HTML under Demonstrations/Evaluation_Run_2026-04-14_gemini31pro_low_batch7/"
 }

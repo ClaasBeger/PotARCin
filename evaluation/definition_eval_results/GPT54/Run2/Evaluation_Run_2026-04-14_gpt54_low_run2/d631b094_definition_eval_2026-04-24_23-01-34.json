@@ -1,0 +1,202 @@
+{
+  "task_id": "d631b094",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0\n1 0 0\n0 1 0\nOutput:\n1 1\n\nExample 2:\n\nInput:\n0 2 0\n2 0 0\n0 2 0\nOutput:\n2 2 2\n\nExample 3:\n\nInput:\n0 7 0\n0 0 0\n0 0 0\nOutput:\n7\n\nExample 4:\n\nInput:\n0 8 0\n8 8 0\n8 0 0\nOutput:\n8 8 8 8\n\nBelow is a test input grid.\n\nInput:\n4 4 0\n4 0 4\n0 0 4\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    vals = []\n    for row in grid:\n        for x in row:\n            if x != 0:\n                vals.append(x)\n    return [vals]",
+  "script": "def solve(grid):\n    vals = []\n    for row in grid:\n        for x in row:\n            if x != 0:\n                vals.append(x)\n    return [vals]",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 4,
+      "total": 4,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 261,
+      "total": 261,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 1000,
+      "total": 1000,
+      "success_rate": 1.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          4,
+          4,
+          0,
+          0,
+          4,
+          0
+        ],
+        [
+          4,
+          0,
+          4,
+          0,
+          4,
+          4,
+          0,
+          4,
+          0
+        ],
+        [
+          4,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0
+        ],
+        [
+          4,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          4,
+          0,
+          4,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          4,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      ],
+      "got": [
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      ]
+    }
+  },
+  "evaluation_ok": true
+}

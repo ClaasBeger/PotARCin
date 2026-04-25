@@ -11,7 +11,8 @@
   "completed_before_count": 250,
   "last_completed_task_id_before": "a48eeaf7",
   "merged_from_sources": [
-    "run_2026-04-24_14-24-18.json (intermediate summary; merged into this batch then removed)"
+    "run_2026-04-24_14-24-18.json (intermediate summary; merged into this batch then removed)",
+    "updated_aba27056_from_run_2026-04-24_20-30-11.json"
   ],
   "runs": [
     {
@@ -1592,11 +1593,41 @@
       },
       "dimensions": {
         "definition": {
-          "ok": false,
-          "error": "Remote end closed connection without response",
-          "result_path": null,
-          "metrics": null,
-          "attempts": 2
+          "ok": true,
+          "result_path": "evaluation/definition_eval_results/GPT54/Run2/Evaluation_Run_2026-04-14_gpt54_low_run2/aba27056_definition_eval_2026-04-24_20-32-16.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 15,
+              "total": 1000,
+              "success_rate": 0.015
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
         },
         "classification_distribution": {
           "ok": true,
@@ -1607,7 +1638,8 @@
             "total": 5,
             "exact_match": 1
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "constrained_generation": {
           "ok": true,
@@ -1620,7 +1652,8 @@
             "rejected_verifier_mismatch": 0,
             "noted_arc_gen_stable_exact_match": 0
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "editing": {
           "ok": true,
@@ -1628,7 +1661,8 @@
           "metrics": {
             "success": false
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         },
         "inversion": {
           "ok": true,
@@ -1636,7 +1670,8 @@
           "metrics": {
             "success_rate": 1.0
           },
-          "attempts": 1
+          "attempts": 0,
+          "skipped_rerun": true
         }
       }
     },

@@ -1,0 +1,91 @@
+{
+  "task_count": 50,
+  "source_run_json": "evaluation/multi_dimension_eval_runs/Gemini31Pro/Run1/Evaluation_Run_2026-04-14_gemini31pro_low/run_batch8_unified_50.json",
+  "criteria": {
+    "definition": "train/test/stable/dynamic50 success_rate == 1.0",
+    "classification": "accuracy == 1.0",
+    "constrained_generation": "success_rate == 1.0",
+    "editing": "success == true (or success_rate == 1.0)",
+    "inversion": "success_rate == 1.0"
+  },
+  "by_dimension": {
+    "definition": {
+      "strict_full_task_pass": 38,
+      "files_found": 50,
+      "strict_accuracy": 0.76,
+      "example_fail_task_ids": [
+        "de1cd16c",
+        "e5062a87",
+        "e509e548",
+        "e6721834",
+        "e73095fd",
+        "e8dc4411",
+        "ea32f347",
+        "ecdecbb3",
+        "ef135b50",
+        "f15e1fac",
+        "f1cefba8",
+        "f8c80d96"
+      ]
+    },
+    "classification_distribution": {
+      "strict_full_task_pass": 41,
+      "files_found": 50,
+      "strict_accuracy": 0.82,
+      "example_fail_task_ids": [
+        "e40b9e2f",
+        "e5062a87",
+        "e509e548",
+        "e50d258f",
+        "e73095fd",
+        "e8dc4411",
+        "f8c80d96",
+        "fcb5c309",
+        "ff805c23"
+      ]
+    },
+    "constrained_generation": {
+      "strict_full_task_pass": 43,
+      "files_found": 50,
+      "strict_accuracy": 0.86,
+      "example_fail_task_ids": [
+        "dc0a314f",
+        "e5062a87",
+        "e509e548",
+        "e6721834",
+        "ef135b50",
+        "f1cefba8",
+        "f8c80d96"
+      ]
+    },
+    "editing": {
+      "strict_full_task_pass": 41,
+      "files_found": 50,
+      "strict_accuracy": 0.82,
+      "example_fail_task_ids": [
+        "e40b9e2f",
+        "e509e548",
+        "e73095fd",
+        "e8593010",
+        "e8dc4411",
+        "ecdecbb3",
+        "f1cefba8",
+        "f8c80d96",
+        "fcb5c309"
+      ]
+    },
+    "inversion": {
+      "strict_full_task_pass": 44,
+      "files_found": 50,
+      "strict_accuracy": 0.88,
+      "example_fail_task_ids": [
+        "dc0a314f",
+        "e26a3af2",
+        "e40b9e2f",
+        "eb5a1d5d",
+        "f15e1fac",
+        "ff805c23"
+      ]
+    }
+  }
+}

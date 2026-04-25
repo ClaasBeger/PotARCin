@@ -6,7 +6,7 @@
 
 | Dimension | OK tasks | Failed tasks | OK rate | Mean primary metric |
 |---|---:|---:|---:|---:|
-| definition | 49 | 1 | 98.00% | n/a |
+| definition | 50 | 0 | 100.00% | n/a |
 | classification_distribution | 50 | 0 | 100.00% | 0.9640 |
 | constrained_generation | 50 | 0 | 100.00% | 0.7400 |
 | editing | 50 | 0 | 100.00% | n/a |
