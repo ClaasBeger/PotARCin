@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import datetime as dt
 import json
 import random
@@ -69,6 +70,7 @@ def run_all_dimensions_for_task(
     retry_backoff_s: float = 1.5,
     out_dirs: dict[str, Path] | None = None,
     skip_completed_dimensions: bool | None = None,
+    parallel_dimensions: int = 1,
 ) -> dict[str, Any]:
     """Run all five dimension evaluations for one task id.
 
@@ -111,7 +113,7 @@ def run_all_dimensions_for_task(
 
     task = load_task(task_id)
 
-    def _run(name: str, fn: Callable[[], dict[str, Any]]) -> None:
+    def _run(name: str, fn: Callable[[], dict[str, Any]]) -> dict[str, Any]:
         attempts = max(1, int(dimension_retries) + 1)
         last_err = ""
         last_result_path: str | None = None
@@ -125,27 +127,25 @@ def run_all_dimensions_for_task(
                     last_err = str(res.get("error") or "evaluation_ok is false")
                     last_result_path = res.get("result_path") if isinstance(res.get("result_path"), str) else None
                     last_metrics = res.get("metrics")
-                    report["dimensions"][name] = {
+                    return {
                         "ok": False,
                         "error": last_err,
                         "result_path": last_result_path,
                         "metrics": last_metrics,
                         "attempts": attempt,
                     }
-                    return
-                report["dimensions"][name] = {
+                return {
                     "ok": True,
                     "result_path": res.get("result_path"),
                     "metrics": res.get("metrics"),
                     "attempts": attempt,
                 }
-                return
             except Exception as e:
                 last_err = str(e)
                 if attempt >= attempts or not _is_transient_error(last_err):
                     break
                 time.sleep(max(0.0, retry_backoff_s) * attempt)
-        report["dimensions"][name] = {
+        return {
             "ok": False,
             "error": last_err,
             "result_path": last_result_path,
@@ -158,7 +158,7 @@ def run_all_dimensions_for_task(
         out_dir_key: str,
         file_suffix: str,
         fn: Callable[[], dict[str, Any]],
-    ) -> None:
+    ) -> tuple[str, dict[str, Any]]:
         if skip_completed_dimensions and out_dirs:
             latest_path, payload = _read_latest_dimension_json(
                 out_dirs[out_dir_key], task_id, file_suffix
@@ -166,90 +166,104 @@ def run_all_dimensions_for_task(
             if latest_path is not None and (
                 payload is None or _payload_indicates_dimension_complete(payload)
             ):
-                report["dimensions"][dim_name] = _report_from_saved_dimension(
-                    payload, latest_path
-                )
-                return
-        _run(dim_name, fn)
+                return dim_name, _report_from_saved_dimension(payload, latest_path)
+        return dim_name, _run(dim_name, fn)
 
-    _maybe_rerun_dimension(
-        "definition",
-        "definition",
-        "definition_eval",
-        lambda: run_definition_api_evaluation(
-            task=task,
-            test_idx=definition_test_idx,
-            model=model,
-            provider=provider,
-            api_endpoint="responses",
-            reasoning_effort=reasoning_effort,
-            tools_enabled=tools_enabled,
-            out_dir=out_dirs["definition"] if out_dirs else "evaluation/definition_eval_results",
-        ),
-    )
-    _maybe_rerun_dimension(
-        "classification_distribution",
-        "classification_distribution",
-        "distribution_classification_eval",
-        lambda: run_distribution_classification_api_evaluation_once(
-            task_id=task_id,
-            model=model,
-            provider=provider,
-            reasoning_effort=reasoning_effort,
-            tools_enabled=tools_enabled,
-            seed=dim_seeds["classification_distribution"],
-            out_dir=(
-                out_dirs["classification_distribution"]
-                if out_dirs
-                else "evaluation/classification_eval_results"
+    jobs: list[tuple[str, str, str, Callable[[], dict[str, Any]]]] = [
+        (
+            "definition",
+            "definition",
+            "definition_eval",
+            lambda: run_definition_api_evaluation(
+                task=task,
+                test_idx=definition_test_idx,
+                model=model,
+                provider=provider,
+                api_endpoint="responses",
+                reasoning_effort=reasoning_effort,
+                tools_enabled=tools_enabled,
+                out_dir=out_dirs["definition"] if out_dirs else "evaluation/definition_eval_results",
             ),
         ),
-    )
-    _maybe_rerun_dimension(
-        "constrained_generation",
-        "constrained_generation",
-        "constrained_generation_eval",
-        lambda: run_constrained_generation_api_evaluation_once(
-            task_id=task_id,
-            model=model,
-            provider=provider,
-            reasoning_effort=reasoning_effort,
-            tools_enabled=tools_enabled,
-            out_dir=(
-                out_dirs["constrained_generation"]
-                if out_dirs
-                else "evaluation/constrained_generation_eval_results"
+        (
+            "classification_distribution",
+            "classification_distribution",
+            "distribution_classification_eval",
+            lambda: run_distribution_classification_api_evaluation_once(
+                task_id=task_id,
+                model=model,
+                provider=provider,
+                reasoning_effort=reasoning_effort,
+                tools_enabled=tools_enabled,
+                seed=dim_seeds["classification_distribution"],
+                out_dir=(
+                    out_dirs["classification_distribution"]
+                    if out_dirs
+                    else "evaluation/classification_eval_results"
+                ),
             ),
         ),
-    )
-    _maybe_rerun_dimension(
-        "editing",
-        "editing",
-        "editing_eval",
-        lambda: run_editing_api_evaluation_once(
-            task=task,
-            model=model,
-            provider=provider,
-            reasoning_effort=reasoning_effort,
-            tools_enabled=tools_enabled,
-            seed=dim_seeds["editing"],
-            out_dir=out_dirs["editing"] if out_dirs else "evaluation/editing_eval_results",
+        (
+            "constrained_generation",
+            "constrained_generation",
+            "constrained_generation_eval",
+            lambda: run_constrained_generation_api_evaluation_once(
+                task_id=task_id,
+                model=model,
+                provider=provider,
+                reasoning_effort=reasoning_effort,
+                tools_enabled=tools_enabled,
+                out_dir=(
+                    out_dirs["constrained_generation"]
+                    if out_dirs
+                    else "evaluation/constrained_generation_eval_results"
+                ),
+            ),
         ),
-    )
-    _maybe_rerun_dimension(
-        "inversion",
-        "inversion",
-        "inversion_eval",
-        lambda: run_inversion_api_evaluation_once(
-            task_id=task_id,
-            model=model,
-            provider=provider,
-            reasoning_effort=reasoning_effort,
-            tools_enabled=tools_enabled,
-            seed=dim_seeds["inversion"],
-            out_dir=out_dirs["inversion"] if out_dirs else "evaluation/inversion_eval_results",
+        (
+            "editing",
+            "editing",
+            "editing_eval",
+            lambda: run_editing_api_evaluation_once(
+                task=task,
+                model=model,
+                provider=provider,
+                reasoning_effort=reasoning_effort,
+                tools_enabled=tools_enabled,
+                seed=dim_seeds["editing"],
+                out_dir=out_dirs["editing"] if out_dirs else "evaluation/editing_eval_results",
+            ),
         ),
-    )
+        (
+            "inversion",
+            "inversion",
+            "inversion_eval",
+            lambda: run_inversion_api_evaluation_once(
+                task_id=task_id,
+                model=model,
+                provider=provider,
+                reasoning_effort=reasoning_effort,
+                tools_enabled=tools_enabled,
+                seed=dim_seeds["inversion"],
+                out_dir=out_dirs["inversion"] if out_dirs else "evaluation/inversion_eval_results",
+            ),
+        ),
+    ]
+
+    workers = max(1, int(parallel_dimensions))
+    if workers == 1:
+        for dim_name, out_key, suffix, fn in jobs:
+            k, v = _maybe_rerun_dimension(dim_name, out_key, suffix, fn)
+            report["dimensions"][k] = v
+    else:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=min(workers, len(jobs))) as pool:
+            futures = [
+                pool.submit(_maybe_rerun_dimension, dim_name, out_key, suffix, fn)
+                for dim_name, out_key, suffix, fn in jobs
+            ]
+            for fut in concurrent.futures.as_completed(futures):
+                k, v = fut.result()
+                report["dimensions"][k] = v
     return report
 
 
@@ -491,6 +505,15 @@ def main() -> None:
         help="Base linear backoff in seconds between retries (default: 1.5)",
     )
     p.add_argument(
+        "--parallel-dimensions",
+        type=int,
+        default=1,
+        help=(
+            "Run dimensions concurrently per task (default: 1 = sequential). "
+            "Values like 2-3 can substantially reduce wall time for slow providers."
+        ),
+    )
+    p.add_argument(
         "--summary-out",
         default=None,
         help="Optional output path for run summary JSON. Default: evaluation/multi_dimension_eval_runs/<timestamp>.json",
@@ -567,6 +590,7 @@ def main() -> None:
             definition_test_idx=args.definition_test_idx,
             dimension_retries=args.dimension_retries,
             retry_backoff_s=args.retry_backoff_s,
+            parallel_dimensions=args.parallel_dimensions,
             out_dirs=out_dirs or None,
             skip_completed_dimensions=skip_completed,
         )
@@ -630,6 +654,7 @@ def main() -> None:
             definition_test_idx=args.definition_test_idx,
             dimension_retries=args.dimension_retries,
             retry_backoff_s=args.retry_backoff_s,
+            parallel_dimensions=args.parallel_dimensions,
             out_dirs=out_dirs or None,
             skip_completed_dimensions=skip_completed,
         )

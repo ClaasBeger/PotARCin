@@ -82,6 +82,19 @@ def _together_kimi_reasoning_param(*, model: str) -> dict[str, bool]:
     return {"enabled": _env_bool("POTARCIN_KIMI_REASONING_ENABLED", True)}
 
 
+def _together_kimi_reasoning_and_temperature(
+    *, model: str, reasoning_effort: Optional[str]
+) -> tuple[dict[str, bool], float]:
+    """
+    Kimi-only override:
+    - reasoning_effort=none => disable thinking and use lower temperature for non-thinking mode.
+    """
+    if _is_kimi_together_model(model) and isinstance(reasoning_effort, str):
+        if reasoning_effort.strip().lower() == "none":
+            return {"enabled": False}, 0.6
+    return _together_kimi_reasoning_param(model=model), 1.0
+
+
 def _together_transient_error(exc: BaseException) -> bool:
     if isinstance(
         exc,
@@ -114,23 +127,28 @@ def _together_transient_error(exc: BaseException) -> bool:
     return False
 
 
-def _together_retry_count() -> int:
+def _together_retry_count(*, model: str) -> int:
+    # Keep retries conservative for Kimi to avoid nested retry explosions:
+    # per-dimension retries already exist at a higher layer.
+    default_retries = "1" if _is_kimi_together_model(model) else "2"
     try:
-        n = int(os.environ.get("POTARCIN_TOGETHER_MAX_RETRIES", "4").strip())
+        n = int(os.environ.get("POTARCIN_TOGETHER_MAX_RETRIES", default_retries).strip())
     except Exception:
-        n = 4
+        n = int(default_retries)
     return min(max(1, n), 8)
 
 
-def _together_sdk_wall_timeout_s(*, timeout_s: int) -> int:
+def _together_sdk_wall_timeout_s(*, timeout_s: int, model: str) -> int:
     try:
         extra = int(os.environ.get("POTARCIN_TOGETHER_SDK_TIMEOUT_S", "0").strip() or 0)
     except Exception:
         extra = 0
     if extra > 0:
         return extra
-    # Long generations + reasoning: avoid hung SDK calls without a ceiling.
-    return max(timeout_s, 900)
+    # Together/Kimi should closely track configured request timeout to avoid
+    # silently stretching single calls into 15-minute waits.
+    buffer_s = 45 if _is_kimi_together_model(model) else 30
+    return max(60, timeout_s + buffer_s)
 
 
 def _dump_full_response_debug(*, provider: str, model: str, payload: Any) -> str:
@@ -255,13 +273,15 @@ def request_text_completion(
         if to > 0:
             timeout_s = to
         elif _is_kimi_together_model(model):
-            # Default dimension timeout is 180s; Kimi requests often need more time.
-            timeout_s = max(timeout_s, 600)
+            # Slightly more permissive default for Kimi while staying practical.
+            # Explicit env override (POTARCIN_TOGETHER_TIMEOUT_S) still wins.
+            timeout_s = max(timeout_s, 420)
         text = _together_chat_completions_completion(
             prompt=prompt,
             model=model,
             api_key=effective_key,
             base_url=effective_base,
+            reasoning_effort=reasoning_effort,
             timeout_s=timeout_s,
         )
     else:
@@ -515,12 +535,15 @@ def _together_chat_completions_completion(
     model: str,
     api_key: str,
     base_url: str,
+    reasoning_effort: Optional[str] = None,
     timeout_s: int = 180,
 ) -> str:
     max_tokens = _together_effective_max_tokens(model=model)
-    reasoning_cfg = _together_kimi_reasoning_param(model=model)
+    reasoning_cfg, temperature = _together_kimi_reasoning_and_temperature(
+        model=model, reasoning_effort=reasoning_effort
+    )
     last_err: Exception | None = None
-    n_attempts = _together_retry_count()
+    n_attempts = _together_retry_count(model=model)
     for attempt in range(1, n_attempts + 1):
         try:
             return _together_chat_completions_completion_once(
@@ -531,6 +554,7 @@ def _together_chat_completions_completion(
                 timeout_s=timeout_s,
                 max_tokens=max_tokens,
                 reasoning_cfg=reasoning_cfg,
+                temperature=temperature,
             )
         except Exception as e:
             last_err = e
@@ -552,9 +576,10 @@ def _together_chat_completions_completion_once(
     timeout_s: int = 180,
     max_tokens: int,
     reasoning_cfg: dict[str, bool],
+    temperature: float,
 ) -> str:
     sdk_error: Exception | None = None
-    sdk_wall_s = _together_sdk_wall_timeout_s(timeout_s=timeout_s)
+    sdk_wall_s = _together_sdk_wall_timeout_s(timeout_s=timeout_s, model=model)
 
     def _extract_text_from_content(content: Any) -> str:
         if isinstance(content, str) and content.strip():
@@ -630,7 +655,7 @@ def _together_chat_completions_completion_once(
                 model=model,
                 messages=[{"role": "user", "content": prompt}],
                 reasoning=reasoning_cfg,
-                temperature=1.0,
+                temperature=temperature,
                 top_p=0.95,
                 max_tokens=max_tokens,
             )
@@ -688,7 +713,7 @@ def _together_chat_completions_completion_once(
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
         "reasoning": reasoning_cfg,
-        "temperature": 1.0,
+        "temperature": temperature,
         "top_p": 0.95,
         "max_tokens": max_tokens,
     }

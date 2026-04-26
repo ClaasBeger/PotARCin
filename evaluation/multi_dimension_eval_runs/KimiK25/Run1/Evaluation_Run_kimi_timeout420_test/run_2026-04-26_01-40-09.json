@@ -1,0 +1,171 @@
+{
+  "mode": "batch_pending",
+  "created_at": "2026-04-26_01-40-09",
+  "task_count": 2,
+  "run_tag": "Evaluation_Run_kimi_timeout420_test",
+  "seed_mode": "fixed",
+  "base_seed": 77,
+  "batch_size": 2,
+  "completed_before_count": 2,
+  "last_completed_task_id_before": "00d62c1b",
+  "runs": [
+    {
+      "task_id": "017c7c7b",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 79,
+      "dimension_seeds": {
+        "classification_distribution": 624214061,
+        "editing": 1879062157,
+        "inversion": 1501139409
+      },
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/017c7c7b_definition_eval_2026-04-26_01-26-19.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 261,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/017c7c7b_constrained_generation_eval_2026-04-26_01-30-02.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/017c7c7b_editing_eval_2026-04-26_01-30-01.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/017c7c7b_inversion_eval_2026-04-26_01-46-39.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/017c7c7b_distribution_classification_eval_2026-04-26_01-40-22.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "025d127b",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 80,
+      "dimension_seeds": {
+        "classification_distribution": 1166045467,
+        "editing": 1691961909,
+        "inversion": 1807297945
+      },
+      "dimensions": {
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/025d127b_constrained_generation_eval_2026-04-26_01-56-40.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "The read operation timed out",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/025d127b_distribution_classification_eval_2026-04-26_01-47-34.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "definition": {
+          "ok": false,
+          "error": "Remote end closed connection without response",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 2
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/025d127b_inversion_eval_2026-04-26_02-07-06.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/025d127b_editing_eval_2026-04-26_02-14-11.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 2
+        }
+      }
+    }
+  ]
+}
