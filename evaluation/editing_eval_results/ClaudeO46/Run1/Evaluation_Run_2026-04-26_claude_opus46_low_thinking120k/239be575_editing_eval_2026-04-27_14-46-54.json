@@ -1,0 +1,248 @@
+{
+  "task_id": "239be575",
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 24639197,
+  "include_true": false,
+  "corruption_source": "h_arc_incorrect",
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n0 0 8 0 8\n2 2 8 0 0\n2 2 0 0 8\n0 0 0 2 2\n8 8 0 2 2\nOutput:\n0\n\nExample 2:\nInput:\n0 8 0 0 0 0 0\n2 2 0 8 8 8 0\n2 2 8 8 0 2 2\n0 0 8 0 0 2 2\n0 8 0 0 8 0 0\nOutput:\n8\n\nExample 3:\nInput:\n8 2 2 8 8 0 0\n0 2 2 0 0 0 8\n0 8 8 0 0 8 0\n0 0 8 0 0 0 8\n8 0 8 8 8 2 2\n8 0 0 0 0 2 2\nOutput:\n8\n\nExample 4:\nInput:\n8 8 0 0 2 2 0\n0 8 8 0 2 2 8\n0 0 0 8 0 8 0\n8 0 0 0 0 0 0\n0 2 2 0 8 0 8\n0 2 2 8 8 0 8\nOutput:\n0\n\nExample 5:\nInput:\n8 0 0 0 0 8 0\n0 0 2 2 0 8 0\n8 0 2 2 0 0 0\n0 0 8 0 0 8 0\n0 0 8 2 2 0 8\n8 0 0 2 2 8 0\nOutput:\n8\n\nExample 6:\nInput:\n8 0 0 2 2 8\n8 0 8 2 2 0\n0 0 0 0 8 0\n2 2 8 0 8 0\n2 2 0 0 0 8\n0 8 8 0 8 0\nOutput:\n0\n\nThe following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.\n\nCandidate pair:\nInput:\n0 8 0 0 0 0\n0 0 0 8 2 2\n0 8 8 8 2 2\n0 8 0 0 0 8\n0 0 0 8 0 0\n8 2 2 0 0 8\n0 2 2 0 0 0\n0 8 0 8 8 0\nOutput:\n0 0\n0 0\n\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "Looking at the examples, each grid has exactly two 2\u00d72 blocks of `2`s. The output is a single value: **`8`** if the two blocks are connected by a path of `8`s (using 4-directional adjacency), **`0`** otherwise.\n\n**Candidate analysis:**\n- Block 1: rows 1\u20132, cols 4\u20135\n- Block 2: rows 5\u20136, cols 1\u20132\n- Tracing 8-adjacency: The 8s near Block 1 (at (1,3),(2,1),(2,2),(2,3)) cluster in the upper region and connect to (3,1), but no continuous 8-path reaches Block 2's neighbors ((5,0),(7,1)).\n- **No connected 8-path \u2192 output is `0`.**\n\nThe corruption was the output being a 2\u00d72 grid instead of a single cell.\n\n```json\n{\"input\": [[0,8,0,0,0,0],[0,0,0,8,2,2],[0,8,8,8,2,2],[0,8,0,0,0,8],[0,0,0,8,0,0],[8,2,2,0,0,8],[0,2,2,0,0,0],[0,8,0,8,8,0]], \"output\": [[0]]}\n```",
+  "corrupted_pair": {
+    "input": [
+      [
+        0,
+        8,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        8,
+        2,
+        2
+      ],
+      [
+        0,
+        8,
+        8,
+        8,
+        2,
+        2
+      ],
+      [
+        0,
+        8,
+        0,
+        0,
+        0,
+        8
+      ],
+      [
+        0,
+        0,
+        0,
+        8,
+        0,
+        0
+      ],
+      [
+        8,
+        2,
+        2,
+        0,
+        0,
+        8
+      ],
+      [
+        0,
+        2,
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        8,
+        0,
+        8,
+        8,
+        0
+      ]
+    ],
+    "output": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ]
+  },
+  "target_pair": {
+    "input": [
+      [
+        0,
+        8,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        8,
+        2,
+        2
+      ],
+      [
+        0,
+        8,
+        8,
+        8,
+        2,
+        2
+      ],
+      [
+        0,
+        8,
+        0,
+        0,
+        0,
+        8
+      ],
+      [
+        0,
+        0,
+        0,
+        8,
+        0,
+        0
+      ],
+      [
+        8,
+        2,
+        2,
+        0,
+        0,
+        8
+      ],
+      [
+        0,
+        2,
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        8,
+        0,
+        8,
+        8,
+        0
+      ]
+    ],
+    "output": [
+      [
+        0
+      ]
+    ]
+  },
+  "evaluation_ok": true,
+  "prediction_pair": {
+    "input": [
+      [
+        0,
+        8,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        8,
+        2,
+        2
+      ],
+      [
+        0,
+        8,
+        8,
+        8,
+        2,
+        2
+      ],
+      [
+        0,
+        8,
+        0,
+        0,
+        0,
+        8
+      ],
+      [
+        0,
+        0,
+        0,
+        8,
+        0,
+        0
+      ],
+      [
+        8,
+        2,
+        2,
+        0,
+        0,
+        8
+      ],
+      [
+        0,
+        2,
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        8,
+        0,
+        8,
+        8,
+        0
+      ]
+    ],
+    "output": [
+      [
+        0
+      ]
+    ]
+  },
+  "guardrail": {
+    "enabled": true,
+    "max_norm_edit": 0.7,
+    "normalized_distance_input": 0.0,
+    "normalized_distance_output": 0.75,
+    "passed": true
+  },
+  "metrics": {
+    "success": true
+  }
+}
