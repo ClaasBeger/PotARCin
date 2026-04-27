@@ -724,8 +724,6 @@ def _together_chat_completions_completion_once(
                 return txt3
     except Exception as e:
         sdk_error = e
-        # Fall through to HTTP fallback for environments without together SDK.
-        pass
 
     http_read_s = max(timeout_s, 120)
     url = base_url.rstrip("/") + "/chat/completions"
