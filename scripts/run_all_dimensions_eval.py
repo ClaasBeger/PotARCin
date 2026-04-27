@@ -71,6 +71,7 @@ def run_all_dimensions_for_task(
     out_dirs: dict[str, Path] | None = None,
     skip_completed_dimensions: bool | None = None,
     parallel_dimensions: int = 1,
+    classification_serial: bool = False,
 ) -> dict[str, Any]:
     """Run all five dimension evaluations for one task id.
 
@@ -127,6 +128,11 @@ def run_all_dimensions_for_task(
                     last_err = str(res.get("error") or "evaluation_ok is false")
                     last_result_path = res.get("result_path") if isinstance(res.get("result_path"), str) else None
                     last_metrics = res.get("metrics")
+                    # Retry transient API failures even when dimensions report them as
+                    # evaluation_ok=false payloads (not raised exceptions).
+                    if attempt < attempts and _is_transient_error(last_err):
+                        time.sleep(max(0.0, retry_backoff_s) * attempt)
+                        continue
                     return {
                         "ok": False,
                         "error": last_err,
@@ -251,19 +257,50 @@ def run_all_dimensions_for_task(
     ]
 
     workers = max(1, int(parallel_dimensions))
-    if workers == 1:
-        for dim_name, out_key, suffix, fn in jobs:
-            k, v = _maybe_rerun_dimension(dim_name, out_key, suffix, fn)
-            report["dimensions"][k] = v
-    else:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=min(workers, len(jobs))) as pool:
+
+    def _run_job_batch(
+        batch_jobs: list[tuple[str, str, str, Callable[[], dict[str, Any]]]],
+        *,
+        batch_workers: int,
+    ) -> None:
+        if not batch_jobs:
+            return
+        if batch_workers <= 1 or len(batch_jobs) == 1:
+            for dim_name, out_key, suffix, fn in batch_jobs:
+                k, v = _maybe_rerun_dimension(dim_name, out_key, suffix, fn)
+                report["dimensions"][k] = v
+            return
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=min(batch_workers, len(batch_jobs))
+        ) as pool:
             futures = [
                 pool.submit(_maybe_rerun_dimension, dim_name, out_key, suffix, fn)
-                for dim_name, out_key, suffix, fn in jobs
+                for dim_name, out_key, suffix, fn in batch_jobs
             ]
             for fut in concurrent.futures.as_completed(futures):
                 k, v = fut.result()
                 report["dimensions"][k] = v
+
+    if classification_serial:
+        jobs_by_name = {j[0]: j for j in jobs}
+        # User-selected schedule:
+        #   1) definition + editing in parallel
+        #   2) constrained_generation + inversion in parallel
+        #   3) classification_distribution alone
+        _run_job_batch(
+            [jobs_by_name["definition"], jobs_by_name["editing"]],
+            batch_workers=workers,
+        )
+        _run_job_batch(
+            [jobs_by_name["constrained_generation"], jobs_by_name["inversion"]],
+            batch_workers=workers,
+        )
+        _run_job_batch(
+            [jobs_by_name["classification_distribution"]],
+            batch_workers=1,
+        )
+    else:
+        _run_job_batch(jobs, batch_workers=workers)
     return report
 
 
@@ -514,6 +551,23 @@ def main() -> None:
         ),
     )
     p.add_argument(
+        "--classification-serial",
+        action="store_true",
+        help=(
+            "Run classification_distribution alone while allowing other dimensions "
+            "to run in parallel batches (definition+editing, constrained+inversion)."
+        ),
+    )
+    p.add_argument(
+        "--parallel-tasks",
+        type=int,
+        default=1,
+        help=(
+            "Run pending tasks concurrently in batch mode (default: 1 = sequential). "
+            "Use small values first to avoid provider rate-limit spikes."
+        ),
+    )
+    p.add_argument(
         "--summary-out",
         default=None,
         help="Optional output path for run summary JSON. Default: evaluation/multi_dimension_eval_runs/<timestamp>.json",
@@ -591,6 +645,7 @@ def main() -> None:
             dimension_retries=args.dimension_retries,
             retry_backoff_s=args.retry_backoff_s,
             parallel_dimensions=args.parallel_dimensions,
+            classification_serial=args.classification_serial,
             out_dirs=out_dirs or None,
             skip_completed_dimensions=skip_completed,
         )
@@ -640,12 +695,10 @@ def main() -> None:
         print(f"Using base seed: {base_seed} (mode={seed_mode})")
     else:
         print("Using non-reproducible random seeds (mode=none)")
-    for i, task_id in enumerate(task_ids):
-        run_seed = (base_seed + task_index[task_id]) if base_seed is not None else None
-        seed_txt = "random" if run_seed is None else str(run_seed)
-        print(f"[{i+1}/{len(task_ids)}] {task_id} (seed={seed_txt})")
+    def _run_one(index: int, tid: str) -> tuple[int, str, int | None, dict[str, Any]]:
+        run_seed = (base_seed + task_index[tid]) if base_seed is not None else None
         run = run_all_dimensions_for_task(
-            task_id=task_id,
+            task_id=tid,
             model=args.model,
             provider=args.provider,
             reasoning_effort=args.reasoning_effort,
@@ -655,14 +708,65 @@ def main() -> None:
             dimension_retries=args.dimension_retries,
             retry_backoff_s=args.retry_backoff_s,
             parallel_dimensions=args.parallel_dimensions,
+            classification_serial=args.classification_serial,
             out_dirs=out_dirs or None,
             skip_completed_dimensions=skip_completed,
         )
-        runs.append(run)
-        ok_dims = sum(1 for d in run["dimensions"].values() if d.get("ok"))
-        skipped = sum(1 for d in run["dimensions"].values() if d.get("skipped_rerun"))
-        ran = 5 - skipped
-        print(f"  -> ok {ok_dims}/5 dimensions ({ran} re-run, {skipped} reused from disk)")
+        return index, tid, run_seed, run
+
+    task_workers = max(1, int(args.parallel_tasks))
+    if task_workers == 1:
+        for i, task_id in enumerate(task_ids):
+            run_seed = (base_seed + task_index[task_id]) if base_seed is not None else None
+            seed_txt = "random" if run_seed is None else str(run_seed)
+            print(f"[{i+1}/{len(task_ids)}] {task_id} (seed={seed_txt})")
+            _, _, _, run = _run_one(i, task_id)
+            runs.append(run)
+            ok_dims = sum(1 for d in run["dimensions"].values() if d.get("ok"))
+            skipped = sum(1 for d in run["dimensions"].values() if d.get("skipped_rerun"))
+            ran = 5 - skipped
+            print(f"  -> ok {ok_dims}/5 dimensions ({ran} re-run, {skipped} reused from disk)")
+    else:
+        print(
+            f"Running up to {min(task_workers, len(task_ids))} tasks in parallel "
+            f"(parallel-tasks={task_workers})"
+        )
+        indexed_runs: dict[int, tuple[str, int | None, dict[str, Any]]] = {}
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=min(task_workers, len(task_ids))
+        ) as pool:
+            futures = {
+                pool.submit(_run_one, i, task_id): (i, task_id)
+                for i, task_id in enumerate(task_ids)
+            }
+            for fut in concurrent.futures.as_completed(futures):
+                i, task_id = futures[fut]
+                try:
+                    idx, tid, run_seed, run = fut.result()
+                except Exception as e:
+                    run_seed = (base_seed + task_index[task_id]) if base_seed is not None else None
+                    run = {
+                        "task_id": task_id,
+                        "model": args.model,
+                        "provider": args.provider,
+                        "reasoning_effort": args.reasoning_effort,
+                        "tools_enabled": bool(args.tools_enabled),
+                        "seed": run_seed,
+                        "dimensions": {
+                            dim: {"ok": False, "error": str(e), "attempts": 0}
+                            for dim in _DIMENSION_ORDER
+                        },
+                    }
+                    idx, tid = i, task_id
+                indexed_runs[idx] = (tid, run_seed, run)
+                seed_txt = "random" if run_seed is None else str(run_seed)
+                ok_dims = sum(1 for d in run["dimensions"].values() if d.get("ok"))
+                skipped = sum(1 for d in run["dimensions"].values() if d.get("skipped_rerun"))
+                ran = 5 - skipped
+                print(f"[{idx+1}/{len(task_ids)}] {tid} (seed={seed_txt})")
+                print(f"  -> ok {ok_dims}/5 dimensions ({ran} re-run, {skipped} reused from disk)")
+        for i in range(len(task_ids)):
+            runs.append(indexed_runs[i][2])
 
     payload = {
         "mode": "batch_pending",

@@ -179,7 +179,12 @@ def infer_provider(*, model: str, provider: Optional[str] = None) -> Provider:
         )
 
     m = model.strip().lower()
-    if m.startswith("moonshotai/") or m.startswith("kimi"):
+    if (
+        m.startswith("moonshotai/")
+        or m.startswith("kimi")
+        or m.startswith("minimaxai/")
+        or "minimax" in m
+    ):
         return "together"
     if m.startswith("claude") or m.startswith("anthropic/claude"):
         return "anthropic"
@@ -351,6 +356,11 @@ def _anthropic_messages_completion(
     timeout_s: int = 180,
 ) -> str:
     effort = _normalize_reasoning_effort(reasoning_effort)
+    thinking_budget_tokens = _anthropic_thinking_budget_tokens(effort)
+    # Anthropic requires: thinking.budget_tokens < max_tokens.
+    max_tokens = 4096
+    if thinking_budget_tokens is not None:
+        max_tokens = max(max_tokens, thinking_budget_tokens + 1024)
     sdk_timeout_s = max(timeout_s, 900)  # keep Claude requests generous by default (15 min minimum)
     max_attempts = 3
 
@@ -364,11 +374,16 @@ def _anthropic_messages_completion(
         client = anthropic.Anthropic(**kwargs)
         req: dict[str, Any] = {
             "model": model,
-            "max_tokens": 4096,
+            "max_tokens": max_tokens,
             "messages": [{"role": "user", "content": prompt}],
         }
         if effort is not None:
             req["output_config"] = {"effort": effort}
+        if thinking_budget_tokens is not None:
+            req["thinking"] = {
+                "type": "enabled",
+                "budget_tokens": thinking_budget_tokens,
+            }
         resp = client.messages.create(**req)
         parts: list[str] = []
         for block in getattr(resp, "content", []) or []:
@@ -399,11 +414,16 @@ def _anthropic_messages_completion(
     url = base_url.rstrip("/") + "/messages"
     payload: dict[str, Any] = {
         "model": model,
-        "max_tokens": 4096,
+        "max_tokens": max_tokens,
         "messages": [{"role": "user", "content": prompt}],
     }
     if effort is not None:
         payload["output_config"] = {"effort": effort}
+    if thinking_budget_tokens is not None:
+        payload["thinking"] = {
+            "type": "enabled",
+            "budget_tokens": thinking_budget_tokens,
+        }
     body = json.dumps(payload).encode("utf-8")
     req = request.Request(
         url=url,
@@ -761,6 +781,32 @@ def _normalize_reasoning_effort(effort: Optional[str]) -> Optional[str]:
         return None
     allowed = {"low", "medium", "high", "xhigh", "max"}
     return e if e in allowed else None
+
+
+def _anthropic_thinking_budget_tokens(effort: Optional[str]) -> int | None:
+    """
+    Resolve Anthropic extended-thinking budget token configuration.
+
+    Uses POTARCIN_ANTHROPIC_THINKING_BUDGET_TOKENS when set.
+    Default with any valid reasoning effort: 120000 tokens.
+    Set env var to 0 or negative to disable explicit thinking config.
+    """
+    normalized = _normalize_reasoning_effort(effort)
+    if normalized is None:
+        return None
+
+    raw = os.environ.get("POTARCIN_ANTHROPIC_THINKING_BUDGET_TOKENS", "").strip()
+    if raw:
+        try:
+            budget = int(raw)
+        except Exception:
+            budget = 120000
+    else:
+        budget = 120000
+
+    if budget <= 0:
+        return None
+    return max(1024, budget)
 
 
 def _map_google_thinking_level(effort: Optional[str]) -> Optional[str]:
