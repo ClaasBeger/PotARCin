@@ -6,6 +6,7 @@ import datetime as dt
 import json
 import multiprocessing as mp
 import os
+import random
 import signal
 import traceback
 from contextlib import redirect_stderr, redirect_stdout
@@ -255,12 +256,20 @@ def evaluate_definition_script_on_task(
     task: ArcTask,
     script: str,
     test_idx: int = 0,
+    arc_gen_dynamic_n: int = 50,
+    arc_gen_dynamic_rng: Optional[random.Random] = None,
+    re_arc_dynamic_n: int = 50,
 ) -> dict[str, Any]:
     """Evaluate a solved definition script across all configured splits."""
     if not task.train_pairs:
         raise ValueError(f"Task {task.task_id} has no training pairs.")
     if test_idx < 0 or test_idx >= len(task.test_inputs) or test_idx >= len(task.test_outputs):
         raise ValueError(f"Invalid test_idx={test_idx} for task {task.task_id}.")
+
+    arc_dyn_n = int(arc_gen_dynamic_n)
+    arc_dyn_key = "dynamic50" if arc_dyn_n == 50 else f"dynamic{arc_dyn_n}"
+    re_dyn_n = int(re_arc_dynamic_n)
+    re_dyn_key = "re_arc_dynamic50" if re_dyn_n == 50 else f"re_arc_dynamic{re_dyn_n}"
 
     eval_sets: dict[str, list[dict[str, Grid]]] = {
         "train": [{"input": p.input, "output": p.output} for p in task.train_pairs],
@@ -269,19 +278,28 @@ def evaluate_definition_script_on_task(
             {"input": p.input, "output": p.output}
             for p in (task.arc_gen_synthetic_pairs or [])
         ],
-        "dynamic50": [],
+        arc_dyn_key: [],
         "re_arc_stable": [
             {"input": p.input, "output": p.output}
             for p in (task.re_arc_synthetic_pairs or [])
         ],
-        "re_arc_dynamic50": [],
+        re_dyn_key: [],
     }
     if task.arc_gen_generator is not None:
-        dyn = task.arc_gen_generator(50)
-        eval_sets["dynamic50"] = [{"input": p.input, "output": p.output} for p in dyn]
+        n = arc_dyn_n
+        if n <= 0:
+            dyn = []
+        else:
+            try:
+                dyn = task.arc_gen_generator(n, rng=arc_gen_dynamic_rng)
+            except TypeError:
+                # Backward compatibility for generators without rng=.
+                dyn = task.arc_gen_generator(n)
+        eval_sets[arc_dyn_key] = [{"input": p.input, "output": p.output} for p in dyn]
     if task.re_arc_generator is not None:
-        dyn = task.re_arc_generator(50)
-        eval_sets["re_arc_dynamic50"] = [{"input": p.input, "output": p.output} for p in dyn]
+        n = re_dyn_n
+        dyn = task.re_arc_generator(n) if n > 0 else []
+        eval_sets[re_dyn_key] = [{"input": p.input, "output": p.output} for p in dyn]
 
     out: dict[str, Any] = {
         "script_loaded": False,

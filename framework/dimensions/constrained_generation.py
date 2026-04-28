@@ -337,6 +337,7 @@ def run_constrained_generation_api_evaluation_once(
     tools_enabled: bool = False,
     api_key: Optional[str] = None,
     base_url: Optional[str] = None,
+    extra_demonstrations: Sequence[GridPair] = (),
     out_dir: str | Path = "evaluation/constrained_generation_eval_results",
 ) -> dict[str, Any]:
     """Call the model, parse, score, and write JSON under *out_dir*.
@@ -350,7 +351,10 @@ def run_constrained_generation_api_evaluation_once(
     if not task.train_pairs:
         raise ValueError(f"Task {task_id} has no training pairs.")
 
-    prompt = build_constrained_generation_prompt(demonstrations=task.train_pairs)
+    demos: list[GridPair] = list(task.train_pairs)
+    if extra_demonstrations:
+        demos.extend(list(extra_demonstrations))
+    prompt = build_constrained_generation_prompt(demonstrations=demos)
     resolved_provider, _effective_key, effective_base = resolve_provider_config(
         model=model,
         provider=provider,
@@ -379,6 +383,7 @@ def run_constrained_generation_api_evaluation_once(
         "base_url": effective_base,
         "reasoning_effort": reasoning_effort,
         "tools_enabled": tools_enabled,
+        "demonstration_count": len(demos),
         "prompt": prompt,
         "raw_response": raw,
         "evaluation_ok": False,
