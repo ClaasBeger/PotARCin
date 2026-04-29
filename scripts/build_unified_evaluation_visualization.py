@@ -509,23 +509,27 @@ def main() -> None:
         def_footer_inner = f'<p class="note">Source: latest definition eval — <code>{escape(str(def_json.name))}</code>. Model: {escape(str(data.get("model", "")))}.</p>'
         m = data.get("metrics", {})
         if m:
-            metric_order = (
-                ("train", "train"),
-                ("test", "test"),
-                ("stable", "ARC-GEN stable"),
-                ("dynamic50", "dynamic50"),
-                ("re_arc_stable", "Re-ARC stable"),
-                ("re_arc_dynamic50", "Re-ARC dynamic50"),
-            )
             parts: list[str] = []
-            for key, label in metric_order:
+
+            def _append_metric(key: str, label: str) -> None:
                 mm = m.get(key)
                 if not isinstance(mm, dict):
-                    continue
+                    return
                 sr = mm.get("success_rate")
                 if sr is None:
-                    continue
+                    return
                 parts.append(f"{label} {sr}")
+
+            # Stable ordering, while still surfacing non-default dynamic sample sizes
+            # such as dynamic1000 / re_arc_dynamic1000 in stress runs.
+            _append_metric("train", "train")
+            _append_metric("test", "test")
+            _append_metric("stable", "ARC-GEN stable")
+            for key in sorted(k for k in m.keys() if str(k).startswith("dynamic")):
+                _append_metric(str(key), str(key))
+            _append_metric("re_arc_stable", "Re-ARC stable")
+            for key in sorted(k for k in m.keys() if str(k).startswith("re_arc_dynamic")):
+                _append_metric(str(key), str(key))
             if parts:
                 def_footer_inner += (
                     f"<div class=\"metrics\">Metrics snapshot: {', '.join(parts)}</div>"

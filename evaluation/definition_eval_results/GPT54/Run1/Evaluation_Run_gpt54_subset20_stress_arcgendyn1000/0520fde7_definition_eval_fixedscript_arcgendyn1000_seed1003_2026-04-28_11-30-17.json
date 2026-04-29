@@ -1,0 +1,61 @@
+{
+  "task_id": "0520fde7",
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 1003,
+  "definition_mode": "fixed_script_rescore",
+  "arc_gen_dynamic_n": 1000,
+  "arc_gen_dynamic_seed": 1089051259,
+  "script": "def solve(grid):\n    rows = len(grid)\n    cols = len(grid[0])\n\n    sep = None\n    for c in range(cols):\n        if all(grid[r][c] == 5 for r in range(rows)):\n            sep = c\n            break\n\n    left = [row[:sep] for row in grid]\n    right = [row[sep + 1:] for row in grid]\n\n    h = rows\n    w = min(len(left[0]), len(right[0]))\n\n    out = []\n    for r in range(h):\n        new_row = []\n        for c in range(w):\n            new_row.append(2 if left[r][c] == 1 and right[r][c] == 1 else 0)\n        out.append(new_row)\n\n    return out",
+  "evaluation_ok": true,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic1000": {
+      "ok": 1000,
+      "total": 1000,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 3,
+      "total": 1000,
+      "success_rate": 0.003
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic1000": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "unsupported operand type(s) for +: 'NoneType' and 'int'"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "unsupported operand type(s) for +: 'NoneType' and 'int'"
+    }
+  },
+  "script_loaded": true,
+  "script_load_error": null
+}

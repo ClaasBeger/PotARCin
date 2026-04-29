@@ -1,0 +1,417 @@
+{
+  "task_id": "1f876c06",
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 1004,
+  "definition_mode": "fixed_script_rescore",
+  "arc_gen_dynamic_n": 1000,
+  "arc_gen_dynamic_seed": 1532971741,
+  "script": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    out = [row[:] for row in grid]\n\n    positions = {}\n    for r in range(h):\n        for c in range(w):\n            v = grid[r][c]\n            if v != 0:\n                positions.setdefault(v, []).append((r, c))\n\n    def sign(x):\n        if x < 0:\n            return -1\n        if x > 0:\n            return 1\n        return 0\n\n    for color, pts in positions.items():\n        if len(pts) < 2:\n            continue\n\n        # Use the two occurrences of the color as the endpoints of the diagonal.\n        (r1, c1), (r2, c2) = pts[0], pts[1]\n\n        dr = sign(r2 - r1)\n        dc = sign(c2 - c1)\n\n        # Fill only if the two points define a diagonal segment.\n        if abs(r2 - r1) != abs(c2 - c1):\n            continue\n\n        steps = abs(r2 - r1)\n        for k in range(steps + 1):\n            out[r1 + dr * k][c1 + dc * k] = color\n\n    return out",
+  "evaluation_ok": true,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic1000": {
+      "ok": 1000,
+      "total": 1000,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 516,
+      "total": 1000,
+      "success_rate": 0.516
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic1000": null,
+    "re_arc_stable": {
+      "index": 0,
+      "input": [
+        [
+          2,
+          2,
+          8,
+          2,
+          2,
+          6,
+          2,
+          2,
+          4,
+          2,
+          0
+        ],
+        [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          5,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          8,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          9,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          1,
+          6,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          2,
+          4,
+          2,
+          2,
+          2,
+          2,
+          3,
+          2,
+          5
+        ],
+        [
+          2,
+          2,
+          2,
+          2,
+          0,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          9,
+          2,
+          2,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      ],
+      "expected": [
+        [
+          2,
+          2,
+          8,
+          2,
+          2,
+          6,
+          2,
+          2,
+          4,
+          2,
+          0
+        ],
+        [
+          2,
+          8,
+          2,
+          2,
+          6,
+          2,
+          5,
+          4,
+          2,
+          0,
+          2
+        ],
+        [
+          8,
+          2,
+          2,
+          6,
+          2,
+          2,
+          4,
+          5,
+          0,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          6,
+          2,
+          2,
+          4,
+          9,
+          0,
+          5,
+          2,
+          2
+        ],
+        [
+          1,
+          6,
+          2,
+          2,
+          4,
+          9,
+          0,
+          2,
+          2,
+          5,
+          2
+        ],
+        [
+          2,
+          1,
+          2,
+          4,
+          9,
+          0,
+          2,
+          2,
+          3,
+          2,
+          5
+        ],
+        [
+          2,
+          2,
+          1,
+          9,
+          0,
+          2,
+          2,
+          3,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          9,
+          1,
+          2,
+          2,
+          3,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          9,
+          2,
+          2,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      ],
+      "got": [
+        [
+          2,
+          2,
+          8,
+          2,
+          2,
+          6,
+          2,
+          2,
+          4,
+          2,
+          0
+        ],
+        [
+          2,
+          8,
+          2,
+          2,
+          6,
+          2,
+          5,
+          4,
+          2,
+          2,
+          2
+        ],
+        [
+          8,
+          2,
+          2,
+          6,
+          2,
+          2,
+          4,
+          5,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          6,
+          2,
+          2,
+          4,
+          9,
+          2,
+          5,
+          2,
+          2
+        ],
+        [
+          1,
+          6,
+          2,
+          2,
+          4,
+          9,
+          2,
+          2,
+          2,
+          5,
+          2
+        ],
+        [
+          2,
+          1,
+          2,
+          4,
+          9,
+          2,
+          2,
+          2,
+          3,
+          2,
+          5
+        ],
+        [
+          2,
+          2,
+          1,
+          9,
+          0,
+          2,
+          2,
+          3,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          9,
+          1,
+          2,
+          2,
+          3,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          9,
+          2,
+          2,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      ]
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "'tuple' object does not support item assignment"
+    }
+  },
+  "script_loaded": true,
+  "script_load_error": null
+}

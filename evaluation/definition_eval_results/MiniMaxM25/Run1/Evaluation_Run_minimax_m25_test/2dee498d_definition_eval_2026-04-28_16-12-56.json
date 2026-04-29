@@ -1,0 +1,311 @@
+{
+  "task_id": "2dee498d",
+  "test_idx": 0,
+  "model": "MiniMaxAI/MiniMax-M2.5",
+  "provider": "together",
+  "base_url": "https://api.together.xyz/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n4 5 1 1 5 4 4 5 1\n5 5 5 5 5 5 5 5 5\n1 5 4 4 5 1 1 5 4\nOutput:\n4 5 1\n5 5 5\n1 5 4\n\nExample 2:\n\nInput:\n2 0 0 1 2 0 0 1 2 0 0 1\n4 2 1 4 4 2 1 4 4 2 1 4\n4 1 2 4 4 1 2 4 4 1 2 4\n1 0 0 2 1 0 0 2 1 0 0 2\nOutput:\n2 0 0 1\n4 2 1 4\n4 1 2 4\n1 0 0 2\n\nExample 3:\n\nInput:\n2 1 2 1 2 1\n2 3 2 3 2 3\nOutput:\n2 1\n2 3\n\nBelow is a test input grid.\n\nInput:\n0 2 0 4 4 0 2 0 4 4 0 2 0 4 4\n2 2 0 4 4 2 2 0 4 4 2 2 0 4 4\n0 2 2 2 0 0 2 2 2 0 0 2 2 2 0\n1 1 0 2 2 1 1 0 2 2 1 1 0 2 2\n1 1 0 2 0 1 1 0 2 0 1 1 0 2 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    if not grid:\n        return []\n\n    rows = len(grid)\n    cols = len(grid[0])\n\n    # ---- find minimal horizontal period ----\n    w = cols\n    for cand in range(1, cols + 1):\n        if cols % cand != 0:\n            continue\n        ok = True\n        for i in range(rows):\n            for j in range(cand, cols):\n                if grid[i][j] != grid[i][j - cand]:\n                    ok = False\n                    break\n            if not ok:\n                break\n        if ok:\n            w = cand\n            break\n\n    # ---- find minimal vertical period ----\n    h = rows\n    for cand in range(1, rows + 1):\n        if rows % cand != 0:\n            continue\n        ok = True\n        for i in range(cand, rows):\n            for j in range(cols):\n                if grid[i][j] != grid[i - cand][j]:\n                    ok = False\n                    break\n            if not ok:\n                break\n        if ok:\n            h = cand\n            break\n\n    # ---- extract the tile ----\n    tile = [row[:w] for row in grid[:h]]\n    return tile",
+  "script": "def solve(grid):\n    if not grid:\n        return []\n\n    rows = len(grid)\n    cols = len(grid[0])\n\n    # ---- find minimal horizontal period ----\n    w = cols\n    for cand in range(1, cols + 1):\n        if cols % cand != 0:\n            continue\n        ok = True\n        for i in range(rows):\n            for j in range(cand, cols):\n                if grid[i][j] != grid[i][j - cand]:\n                    ok = False\n                    break\n            if not ok:\n                break\n        if ok:\n            w = cand\n            break\n\n    # ---- find minimal vertical period ----\n    h = rows\n    for cand in range(1, rows + 1):\n        if rows % cand != 0:\n            continue\n        ok = True\n        for i in range(cand, rows):\n            for j in range(cols):\n                if grid[i][j] != grid[i - cand][j]:\n                    ok = False\n                    break\n            if not ok:\n                break\n        if ok:\n            h = cand\n            break\n\n    # ---- extract the tile ----\n    tile = [row[:w] for row in grid[:h]]\n    return tile",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 2,
+      "total": 3,
+      "success_rate": 0.6666666666666666
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 119,
+      "total": 262,
+      "success_rate": 0.4541984732824427
+    },
+    "dynamic50": {
+      "ok": 35,
+      "total": 50,
+      "success_rate": 0.7
+    },
+    "re_arc_stable": {
+      "ok": 998,
+      "total": 1000,
+      "success_rate": 0.998
+    },
+    "re_arc_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "input": [
+        [
+          4,
+          5,
+          1,
+          1,
+          5,
+          4,
+          4,
+          5,
+          1
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          1,
+          5,
+          4,
+          4,
+          5,
+          1,
+          1,
+          5,
+          4
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          5,
+          1
+        ],
+        [
+          5,
+          5,
+          5
+        ],
+        [
+          1,
+          5,
+          4
+        ]
+      ],
+      "got": [
+        [
+          4,
+          5,
+          1,
+          1,
+          5,
+          4,
+          4,
+          5,
+          1
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          1,
+          5,
+          4,
+          4,
+          5,
+          1,
+          1,
+          5,
+          4
+        ]
+      ]
+    },
+    "test": null,
+    "stable": {
+      "index": 0,
+      "input": [
+        [
+          8,
+          2,
+          7,
+          8,
+          8,
+          2
+        ],
+        [
+          7,
+          8,
+          8,
+          2,
+          7,
+          8
+        ]
+      ],
+      "expected": [
+        [
+          8,
+          2
+        ],
+        [
+          7,
+          8
+        ]
+      ],
+      "got": [
+        [
+          8,
+          2,
+          7,
+          8,
+          8,
+          2
+        ],
+        [
+          7,
+          8,
+          8,
+          2,
+          7,
+          8
+        ]
+      ]
+    },
+    "dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ],
+        [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ]
+      ],
+      "expected": [
+        [
+          7,
+          7
+        ],
+        [
+          7,
+          7
+        ]
+      ],
+      "got": [
+        [
+          7
+        ]
+      ]
+    },
+    "re_arc_stable": {
+      "index": 279,
+      "input": [
+        [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ]
+      ],
+      "expected": [
+        [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ]
+      ],
+      "got": [
+        [
+          5
+        ]
+      ]
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

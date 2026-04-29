@@ -1,0 +1,132 @@
+{
+  "task_id": "67a3c6ac",
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 136825694,
+  "include_true": false,
+  "corruption_source": "h_arc_incorrect",
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n6 6 6 2\n6 1 6 2\n7 2 7 2\n1 7 2 2\nOutput:\n2 6 6 6\n2 6 1 6\n2 7 2 7\n2 2 7 1\n\nExample 2:\nInput:\n7 7 7 6 6 6 2\n6 7 1 1 7 7 1\n7 7 2 1 2 6 6\n2 2 7 7 7 2 2\n7 2 7 1 2 7 2\n6 6 6 2 2 1 1\n6 2 6 6 6 6 6\nOutput:\n2 6 6 6 7 7 7\n1 7 7 1 1 7 6\n6 6 2 1 2 7 7\n2 2 7 7 7 2 2\n2 7 2 1 7 2 7\n1 1 2 2 6 6 6\n6 6 6 6 6 2 6\n\nExample 3:\nInput:\n1 2 7 1 1 1\n2 1 7 7 2 6\n2 1 2 6 2 1\n1 2 1 7 6 2\n2 7 1 2 7 1\n2 1 6 2 7 7\nOutput:\n1 1 1 7 2 1\n6 2 7 7 1 2\n1 2 6 2 1 2\n2 6 7 1 2 1\n1 7 2 1 7 2\n7 7 2 6 1 2\n\nThe following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.\n\nCandidate pair:\nInput:\n7 6 1\n6 7 6\n6 2 2\nOutput:\n7 6 1\n4 7 6\n6 2 1\n\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "{\"input\": [[7, 6, 1], [6, 7, 6], [6, 2, 2]], \"output\": [[1, 6, 7], [6, 7, 6], [2, 2, 6]]}",
+  "corrupted_pair": {
+    "input": [
+      [
+        7,
+        6,
+        1
+      ],
+      [
+        6,
+        7,
+        6
+      ],
+      [
+        6,
+        2,
+        2
+      ]
+    ],
+    "output": [
+      [
+        7,
+        6,
+        1
+      ],
+      [
+        4,
+        7,
+        6
+      ],
+      [
+        6,
+        2,
+        1
+      ]
+    ]
+  },
+  "target_pair": {
+    "input": [
+      [
+        7,
+        6,
+        1
+      ],
+      [
+        6,
+        7,
+        6
+      ],
+      [
+        6,
+        2,
+        2
+      ]
+    ],
+    "output": [
+      [
+        1,
+        6,
+        7
+      ],
+      [
+        6,
+        7,
+        6
+      ],
+      [
+        2,
+        2,
+        6
+      ]
+    ]
+  },
+  "evaluation_ok": true,
+  "prediction_pair": {
+    "input": [
+      [
+        7,
+        6,
+        1
+      ],
+      [
+        6,
+        7,
+        6
+      ],
+      [
+        6,
+        2,
+        2
+      ]
+    ],
+    "output": [
+      [
+        1,
+        6,
+        7
+      ],
+      [
+        6,
+        7,
+        6
+      ],
+      [
+        2,
+        2,
+        6
+      ]
+    ]
+  },
+  "guardrail": {
+    "enabled": true,
+    "max_norm_edit": 0.7,
+    "normalized_distance_input": 0.0,
+    "normalized_distance_output": 0.5555555555555556,
+    "passed": true
+  },
+  "metrics": {
+    "success": true
+  }
+}

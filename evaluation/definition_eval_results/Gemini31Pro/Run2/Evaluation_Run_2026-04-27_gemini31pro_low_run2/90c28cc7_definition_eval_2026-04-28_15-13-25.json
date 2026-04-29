@@ -1,0 +1,248 @@
+{
+  "task_id": "90c28cc7",
+  "test_idx": 0,
+  "model": "gemini-3.1-pro-preview",
+  "provider": "google",
+  "base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 8 8 8 8 8 8 8 8 7 7 7 7 7 7 7 7 7 7 7 7\n0 8 8 8 8 8 8 8 8 7 7 7 7 7 7 7 7 7 7 7 7\n0 8 8 8 8 8 8 8 8 7 7 7 7 7 7 7 7 7 7 7 7\n0 8 8 8 8 8 8 8 8 7 7 7 7 7 7 7 7 7 7 7 7\n0 8 8 8 8 8 8 8 8 7 7 7 7 7 7 7 7 7 7 7 7\n0 8 8 8 8 8 8 8 8 7 7 7 7 7 7 7 7 7 7 7 7\n0 3 3 3 3 3 3 3 3 4 4 4 4 4 4 1 1 1 1 1 1\n0 3 3 3 3 3 3 3 3 4 4 4 4 4 4 1 1 1 1 1 1\n0 3 3 3 3 3 3 3 3 4 4 4 4 4 4 1 1 1 1 1 1\n0 3 3 3 3 3 3 3 3 4 4 4 4 4 4 1 1 1 1 1 1\n0 2 2 2 2 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5\n0 2 2 2 2 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5\n0 2 2 2 2 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5\n0 2 2 2 2 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5\n0 2 2 2 2 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n8 7 7\n3 4 1\n2 5 5\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n2 8\n1 4\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 8 8 8 8 8 8 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 8 8 8 8 8 8 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 8 8 8 8 8 8 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 8 8 8 8 8 8 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 8 8 8 8 8 8 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 4 4 4 4 4 4 1 1 1 1 1 1 0 0 0 0 0 0 0\n0 0 4 4 4 4 4 4 1 1 1 1 1 1 0 0 0 0 0 0 0\n0 0 4 4 4 4 4 4 1 1 1 1 1 1 0 0 0 0 0 0 0\n0 0 4 4 4 4 4 4 1 1 1 1 1 1 0 0 0 0 0 0 0\n0 0 4 4 4 4 4 4 1 1 1 1 1 1 0 0 0 0 0 0 0\n0 0 4 4 4 4 4 4 1 1 1 1 1 1 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n8 2\n3 3\n4 1\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 1 1 1 1 1 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 1 1 1 1 1 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 1 1 1 1 1 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 1 1 1 1 1 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 1 1 1 1 1 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 1 1 1 1 1 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 2 2 2 2 2 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 2 2 2 2 2 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 2 2 2 2 2 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 2 2 2 2 2 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    if not grid or not grid[0]:\n        return []\n\n    # Find the bounding box of non-zero elements\n    non_empty_rows = [i for i, row in enumerate(grid) if any(val != 0 for val in row)]\n    if not non_empty_rows:\n        return []\n    min_r, max_r = non_empty_rows[0], non_empty_rows[-1]\n    \n    non_empty_cols = [j for j in range(len(grid[0])) if any(grid[i][j] != 0 for i in range(len(grid)))]\n    min_c, max_c = non_empty_cols[0], non_empty_cols[-1]\n    \n    # Extract the subgrid\n    subgrid = [row[min_c:max_c+1] for row in grid[min_r:max_r+1]]\n    \n    # Compress adjacent identical rows\n    comp_rows = [subgrid[0]]\n    for row in subgrid[1:]:\n        if row != comp_rows[-1]:\n            comp_rows.append(row)\n            \n    # Transpose to process columns\n    transposed = list(zip(*comp_rows))\n    \n    # Compress adjacent identical columns\n    comp_cols = [transposed[0]]\n    for col in transposed[1:]:\n        if col != comp_cols[-1]:\n            comp_cols.append(col)\n            \n    # Transpose back to get the final result\n    result = [list(row) for row in zip(*comp_cols)]\n    \n    return result\n```",
+  "script": "def solve(grid):\n    if not grid or not grid[0]:\n        return []\n\n    # Find the bounding box of non-zero elements\n    non_empty_rows = [i for i, row in enumerate(grid) if any(val != 0 for val in row)]\n    if not non_empty_rows:\n        return []\n    min_r, max_r = non_empty_rows[0], non_empty_rows[-1]\n    \n    non_empty_cols = [j for j in range(len(grid[0])) if any(grid[i][j] != 0 for i in range(len(grid)))]\n    min_c, max_c = non_empty_cols[0], non_empty_cols[-1]\n    \n    # Extract the subgrid\n    subgrid = [row[min_c:max_c+1] for row in grid[min_r:max_r+1]]\n    \n    # Compress adjacent identical rows\n    comp_rows = [subgrid[0]]\n    for row in subgrid[1:]:\n        if row != comp_rows[-1]:\n            comp_rows.append(row)\n            \n    # Transpose to process columns\n    transposed = list(zip(*comp_rows))\n    \n    # Compress adjacent identical columns\n    comp_cols = [transposed[0]]\n    for col in transposed[1:]:\n        if col != comp_cols[-1]:\n            comp_cols.append(col)\n            \n    # Transpose back to get the final result\n    result = [list(row) for row in zip(*comp_cols)]\n    \n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 1000,
+      "total": 1000,
+      "success_rate": 1.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          6,
+          6,
+          9,
+          9,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          6,
+          6,
+          9,
+          9,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          6,
+          6,
+          9,
+          9,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          6,
+          6,
+          9,
+          9,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          9,
+          9,
+          9,
+          6,
+          6,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          9,
+          9,
+          9,
+          6,
+          6,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          9,
+          9,
+          9,
+          6,
+          6,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          6,
+          9,
+          9,
+          6
+        ],
+        [
+          9,
+          6,
+          9,
+          6
+        ]
+      ],
+      "got": [
+        [
+          6,
+          9,
+          9,
+          6
+        ],
+        [
+          9,
+          6,
+          9,
+          6
+        ]
+      ]
+    }
+  },
+  "evaluation_ok": true
+}

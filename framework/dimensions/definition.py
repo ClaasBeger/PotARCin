@@ -29,7 +29,13 @@ from framework.tasks.base import ArcTask, DimensionName, Verifier
 # In the definition dimension, the prediction is typically a Python program
 # (as a string) or a callable. For now, we keep this abstract as `str`.
 ProgramText = str
-_SOLVE_CALL_TIMEOUT_S = 600
+# Hard wall-clock timeout for each generated solve(grid) execution.
+# This is per-grid, so lowering it prevents a single definition dimension
+# from stalling for too long on expensive/ill-behaved generated programs.
+_SOLVE_CALL_TIMEOUT_S = int(os.environ.get("POTARCIN_DEFINITION_SOLVE_TIMEOUT_S", "60").strip() or 60)
+_EXCESSIVE_TIMEOUT_ABORT_THRESHOLD = int(
+    os.environ.get("POTARCIN_DEFINITION_EXCESSIVE_TIMEOUT_ABORT_THRESHOLD", "15").strip() or 15
+)
 
 
 def _call_with_timeout(fn: Callable[[Grid], Grid], grid: Grid, timeout_s: int = _SOLVE_CALL_TIMEOUT_S) -> Grid:
@@ -92,6 +98,11 @@ def _call_script_with_hard_timeout(script: str, grid: Grid, timeout_s: int = _SO
     if msg.get("ok") is True:
         return msg.get("got")
     raise RuntimeError(str(msg.get("error") or "unknown solve() subprocess error"))
+
+
+def _is_timeout_error(exc: Exception) -> bool:
+    msg = str(exc).lower()
+    return "timed out" in msg or "timeout" in msg
 
 def _grid_to_str(grid: Grid) -> str:
     return "\n".join(" ".join(str(cell) for cell in row) for row in grid)
@@ -314,12 +325,18 @@ def evaluate_definition_script_on_task(
         out["script_load_error"] = f"{e}\n{traceback.format_exc()}"
         fn = None
 
-    for split_name, pairs in eval_sets.items():
+    total_candidates_seen = 0
+    total_timeout_errors = 0
+    split_names = list(eval_sets.keys())
+
+    for split_idx, split_name in enumerate(split_names):
+        pairs = eval_sets[split_name]
         total = len(pairs)
         ok = 0
         failure: Optional[dict[str, Any]] = None
         if fn is not None:
             for i, ex in enumerate(pairs):
+                total_candidates_seen += 1
                 try:
                     # Use a hard process-level timeout to avoid hangs that ignore SIGALRM.
                     got = _call_script_with_hard_timeout(script, copy.deepcopy(ex["input"]))
@@ -333,6 +350,42 @@ def evaluate_definition_script_on_task(
                             "got": got,
                         }
                 except Exception as e:
+                    if _is_timeout_error(e):
+                        total_timeout_errors += 1
+                        threshold = max(1, _EXCESSIVE_TIMEOUT_ABORT_THRESHOLD)
+                        if (
+                            total_candidates_seen >= threshold
+                            and total_timeout_errors == total_candidates_seen
+                        ):
+                            out["metrics"][split_name] = {
+                                "ok": None,
+                                "total": total,
+                                "success_rate": None,
+                            }
+                            out["first_failures"][split_name] = {
+                                "index": i,
+                                "error": (
+                                    "excessive-timeouts: first "
+                                    f"{threshold} evaluated candidates all timed out; "
+                                    "aborting definition evaluation"
+                                ),
+                            }
+                            for later_name in split_names[split_idx + 1 :]:
+                                later_total = len(eval_sets[later_name])
+                                out["metrics"][later_name] = {
+                                    "ok": None,
+                                    "total": later_total,
+                                    "success_rate": None,
+                                }
+                                out["first_failures"][later_name] = {
+                                    "error": "excessive-timeouts: split not evaluated"
+                                }
+                            out["error_code"] = "excessive-timeouts"
+                            out["error"] = (
+                                "excessive-timeouts: first "
+                                f"{threshold} evaluated candidates all timed out"
+                            )
+                            return out
                     if failure is None:
                         failure = {"index": i, "error": str(e)}
         out["metrics"][split_name] = {
@@ -453,7 +506,11 @@ def run_definition_api_evaluation(
         result["script_load_error"] = eval_result["script_load_error"]
         result["metrics"] = eval_result["metrics"]
         result["first_failures"] = eval_result["first_failures"]
-        result["evaluation_ok"] = True
+        if eval_result.get("error_code") == "excessive-timeouts":
+            result["error"] = str(eval_result.get("error") or "excessive-timeouts")
+            result["evaluation_ok"] = False
+        else:
+            result["evaluation_ok"] = True
     except Exception as e:
         result["error"] = str(e)
         result["script_load_error"] = str(e)

@@ -48,7 +48,9 @@ def _center_order(cols: list[int]) -> list[int]:
     return sorted(cols, key=lambda c: (abs(c - center), c))
 
 
-def _pack_component(comp: set[tuple[int, int]], count: int) -> set[tuple[int, int]]:
+def _pack_component(
+    comp: set[tuple[int, int]], count: int, preferred_center: float | None = None
+) -> set[tuple[int, int]]:
     if count <= 0:
         return set()
     rows = sorted({r for r, _ in comp}, reverse=True)
@@ -58,39 +60,63 @@ def _pack_component(comp: set[tuple[int, int]], count: int) -> set[tuple[int, in
     filled: set[tuple[int, int]] = set()
     remaining = count
 
-    # Bottom-up fill; each row fills from the middle, but is anchored to filled row below.
+    # Bottom-up fill; each row selects a single flow-front segment and fills from
+    # the middle. This avoids non-physical "teleport" fills into side cavities on
+    # the same level.
     for r in rows:
         if remaining <= 0:
             break
         cols = row_cells[r]
         if not cols:
             continue
+        segments: list[list[int]] = []
         i = 0
         while i < len(cols):
             j = i
             while j + 1 < len(cols) and cols[j + 1] == cols[j] + 1:
                 j += 1
             seg = cols[i : j + 1]
+            segments.append(seg)
             i = j + 1
-            if remaining <= 0:
-                break
 
-            if r == bottom:
-                order = _center_order(seg)
-            else:
+        if not segments:
+            continue
+
+        if r == bottom:
+            global_center = preferred_center if preferred_center is not None else (cols[0] + cols[-1]) / 2.0
+            chosen_seg = min(segments, key=lambda seg: (abs(((seg[0] + seg[-1]) / 2.0) - global_center), seg[0]))
+            order = _center_order(chosen_seg)
+        else:
+            anchored: list[tuple[int, list[int], list[int]]] = []
+            for seg in segments:
                 anchors = [c for c in seg if (r + 1, c) in filled]
-                if not anchors:
-                    continue
-                center = (seg[0] + seg[-1]) / 2.0
-                order = sorted(
-                    seg,
-                    key=lambda c: (min(abs(c - a) for a in anchors), abs(c - center), c),
+                if anchors:
+                    anchored.append((len(anchors), seg, anchors))
+            if not anchored:
+                continue
+            # Prefer the segment with the strongest support from below.
+            anchored.sort(
+                key=lambda t: (
+                    -t[0],
+                    abs(
+                        ((t[1][0] + t[1][-1]) / 2.0)
+                        - (preferred_center if preferred_center is not None else ((cols[0] + cols[-1]) / 2.0))
+                    ),
+                    t[1][0],
                 )
+            )
+            _, chosen_seg, anchors = anchored[0]
+            # Center from underlying cyan support row (anchors), not full row span.
+            center = sum(anchors) / float(len(anchors))
+            order = sorted(
+                chosen_seg,
+                key=lambda c: (abs(c - center), min(abs(c - a) for a in anchors), c),
+            )
 
-            take = min(remaining, len(order))
-            for c in order[:take]:
-                filled.add((r, c))
-            remaining -= take
+        take = min(remaining, len(order))
+        for c in order[:take]:
+            filled.add((r, c))
+        remaining -= take
 
     # Rare fallback for irregular cavities: continue from frontier.
     while remaining > 0:
@@ -117,6 +143,104 @@ def _pack_component(comp: set[tuple[int, int]], count: int) -> set[tuple[int, in
     return filled
 
 
+def _flow_component(
+    comp: set[tuple[int, int]], initial_cyan: set[tuple[int, int]], steps_cap: int = 2000
+) -> set[tuple[int, int]]:
+    """Simulate deterministic gravity/flow inside one non-orange component."""
+    if not initial_cyan:
+        return set()
+    by_row: dict[int, set[int]] = {}
+    for r, c in comp:
+        by_row.setdefault(r, set()).add(c)
+
+    def row_segment(r: int, c: int) -> tuple[int, int] | None:
+        row = by_row.get(r)
+        if row is None or c not in row:
+            return None
+        lo = c
+        hi = c
+        while (lo - 1) in row:
+            lo -= 1
+        while (hi + 1) in row:
+            hi += 1
+        return (lo, hi)
+
+    occ = set(initial_cyan)
+    global_center = sum(c for _, c in comp) / float(len(comp))
+
+    steps = 0
+    changed = True
+    while changed and steps < steps_cap:
+        steps += 1
+        changed = False
+        # Bottom-up update reduces oscillations and keeps settling stable.
+        order = sorted(occ, key=lambda rc: (-rc[0], abs(rc[1] - global_center), rc[1]))
+        for r, c in order:
+            if (r, c) not in occ:
+                continue
+            # 1) Pure gravity: fall straight down whenever possible.
+            below = (r + 1, c)
+            if below in comp and below not in occ:
+                occ.remove((r, c))
+                occ.add(below)
+                changed = True
+                continue
+            # Lateral travel is only on solid support (orange/boundary below),
+            # not when simply stacked on another cyan.
+            if below in comp:
+                continue
+
+            # 2) Blocked below: move laterally toward a reachable drop if any.
+            seg = row_segment(r, c)
+            if seg is None:
+                continue
+            lo, hi = seg
+
+            drop_targets: list[int] = []
+            for tc in range(lo, hi + 1):
+                if (r, tc) in occ and tc != c:
+                    continue
+                tb = (r + 1, tc)
+                if tb in comp and tb not in occ:
+                    drop_targets.append(tc)
+
+            moved = False
+            if drop_targets:
+                best_tc = min(
+                    drop_targets,
+                    key=lambda tc: (abs(tc - c), abs(tc - global_center), tc),
+                )
+                step = 0 if best_tc == c else (1 if best_tc > c else -1)
+                if step != 0:
+                    nxt = (r, c + step)
+                    if nxt in comp and nxt not in occ:
+                        occ.remove((r, c))
+                        occ.add(nxt)
+                        changed = True
+                        moved = True
+            if moved:
+                continue
+
+            # 3) No reachable drop: settle on the current solid lane from middle.
+            seg_center = (lo + hi) / 2.0
+            dirs = sorted(
+                [-1, 1],
+                key=lambda dc: (
+                    abs((c + dc) - seg_center),
+                    abs((c + dc) - global_center),
+                    c + dc,
+                ),
+            )
+            for dc in dirs:
+                nxt = (r, c + dc)
+                if nxt in comp and nxt not in occ:
+                    occ.remove((r, c))
+                    occ.add(nxt)
+                    changed = True
+                    break
+    return occ
+
+
 def transform_t5(inp: Grid) -> Grid:
     h = len(inp)
     w = len(inp[0]) if h else 0
@@ -127,8 +251,10 @@ def transform_t5(inp: Grid) -> Grid:
                 out[r][c] = ORANGE
 
     for comp in _non_orange_components(inp):
-        n_cyan = sum(1 for r, c in comp if inp[r][c] == CYAN)
-        for r, c in _pack_component(comp, n_cyan):
+        cyan_cols = [c for r, c in comp if inp[r][c] == CYAN]
+        n_cyan = len(cyan_cols)
+        preferred_center = (sum(cyan_cols) / float(n_cyan)) if n_cyan > 0 else None
+        for r, c in _pack_component(comp, n_cyan, preferred_center=preferred_center):
             out[r][c] = CYAN
     return out
 
@@ -161,28 +287,10 @@ def _add_random_boundaries(
             if 0 <= rr < h and 0 <= cc < w:
                 reserved_no_cyan.add((rr, cc))
 
-    # Add a second horizontal barrier sometimes (still center-symmetric opening).
-    if rng.random() < 0.65 and barrier_r + 2 < h - 1:
-        r2 = rng.randint(barrier_r + 2, h - 2)
-        for c in range(w):
-            grid[r2][c] = ORANGE
-        if w % 2 == 0:
-            gaps2 = {w // 2 - 1, w // 2}
-        else:
-            gaps2 = {w // 2}
-        for c in gaps2:
-            grid[r2][c] = 0
-            reserved_no_cyan.add((r2, c))
-            for rr, cc in (
-                (r2 - 1, c - 1),
-                (r2 - 1, c + 1),
-                (r2 + 1, c - 1),
-                (r2 + 1, c + 1),
-            ):
-                if 0 <= rr < h and 0 <= cc < w:
-                    reserved_no_cyan.add((rr, cc))
+    # Keep one main horizontal barrier only; stacked barriers can produce
+    # non-physical-looking fills under a gravity interpretation.
 
-    # Add one or two vertical walls for richer basin geometry.
+    # Add one or two vertical walls for richer basin geometry/cavities.
     wall_count = rng.randint(0, 2)
     for _ in range(wall_count):
         candidates = [c for c in range(1, w - 1) if all(abs(c - gc) >= 2 for gc in gap_cols)]
@@ -229,49 +337,73 @@ def _row_segments(cells: set[tuple[int, int]]) -> dict[int, list[list[int]]]:
 
 
 def _is_ambiguous_fill(inp: Grid, out: Grid) -> bool:
-    """True if fill needs unresolved side tie-breaks or violates center-on-water behavior."""
+    """Reject generated samples with unresolved center-fill side ambiguity."""
     h = len(inp)
-    w = len(inp[0]) if h else 0
-
-    # Reject patterns where cyan appears wedged by orange support that would be ambiguous.
-    for r in range(h):
-        for c in range(w):
-            if inp[r][c] != CYAN:
-                continue
-            below_orange = (r + 1 >= h) or (inp[r + 1][c] == ORANGE)
-            left_orange = (c - 1 < 0) or (inp[r][c - 1] == ORANGE)
-            right_orange = (c + 1 >= w) or (inp[r][c + 1] == ORANGE)
-            if below_orange and (left_orange or right_orange):
-                # Keep such cells fixed; if they disappear, dynamics are unclear in examples.
-                if out[r][c] != CYAN:
-                    return True
-
     for comp in _non_orange_components(inp):
         segs_by_row = _row_segments(comp)
-        bottom = max(r for r, _ in comp)
         for r, segs in segs_by_row.items():
             for seg in segs:
                 chosen = [c for c in seg if out[r][c] == CYAN]
                 if not chosen or len(chosen) == len(seg):
                     continue
-                if r == bottom:
-                    center = (seg[0] + seg[-1]) / 2.0
-                else:
-                    supports = [c for c in seg if r + 1 < h and out[r + 1][c] == CYAN]
-                    center = (
-                        (sum(supports) / len(supports))
-                        if supports
-                        else (seg[0] + seg[-1]) / 2.0
-                    )
-                chosen = sorted(chosen)
-                # Partial rows must be one contiguous interval.
-                if any(chosen[i + 1] != chosen[i] + 1 for i in range(len(chosen) - 1)):
+                # Partial fills are validated against deterministic center ranking
+                # from the immediate supporting row.
+                support = [c for c in seg if r + 1 < h and out[r + 1][c] == CYAN]
+                if not support:
                     return True
-                left = chosen[0]
-                right = chosen[-1]
-                # Strict symmetric centering around the selected center.
-                if abs((center - left) - (right - center)) > 1e-9:
+                center = sum(support) / float(len(support))
+                ordered = sorted(seg, key=lambda c: (abs(c - center), c))
+                k = len(chosen)
+                # If the boundary between chosen and unchosen has equal distance
+                # to center, then side choice is ambiguous.
+                if 0 < k < len(ordered):
+                    d_k = abs(ordered[k - 1] - center)
+                    d_next = abs(ordered[k] - center)
+                    if abs(d_k - d_next) < 1e-9:
+                        return True
+                if set(chosen) != set(ordered[:k]):
                     return True
+                # If an unchosen column in this segment has a free drop below
+                # (inside component and not already occupied), dynamics would be
+                # ambiguous between "center now" vs "slide then drop".
+                if r + 1 < h:
+                    for c in seg:
+                        if c in chosen:
+                            continue
+                        if (r + 1, c) in comp and out[r + 1][c] != CYAN:
+                            return True
+    return False
+
+
+def _has_multi_basin_drop_ambiguity(inp: Grid) -> bool:
+    """Reject layouts with multiple simultaneously fed bottom basins.
+
+    If a non-orange component has a split row near its bottom (multiple disjoint
+    segments) and more than one segment has cyan somewhere above it in-column,
+    the intended drop destination can be read ambiguously.
+    """
+    for comp in _non_orange_components(inp):
+        if not comp:
+            continue
+        by_row = _row_segments(comp)
+        rows = sorted(by_row.keys(), reverse=True)  # bottom-up
+        # Focus on the lowest part of each cavity where ambiguity is most visible.
+        for r in rows[:3]:
+            segs = by_row[r]
+            if len(segs) <= 1:
+                continue
+            fed = 0
+            for seg in segs:
+                cols = set(seg)
+                has_source = any(
+                    inp[rr][cc] == CYAN
+                    for rr, cc in comp
+                    if rr < r and cc in cols
+                )
+                if has_source:
+                    fed += 1
+            if fed >= 2:
+                return True
     return False
 
 
@@ -296,21 +428,60 @@ def generate(
         for comp in comps:
             if not comp:
                 continue
-            frac = rr.uniform(0.2, 0.6)
+            frac = rr.uniform(0.2, 0.5)
             cells = [
                 (r, c)
                 for (r, c) in comp
                 if (r, c) not in reserved_no_cyan and not (r == barrier_r and c in gap_cols)
             ]
-            if not cells:
+            # Avoid seeding directly ambiguous local states:
+            # cyan above orange with both lateral routes open.
+            safe_cells: list[tuple[int, int]] = []
+            for r, c in cells:
+                if r + 1 < height and inp[r + 1][c] == ORANGE:
+                    continue
+                safe_cells.append((r, c))
+            if not safe_cells:
                 continue
-            n = max(1, min(len(cells), int(round(len(cells) * frac))))
-            rr.shuffle(cells)
-            for r, c in cells[:n]:
+            # Favor sources above/near the first barrier and near its opening(s),
+            # so motion reads like mostly vertical falling into the main basin.
+            gap_min = min(gap_cols)
+            gap_max = max(gap_cols)
+            upper_band = [
+                rc
+                for rc in safe_cells
+                if rc[0] <= barrier_r + 1 and (gap_min - 2) <= rc[1] <= (gap_max + 2)
+            ]
+            # If filtering is too strict for a particular component, relax gently.
+            if len(upper_band) < max(1, int(0.5 * len(safe_cells))):
+                upper_band = [rc for rc in safe_cells if rc[0] <= barrier_r + 1]
+
+            n = max(1, min(len(safe_cells), int(round(len(safe_cells) * frac))))
+            upper_target = n
+            chosen: list[tuple[int, int]] = []
+
+            rr.shuffle(upper_band)
+            chosen.extend(upper_band[: min(len(upper_band), upper_target)])
+
+            remaining = n - len(chosen)
+            if remaining > 0:
+                # Top up from just-above-barrier cells before using deeper cells.
+                chosen_set = set(chosen)
+                near_band = [rc for rc in safe_cells if rc[0] <= barrier_r + 2 and rc not in chosen_set]
+                rr.shuffle(near_band)
+                chosen.extend(near_band[:remaining])
+
+            if len(chosen) < n:
+                chosen_set = set(chosen)
+                rest = [rc for rc in safe_cells if rc not in chosen_set and rc[0] <= barrier_r + 3]
+                rr.shuffle(rest)
+                chosen.extend(rest[: n - len(chosen)])
+
+            for r, c in chosen:
                 inp[r][c] = CYAN
 
         out = transform_t5(inp)
-        if not _is_ambiguous_fill(inp, out):
+        if not _is_ambiguous_fill(inp, out) and not _has_multi_basin_drop_ambiguity(inp):
             return {"input": inp, "output": out}
 
     raise RuntimeError("failed to sample unambiguous t5 instance")

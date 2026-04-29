@@ -133,6 +133,160 @@ class StressConfig:
     history_run_tags: list[str]
 
 
+def _write_summary(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
+
+
+def _seed_from_definition_filename(path: Path) -> int | None:
+    name = path.name
+    marker = "_seed"
+    i = name.find(marker)
+    if i < 0:
+        return None
+    j = i + len(marker)
+    digits: list[str] = []
+    while j < len(name) and name[j].isdigit():
+        digits.append(name[j])
+        j += 1
+    if not digits:
+        return None
+    try:
+        return int("".join(digits))
+    except Exception:
+        return None
+
+
+def _build_skip_report_entry(payload: dict[str, Any], path: Path) -> dict[str, Any]:
+    ok = payload.get("evaluation_ok")
+    if ok is False:
+        return {
+            "ok": False,
+            "error": str(payload.get("error") or "evaluation_ok is false"),
+            "result_path": str(path),
+            "metrics": payload.get("metrics"),
+            "attempts": 0,
+            "skipped_rerun": True,
+        }
+    return {
+        "ok": True,
+        "result_path": str(path),
+        "metrics": payload.get("metrics"),
+        "attempts": 0,
+        "skipped_rerun": True,
+    }
+
+
+def _existing_report_for_task_seed(
+    *,
+    task_id: str,
+    seed: int,
+    cfg: StressConfig,
+    out_dirs: dict[str, Path],
+) -> dict[str, Any] | None:
+    task_int = int(task_id, 16)
+
+    def _mix(tag: int) -> int:
+        return int((seed * 1_000_003 + task_int + tag) % (1 << 31))
+
+    dim_seeds = {
+        "classification_distribution": _mix(11),
+        "editing": _mix(13),
+        "inversion": _mix(17),
+        "definition_arcgen": _mix(19),
+        "constrained_generation": _mix(23),
+    }
+
+    # Definition is keyed by base seed in filename.
+    def_paths = sorted(
+        out_dirs["definition"].glob(
+            f"{task_id}_definition_eval_fixedscript_arcgendyn{cfg.definition_arc_gen_dynamic_n}_seed{seed}_*.json"
+        )
+    )
+    if not def_paths:
+        return None
+    def_path = def_paths[-1]
+    try:
+        def_payload = _read_json(def_path)
+    except Exception:
+        return None
+
+    # Classification / Editing / Inversion are keyed by derived per-dimension seed in payload.
+    def _find_by_payload_seed(dir_path: Path, pattern: str, target_seed: int) -> tuple[Path, dict[str, Any]] | None:
+        matches = sorted(dir_path.glob(pattern))
+        for p in reversed(matches):
+            try:
+                payload = _read_json(p)
+            except Exception:
+                continue
+            if payload.get("seed") == target_seed:
+                return p, payload
+        return None
+
+    cls = _find_by_payload_seed(
+        out_dirs["classification_distribution"],
+        f"{task_id}_distribution_classification_eval_*.json",
+        dim_seeds["classification_distribution"],
+    )
+    edt = _find_by_payload_seed(
+        out_dirs["editing"],
+        f"{task_id}_editing_eval_*.json",
+        dim_seeds["editing"],
+    )
+    inv = _find_by_payload_seed(
+        out_dirs["inversion"],
+        f"{task_id}_inversion_eval_*.json",
+        dim_seeds["inversion"],
+    )
+    if cls is None or edt is None or inv is None:
+        return None
+    cls_path, cls_payload = cls
+    edt_path, edt_payload = edt
+    inv_path, inv_payload = inv
+
+    # Constrained generation has no seed in payload/filename. We align by completed-seed order
+    # for this task: definition seed order <-> constrained-generation timestamp order.
+    cg_paths = sorted(
+        out_dirs["constrained_generation"].glob(f"{task_id}_constrained_generation_eval_*.json")
+    )
+    if not cg_paths:
+        return None
+    all_def_paths = sorted(
+        out_dirs["definition"].glob(
+            f"{task_id}_definition_eval_fixedscript_arcgendyn{cfg.definition_arc_gen_dynamic_n}_seed*_*.json"
+        )
+    )
+    ordered_def_seeds = [s for s in (_seed_from_definition_filename(p) for p in all_def_paths) if s is not None]
+    try:
+        idx = ordered_def_seeds.index(seed)
+    except ValueError:
+        return None
+    if idx >= len(cg_paths):
+        return None
+    cg_path = cg_paths[idx]
+    try:
+        cg_payload = _read_json(cg_path)
+    except Exception:
+        return None
+
+    return {
+        "task_id": task_id,
+        "model": cfg.model,
+        "provider": cfg.provider,
+        "reasoning_effort": cfg.reasoning_effort,
+        "tools_enabled": cfg.tools_enabled,
+        "seed": seed,
+        "dimension_seeds": dim_seeds,
+        "dimensions": {
+            "definition": _build_skip_report_entry(def_payload, def_path),
+            "classification_distribution": _build_skip_report_entry(cls_payload, cls_path),
+            "constrained_generation": _build_skip_report_entry(cg_payload, cg_path),
+            "editing": _build_skip_report_entry(edt_payload, edt_path),
+            "inversion": _build_skip_report_entry(inv_payload, inv_path),
+        },
+    }
+
+
 def _resolve_history_dirs(history_run_tags: Sequence[str]) -> list[Path]:
     dirs: list[Path] = []
     base = ROOT_DIR / "evaluation" / "constrained_generation_eval_results"
@@ -331,6 +485,16 @@ def main() -> None:
     p.add_argument("--reasoning-effort", default="low")
     p.add_argument("--tools-enabled", action="store_true")
     p.add_argument("--run-tag", required=True, help="Run tag for output directories.")
+    p.add_argument(
+        "--skip-existing",
+        action="store_true",
+        help="Skip task/seed pairs that already have all five dimension artifacts (resume mode).",
+    )
+    p.add_argument(
+        "--force-rerun",
+        action="store_true",
+        help="Ignore existing artifacts and re-run every task/seed pair.",
+    )
     p.add_argument("--seed", type=int, default=77, help="Base seed for the 10-seed sweep (default: 77).")
     p.add_argument("--num-seeds", type=int, default=10, help="Number of seeds per task (default: 10).")
     p.add_argument(
@@ -349,6 +513,8 @@ def main() -> None:
         help="Run-tag(s) to mine prior successful constrained-generation examples from (can be repeated).",
     )
     args = p.parse_args()
+    if args.skip_existing and args.force_rerun:
+        raise SystemExit("Use either --skip-existing or --force-rerun, not both.")
 
     subset_path = (ROOT_DIR / args.subset_json).resolve() if not str(args.subset_json).startswith("/") else Path(args.subset_json)
     subset = _read_json(subset_path)
@@ -385,19 +551,6 @@ def main() -> None:
     summary_path = multi_run_summary_dir(root_dir=ROOT_DIR, model=cfg.model, run_tag=cfg.run_tag) / f"sampling_stress_{ts}.json"
     summary_path.parent.mkdir(parents=True, exist_ok=True)
 
-    runs: list[dict[str, Any]] = []
-    for ti, task_id in enumerate(task_ids):
-        for si, seed in enumerate(cfg.seeds):
-            print(f"[task {ti+1}/{len(task_ids)}] {task_id}  [seed {si+1}/{len(cfg.seeds)}] {seed}")
-            rep = run_for_task_and_seed(
-                task_id=task_id,
-                seed=seed,
-                cfg=cfg,
-                out_dirs=out_dirs,
-                reference_definition_dirs=reference_definition_dirs,
-            )
-            runs.append(rep)
-
     payload: dict[str, Any] = {
         "mode": "subset_sampling_stress",
         "created_at": ts,
@@ -411,10 +564,47 @@ def main() -> None:
         "tools_enabled": cfg.tools_enabled,
         "definition_arc_gen_dynamic_n": cfg.definition_arc_gen_dynamic_n,
         "history_run_tags": cfg.history_run_tags,
-        "runs": runs,
+        "runs": [],
     }
-    summary_path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
+    _write_summary(summary_path, payload)
+
+    skip_existing = bool(args.skip_existing) and not bool(args.force_rerun)
+    skipped = 0
+    executed = 0
+    try:
+        for ti, task_id in enumerate(task_ids):
+            for si, seed in enumerate(cfg.seeds):
+                print(f"[task {ti+1}/{len(task_ids)}] {task_id}  [seed {si+1}/{len(cfg.seeds)}] {seed}")
+                rep: dict[str, Any] | None = None
+                if skip_existing:
+                    rep = _existing_report_for_task_seed(
+                        task_id=task_id,
+                        seed=seed,
+                        cfg=cfg,
+                        out_dirs=out_dirs,
+                    )
+                    if rep is not None:
+                        skipped += 1
+                        print("  -> skipped (reused existing artifacts)")
+                if rep is None:
+                    rep = run_for_task_and_seed(
+                        task_id=task_id,
+                        seed=seed,
+                        cfg=cfg,
+                        out_dirs=out_dirs,
+                        reference_definition_dirs=reference_definition_dirs,
+                    )
+                    executed += 1
+                payload["runs"].append(rep)
+                _write_summary(summary_path, payload)
+    except KeyboardInterrupt:
+        _write_summary(summary_path, payload)
+        print(f"Interrupted. Partial summary saved: {summary_path}")
+        print(f"Progress: runs_recorded={len(payload['runs'])}, executed={executed}, skipped={skipped}")
+        raise SystemExit(130)
+
     print(f"Summary saved: {summary_path}")
+    print(f"Progress: runs_recorded={len(payload['runs'])}, executed={executed}, skipped={skipped}")
 
 
 if __name__ == "__main__":

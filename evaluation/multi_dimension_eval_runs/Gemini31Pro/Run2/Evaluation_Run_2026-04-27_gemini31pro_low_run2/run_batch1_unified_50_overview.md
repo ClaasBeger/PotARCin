@@ -1,17 +1,12 @@
-# Multi-Dimension Run Overview
+# Batch 1 Strict Full-Task Accuracy
 
-- Created: 2026-04-27_13-52-42
+- Run tag: Evaluation_Run_2026-04-27_gemini31pro_low_run2
 - Tasks: 50
-- Batch index: 1 (train[0:50])
+- Strict full-task pass: 26/50 (52.00%)
 
-| Dimension | OK tasks | Failed tasks | OK rate | Mean primary metric |
-|---|---:|---:|---:|---:|
-| definition | 50 | 0 | 100.00% | n/a |
-| classification_distribution | 50 | 0 | 100.00% | 0.9120 |
-| constrained_generation | 50 | 0 | 100.00% | 0.8400 |
-| editing | 50 | 0 | 100.00% | n/a |
-| inversion | 50 | 0 | 100.00% | 0.8800 |
-
-## Strict full-task accuracy (all five dimensions)
-
-- Pass all five: **26** / 50 = **52.00%**
+## Dimension pass counts (strict)
+- definition: 41/50 (82.00%)
+- classification_distribution: 35/50 (70.00%)
+- constrained_generation: 42/50 (84.00%)
+- editing: 45/50 (90.00%)
+- inversion: 44/50 (88.00%)

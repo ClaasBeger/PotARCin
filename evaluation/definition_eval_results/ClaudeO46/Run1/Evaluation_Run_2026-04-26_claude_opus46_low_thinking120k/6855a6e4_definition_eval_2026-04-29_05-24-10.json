@@ -1,0 +1,62 @@
+{
+  "task_id": "6855a6e4",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 2 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 2 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 5 5 5 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 2 0 0 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 5 5 5 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 2 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 0 2 2 0 0 0\n0 0 0 2 0 0 0 0 0 0 0 2 0 5 0\n5 5 0 2 0 0 0 0 0 0 0 2 0 5 5\n5 5 0 2 0 0 0 0 0 0 0 2 0 5 5\n0 0 0 2 0 0 0 0 0 0 0 2 0 5 0\n0 0 0 2 2 0 0 0 0 0 2 2 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 0 2 2 0 0 0\n0 0 0 2 0 0 0 0 0 5 0 2 0 0 0\n0 0 0 2 0 5 5 0 5 5 0 2 0 0 0\n0 0 0 2 0 5 5 0 5 5 0 2 0 0 0\n0 0 0 2 0 0 0 0 0 5 0 2 0 0 0\n0 0 0 2 2 0 0 0 0 0 2 2 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 2 2 0 0 0 0\n0 5 0 2 0 0 0 0 0 0 2 0 5 0 0\n5 5 0 2 0 0 0 0 0 0 2 0 5 5 0\n0 5 0 2 0 0 0 0 0 0 2 0 0 5 0\n0 0 0 2 2 0 0 0 0 2 2 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 2 2 0 0 0 0\n0 0 0 2 0 5 0 0 5 0 2 0 0 0 0\n0 0 0 2 0 5 5 5 5 0 2 0 0 0 0\n0 0 0 2 0 5 0 5 0 0 2 0 0 0 0\n0 0 0 2 2 0 0 0 0 2 2 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 5 5 5 0 0 0 0 0 0 0\n0 0 0 0 5 5 0 5 5 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 2 2 2 2 2 0 0 0 0 0\n0 0 0 2 0 0 0 0 0 2 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 0 0 0 0 0 2 0 0 0 0 0\n0 0 0 2 2 2 2 2 2 2 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 5 0 0 0 0 0 0 0 0\n0 0 0 0 5 5 5 5 5 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    import numpy as np\n    g = [row[:] for row in grid]\n    rows, cols = len(g), len(g[0])\n    \n    # Find all 2 cells and 5 cells\n    twos = set()\n    fives = []\n    for r in range(rows):\n        for c in range(cols):\n            if g[r][c] == 2:\n                twos.add((r, c))\n            elif g[r][c] == 5:\n                fives.append((r, c))\n    \n    # Find bounding box of 2s\n    tr = [r for r, c in twos]\n    tc = [c for r, c in twos]\n    min_r, max_r = min(tr), max(tr)\n    min_c, max_c = min(tc), max(tc)\n    \n    # The 2s form a rectangle frame with an opening (gap) on some sides\n    # Find the interior region and the openings\n    # The interior is bounded by min_r, max_r, min_c, max_c\n    \n    # For each 5 cell, determine which side it's on relative to the rectangle\n    # and reflect it inside through the opening\n    \n    # Clear 5s from original positions\n    result = [row[:] for row in g]\n    for r, c in fives:\n        result[r][c] = 0\n    \n    # Determine reflection axis - find which side(s) have openings\n    # Check each side for gaps (non-2 cells along the border)\n    \n    # For each group of 5s, figure out the nearest side and reflect\n    # The 5s need to be moved inside the rectangle, reflected through the open edge\n    \n    # Find the open sides (sides where not all border cells are 2)\n    top_edge = all((min_r, c) in twos for c in range(min_c, max_c + 1))\n    bot_edge = all((max_r, c) in twos for c in range(min_c, max_c + 1))\n    left_edge = all((r, min_c) in twos for r in range(min_r, max_r + 1))\n    right_edge = all((r, max_c) in twos for r in range(min_r, max_r + 1))\n    \n    # Group 5s by which side they're near\n    for r, c in fives:\n        # Determine which open side this 5 is closest to / associated with\n        if r < min_r:  # above - top side\n            # Reflect: mirror vertically, anchor at top edge\n            # Distance from top edge: min_r - r\n            dist = min_r - r\n            new_r = min_r + dist\n            new_c = c\n        elif r > max_r:  # below - bottom side\n            dist = r - max_r\n            new_r = max_r - dist\n            new_c = c\n        elif c < min_c:  # left\n            dist = min_c - c\n            new_r = r\n            new_c = min_c + dist\n        elif c > max_c:  # right\n            dist = c - max_c\n            new_r = r\n            new_c = max_c - dist\n        else:\n            continue\n        \n        if 0 <= new_r < rows and 0 <= new_c < cols and (new_r, new_c) not in twos:\n            result[new_r][new_c] = 5\n    \n    return result\n```",
+  "script": "def solve(grid):\n    import numpy as np\n    g = [row[:] for row in grid]\n    rows, cols = len(g), len(g[0])\n    \n    # Find all 2 cells and 5 cells\n    twos = set()\n    fives = []\n    for r in range(rows):\n        for c in range(cols):\n            if g[r][c] == 2:\n                twos.add((r, c))\n            elif g[r][c] == 5:\n                fives.append((r, c))\n    \n    # Find bounding box of 2s\n    tr = [r for r, c in twos]\n    tc = [c for r, c in twos]\n    min_r, max_r = min(tr), max(tr)\n    min_c, max_c = min(tc), max(tc)\n    \n    # The 2s form a rectangle frame with an opening (gap) on some sides\n    # Find the interior region and the openings\n    # The interior is bounded by min_r, max_r, min_c, max_c\n    \n    # For each 5 cell, determine which side it's on relative to the rectangle\n    # and reflect it inside through the opening\n    \n    # Clear 5s from original positions\n    result = [row[:] for row in g]\n    for r, c in fives:\n        result[r][c] = 0\n    \n    # Determine reflection axis - find which side(s) have openings\n    # Check each side for gaps (non-2 cells along the border)\n    \n    # For each group of 5s, figure out the nearest side and reflect\n    # The 5s need to be moved inside the rectangle, reflected through the open edge\n    \n    # Find the open sides (sides where not all border cells are 2)\n    top_edge = all((min_r, c) in twos for c in range(min_c, max_c + 1))\n    bot_edge = all((max_r, c) in twos for c in range(min_c, max_c + 1))\n    left_edge = all((r, min_c) in twos for r in range(min_r, max_r + 1))\n    right_edge = all((r, max_c) in twos for r in range(min_r, max_r + 1))\n    \n    # Group 5s by which side they're near\n    for r, c in fives:\n        # Determine which open side this 5 is closest to / associated with\n        if r < min_r:  # above - top side\n            # Reflect: mirror vertically, anchor at top edge\n            # Distance from top edge: min_r - r\n            dist = min_r - r\n            new_r = min_r + dist\n            new_c = c\n        elif r > max_r:  # below - bottom side\n            dist = r - max_r\n            new_r = max_r - dist\n            new_c = c\n        elif c < min_c:  # left\n            dist = min_c - c\n            new_r = r\n            new_c = min_c + dist\n        elif c > max_c:  # right\n            dist = c - max_c\n            new_r = r\n            new_c = max_c - dist\n        else:\n            continue\n        \n        if 0 <= new_r < rows and 0 <= new_c < cols and (new_r, new_c) not in twos:\n            result[new_r][new_c] = 5\n    \n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "min() arg is an empty sequence"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "min() arg is an empty sequence"
+    }
+  },
+  "evaluation_ok": true
+}

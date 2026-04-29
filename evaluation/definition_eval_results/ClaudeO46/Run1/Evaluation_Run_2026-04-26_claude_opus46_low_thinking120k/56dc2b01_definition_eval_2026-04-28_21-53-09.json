@@ -1,0 +1,62 @@
+{
+  "task_id": "56dc2b01",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 3 0 0 0 0 0 0 0 0 2 0 0 0 0 0\n0 3 3 3 0 0 0 0 0 0 2 0 0 0 0 0\n3 3 0 0 0 0 0 0 0 0 2 0 0 0 0 0\n0 3 3 3 0 0 0 0 0 0 2 0 0 0 0 0\nOutput:\n0 0 0 0 0 8 0 3 0 0 2 0 0 0 0 0\n0 0 0 0 0 8 0 3 3 3 2 0 0 0 0 0\n0 0 0 0 0 8 3 3 0 0 2 0 0 0 0 0\n0 0 0 0 0 8 0 3 3 3 2 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0\n3 3 0 0 0\n3 0 0 0 0\n3 3 0 3 3\n0 3 3 3 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n2 2 2 2 2\n0 0 0 0 0\nOutput:\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n8 8 8 8 8\n3 3 0 0 0\n3 0 0 0 0\n3 3 0 3 3\n0 3 3 3 0\n2 2 2 2 2\n0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n2 2 2 2 2\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n3 3 3 3 0\n3 0 0 3 0\n3 3 0 3 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\nOutput:\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n2 2 2 2 2\n3 3 3 3 0\n3 0 0 3 0\n3 3 0 3 0\n8 8 8 8 8\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 2 0 0 0 0 0 0 0 3 3 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 3 0 3 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 3 3 3 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 3 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    import numpy as np\n    g = np.array(grid)\n    rows, cols = g.shape\n    \n    # Find 2-line and 3-shape\n    twos = list(zip(*np.where(g == 2)))\n    threes = list(zip(*np.where(g == 3)))\n    \n    # Determine if 2-line is horizontal or vertical\n    two_rows = set(r for r,c in twos)\n    two_cols = set(c for r,c in twos)\n    \n    three_rows = [r for r,c in threes]\n    three_cols = [c for r,c in threes]\n    \n    # Clear 3s from grid\n    result = g.copy()\n    for r,c in threes:\n        result[r,c] = 0\n    \n    if len(two_rows) == 1:  # horizontal line\n        line_row = list(two_rows)[0]\n        three_min_r = min(three_rows)\n        three_max_r = max(three_rows)\n        shape_h = three_max_r - three_min_r + 1\n        \n        if np.mean(three_rows) > line_row:  # shape below line\n            # Move shape to just below line\n            for r,c in threes:\n                nr = line_row + 1 + (r - three_min_r)\n                result[nr,c] = 3\n            # 8-line below shape\n            eight_row = line_row + 1 + shape_h\n            for c in range(cols):\n                result[eight_row, c] = 8\n        else:  # shape above line\n            for r,c in threes:\n                nr = line_row - shape_h + (r - three_min_r)\n                result[nr,c] = 3\n            eight_row = line_row - shape_h - 1\n            for c in range(cols):\n                result[eight_row, c] = 8\n    else:  # vertical line\n        line_col = list(two_cols)[0]\n        three_min_c = min(three_cols)\n        three_max_c = max(three_cols)\n        shape_w = three_max_c - three_min_c + 1\n        \n        if np.mean(three_cols) > line_col:  # shape right of line\n            for r,c in threes:\n                nc = line_col + 1 + (c - three_min_c)\n                result[r, nc] = 3\n            eight_col = line_col + 1 + shape_w\n            for r in range(rows):\n                result[r, eight_col] = 8\n        else:\n            for r,c in threes:\n                nc = line_col - shape_w + (c - three_min_c)\n                result[r, nc] = 3\n            eight_col = line_col - shape_w - 1\n            for r in range(rows):\n                result[r, eight_col] = 8\n    \n    return result.tolist()",
+  "script": "def solve(grid):\n    import numpy as np\n    g = np.array(grid)\n    rows, cols = g.shape\n    \n    # Find 2-line and 3-shape\n    twos = list(zip(*np.where(g == 2)))\n    threes = list(zip(*np.where(g == 3)))\n    \n    # Determine if 2-line is horizontal or vertical\n    two_rows = set(r for r,c in twos)\n    two_cols = set(c for r,c in twos)\n    \n    three_rows = [r for r,c in threes]\n    three_cols = [c for r,c in threes]\n    \n    # Clear 3s from grid\n    result = g.copy()\n    for r,c in threes:\n        result[r,c] = 0\n    \n    if len(two_rows) == 1:  # horizontal line\n        line_row = list(two_rows)[0]\n        three_min_r = min(three_rows)\n        three_max_r = max(three_rows)\n        shape_h = three_max_r - three_min_r + 1\n        \n        if np.mean(three_rows) > line_row:  # shape below line\n            # Move shape to just below line\n            for r,c in threes:\n                nr = line_row + 1 + (r - three_min_r)\n                result[nr,c] = 3\n            # 8-line below shape\n            eight_row = line_row + 1 + shape_h\n            for c in range(cols):\n                result[eight_row, c] = 8\n        else:  # shape above line\n            for r,c in threes:\n                nr = line_row - shape_h + (r - three_min_r)\n                result[nr,c] = 3\n            eight_row = line_row - shape_h - 1\n            for c in range(cols):\n                result[eight_row, c] = 8\n    else:  # vertical line\n        line_col = list(two_cols)[0]\n        three_min_c = min(three_cols)\n        three_max_c = max(three_cols)\n        shape_w = three_max_c - three_min_c + 1\n        \n        if np.mean(three_cols) > line_col:  # shape right of line\n            for r,c in threes:\n                nc = line_col + 1 + (c - three_min_c)\n                result[r, nc] = 3\n            eight_col = line_col + 1 + shape_w\n            for r in range(rows):\n                result[r, eight_col] = 8\n        else:\n            for r,c in threes:\n                nc = line_col - shape_w + (c - three_min_c)\n                result[r, nc] = 3\n            eight_col = line_col - shape_w - 1\n            for r in range(rows):\n                result[r, eight_col] = 8\n    \n    return result.tolist()",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 60,
+      "total": 1000,
+      "success_rate": 0.06
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "min() arg is an empty sequence"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "min() arg is an empty sequence"
+    }
+  },
+  "evaluation_ok": true
+}

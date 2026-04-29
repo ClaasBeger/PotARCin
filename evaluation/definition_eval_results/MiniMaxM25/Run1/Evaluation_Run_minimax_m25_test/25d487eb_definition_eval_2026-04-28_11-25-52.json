@@ -1,0 +1,74 @@
+{
+  "task_id": "25d487eb",
+  "test_idx": 0,
+  "model": "MiniMaxAI/MiniMax-M2.5",
+  "provider": "together",
+  "base_url": "https://api.together.xyz/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 0 0 0 0 0 0\n0 0 0 1 2 2 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 0 0 0 0 0 0\n0 0 0 1 2 2 1 1 1 1 1 1 1 1 1\n0 0 0 2 2 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 8 8 8 0 0 0 0\n0 0 0 0 8 8 8 8 8 0 0 0\n0 0 0 8 8 8 3 8 8 8 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 3 0 0 0 0 0\n0 0 0 0 0 0 3 0 0 0 0 0\n0 0 0 0 0 0 3 0 0 0 0 0\n0 0 0 0 0 0 3 0 0 0 0 0\n0 0 0 0 0 0 3 0 0 0 0 0\n0 0 0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 8 8 8 0 0 0 0\n0 0 0 0 8 8 8 8 8 0 0 0\n0 0 0 8 8 8 3 8 8 8 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 3 3 2 3 3 0 0 0 0 0\n0 0 0 3 3 3 0 0 0 0 0 0\n0 0 0 0 3 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 3 3 2 3 3 0 0 0 0 0\n0 0 0 3 3 3 0 0 0 0 0 0\n0 0 0 0 3 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 4 0 0 0 0 0 0\n0 0 0 4 4 4 0 0 0 0 0\n0 0 4 4 4 4 4 0 0 0 0\n0 4 4 4 8 4 4 4 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "from collections import Counter\n\ndef solve(grid):\n    if not grid:\n        return grid\n    rows, cols = len(grid), len(grid[0])\n\n    # count non\u2011zero values\n    freq = Counter()\n    for r in grid:\n        for v in r:\n            if v:\n                freq[v] += 1\n\n    # inner colour appears exactly once\n    inner_color = None\n    for v, c in freq.items():\n        if c == 1:\n            inner_color = v\n            break\n    if inner_color is None:\n        return grid\n\n    # the shape colour is the most frequent non\u2011zero colour (excluding the inner colour)\n    shape_color = None\n    max_cnt = -1\n    for v, c in freq.items():\n        if v != inner_color and c > max_cnt:\n            max_cnt = c\n            shape_color = v\n\n    # locate the inner colour\n    r, c = next((i, j) for i in range(rows) for j in range(cols) if grid[i][j] == inner_color)\n\n    # directions: up, down, left, right\n    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n    best_len = -1\n    best_dir = None\n    best_start = None\n\n    for dx, dy in dirs:\n        i, j = r + dx, c + dy\n        # skip any non\u2011zero cells (the shape)\n        while 0 <= i < rows and 0 <= j < cols and grid[i][j] != 0:\n            i += dx\n            j += dy\n        # first zero cell after the shape (or immediate if no shape)\n        if 0 <= i < rows and 0 <= j < cols and grid[i][j] == 0:\n            start_i, start_j = i, j\n            length = 0\n            while 0 <= i < rows and 0 <= j < cols and grid[i][j] == 0:\n                length += 1\n                i += dx\n                j += dy\n            if length > best_len:\n                best_len = length\n                best_dir = (dx, dy)\n                best_start = (start_i, start_j)\n\n    # no extension possible\n    if best_start is None:\n        return grid\n\n    # apply the extension\n    new_grid = [row[:] for row in grid]\n    si, sj = best_start\n    dx, dy = best_dir\n    for k in range(best_len):\n        ni = si + k * dx\n        nj = sj + k * dy\n        new_grid[ni][nj] = inner_color\n\n    return new_grid",
+  "script": "from collections import Counter\n\ndef solve(grid):\n    if not grid:\n        return grid\n    rows, cols = len(grid), len(grid[0])\n\n    # count non\u2011zero values\n    freq = Counter()\n    for r in grid:\n        for v in r:\n            if v:\n                freq[v] += 1\n\n    # inner colour appears exactly once\n    inner_color = None\n    for v, c in freq.items():\n        if c == 1:\n            inner_color = v\n            break\n    if inner_color is None:\n        return grid\n\n    # the shape colour is the most frequent non\u2011zero colour (excluding the inner colour)\n    shape_color = None\n    max_cnt = -1\n    for v, c in freq.items():\n        if v != inner_color and c > max_cnt:\n            max_cnt = c\n            shape_color = v\n\n    # locate the inner colour\n    r, c = next((i, j) for i in range(rows) for j in range(cols) if grid[i][j] == inner_color)\n\n    # directions: up, down, left, right\n    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n    best_len = -1\n    best_dir = None\n    best_start = None\n\n    for dx, dy in dirs:\n        i, j = r + dx, c + dy\n        # skip any non\u2011zero cells (the shape)\n        while 0 <= i < rows and 0 <= j < cols and grid[i][j] != 0:\n            i += dx\n            j += dy\n        # first zero cell after the shape (or immediate if no shape)\n        if 0 <= i < rows and 0 <= j < cols and grid[i][j] == 0:\n            start_i, start_j = i, j\n            length = 0\n            while 0 <= i < rows and 0 <= j < cols and grid[i][j] == 0:\n                length += 1\n                i += dx\n                j += dy\n            if length > best_len:\n                best_len = length\n                best_dir = (dx, dy)\n                best_start = (start_i, start_j)\n\n    # no extension possible\n    if best_start is None:\n        return grid\n\n    # apply the extension\n    new_grid = [row[:] for row in grid]\n    si, sj = best_start\n    dx, dy = best_dir\n    for k in range(best_len):\n        ni = si + k * dx\n        nj = sj + k * dy\n        new_grid[ni][nj] = inner_color\n\n    return new_grid",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 261,
+      "success_rate": 0.0
+    },
+    "dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "stable": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "dynamic50": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    }
+  },
+  "evaluation_ok": true
+}
