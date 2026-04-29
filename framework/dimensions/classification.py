@@ -275,6 +275,7 @@ def build_distribution_classification_prompt(
     *,
     demonstrations: Sequence[GridPair],
     candidates: Sequence[GridPair],
+    prior_work_context: str | None = None,
 ) -> str:
     """Five test pairs: model outputs only a length-5 Python list of 0/1."""
     lines: list[str] = []
@@ -293,6 +294,11 @@ def build_distribution_classification_prompt(
         lines.append(_grid_to_str(ex.input))
         lines.append("Output:")
         lines.append(_grid_to_str(ex.output))
+        lines.append("")
+
+    if prior_work_context:
+        lines.append("Here is some work on this task you have performed on adjacent requests.")
+        lines.append(prior_work_context)
         lines.append("")
 
     lines.append("Test pairs (evaluate each in order, index 0 … 4):")
@@ -617,6 +623,7 @@ def run_distribution_classification_api_evaluation_once(
     api_key: Optional[str] = None,
     base_url: Optional[str] = None,
     seed: int = 0,
+    prior_work_context: str | None = None,
     out_dir: str | Path = "evaluation/classification_eval_results",
 ) -> dict[str, Any]:
     """Sample a 5-way distribution batch, prompt the model, parse ``[0/1]×5``, score.
@@ -675,8 +682,10 @@ def run_distribution_classification_api_evaluation_once(
         prompt = build_distribution_classification_prompt(
             demonstrations=demos,
             candidates=candidates,
+            prior_work_context=prior_work_context,
         )
         result["prompt"] = prompt
+        result["prior_work_context"] = prior_work_context
         result["test_pairs"] = [{"input": p.input, "output": p.output} for p in candidates]
         result["ground_truth"] = gt
         result["item_meta"] = meta

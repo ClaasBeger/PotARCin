@@ -84,6 +84,7 @@ def build_editing_prompt(
     demonstrations: Sequence[GridPair],
     corrupted_pair: GridPair,
     include_true: bool,
+    prior_work_context: str | None = None,
 ) -> str:
     lines: list[str] = []
     lines.append(
@@ -96,6 +97,10 @@ def build_editing_prompt(
         lines.append(_grid_to_str(ex.input))
         lines.append("Output:")
         lines.append(_grid_to_str(ex.output))
+        lines.append("")
+    if prior_work_context:
+        lines.append("Here is some work on this task you have performed on adjacent requests.")
+        lines.append(prior_work_context)
         lines.append("")
 
     if include_true:
@@ -235,6 +240,7 @@ def run_editing_api_evaluation_once(
     seed: int = 0,
     include_true: bool = False,
     max_norm_edit: float | None = 0.70,
+    prior_work_context: str | None = None,
     out_dir: str | Path = "evaluation/editing_eval_results",
 ) -> dict[str, Any]:
     """Run editing eval; after the model returns, ``raw_response`` is always saved."""
@@ -266,6 +272,7 @@ def run_editing_api_evaluation_once(
         demonstrations=task.train_pairs,
         corrupted_pair=corrupted_pair,
         include_true=include_true,
+        prior_work_context=prior_work_context,
     )
 
     resolved_provider, _effective_key, effective_base = resolve_provider_config(
@@ -300,6 +307,7 @@ def run_editing_api_evaluation_once(
         "include_true": include_true,
         "corruption_source": source,
         "prompt": prompt,
+        "prior_work_context": prior_work_context,
         "raw_response": raw,
         "corrupted_pair": {"input": corrupted_pair.input, "output": corrupted_pair.output},
         "target_pair": {"input": target_pair.input, "output": target_pair.output},

@@ -1,0 +1,62 @@
+{
+  "task_id": "760b3cac",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 8 0 8 0 0 0\n0 0 0 0 8 8 0 0 0\n0 0 0 0 0 8 0 0 0\n0 0 0 4 0 0 0 0 0\n0 0 0 4 4 4 0 0 0\n0 0 0 0 4 0 0 0 0\nOutput:\n8 0 8 8 0 8 0 0 0\n8 8 0 0 8 8 0 0 0\n8 0 0 0 0 8 0 0 0\n0 0 0 4 0 0 0 0 0\n0 0 0 4 4 4 0 0 0\n0 0 0 0 4 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 8 0 8 0 0 0\n0 0 0 8 8 8 0 0 0\n0 0 0 8 8 0 0 0 0\n0 0 0 0 0 4 0 0 0\n0 0 0 4 4 4 0 0 0\n0 0 0 0 4 0 0 0 0\nOutput:\n0 0 0 8 0 8 8 0 8\n0 0 0 8 8 8 8 8 8\n0 0 0 8 8 0 0 8 8\n0 0 0 0 0 4 0 0 0\n0 0 0 4 4 4 0 0 0\n0 0 0 0 4 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 8 0 0 0 0 0\n0 0 0 0 8 8 0 0 0\n0 0 0 8 0 0 0 0 0\n0 0 0 4 0 0 0 0 0\n0 0 0 4 4 4 0 0 0\n0 0 0 0 4 0 0 0 0\nOutput:\n0 0 8 8 0 0 0 0 0\n8 8 0 0 8 8 0 0 0\n0 0 8 8 0 0 0 0 0\n0 0 0 4 0 0 0 0 0\n0 0 0 4 4 4 0 0 0\n0 0 0 0 4 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 8 0 8 0 0 0\n0 0 0 0 8 8 0 0 0\n0 0 0 8 0 0 0 0 0\n0 0 0 0 0 4 0 0 0\n0 0 0 4 4 4 0 0 0\n0 0 0 0 4 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    import copy\n    result = copy.deepcopy(grid)\n    \n    eight_cells = [(r,c) for r in range(len(grid)) for c in range(len(grid[0])) if grid[r][c] == 8]\n    four_cells = [(r,c) for r in range(len(grid)) for c in range(len(grid[0])) if grid[r][c] == 4]\n    \n    f_min_c = min(c for r,c in four_cells)\n    f_max_c = max(c for r,c in four_cells)\n    mid_c = (f_min_c + f_max_c) / 2\n    \n    f_min_r = min(r for r,c in four_cells)\n    top_4_c = [c for r,c in four_cells if r == f_min_r][0]\n    \n    e_min_c = min(c for r,c in eight_cells)\n    e_max_c = max(c for r,c in eight_cells)\n    \n    if top_4_c < mid_c:\n        for r, c in eight_cells:\n            nc = 2 * e_min_c - 1 - c\n            if 0 <= nc < len(grid[0]):\n                result[r][nc] = 8\n    else:\n        for r, c in eight_cells:\n            nc = 2 * e_max_c + 1 - c\n            if 0 <= nc < len(grid[0]):\n                result[r][nc] = 8\n    \n    return result",
+  "script": "def solve(grid):\n    import copy\n    result = copy.deepcopy(grid)\n    \n    eight_cells = [(r,c) for r in range(len(grid)) for c in range(len(grid[0])) if grid[r][c] == 8]\n    four_cells = [(r,c) for r in range(len(grid)) for c in range(len(grid[0])) if grid[r][c] == 4]\n    \n    f_min_c = min(c for r,c in four_cells)\n    f_max_c = max(c for r,c in four_cells)\n    mid_c = (f_min_c + f_max_c) / 2\n    \n    f_min_r = min(r for r,c in four_cells)\n    top_4_c = [c for r,c in four_cells if r == f_min_r][0]\n    \n    e_min_c = min(c for r,c in eight_cells)\n    e_max_c = max(c for r,c in eight_cells)\n    \n    if top_4_c < mid_c:\n        for r, c in eight_cells:\n            nc = 2 * e_min_c - 1 - c\n            if 0 <= nc < len(grid[0]):\n                result[r][nc] = 8\n    else:\n        for r, c in eight_cells:\n            nc = 2 * e_max_c + 1 - c\n            if 0 <= nc < len(grid[0]):\n                result[r][nc] = 8\n    \n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 4,
+      "total": 1000,
+      "success_rate": 0.004
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "min() arg is an empty sequence"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "'tuple' object does not support item assignment"
+    }
+  },
+  "evaluation_ok": true
+}

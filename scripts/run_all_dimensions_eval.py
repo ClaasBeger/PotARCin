@@ -80,6 +80,8 @@ def run_all_dimensions_for_task(
     skip_completed_dimensions: bool | None = None,
     parallel_dimensions: int = 1,
     classification_serial: bool = False,
+    stitch_prior_work_context: bool = False,
+    stitched_context_max_chars: int = 12000,
 ) -> dict[str, Any]:
     """Run all five dimension evaluations for one task id.
 
@@ -114,6 +116,8 @@ def run_all_dimensions_for_task(
         "tools_enabled": tools_enabled,
         "seed": seed,
         "dimension_seeds": dim_seeds,
+        "stitch_prior_work_context": stitch_prior_work_context,
+        "stitched_context_max_chars": stitched_context_max_chars,
         "dimensions": {},
     }
 
@@ -121,6 +125,55 @@ def run_all_dimensions_for_task(
         skip_completed_dimensions = bool(out_dirs)
 
     task = load_task(task_id)
+
+    def _trim_text(s: Any, limit: int) -> str:
+        if not isinstance(s, str):
+            return ""
+        t = s.strip()
+        if limit <= 0 or len(t) <= limit:
+            return t
+        return t[:limit] + "\n[TRUNCATED]"
+
+    def _build_prior_work_context(prior_payloads: dict[str, dict[str, Any]], limit: int) -> str:
+        per_dim_limit = max(500, limit // 3) if limit > 0 else 0
+        blocks: list[str] = []
+        for dim in _DIMENSION_ORDER:
+            payload = prior_payloads.get(dim)
+            if not isinstance(payload, dict):
+                continue
+            prompt_txt = _trim_text(payload.get("prompt"), per_dim_limit)
+            raw_txt = _trim_text(payload.get("raw_response"), per_dim_limit)
+            if not prompt_txt and not raw_txt:
+                continue
+            part: list[str] = [f"Prior dimension: {dim}"]
+            if prompt_txt:
+                part.append("Prompt:")
+                part.append(prompt_txt)
+            if raw_txt:
+                part.append("Answer:")
+                part.append(raw_txt)
+            blocks.append("\n".join(part))
+        if not blocks:
+            return ""
+        merged = "\n\n".join(blocks)
+        return _trim_text(merged, limit)
+
+    def _report_from_dimension_result(dim_payload: dict[str, Any]) -> dict[str, Any]:
+        ok = bool(dim_payload.get("evaluation_ok"))
+        if ok:
+            return {
+                "ok": True,
+                "result_path": dim_payload.get("result_path"),
+                "metrics": dim_payload.get("metrics"),
+                "attempts": 1,
+            }
+        return {
+            "ok": False,
+            "error": str(dim_payload.get("error") or "evaluation_ok is false"),
+            "result_path": dim_payload.get("result_path"),
+            "metrics": dim_payload.get("metrics"),
+            "attempts": 1,
+        }
 
     def _run(name: str, fn: Callable[[], dict[str, Any]]) -> dict[str, Any]:
         attempts = max(1, int(dimension_retries) + 1)
@@ -166,6 +219,158 @@ def run_all_dimensions_for_task(
             "metrics": last_metrics,
             "attempts": last_attempt,
         }
+
+    if stitch_prior_work_context:
+        prior_payloads: dict[str, dict[str, Any]] = {}
+
+        def _execute_dimension(
+            *,
+            dim_name: str,
+            out_key: str,
+            suffix: str,
+            fn_with_context: Callable[[str | None], dict[str, Any]],
+            prior_context: str | None,
+        ) -> tuple[dict[str, Any], dict[str, Any]]:
+            if skip_completed_dimensions and out_dirs:
+                latest_path, payload = _read_latest_dimension_json(out_dirs[out_key], task_id, suffix)
+                if latest_path is not None and payload is not None and _payload_indicates_dimension_complete(payload):
+                    rep = _report_from_saved_dimension(payload, latest_path)
+                    return payload, rep
+
+            attempts = max(1, int(dimension_retries) + 1)
+            last_payload: dict[str, Any] | None = None
+            last_error = ""
+            for attempt in range(1, attempts + 1):
+                try:
+                    payload = fn_with_context(prior_context)
+                    last_payload = payload if isinstance(payload, dict) else {"evaluation_ok": False}
+                    if bool(last_payload.get("evaluation_ok")):
+                        rep = _report_from_dimension_result(last_payload)
+                        rep["attempts"] = attempt
+                        return last_payload, rep
+                    last_error = str(last_payload.get("error") or "evaluation_ok is false")
+                    if attempt < attempts and _is_transient_error(last_error):
+                        time.sleep(max(0.0, retry_backoff_s) * attempt)
+                        continue
+                    rep = _report_from_dimension_result(last_payload)
+                    rep["attempts"] = attempt
+                    return last_payload, rep
+                except Exception as e:
+                    last_error = str(e)
+                    if attempt >= attempts or not _is_transient_error(last_error):
+                        break
+                    time.sleep(max(0.0, retry_backoff_s) * attempt)
+
+            fallback = last_payload or {
+                "evaluation_ok": False,
+                "error": last_error,
+                "metrics": None,
+                "result_path": None,
+            }
+            rep = _report_from_dimension_result(fallback)
+            rep["attempts"] = attempts
+            return fallback, rep
+
+        stitched_jobs: list[tuple[str, str, str, Callable[[str | None], dict[str, Any]]]] = [
+            (
+                "definition",
+                "definition",
+                "definition_eval",
+                lambda _ctx: run_definition_api_evaluation(
+                    task=task,
+                    test_idx=definition_test_idx,
+                    model=model,
+                    provider=provider,
+                    api_endpoint="responses",
+                    reasoning_effort=reasoning_effort,
+                    tools_enabled=tools_enabled,
+                    out_dir=out_dirs["definition"] if out_dirs else "evaluation/definition_eval_results",
+                ),
+            ),
+            (
+                "classification_distribution",
+                "classification_distribution",
+                "distribution_classification_eval",
+                lambda ctx: run_distribution_classification_api_evaluation_once(
+                    task_id=task_id,
+                    model=model,
+                    provider=provider,
+                    reasoning_effort=reasoning_effort,
+                    tools_enabled=tools_enabled,
+                    seed=dim_seeds["classification_distribution"],
+                    prior_work_context=ctx,
+                    out_dir=(
+                        out_dirs["classification_distribution"]
+                        if out_dirs
+                        else "evaluation/classification_eval_results"
+                    ),
+                ),
+            ),
+            (
+                "constrained_generation",
+                "constrained_generation",
+                "constrained_generation_eval",
+                lambda ctx: run_editing_api_evaluation_once(
+                    task=task,
+                    model=model,
+                    provider=provider,
+                    reasoning_effort=reasoning_effort,
+                    tools_enabled=tools_enabled,
+                    seed=dim_seeds["editing"],
+                    prior_work_context=ctx,
+                    out_dir=out_dirs["editing"] if out_dirs else "evaluation/editing_eval_results",
+                ),
+            ),
+            (
+                "constrained_generation",
+                "constrained_generation",
+                "constrained_generation_eval",
+                lambda ctx: run_constrained_generation_api_evaluation_once(
+                    task_id=task_id,
+                    model=model,
+                    provider=provider,
+                    reasoning_effort=reasoning_effort,
+                    tools_enabled=tools_enabled,
+                    prior_work_context=ctx,
+                    out_dir=(
+                        out_dirs["constrained_generation"]
+                        if out_dirs
+                        else "evaluation/constrained_generation_eval_results"
+                    ),
+                ),
+            ),
+            (
+                "inversion",
+                "inversion",
+                "inversion_eval",
+                lambda ctx: run_inversion_api_evaluation_once(
+                    task_id=task_id,
+                    model=model,
+                    provider=provider,
+                    reasoning_effort=reasoning_effort,
+                    tools_enabled=tools_enabled,
+                    seed=dim_seeds["inversion"],
+                    prior_work_context=ctx,
+                    out_dir=out_dirs["inversion"] if out_dirs else "evaluation/inversion_eval_results",
+                ),
+            ),
+        ]
+
+        for dim_name, out_key, suffix, fn_with_context in stitched_jobs:
+            ctx = None if dim_name == "definition" else _build_prior_work_context(
+                prior_payloads, stitched_context_max_chars
+            )
+            payload, rep = _execute_dimension(
+                dim_name=dim_name,
+                out_key=out_key,
+                suffix=suffix,
+                fn_with_context=fn_with_context,
+                prior_context=ctx,
+            )
+            report["dimensions"][dim_name] = rep
+            prior_payloads[dim_name] = payload
+
+        return report
 
     def _maybe_rerun_dimension(
         dim_name: str,
@@ -323,6 +528,21 @@ def _first_n_task_ids(n: int) -> list[str]:
 
 def _all_task_ids() -> list[str]:
     return [t.task_id for t in iter_tasks(split="train", source=TaskSource.ORIGINAL_ARC)]
+
+
+def _task_ids_from_subset_file(path: Path) -> list[str]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    ids = payload.get("selected_task_ids")
+    if not isinstance(ids, list) or not ids:
+        raise ValueError(f"Subset file {path} must contain non-empty selected_task_ids list.")
+    out: list[str] = []
+    for x in ids:
+        if not isinstance(x, str) or not x.strip():
+            raise ValueError(f"Subset file {path} contains invalid task id: {x!r}")
+        out.append(x.strip())
+    # Keep file order while deduplicating.
+    deduped = list(dict.fromkeys(out))
+    return deduped
 
 
 def _read_latest_dimension_json(
@@ -550,6 +770,20 @@ def main() -> None:
         help="Base linear backoff in seconds between retries (default: 1.5)",
     )
     p.add_argument(
+        "--stitch-prior-work-context",
+        action="store_true",
+        help=(
+            "Sequentially stitch prior dimension prompt/answer text into each subsequent "
+            "non-definition dimension prompt for the same task."
+        ),
+    )
+    p.add_argument(
+        "--stitched-context-max-chars",
+        type=int,
+        default=12000,
+        help="Max characters of stitched prior-work context passed to each prompt.",
+    )
+    p.add_argument(
         "--parallel-dimensions",
         type=int,
         default=1,
@@ -579,6 +813,14 @@ def main() -> None:
         "--summary-out",
         default=None,
         help="Optional output path for run summary JSON. Default: evaluation/multi_dimension_eval_runs/<timestamp>.json",
+    )
+    p.add_argument(
+        "--task-subset-file",
+        default=None,
+        help=(
+            "Optional JSON file with selected_task_ids (e.g. Test2/ARC1_subsets/*.json). "
+            "In batch mode, only those task ids are considered."
+        ),
     )
     p.add_argument(
         "--run-tag",
@@ -658,6 +900,8 @@ def main() -> None:
             retry_backoff_s=args.retry_backoff_s,
             parallel_dimensions=args.parallel_dimensions,
             classification_serial=args.classification_serial,
+            stitch_prior_work_context=bool(args.stitch_prior_work_context),
+            stitched_context_max_chars=int(args.stitched_context_max_chars),
             out_dirs=out_dirs or None,
             skip_completed_dimensions=skip_completed,
         )
@@ -679,7 +923,20 @@ def main() -> None:
     if args.batch_size <= 0:
         raise SystemExit("--batch-size must be >= 1")
 
-    all_task_ids = _all_task_ids()
+    if args.task_subset_file:
+        subset_path = Path(args.task_subset_file)
+        if not subset_path.is_absolute():
+            subset_path = ROOT_DIR / subset_path
+        all_task_ids = _task_ids_from_subset_file(subset_path)
+        # Keep only ids that exist in ARC1 training split.
+        canonical_ids = set(_all_task_ids())
+        all_task_ids = [tid for tid in all_task_ids if tid in canonical_ids]
+        if not all_task_ids:
+            raise SystemExit(
+                f"--task-subset-file resolved to zero valid ARC1 task ids: {subset_path}"
+            )
+    else:
+        all_task_ids = _all_task_ids()
     completed_before = _completed_tasks_for_run_tag(all_task_ids, out_dirs)
     pending_task_ids = [tid for tid in all_task_ids if tid not in completed_before]
     task_ids = pending_task_ids[: args.batch_size]
@@ -721,6 +978,8 @@ def main() -> None:
             retry_backoff_s=args.retry_backoff_s,
             parallel_dimensions=args.parallel_dimensions,
             classification_serial=args.classification_serial,
+            stitch_prior_work_context=bool(args.stitch_prior_work_context),
+            stitched_context_max_chars=int(args.stitched_context_max_chars),
             out_dirs=out_dirs or None,
             skip_completed_dimensions=skip_completed,
         )

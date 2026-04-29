@@ -46,7 +46,9 @@ def _grid_to_str(grid: Grid) -> str:
     return "\n".join(" ".join(str(cell) for cell in row) for row in grid)
 
 
-def build_constrained_generation_prompt(*, demonstrations: Sequence[GridPair]) -> str:
+def build_constrained_generation_prompt(
+    *, demonstrations: Sequence[GridPair], prior_work_context: str | None = None
+) -> str:
     lines: list[str] = []
     lines.append(
         "Find the common rule that maps an input grid to an output grid given the examples below."
@@ -58,6 +60,10 @@ def build_constrained_generation_prompt(*, demonstrations: Sequence[GridPair]) -
         lines.append(_grid_to_str(ex.input))
         lines.append("Output:")
         lines.append(_grid_to_str(ex.output))
+        lines.append("")
+    if prior_work_context:
+        lines.append("Here is some work on this task you have performed on adjacent requests.")
+        lines.append(prior_work_context)
         lines.append("")
     lines.append(
         "Generate one NEW input/output pair that follows the same transformation rule.\n"
@@ -338,6 +344,7 @@ def run_constrained_generation_api_evaluation_once(
     api_key: Optional[str] = None,
     base_url: Optional[str] = None,
     extra_demonstrations: Sequence[GridPair] = (),
+    prior_work_context: str | None = None,
     out_dir: str | Path = "evaluation/constrained_generation_eval_results",
 ) -> dict[str, Any]:
     """Call the model, parse, score, and write JSON under *out_dir*.
@@ -354,7 +361,10 @@ def run_constrained_generation_api_evaluation_once(
     demos: list[GridPair] = list(task.train_pairs)
     if extra_demonstrations:
         demos.extend(list(extra_demonstrations))
-    prompt = build_constrained_generation_prompt(demonstrations=demos)
+    prompt = build_constrained_generation_prompt(
+        demonstrations=demos,
+        prior_work_context=prior_work_context,
+    )
     resolved_provider, _effective_key, effective_base = resolve_provider_config(
         model=model,
         provider=provider,
@@ -385,6 +395,7 @@ def run_constrained_generation_api_evaluation_once(
         "tools_enabled": tools_enabled,
         "demonstration_count": len(demos),
         "prompt": prompt,
+        "prior_work_context": prior_work_context,
         "raw_response": raw,
         "evaluation_ok": False,
     }

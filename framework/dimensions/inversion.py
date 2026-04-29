@@ -58,6 +58,7 @@ def build_inversion_prompt(
     *,
     demonstrations: Sequence[GridPair],
     desired_output: Grid,
+    prior_work_context: str | None = None,
 ) -> str:
     lines: list[str] = []
     lines.append(
@@ -70,6 +71,10 @@ def build_inversion_prompt(
         lines.append(_grid_to_str(ex.input))
         lines.append("Output:")
         lines.append(_grid_to_str(ex.output))
+        lines.append("")
+    if prior_work_context:
+        lines.append("Here is some work on this task you have performed on adjacent requests.")
+        lines.append(prior_work_context)
         lines.append("")
     lines.append("Now infer an input grid that would produce the following output by applying the same rule.")
     lines.append("Desired output:")
@@ -314,6 +319,7 @@ def run_inversion_api_evaluation_once(
     api_key: Optional[str] = None,
     base_url: Optional[str] = None,
     seed: int = 0,
+    prior_work_context: str | None = None,
     out_dir: str | Path = "evaluation/inversion_eval_results",
 ) -> dict[str, Any]:
     """After the model returns, ``raw_response`` is always written to the eval JSON."""
@@ -328,6 +334,7 @@ def run_inversion_api_evaluation_once(
     prompt = build_inversion_prompt(
         demonstrations=inst.input.demonstrations,
         desired_output=inst.input.desired_output,
+        prior_work_context=prior_work_context,
     )
 
     resolved_provider, _effective_key, effective_base = resolve_provider_config(
@@ -360,6 +367,7 @@ def run_inversion_api_evaluation_once(
         "tools_enabled": tools_enabled,
         "seed": seed,
         "prompt": prompt,
+        "prior_work_context": prior_work_context,
         "raw_response": raw,
         "desired_output": inst.input.desired_output,
         "reference_input": inst.input.reference_input,
