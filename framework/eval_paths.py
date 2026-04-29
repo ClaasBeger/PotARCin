@@ -9,6 +9,7 @@ _MODEL_ALIASES: dict[str, str] = {
     "gemini-3.1-pro-preview": "Gemini31Pro",
     "moonshotai/Kimi-K2.5": "KimiK25",
     "MiniMaxAI/MiniMax-M2.5": "MiniMaxM25",
+    "minimax/minimax-m2.5:nitro": "MiniMaxM25",
 }
 
 

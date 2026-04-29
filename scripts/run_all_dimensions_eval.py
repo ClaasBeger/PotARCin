@@ -57,6 +57,14 @@ def _is_transient_error(msg: str) -> bool:
     return any(tok in s for tok in transient_markers)
 
 
+def _is_claude_run(model: str, provider: str | None) -> bool:
+    p = (provider or "").strip().lower()
+    m = (model or "").strip().lower()
+    if p == "anthropic":
+        return True
+    return m.startswith("claude") or m.startswith("anthropic/claude")
+
+
 def run_all_dimensions_for_task(
     *,
     task_id: str,
@@ -509,7 +517,7 @@ def main() -> None:
     p.add_argument(
         "--provider",
         default=None,
-        choices=["openai", "anthropic", "google", "together"],
+        choices=["openai", "anthropic", "google", "together", "openrouter"],
         help="LLM provider (default: infer from --model)",
     )
     p.add_argument(
@@ -601,6 +609,10 @@ def main() -> None:
     args = p.parse_args()
     if args.seed is not None and args.seed_random:
         raise SystemExit("Use either --seed or --seed-random, not both.")
+    # For Claude, use fewer retries by default to reduce long tail stalls.
+    # Explicit --dimension-retries from CLI always wins.
+    if "--dimension-retries" not in sys.argv and _is_claude_run(args.model, args.provider):
+        args.dimension_retries = 1
 
     ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     if args.seed is not None:

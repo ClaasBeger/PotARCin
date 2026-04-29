@@ -10,9 +10,9 @@ from pathlib import Path
 from typing import Any, Literal, Optional
 from urllib import error, parse, request
 
-Provider = Literal["openai", "anthropic", "google", "together"]
+Provider = Literal["openai", "anthropic", "google", "together", "openrouter"]
 
-_VALID_PROVIDERS: tuple[Provider, ...] = ("openai", "anthropic", "google", "together")
+_VALID_PROVIDERS: tuple[Provider, ...] = ("openai", "anthropic", "google", "together", "openrouter")
 
 
 def _full_response_debug_enabled() -> bool:
@@ -179,6 +179,8 @@ def infer_provider(*, model: str, provider: Optional[str] = None) -> Provider:
         )
 
     m = model.strip().lower()
+    if m.startswith("minimax/") or m.startswith("openrouter/") or ":nitro" in m:
+        return "openrouter"
     if (
         m.startswith("moonshotai/")
         or m.startswith("kimi")
@@ -205,6 +207,10 @@ def resolve_provider_config(
         env_key_name = "OPENAI_API_KEY"
         env_base_name = "OPENAI_BASE_URL"
         default_base = "https://api.openai.com/v1"
+    elif resolved_provider == "openrouter":
+        env_key_name = "OPENROUTER_API_KEY"
+        env_base_name = "OPENROUTER_BASE_URL"
+        default_base = "https://openrouter.ai/api/v1"
     elif resolved_provider == "anthropic":
         env_key_name = "ANTHROPIC_API_KEY"
         env_base_name = "ANTHROPIC_BASE_URL"
@@ -261,6 +267,26 @@ def request_text_completion(
             tools_enabled=tools_enabled,
             timeout_s=timeout_s,
         )
+    elif resolved_provider == "openrouter":
+        try:
+            to = int(os.environ.get("POTARCIN_OPENROUTER_TIMEOUT_S", "0").strip() or 0)
+        except Exception:
+            to = 0
+        if to <= 0:
+            # Optional compatibility fallback so existing timeout env still works.
+            try:
+                to = int(os.environ.get("POTARCIN_TOGETHER_TIMEOUT_S", "0").strip() or 0)
+            except Exception:
+                to = 0
+        if to > 0:
+            timeout_s = to
+        text = _openrouter_chat_completions_completion(
+            prompt=prompt,
+            model=model,
+            api_key=effective_key,
+            base_url=effective_base,
+            timeout_s=timeout_s,
+        )
     elif resolved_provider == "anthropic":
         text = _anthropic_messages_completion(
             prompt=prompt,
@@ -299,6 +325,113 @@ def request_text_completion(
             timeout_s=timeout_s,
         )
     return text.strip(), resolved_provider, effective_base
+
+
+def _openrouter_chat_completions_completion(
+    *,
+    prompt: str,
+    model: str,
+    api_key: str,
+    base_url: str,
+    timeout_s: int = 180,
+) -> str:
+    # Match the Together MiniMax defaults used in this project.
+    max_tokens = _together_max_tokens()
+    reasoning_cfg = {"enabled": True}
+    temperature = 1.0
+    top_p = 0.95
+    try:
+        n_attempts = int(os.environ.get("POTARCIN_OPENROUTER_MAX_RETRIES", "0").strip() or 0)
+    except Exception:
+        n_attempts = 0
+    if n_attempts <= 0:
+        # Compatibility fallback to existing retry env.
+        try:
+            n_attempts = int(os.environ.get("POTARCIN_TOGETHER_MAX_RETRIES", "1").strip() or 1)
+        except Exception:
+            n_attempts = 1
+    n_attempts = min(max(1, n_attempts), 8)
+
+    def _extract_text(payload: Any) -> str:
+        if not isinstance(payload, dict):
+            return ""
+        choices = payload.get("choices")
+        if not isinstance(choices, list):
+            return ""
+        for c in choices:
+            if not isinstance(c, dict):
+                continue
+            msg = c.get("message")
+            if isinstance(msg, dict):
+                content = msg.get("content")
+                if isinstance(content, str) and content.strip():
+                    return content.strip()
+                if isinstance(content, list):
+                    parts: list[str] = []
+                    for item in content:
+                        if isinstance(item, str) and item.strip():
+                            parts.append(item.strip())
+                        elif isinstance(item, dict):
+                            txt = item.get("text")
+                            if isinstance(txt, str) and txt.strip():
+                                parts.append(txt.strip())
+                    if parts:
+                        return "\n".join(parts)
+            txt = c.get("text")
+            if isinstance(txt, str) and txt.strip():
+                return txt.strip()
+        return ""
+
+    url = base_url.rstrip("/") + "/chat/completions"
+    payload: dict[str, Any] = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+        "reasoning": reasoning_cfg,
+        "temperature": temperature,
+        "top_p": top_p,
+        "max_tokens": max_tokens,
+    }
+    body = json.dumps(payload).encode("utf-8")
+    req = request.Request(
+        url=url,
+        data=body,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+            "User-Agent": "PotARCin/1.0",
+        },
+        method="POST",
+    )
+    http_read_s = max(timeout_s, 120)
+    last_err: Exception | None = None
+    for attempt in range(1, n_attempts + 1):
+        try:
+            with request.urlopen(req, timeout=http_read_s) as resp:
+                raw = resp.read().decode("utf-8")
+            parsed = json.loads(raw)
+            if _full_response_debug_enabled():
+                return _dump_full_response_debug(
+                    provider="openrouter_http",
+                    model=model,
+                    payload=parsed,
+                )
+            text = _extract_text(parsed)
+            if text:
+                return text
+            raise ValueError("OpenRouter Chat Completions response did not contain any text content.")
+        except error.HTTPError as e:
+            body_txt = e.read().decode("utf-8", errors="replace")
+            err: Exception = ValueError(f"OpenRouter Chat Completions API error {e.code}: {body_txt}")
+            last_err = err
+        except Exception as e:
+            last_err = e
+        if attempt < n_attempts and last_err is not None and _together_transient_error(last_err):
+            time.sleep(min(60.0, (2.0 ** (attempt - 1)) + random.random()))
+            continue
+        break
+    if last_err is None:
+        raise RuntimeError("OpenRouter: retry loop finished without a stored error (internal bug).")
+    raise last_err
 
 
 def _openai_responses_completion(
