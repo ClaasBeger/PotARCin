@@ -1,0 +1,74 @@
+{
+  "task_id": "46442a0e",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n8 6\n6 8\nOutput:\n8 6 6 8\n6 8 8 6\n6 8 8 6\n8 6 6 8\n\nExample 2:\n\nInput:\n7 7 8\n7 7 8\n8 8 8\nOutput:\n7 7 8 8 7 7\n7 7 8 8 7 7\n8 8 8 8 8 8\n8 8 8 8 8 8\n7 7 8 8 7 7\n7 7 8 8 7 7\n\nExample 3:\n\nInput:\n6 9 9\n6 4 4\n6 4 4\nOutput:\n6 9 9 6 6 6\n6 4 4 4 4 9\n6 4 4 4 4 9\n9 4 4 4 4 6\n9 4 4 4 4 6\n6 6 6 9 9 6\n\nBelow is a test input grid.\n\nInput:\n1 4 1\n4 9 4\n9 1 9\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def rotate_cw(grid):\n    # 90 degree clockwise rotation\n    return [list(row) for row in zip(*grid[::-1])]\n\ndef rotate_ccw(grid):\n    # 90 degree counter\u2011clockwise rotation\n    return [list(row) for row in zip(*grid)[::-1]]\n\ndef rotate_180(grid):\n    # 180 degree rotation\n    return rotate_cw(rotate_cw(grid))\n\ndef solve(grid):\n    n = len(grid)\n    cw = rotate_cw(grid)      # top\u2011right\n    ccw = rotate_ccw(grid)    # bottom\u2011left\n    rot180 = rotate_180(grid) # bottom\u2011right\n\n    size = 2 * n\n    result = [[0] * size for _ in range(size)]\n\n    for i in range(n):\n        for j in range(n):\n            result[i][j]       = grid[i][j]     # top\u2011left\n            result[i][j + n]   = cw[i][j]       # top\u2011right\n            result[i + n][j]   = ccw[i][j]      # bottom\u2011left\n            result[i + n][j + n] = rot180[i][j] # bottom\u2011right\n\n    return result",
+  "script": "def rotate_cw(grid):\n    # 90 degree clockwise rotation\n    return [list(row) for row in zip(*grid[::-1])]\n\ndef rotate_ccw(grid):\n    # 90 degree counter\u2011clockwise rotation\n    return [list(row) for row in zip(*grid)[::-1]]\n\ndef rotate_180(grid):\n    # 180 degree rotation\n    return rotate_cw(rotate_cw(grid))\n\ndef solve(grid):\n    n = len(grid)\n    cw = rotate_cw(grid)      # top\u2011right\n    ccw = rotate_ccw(grid)    # bottom\u2011left\n    rot180 = rotate_180(grid) # bottom\u2011right\n\n    size = 2 * n\n    result = [[0] * size for _ in range(size)]\n\n    for i in range(n):\n        for j in range(n):\n            result[i][j]       = grid[i][j]     # top\u2011left\n            result[i][j + n]   = cw[i][j]       # top\u2011right\n            result[i + n][j]   = ccw[i][j]      # bottom\u2011left\n            result[i + n][j + n] = rot180[i][j] # bottom\u2011right\n\n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 262,
+      "success_rate": 0.0
+    },
+    "dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'rotate_cw' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'rotate_cw' is not defined"
+    },
+    "stable": {
+      "index": 0,
+      "error": "name 'rotate_cw' is not defined"
+    },
+    "dynamic50": {
+      "index": 0,
+      "error": "name 'rotate_cw' is not defined"
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "name 'rotate_cw' is not defined"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "name 'rotate_cw' is not defined"
+    }
+  },
+  "evaluation_ok": true
+}
