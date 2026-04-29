@@ -16,6 +16,8 @@ Generation constraints used to keep examples well-formed and unambiguous:
 - some samples include fully missing orbits (unfillable gaps) so those remain
   empty in the output;
 - all generated shapes keep the cyan line markers inside the hollow interior;
+- both one-line and two-line symmetry examples are generated, including
+  mixed orthogonal+diagonal two-line pairs;
 - cyan symmetry-line markers are always preserved in the output.
 """
 
@@ -333,19 +335,27 @@ def _outline_from_family(h: int, w: int, lines: Sequence[Line], rng: random.Rand
             else:
                 mask = _filled_vert_blob(h, w, rng, mirror_h=(len(lines) == 2))
         outline = _boundary_of_mask(mask)
+        # Remove any cells that lie directly on a cyan symmetry marker. This lets
+        # one- and two-line examples both keep the marker inside the hollow shape
+        # rather than overwriting it with outline cells.
+        outline = {p for p in outline if not any(_on_line(line, p) for line in lines)}
         if len(outline) < 12:
             continue
-        # Keep all line cells out of the outline so the cyan markers sit in empty interior.
-        if any(any(_on_line(line, p) for line in lines) for p in outline):
-            continue
-        # The outline itself must be symmetric under the chosen lines.
-        good = True
-        for p in outline:
+        # Keep only full symmetry orbits that stay entirely off the cyan lines.
+        # This is especially important for mixed two-line cases such as
+        # vertical+diagonal: some boundary cells may have reflected partners that
+        # land on a symmetry line, and those incomplete orbits must be excluded.
+        filtered: Set[Coord] = set()
+        seen_orbit_cells: Set[Coord] = set()
+        for p in sorted(outline):
+            if p in seen_orbit_cells:
+                continue
             orb = _orbit(p, lines, h, w)
-            if not orb <= outline:
-                good = False
-                break
-        if not good:
+            seen_orbit_cells |= orb
+            if orb <= outline:
+                filtered |= orb
+        outline = filtered
+        if len(outline) < 12:
             continue
         return outline
     raise RuntimeError('failed to generate symmetric outline')
@@ -376,16 +386,23 @@ def _assign_colors(orbits: Sequence[Set[Coord]], rng: random.Random) -> Dict[Coo
 
 def _line_setup(rng: random.Random, h: int, w: int) -> List[Line]:
     cr, cc = h // 2, w // 2
-    options: List[List[Line]] = [
+    # Include both one-line and two-line examples. Two-line cases are weighted
+    # deliberately so the generated sample set reflects the original demos.
+    one_line: List[List[Line]] = [
         [('v', cc)],
         [('h', cr)],
-        [('v', cc), ('h', cr)],
         [('d', cr - cc)],
         [('a', cr + cc)],
+    ]
+    two_line: List[List[Line]] = [
+        [('v', cc), ('h', cr)],
+        [('d', cr - cc), ('a', cr + cc)],
         [('v', cc), ('d', cr - cc)],
+        [('v', cc), ('a', cr + cc)],
+        [('h', cr), ('d', cr - cc)],
         [('h', cr), ('a', cr + cc)],
     ]
-    return rng.choice(options)
+    return rng.choice(two_line if rng.random() < 0.45 else one_line)
 
 
 def generate(rng: random.Random | None = None) -> Dict[str, Grid]:
