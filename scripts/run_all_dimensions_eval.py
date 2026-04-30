@@ -884,8 +884,36 @@ def main() -> None:
             else ROOT_DIR / "evaluation" / "multi_dimension_eval_runs" / f"run_{ts}.json"
         )
     )
+    events_path = summary_path.with_name(summary_path.stem + "_events.jsonl")
 
     skip_completed = bool(out_dirs) and not args.force_all_dimensions
+
+    def _append_event(event: dict[str, Any]) -> None:
+        event_rec = {"ts": dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"), **event}
+        events_path.parent.mkdir(parents=True, exist_ok=True)
+        with events_path.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(event_rec, ensure_ascii=False) + "\n")
+
+    def _checkpoint_payload(
+        *,
+        runs_so_far: list[dict[str, Any]],
+        in_progress_task_id: str | None = None,
+        interrupted: bool = False,
+    ) -> dict[str, Any]:
+        return {
+            "mode": "batch_pending",
+            "created_at": ts,
+            "task_count": len(runs_so_far),
+            "run_tag": args.run_tag,
+            "seed_mode": seed_mode,
+            "base_seed": base_seed,
+            "batch_size": args.batch_size,
+            "completed_before_count": len(completed_before),
+            "last_completed_task_id_before": last_completed_task_id,
+            "interrupted": interrupted,
+            "in_progress_task_id": in_progress_task_id,
+            "runs": runs_so_far,
+        }
 
     if args.task_id:
         run = run_all_dimensions_for_task(
@@ -986,58 +1014,121 @@ def main() -> None:
         return index, tid, run_seed, run
 
     task_workers = max(1, int(args.parallel_tasks))
-    if task_workers == 1:
-        for i, task_id in enumerate(task_ids):
-            run_seed = (base_seed + task_index[task_id]) if base_seed is not None else None
-            seed_txt = "random" if run_seed is None else str(run_seed)
-            print(f"[{i+1}/{len(task_ids)}] {task_id} (seed={seed_txt})")
-            _, _, _, run = _run_one(i, task_id)
-            runs.append(run)
-            ok_dims = sum(1 for d in run["dimensions"].values() if d.get("ok"))
-            skipped = sum(1 for d in run["dimensions"].values() if d.get("skipped_rerun"))
-            ran = 5 - skipped
-            print(f"  -> ok {ok_dims}/5 dimensions ({ran} re-run, {skipped} reused from disk)")
-    else:
-        print(
-            f"Running up to {min(task_workers, len(task_ids))} tasks in parallel "
-            f"(parallel-tasks={task_workers})"
-        )
-        indexed_runs: dict[int, tuple[str, int | None, dict[str, Any]]] = {}
-        with concurrent.futures.ThreadPoolExecutor(
-            max_workers=min(task_workers, len(task_ids))
-        ) as pool:
-            futures = {
-                pool.submit(_run_one, i, task_id): (i, task_id)
-                for i, task_id in enumerate(task_ids)
-            }
-            for fut in concurrent.futures.as_completed(futures):
-                i, task_id = futures[fut]
-                try:
-                    idx, tid, run_seed, run = fut.result()
-                except Exception as e:
-                    run_seed = (base_seed + task_index[task_id]) if base_seed is not None else None
-                    run = {
-                        "task_id": task_id,
-                        "model": args.model,
-                        "provider": args.provider,
-                        "reasoning_effort": args.reasoning_effort,
-                        "tools_enabled": bool(args.tools_enabled),
-                        "seed": run_seed,
-                        "dimensions": {
-                            dim: {"ok": False, "error": str(e), "attempts": 0}
-                            for dim in _DIMENSION_ORDER
-                        },
-                    }
-                    idx, tid = i, task_id
-                indexed_runs[idx] = (tid, run_seed, run)
+    current_task_id: str | None = None
+    try:
+        if task_workers == 1:
+            for i, task_id in enumerate(task_ids):
+                current_task_id = task_id
+                run_seed = (base_seed + task_index[task_id]) if base_seed is not None else None
                 seed_txt = "random" if run_seed is None else str(run_seed)
+                print(f"[{i+1}/{len(task_ids)}] {task_id} (seed={seed_txt})")
+                _append_event({"event": "task_started", "task_id": task_id, "index": i + 1, "seed": run_seed})
+                _, _, _, run = _run_one(i, task_id)
+                runs.append(run)
                 ok_dims = sum(1 for d in run["dimensions"].values() if d.get("ok"))
                 skipped = sum(1 for d in run["dimensions"].values() if d.get("skipped_rerun"))
                 ran = 5 - skipped
-                print(f"[{idx+1}/{len(task_ids)}] {tid} (seed={seed_txt})")
                 print(f"  -> ok {ok_dims}/5 dimensions ({ran} re-run, {skipped} reused from disk)")
-        for i in range(len(task_ids)):
-            runs.append(indexed_runs[i][2])
+                _append_event(
+                    {
+                        "event": "task_completed",
+                        "task_id": task_id,
+                        "index": i + 1,
+                        "ok_dimensions": ok_dims,
+                        "rerun_dimensions": ran,
+                        "reused_dimensions": skipped,
+                        "dimension_errors": {
+                            dim: d.get("error")
+                            for dim, d in run.get("dimensions", {}).items()
+                            if not d.get("ok") and d.get("error")
+                        },
+                    }
+                )
+                _write_run_summary(
+                    summary_path,
+                    _checkpoint_payload(runs_so_far=runs, in_progress_task_id=None, interrupted=False),
+                )
+                current_task_id = None
+        else:
+            print(
+                f"Running up to {min(task_workers, len(task_ids))} tasks in parallel "
+                f"(parallel-tasks={task_workers})"
+            )
+            indexed_runs: dict[int, tuple[str, int | None, dict[str, Any]]] = {}
+            with concurrent.futures.ThreadPoolExecutor(
+                max_workers=min(task_workers, len(task_ids))
+            ) as pool:
+                futures = {}
+                for i, task_id in enumerate(task_ids):
+                    run_seed = (base_seed + task_index[task_id]) if base_seed is not None else None
+                    _append_event({"event": "task_started", "task_id": task_id, "index": i + 1, "seed": run_seed})
+                    futures[pool.submit(_run_one, i, task_id)] = (i, task_id)
+                for fut in concurrent.futures.as_completed(futures):
+                    i, task_id = futures[fut]
+                    try:
+                        idx, tid, run_seed, run = fut.result()
+                    except Exception as e:
+                        run_seed = (base_seed + task_index[task_id]) if base_seed is not None else None
+                        run = {
+                            "task_id": task_id,
+                            "model": args.model,
+                            "provider": args.provider,
+                            "reasoning_effort": args.reasoning_effort,
+                            "tools_enabled": bool(args.tools_enabled),
+                            "seed": run_seed,
+                            "dimensions": {
+                                dim: {"ok": False, "error": str(e), "attempts": 0}
+                                for dim in _DIMENSION_ORDER
+                            },
+                        }
+                        idx, tid = i, task_id
+                    indexed_runs[idx] = (tid, run_seed, run)
+                    seed_txt = "random" if run_seed is None else str(run_seed)
+                    ok_dims = sum(1 for d in run["dimensions"].values() if d.get("ok"))
+                    skipped = sum(1 for d in run["dimensions"].values() if d.get("skipped_rerun"))
+                    ran = 5 - skipped
+                    print(f"[{idx+1}/{len(task_ids)}] {tid} (seed={seed_txt})")
+                    print(f"  -> ok {ok_dims}/5 dimensions ({ran} re-run, {skipped} reused from disk)")
+                    _append_event(
+                        {
+                            "event": "task_completed",
+                            "task_id": tid,
+                            "index": idx + 1,
+                            "ok_dimensions": ok_dims,
+                            "rerun_dimensions": ran,
+                            "reused_dimensions": skipped,
+                            "dimension_errors": {
+                                dim: d.get("error")
+                                for dim, d in run.get("dimensions", {}).items()
+                                if not d.get("ok") and d.get("error")
+                            },
+                        }
+                    )
+                    partial_runs = [indexed_runs[k][2] for k in sorted(indexed_runs.keys())]
+                    _write_run_summary(
+                        summary_path,
+                        _checkpoint_payload(
+                            runs_so_far=partial_runs, in_progress_task_id=None, interrupted=False
+                        ),
+                    )
+            for i in range(len(task_ids)):
+                runs.append(indexed_runs[i][2])
+    except KeyboardInterrupt:
+        _append_event(
+            {
+                "event": "run_interrupted",
+                "in_progress_task_id": current_task_id,
+                "completed_tasks_in_this_batch": len(runs),
+            }
+        )
+        _write_run_summary(
+            summary_path,
+            _checkpoint_payload(
+                runs_so_far=runs, in_progress_task_id=current_task_id, interrupted=True
+            ),
+        )
+        print(f"Interrupted. Partial summary saved: {summary_path}")
+        raise
 
     payload = {
         "mode": "batch_pending",

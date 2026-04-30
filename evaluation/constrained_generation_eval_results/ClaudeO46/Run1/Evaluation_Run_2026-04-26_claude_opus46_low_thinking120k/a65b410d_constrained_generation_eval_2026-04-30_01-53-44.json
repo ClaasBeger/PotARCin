@@ -1,0 +1,187 @@
+{
+  "task_id": "a65b410d",
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "demonstration_count": 3,
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n2 2 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\nOutput:\n3 3 3 3 3 0 0\n3 3 3 3 0 0 0\n3 3 3 0 0 0 0\n2 2 0 0 0 0 0\n1 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n\nExample 2:\nInput:\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n2 2 2 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\nOutput:\n3 3 3 3 3 3 0 0 0\n3 3 3 3 3 0 0 0 0\n3 3 3 3 0 0 0 0 0\n2 2 2 0 0 0 0 0 0\n1 1 0 0 0 0 0 0 0\n1 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n\nExample 3:\nInput:\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n2 2 2 2 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\nOutput:\n3 3 3 3 3 3 0 0 0\n3 3 3 3 3 0 0 0 0\n2 2 2 2 0 0 0 0 0\n1 1 1 0 0 0 0 0 0\n1 1 0 0 0 0 0 0 0\n1 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n\nGenerate one NEW input/output pair that follows the same transformation rule.\n- Do NOT copy any demonstration pair exactly.\n- The generated input and output must be different (non-trivial transformation).\n- Your pair must be consistent with the same underlying rule.\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "{\"input\": [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[2,2,2,2,2,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]],\"output\": [[3,3,3,3,3,3,3,3,0],[3,3,3,3,3,3,3,0],[3,3,3,3,3,3,0,0],[3,3,3,3,3,0,0,0],[2,2,2,2,0,0,0,0],[1,1,1,0,0,0,0,0],[1,1,0,0,0,0,0,0],[1,0,0,0,0,0,0,0]]}\n\nWait, let me recount.\n\n{\"input\": [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[2,2,2,2,2,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]],\"output\": [[3,3,3,3,3,3,3,3],[3,3,3,3,3,3,3,0],[3,3,3,3,3,3,0,0],[3,3,3,3,3,0,0,0],[2,2,2,2,2,0,0,0],[1,1,1,1,0,0,0,0],[1,1,1,0,0,0,0,0],[1,1,0,0,0,0,0,0]]}\n\nHmm, let me recheck the pattern. N=2: 3 rows above with 3,4,5 threes; 1 row below with 1 one. N=3: 3 rows above with 4,5,6; 2 rows below with 2,1. N=4: 2 rows above with 5,6; 3 rows below with 3,2,1.\n\nSo for N=5, 4 rows above: row0=8,row1=7,row2=6,row3=5 (wait, that's 9,8,7,6?)\n\nPattern: above row at distance d gets N+d threes. Below at distance d gets N-d ones.\n\nN=2: above d=1:3, d=2:4, d=3:5. Below d=1:1.\nN=3: above d=1:4, d=2:5, d=3:6. Below d=1:2, d=2:1.\nN=4: above d=1:5, d=2:6. Below d=1:3, d=2:2, d=3:1.\n\nYes. For N=5 at row 4, 4 rows above: d=1:6, d=2:7, d=3:8, d=4:9 (too wide for 8 cols). Let me use a smaller example.\n\n{\"input\": [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[2,2,2,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]],\"output\": [[3,3,3,3,3,3,3,3],[3,3,3,3,3,3,3,0],[3,3,3,3,3,3,0,0],[3,3,3,3,3,0,0,0],[3,3,3,3,0,0,0,0],[2,2,2,0,0,0,0,0],[1,1,0,0,0,0,0,0],[1,0,0,0,0,0,0,0]]}",
+  "evaluation_ok": true,
+  "prediction": {
+    "input": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "output": [
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        0
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        0,
+        0
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        0,
+        0,
+        0
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "metrics": {
+    "success_rate": 1.0,
+    "rejected_as_demo_copy": 0,
+    "rejected_no_change": 0,
+    "rejected_verifier_missing": 0,
+    "rejected_verifier_mismatch": 0,
+    "noted_arc_gen_stable_exact_match": 0
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "task_id": "b7249182",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0\n0 0 2 2 2 2 2 0 0 0\n0 0 2 0 0 0 2 0 0 0\n0 0 8 0 0 0 8 0 0 0\n0 0 8 8 8 8 8 0 0 0\n0 0 0 0 8 0 0 0 0 0\n0 0 0 0 8 0 0 0 0 0\n0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 3 0 0 0 0 0 0 0 0 0 0 1\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 3 3 1 1 0 0 0 0\n0 0 0 0 0 3 0 0 1 0 0 0 0\n0 3 3 3 3 3 0 0 1 1 1 1 1\n0 0 0 0 0 3 0 0 1 0 0 0 0\n0 0 0 0 0 3 3 1 1 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 5 0 0 0 0 0 0 0 0 0 0 0 0 8 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 5 5 8 8 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 5 0 0 8 0 0 0 0 0 0\n0 0 0 5 5 5 5 5 5 0 0 8 8 8 8 8 8 0\n0 0 0 0 0 0 0 0 5 0 0 8 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 5 5 8 8 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0\n0 0 0 7 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 6 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    grid = [row[:] for row in grid]\n    rows, cols = len(grid), len(grid[0])\n    \n    points = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] != 0:\n                points.append((r, c, grid[r][c]))\n                grid[r][c] = 0\n    \n    (r1, c1, v1), (r2, c2, v2) = points\n    \n    if c1 == c2:\n        if r1 > r2:\n            r1, r2, v1, v2 = r2, r1, v2, v1\n        D = r2 - r1\n        line_len = (D - 3) // 2\n        arm = 2\n        bar1_r = r1 + line_len\n        bar2_r = r2 - line_len\n        for r in range(r1, bar1_r):\n            grid[r][c1] = v1\n        for r in range(bar2_r + 1, r2 + 1):\n            grid[r][c1] = v2\n        for c in range(c1 - arm, c1 + arm + 1):\n            grid[bar1_r][c] = v1\n            grid[bar2_r][c] = v2\n        for r in range(bar1_r + 1, bar2_r):\n            val = v1 if r < (r1 + r2) / 2 else v2\n            grid[r][c1 - arm] = val\n            grid[r][c1 + arm] = val\n    else:\n        if c1 > c2:\n            r1, r2, c1, c2, v1, v2 = r2, r1, c2, c1, v2, v1\n        D = c2 - c1\n        line_len = (D - 3) // 2\n        arm = 2\n        bar1_c = c1 + line_len\n        bar2_c = c2 - line_len\n        for c in range(c1, bar1_c):\n            grid[r1][c] = v1\n        for c in range(bar2_c + 1, c2 + 1):\n            grid[r1][c] = v2\n        for r in range(r1 - arm, r1 + arm + 1):\n            grid[r][bar1_c] = v1\n            grid[r][bar2_c] = v2\n        for c in range(bar1_c + 1, bar2_c):\n            val = v1 if c < (c1 + c2) / 2 else v2\n            grid[r1 - arm][c] = val\n            grid[r1 + arm][c] = val\n    \n    return grid",
+  "script": "def solve(grid):\n    grid = [row[:] for row in grid]\n    rows, cols = len(grid), len(grid[0])\n    \n    points = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] != 0:\n                points.append((r, c, grid[r][c]))\n                grid[r][c] = 0\n    \n    (r1, c1, v1), (r2, c2, v2) = points\n    \n    if c1 == c2:\n        if r1 > r2:\n            r1, r2, v1, v2 = r2, r1, v2, v1\n        D = r2 - r1\n        line_len = (D - 3) // 2\n        arm = 2\n        bar1_r = r1 + line_len\n        bar2_r = r2 - line_len\n        for r in range(r1, bar1_r):\n            grid[r][c1] = v1\n        for r in range(bar2_r + 1, r2 + 1):\n            grid[r][c1] = v2\n        for c in range(c1 - arm, c1 + arm + 1):\n            grid[bar1_r][c] = v1\n            grid[bar2_r][c] = v2\n        for r in range(bar1_r + 1, bar2_r):\n            val = v1 if r < (r1 + r2) / 2 else v2\n            grid[r][c1 - arm] = val\n            grid[r][c1 + arm] = val\n    else:\n        if c1 > c2:\n            r1, r2, c1, c2, v1, v2 = r2, r1, c2, c1, v2, v1\n        D = c2 - c1\n        line_len = (D - 3) // 2\n        arm = 2\n        bar1_c = c1 + line_len\n        bar2_c = c2 - line_len\n        for c in range(c1, bar1_c):\n            grid[r1][c] = v1\n        for c in range(bar2_c + 1, c2 + 1):\n            grid[r1][c] = v2\n        for r in range(r1 - arm, r1 + arm + 1):\n            grid[r][bar1_c] = v1\n            grid[r][bar2_c] = v2\n        for c in range(bar1_c + 1, bar2_c):\n            val = v1 if c < (c1 + c2) / 2 else v2\n            grid[r1 - arm][c] = val\n            grid[r1 + arm][c] = val\n    \n    return grid",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 109,
+      "total": 1000,
+      "success_rate": 0.109
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "too many values to unpack (expected 2)"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "'tuple' object does not support item assignment"
+    }
+  },
+  "evaluation_ok": true
+}
