@@ -1,0 +1,62 @@
+{
+  "task_id": "952a094c",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 8 8 8 8 0 0 0\n0 0 0 8 4 3 8 0 0 0\n0 0 0 8 0 0 8 0 0 0\n0 0 0 8 2 6 8 0 0 0\n0 0 0 8 8 8 8 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 6 0 0 0 0 2 0 0\n0 0 0 8 8 8 8 0 0 0\n0 0 0 8 0 0 8 0 0 0\n0 0 0 8 0 0 8 0 0 0\n0 0 0 8 0 0 8 0 0 0\n0 0 0 8 8 8 8 0 0 0\n0 0 3 0 0 0 0 4 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 7 7 7 7 7 7 0 0\n0 0 7 2 0 0 8 7 0 0\n0 0 7 0 0 0 0 7 0 0\n0 0 7 0 0 0 0 7 0 0\n0 0 7 9 0 0 3 7 0 0\n0 0 7 7 7 7 7 7 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 3 0 0 0 0 0 0 9 0\n0 0 7 7 7 7 7 7 0 0\n0 0 7 0 0 0 0 7 0 0\n0 0 7 0 0 0 0 7 0 0\n0 0 7 0 0 0 0 7 0 0\n0 0 7 0 0 0 0 7 0 0\n0 0 7 7 7 7 7 7 0 0\n0 8 0 0 0 0 0 0 2 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 1 1 1 1 1 1 0 0 0\n0 1 2 0 0 5 1 0 0 0\n0 1 0 0 0 0 1 0 0 0\n0 1 6 0 0 3 1 0 0 0\n0 1 1 1 1 1 1 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n3 0 0 0 0 0 0 6 0 0\n0 1 1 1 1 1 1 0 0 0\n0 1 0 0 0 0 1 0 0 0\n0 1 0 0 0 0 1 0 0 0\n0 1 0 0 0 0 1 0 0 0\n0 1 1 1 1 1 1 0 0 0\n5 0 0 0 0 0 0 2 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 0 0\n0 0 3 6 0 0 4 3 0 0\n0 0 3 0 0 0 0 3 0 0\n0 0 3 8 0 0 2 3 0 0\n0 0 3 3 3 3 3 3 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    n = len(grid)\n    if n == 0:\n        return []\n    m = len(grid[0])\n\n    # locate bounding box of all non\u2011zero cells\n    min_r = None\n    max_r = -1\n    min_c = None\n    max_c = -1\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] != 0:\n                if min_r is None or i < min_r:\n                    min_r = i\n                if max_r < i:\n                    max_r = i\n                if min_c is None or j < min_c:\n                    min_c = j\n                if max_c < j:\n                    max_c = j\n\n    # no non\u2011zero cells \u2013 nothing to do\n    if min_r is None:\n        return [row[:] for row in grid]\n\n    border_val = grid[min_r][min_c]\n\n    # deep copy of the input grid\n    out = [row[:] for row in grid]\n\n    # clear interior (border stays unchanged)\n    for r in range(min_r + 1, max_r):\n        for c in range(min_c + 1, max_c):\n            out[r][c] = 0\n\n    # move each interior non\u2011zero value to its symmetric external position\n    for r in range(min_r + 1, max_r):\n        for c in range(min_c + 1, max_c):\n            val = grid[r][c]\n            if val != 0 and val != border_val:\n                d_up = r - min_r\n                d_down = max_r - r\n                d_left = c - min_c\n                d_right = max_c - c\n\n                # vertical placement\n                if d_up <= d_down:\n                    new_r = max_r + d_up\n                else:\n                    new_r = min_r - d_down\n\n                # horizontal placement\n                if d_left <= d_right:\n                    new_c = max_c + d_left\n                else:\n                    new_c = min_c - d_right\n\n                out[new_r][new_c] = val\n\n    return out",
+  "script": "def solve(grid):\n    n = len(grid)\n    if n == 0:\n        return []\n    m = len(grid[0])\n\n    # locate bounding box of all non\u2011zero cells\n    min_r = None\n    max_r = -1\n    min_c = None\n    max_c = -1\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] != 0:\n                if min_r is None or i < min_r:\n                    min_r = i\n                if max_r < i:\n                    max_r = i\n                if min_c is None or j < min_c:\n                    min_c = j\n                if max_c < j:\n                    max_c = j\n\n    # no non\u2011zero cells \u2013 nothing to do\n    if min_r is None:\n        return [row[:] for row in grid]\n\n    border_val = grid[min_r][min_c]\n\n    # deep copy of the input grid\n    out = [row[:] for row in grid]\n\n    # clear interior (border stays unchanged)\n    for r in range(min_r + 1, max_r):\n        for c in range(min_c + 1, max_c):\n            out[r][c] = 0\n\n    # move each interior non\u2011zero value to its symmetric external position\n    for r in range(min_r + 1, max_r):\n        for c in range(min_c + 1, max_c):\n            val = grid[r][c]\n            if val != 0 and val != border_val:\n                d_up = r - min_r\n                d_down = max_r - r\n                d_left = c - min_c\n                d_right = max_c - c\n\n                # vertical placement\n                if d_up <= d_down:\n                    new_r = max_r + d_up\n                else:\n                    new_r = min_r - d_down\n\n                # horizontal placement\n                if d_left <= d_right:\n                    new_c = max_c + d_left\n                else:\n                    new_c = min_c - d_right\n\n                out[new_r][new_c] = val\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 91,
+      "total": 1000,
+      "success_rate": 0.091
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "list index out of range"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "'tuple' object does not support item assignment"
+    }
+  },
+  "evaluation_ok": true
+}
