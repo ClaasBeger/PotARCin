@@ -1,0 +1,123 @@
+{
+  "task_id": "85c4e7cd",
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "demonstration_count": 4,
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n4 4 4 4 4 4 4 4 4 4 4 4\n4 2 2 2 2 2 2 2 2 2 2 4\n4 2 1 1 1 1 1 1 1 1 2 4\n4 2 1 3 3 3 3 3 3 1 2 4\n4 2 1 3 5 5 5 5 3 1 2 4\n4 2 1 3 5 8 8 5 3 1 2 4\n4 2 1 3 5 8 8 5 3 1 2 4\n4 2 1 3 5 5 5 5 3 1 2 4\n4 2 1 3 3 3 3 3 3 1 2 4\n4 2 1 1 1 1 1 1 1 1 2 4\n4 2 2 2 2 2 2 2 2 2 2 4\n4 4 4 4 4 4 4 4 4 4 4 4\nOutput:\n8 8 8 8 8 8 8 8 8 8 8 8\n8 5 5 5 5 5 5 5 5 5 5 8\n8 5 3 3 3 3 3 3 3 3 5 8\n8 5 3 1 1 1 1 1 1 3 5 8\n8 5 3 1 2 2 2 2 1 3 5 8\n8 5 3 1 2 4 4 2 1 3 5 8\n8 5 3 1 2 4 4 2 1 3 5 8\n8 5 3 1 2 2 2 2 1 3 5 8\n8 5 3 1 1 1 1 1 1 3 5 8\n8 5 3 3 3 3 3 3 3 3 5 8\n8 5 5 5 5 5 5 5 5 5 5 8\n8 8 8 8 8 8 8 8 8 8 8 8\n\nExample 2:\nInput:\n2 2 2 2 2 2\n2 1 1 1 1 2\n2 1 6 6 1 2\n2 1 6 6 1 2\n2 1 1 1 1 2\n2 2 2 2 2 2\nOutput:\n6 6 6 6 6 6\n6 1 1 1 1 6\n6 1 2 2 1 6\n6 1 2 2 1 6\n6 1 1 1 1 6\n6 6 6 6 6 6\n\nExample 3:\nInput:\n8 8 8 8 8 8 8 8\n8 1 1 1 1 1 1 8\n8 1 2 2 2 2 1 8\n8 1 2 4 4 2 1 8\n8 1 2 4 4 2 1 8\n8 1 2 2 2 2 1 8\n8 1 1 1 1 1 1 8\n8 8 8 8 8 8 8 8\nOutput:\n4 4 4 4 4 4 4 4\n4 2 2 2 2 2 2 4\n4 2 1 1 1 1 2 4\n4 2 1 8 8 1 2 4\n4 2 1 8 8 1 2 4\n4 2 1 1 1 1 2 4\n4 2 2 2 2 2 2 4\n4 4 4 4 4 4 4 4\n\nExample 4:\nInput:\n7 7 7 7 7 7 7 7 7 7\n7 2 2 2 2 2 2 2 2 7\n7 2 4 4 4 4 4 4 2 7\n7 2 4 1 1 1 1 4 2 7\n7 2 4 1 3 3 1 4 2 7\n7 2 4 1 3 3 1 4 2 7\n7 2 4 1 1 1 1 4 2 7\n7 2 4 4 4 4 4 4 2 7\n7 2 2 2 2 2 2 2 2 7\n7 7 7 7 7 7 7 7 7 7\nOutput:\n3 3 3 3 3 3 3 3 3 3\n3 1 1 1 1 1 1 1 1 3\n3 1 4 4 4 4 4 4 1 3\n3 1 4 2 2 2 2 4 1 3\n3 1 4 2 7 7 2 4 1 3\n3 1 4 2 7 7 2 4 1 3\n3 1 4 2 2 2 2 4 1 3\n3 1 4 4 4 4 4 4 1 3\n3 1 1 1 1 1 1 1 1 3\n3 3 3 3 3 3 3 3 3 3\n\nGenerate one NEW input/output pair that follows the same transformation rule.\n- Do NOT copy any demonstration pair exactly.\n- The generated input and output must be different (non-trivial transformation).\n- Your pair must be consistent with the same underlying rule.\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "{\"input\": [[3,3,3,3,3,3],[3,9,9,9,9,3],[3,9,5,5,9,3],[3,9,5,5,9,3],[3,9,9,9,9,3],[3,3,3,3,3,3]],\"output\": [[5,5,5,5,5,5],[5,9,9,9,9,5],[5,9,3,3,9,5],[5,9,3,3,9,5],[5,9,9,9,9,5],[5,5,5,5,5,5]]}",
+  "evaluation_ok": true,
+  "prediction": {
+    "input": [
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      [
+        3,
+        9,
+        9,
+        9,
+        9,
+        3
+      ],
+      [
+        3,
+        9,
+        5,
+        5,
+        9,
+        3
+      ],
+      [
+        3,
+        9,
+        5,
+        5,
+        9,
+        3
+      ],
+      [
+        3,
+        9,
+        9,
+        9,
+        9,
+        3
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ]
+    ],
+    "output": [
+      [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      [
+        5,
+        9,
+        9,
+        9,
+        9,
+        5
+      ],
+      [
+        5,
+        9,
+        3,
+        3,
+        9,
+        5
+      ],
+      [
+        5,
+        9,
+        3,
+        3,
+        9,
+        5
+      ],
+      [
+        5,
+        9,
+        9,
+        9,
+        9,
+        5
+      ],
+      [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ]
+    ]
+  },
+  "metrics": {
+    "success_rate": 1.0,
+    "rejected_as_demo_copy": 0,
+    "rejected_no_change": 0,
+    "rejected_verifier_missing": 0,
+    "rejected_verifier_mismatch": 0,
+    "noted_arc_gen_stable_exact_match": 0
+  }
+}

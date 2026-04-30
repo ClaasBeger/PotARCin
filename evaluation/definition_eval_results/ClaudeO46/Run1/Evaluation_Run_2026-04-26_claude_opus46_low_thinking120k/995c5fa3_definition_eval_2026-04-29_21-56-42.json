@@ -1,0 +1,182 @@
+{
+  "task_id": "995c5fa3",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 5 0 0 5 0 0 5 5 0\n5 5 5 5 0 5 0 0 5 0 0 5 5 0\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\nOutput:\n2 2 2\n8 8 8\n3 3 3\n\nExample 2:\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n0 5 5 0 0 5 5 5 5 0 5 5 5 5\n0 5 5 0 0 5 0 0 5 0 5 5 5 5\n5 5 5 5 0 5 0 0 5 0 5 5 5 5\nOutput:\n3 3 3\n4 4 4\n2 2 2\n\nExample 3:\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 0 0 5 0 5 5 5 5 0 5 5 5 5\n5 0 0 5 0 5 5 5 5 0 5 0 0 5\n5 5 5 5 0 5 5 5 5 0 5 0 0 5\nOutput:\n8 8 8\n2 2 2\n4 4 4\n\nExample 4:\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 5 0 0 5 0 5 5 5 5\n5 5 5 5 0 5 0 0 5 0 5 5 5 5\nOutput:\n2 2 2\n4 4 4\n2 2 2\n\nBelow is a test input grid.\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 0 5 5 0 0 5 0 0 5\n5 0 0 5 0 0 5 5 0 0 5 0 0 5\n5 0 0 5 0 5 5 5 5 0 5 5 5 5\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    rows = len(grid)\n    cols = len(grid[0])\n    \n    # Find separator columns (all 0)\n    sep_cols = [c for c in range(cols) if all(grid[r][c] == 0 for r in range(rows))]\n    \n    # Extract panels between separators\n    boundaries = [-1] + sep_cols + [cols]\n    panels = []\n    for i in range(len(boundaries) - 1):\n        c_start = boundaries[i] + 1\n        c_end = boundaries[i + 1]\n        if c_end > c_start:\n            panel = [grid[r][c_start:c_end] for r in range(rows)]\n            panels.append(panel)\n    \n    results = []\n    for panel in panels:\n        pw = len(panel[0])\n        zero_positions = []\n        for r in range(rows):\n            for c in range(pw):\n                if panel[r][c] == 0:\n                    zero_positions.append((r, c))\n        \n        if not zero_positions:\n            results.append(2)\n        else:\n            min_r = min(r for r, c in zero_positions)\n            cols_used = set(c for r, c in zero_positions)\n            \n            if min_r == 0:\n                vpos = 'top'\n            elif min_r == 1:\n                vpos = 'middle'\n            else:\n                vpos = 'bottom'\n            \n            inner = cols_used <= {1, 2}\n            \n            mapping = {\n                ('middle', True): 8,\n                ('middle', False): 3,\n                ('bottom', True): 4,\n                ('bottom', False): 6,\n                ('top', True): 1,\n                ('top', False): 7,\n            }\n            results.append(mapping.get((vpos, inner), 0))\n    \n    num_cols_out = len(panels)\n    return [[v] * num_cols_out for v in results]\n```",
+  "script": "def solve(grid):\n    rows = len(grid)\n    cols = len(grid[0])\n    \n    # Find separator columns (all 0)\n    sep_cols = [c for c in range(cols) if all(grid[r][c] == 0 for r in range(rows))]\n    \n    # Extract panels between separators\n    boundaries = [-1] + sep_cols + [cols]\n    panels = []\n    for i in range(len(boundaries) - 1):\n        c_start = boundaries[i] + 1\n        c_end = boundaries[i + 1]\n        if c_end > c_start:\n            panel = [grid[r][c_start:c_end] for r in range(rows)]\n            panels.append(panel)\n    \n    results = []\n    for panel in panels:\n        pw = len(panel[0])\n        zero_positions = []\n        for r in range(rows):\n            for c in range(pw):\n                if panel[r][c] == 0:\n                    zero_positions.append((r, c))\n        \n        if not zero_positions:\n            results.append(2)\n        else:\n            min_r = min(r for r, c in zero_positions)\n            cols_used = set(c for r, c in zero_positions)\n            \n            if min_r == 0:\n                vpos = 'top'\n            elif min_r == 1:\n                vpos = 'middle'\n            else:\n                vpos = 'bottom'\n            \n            inner = cols_used <= {1, 2}\n            \n            mapping = {\n                ('middle', True): 8,\n                ('middle', False): 3,\n                ('bottom', True): 4,\n                ('bottom', False): 6,\n                ('top', True): 1,\n                ('top', False): 7,\n            }\n            results.append(mapping.get((vpos, inner), 0))\n    \n    num_cols_out = len(panels)\n    return [[v] * num_cols_out for v in results]",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 4,
+      "total": 4,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 64,
+      "total": 64,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 106,
+      "total": 1000,
+      "success_rate": 0.106
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "input": [
+        [
+          9,
+          9,
+          9,
+          9,
+          8,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          9,
+          8,
+          8,
+          9,
+          8,
+          8,
+          2,
+          2,
+          8
+        ],
+        [
+          9,
+          8,
+          8,
+          9,
+          8,
+          8,
+          2,
+          2,
+          8
+        ],
+        [
+          9,
+          9,
+          9,
+          9,
+          8,
+          2,
+          2,
+          2,
+          2
+        ]
+      ],
+      "expected": [
+        [
+          8,
+          8
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "got": [
+        [
+          2
+        ]
+      ]
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          4,
+          4,
+          4,
+          4,
+          7,
+          8,
+          8,
+          8,
+          8
+        ],
+        [
+          4,
+          7,
+          7,
+          4,
+          7,
+          8,
+          7,
+          7,
+          8
+        ],
+        [
+          4,
+          7,
+          7,
+          4,
+          7,
+          8,
+          7,
+          7,
+          8
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          7,
+          8,
+          8,
+          8,
+          8
+        ]
+      ],
+      "expected": [
+        [
+          8,
+          8
+        ],
+        [
+          8,
+          8
+        ]
+      ],
+      "got": [
+        [
+          2
+        ]
+      ]
+    }
+  },
+  "evaluation_ok": true
+}

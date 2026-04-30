@@ -1,0 +1,205 @@
+{
+  "task_id": "4c4377d9",
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 1285757058,
+  "include_true": false,
+  "corruption_source": "h_arc_incorrect",
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n9 9 5 9\n5 5 9 9\n9 5 9 9\nOutput:\n9 5 9 9\n5 5 9 9\n9 9 5 9\n9 9 5 9\n5 5 9 9\n9 5 9 9\n\nExample 2:\nInput:\n4 1 1 4\n1 1 1 1\n4 4 4 1\nOutput:\n4 4 4 1\n1 1 1 1\n4 1 1 4\n4 1 1 4\n1 1 1 1\n4 4 4 1\n\nExample 3:\nInput:\n9 4 9 4\n9 9 4 4\n4 4 4 4\nOutput:\n4 4 4 4\n9 9 4 4\n9 4 9 4\n9 4 9 4\n9 9 4 4\n4 4 4 4\n\nExample 4:\nInput:\n3 3 5 5\n3 5 5 3\n5 5 3 3\nOutput:\n5 5 3 3\n3 5 5 3\n3 3 5 5\n3 3 5 5\n3 5 5 3\n5 5 3 3\n\nThe following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.\n\nCandidate pair:\nInput:\n4 4 9 9\n4 4 4 4\n4 4 9 9\nOutput:\n4 4 0 0\n4 4 4 4\n4 4 0 0\n4 4 0 0\n4 4 4 4\n4 4 0 0\n\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "{\"input\": [[4, 4, 9, 9], [4, 4, 4, 4], [4, 4, 9, 9]], \"output\": [[4, 4, 9, 9], [4, 4, 4, 4], [4, 4, 9, 9], [4, 4, 9, 9], [4, 4, 4, 4], [4, 4, 9, 9]]}",
+  "corrupted_pair": {
+    "input": [
+      [
+        4,
+        4,
+        9,
+        9
+      ],
+      [
+        4,
+        4,
+        4,
+        4
+      ],
+      [
+        4,
+        4,
+        9,
+        9
+      ]
+    ],
+    "output": [
+      [
+        4,
+        4,
+        0,
+        0
+      ],
+      [
+        4,
+        4,
+        4,
+        4
+      ],
+      [
+        4,
+        4,
+        0,
+        0
+      ],
+      [
+        4,
+        4,
+        0,
+        0
+      ],
+      [
+        4,
+        4,
+        4,
+        4
+      ],
+      [
+        4,
+        4,
+        0,
+        0
+      ]
+    ]
+  },
+  "target_pair": {
+    "input": [
+      [
+        4,
+        4,
+        9,
+        9
+      ],
+      [
+        4,
+        4,
+        4,
+        4
+      ],
+      [
+        4,
+        4,
+        9,
+        9
+      ]
+    ],
+    "output": [
+      [
+        4,
+        4,
+        9,
+        9
+      ],
+      [
+        4,
+        4,
+        4,
+        4
+      ],
+      [
+        4,
+        4,
+        9,
+        9
+      ],
+      [
+        4,
+        4,
+        9,
+        9
+      ],
+      [
+        4,
+        4,
+        4,
+        4
+      ],
+      [
+        4,
+        4,
+        9,
+        9
+      ]
+    ]
+  },
+  "evaluation_ok": true,
+  "prediction_pair": {
+    "input": [
+      [
+        4,
+        4,
+        9,
+        9
+      ],
+      [
+        4,
+        4,
+        4,
+        4
+      ],
+      [
+        4,
+        4,
+        9,
+        9
+      ]
+    ],
+    "output": [
+      [
+        4,
+        4,
+        9,
+        9
+      ],
+      [
+        4,
+        4,
+        4,
+        4
+      ],
+      [
+        4,
+        4,
+        9,
+        9
+      ],
+      [
+        4,
+        4,
+        9,
+        9
+      ],
+      [
+        4,
+        4,
+        4,
+        4
+      ],
+      [
+        4,
+        4,
+        9,
+        9
+      ]
+    ]
+  },
+  "guardrail": {
+    "enabled": true,
+    "max_norm_edit": 0.7,
+    "normalized_distance_input": 0.0,
+    "normalized_distance_output": 0.3333333333333333,
+    "passed": true
+  },
+  "metrics": {
+    "success": true
+  }
+}

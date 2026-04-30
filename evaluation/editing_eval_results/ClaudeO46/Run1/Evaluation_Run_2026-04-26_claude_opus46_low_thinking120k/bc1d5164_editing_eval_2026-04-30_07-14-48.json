@@ -1,0 +1,223 @@
+{
+  "task_id": "bc1d5164",
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 1584788932,
+  "include_true": false,
+  "corruption_source": "h_arc_incorrect",
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n0 8 0 0 0 8 0\n8 8 0 0 0 8 8\n0 0 0 0 0 0 0\n8 8 0 0 0 8 8\n0 8 0 0 0 8 0\nOutput:\n0 8 0\n8 8 8\n0 8 0\n\nExample 2:\nInput:\n2 2 0 0 0 2 2\n0 0 0 0 0 0 2\n0 0 0 0 0 0 0\n0 2 0 0 0 2 0\n2 0 0 0 0 0 2\nOutput:\n2 2 2\n0 2 2\n2 0 2\n\nExample 3:\nInput:\n4 4 0 0 0 4 0\n0 0 0 0 0 4 4\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n4 0 0 0 0 0 4\nOutput:\n4 4 0\n0 4 4\n4 0 4\n\nExample 4:\nInput:\n4 0 0 0 0 0 4\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n4 0 0 0 0 4 4\nOutput:\n4 0 4\n0 0 0\n4 4 4\n\nExample 5:\nInput:\n0 3 0 0 0 3 0\n3 0 0 0 0 0 3\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 3\nOutput:\n0 3 0\n3 0 3\n0 0 3\n\nThe following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.\n\nCandidate pair:\nInput:\n0 0 0 0 0 1 1\n1 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 1 0 0 0 0 1\nOutput:\n0 1 1\n1 0 0\n0 1 0\n\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "Looking at the examples, I identify the rule:\n\n1. Split the 5\u00d77 grid into **left** (cols 0-2) and **right** (cols 4-6), with col 3 as separator.\n2. **OR** the left and right halves together (cell-wise).\n3. Compress 5 rows \u2192 3 rows: **row 0**, **row 1 OR row 3**, **row 4**.\n\n**Applying to the candidate:**\n\nLeft (cols 0-2): `0,0,0 / 1,0,0 / 0,0,0 / 0,0,0 / 0,1,0`\nRight (cols 4-6): `0,1,1 / 0,0,0 / 0,0,0 / 0,0,0 / 0,0,1`\nOR: `0,1,1 / 1,0,0 / 0,0,0 / 0,0,0 / 0,1,1`\n\nOutput: row0=`0,1,1`, row1|row3=`1,0,0`, row4=`0,1,1`\n\nThe given output's last row `0,1,0` should be `0,1,1`.\n\n```json\n{\"input\": [[0,0,0,0,0,1,1],[1,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,1,0,0,0,0,1]], \"output\": [[0,1,1],[1,0,0],[0,1,1]]}\n```",
+  "corrupted_pair": {
+    "input": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "output": [
+      [
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ]
+    ]
+  },
+  "target_pair": {
+    "input": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "output": [
+      [
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        1
+      ]
+    ]
+  },
+  "evaluation_ok": true,
+  "prediction_pair": {
+    "input": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "output": [
+      [
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        1
+      ]
+    ]
+  },
+  "guardrail": {
+    "enabled": true,
+    "max_norm_edit": 0.7,
+    "normalized_distance_input": 0.0,
+    "normalized_distance_output": 0.1111111111111111,
+    "passed": true
+  },
+  "metrics": {
+    "success": true
+  }
+}

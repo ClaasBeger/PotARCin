@@ -1,0 +1,74 @@
+{
+  "task_id": "0e206a2e",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5",
+  "provider": "together",
+  "base_url": "https://api.together.xyz/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 8 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 3 8 1 0 0 0 0 0 0 0 0 0 0 4 0 0\n0 0 8 4 8 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 0 1\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 8 0 8 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 8 8 4 0 0 0 0 0 0 0 0\n0 0 1 0 0 0 0 8 0 8 0 0 0 0 0 0 0 0\n0 0 0 4 0 0 0 1 0 0 0 0 0 0 0 0 0 0\n0 0 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 8 4 8 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 8 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 3 8 8 8 1\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 1 8 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 8 8 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 3 8 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 0 4 3 3 0 0 0 0 0 0 0 0 0\n0 0 0 0 3 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 3 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 3 0 0 0 0 0 0 0 0 0 0\n0 0 0 3 1 3 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 4 0\n0 0 0 0 0 0 0 0 0 1 0 0 0 0 2\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 3 0 0 0 4 0\n0 0 0 0 0 0 0 0 0 1 3 3 3 3 2\n0 0 0 0 0 0 0 0 0 3 0 0 0 3 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 4 0 0 0 0\n0 0 0 0 0 8 0 0 0 8 0 0 0 0\n0 0 0 0 0 1 8 8 8 2 8 0 0 0\n0 0 0 0 0 0 0 0 0 8 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 1 0 0 0 2 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 4 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 8 0 0 0 0 0 0 0 0\n0 1 8 8 8 2 8 0 0 0 0 0 0 0\n0 8 0 0 0 8 0 0 0 0 0 0 0 0\n0 0 0 0 0 4 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 5 1 5 5 4 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 5 0 0 5 0 0 0 0 0 0 0 0\n0 0 0 0 0 2 5 5 5 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 5 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 5 0 5 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 4 5 1 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\nimport numpy as np\n\ndef solve(grid):\n    if not grid or not grid[0]:\n        return grid\n    \n    arr = np.array(grid, dtype=int)\n    h, w = arr.shape\n    output = np.zeros_like(arr)\n    \n    # Find connected components\n    visited = np.zeros_like(arr, dtype=bool)\n    \n    def get_component(sr, sc):\n        if visited[sr, sc] or arr[sr, sc] == 0:\n            return []\n        comp = []\n        stack = [(sr, sc)]\n        visited[sr, sc] = True\n        while stack:\n            r, c = stack.pop()\n            comp.append((r, c))\n            for dr, dc in [(-1,0),(1,0),(0,-1),(0,1)]:\n                nr, nc = r+dr, c+dc\n                if 0 <= nr < h and 0 <= nc < w and not visited[nr, nc] and arr[nr, nc] > 0:\n                    visited[nr, nc] = True\n                    stack.append((nr, nc))\n        return comp\n    \n    components = []\n    for r in range(h):\n        for c in range(w):\n            if arr[r, c] > 0 and not visited[r, c]:\n                comp = get_component(r, c)\n                if comp:\n                    components.append(comp)\n    \n    if not components:\n        return grid\n    \n    # Find template (component containing 1, 2, and 4)\n    template_comp = None\n    for comp in components:\n        vals = set(arr[r, c] for r, c in comp)\n        if {1, 2, 4}.issubset(vals):\n            if template_comp is None or len(comp) > len(template_comp):\n                template_comp = comp\n    \n    if template_comp is None:\n        return grid\n    \n    template_set = set(template_comp)\n    \n    # Get reference points in template (use first occurrence of each)\n    t1 = next((r, c) for r, c in template_comp if arr[r, c] == 1)\n    t2 = next((r, c) for r, c in template_comp if arr[r, c] == 2)\n    t4 = next((r, c) for r, c in template_comp if arr[r, c] == 4)\n    \n    # Store pattern relative to t1\n    pattern = {}\n    for r, c in template_comp:\n        pattern[(r - t1[0], c - t1[1])] = arr[r, c]\n    \n    # Find target markers not in template\n    all_1s = [(r, c) for r, c in np.argwhere(arr == 1) if (r, c) not in template_set]\n    all_2s = [(r, c) for r, c in np.argwhere(arr == 2) if (r, c) not in template_set]\n    all_4s = [(r, c) for r, c in np.argwhere(arr == 4) if (r, c) not in template_set]\n    \n    # Vectors in template\n    v2_temp = (t2[0] - t1[0], t2[1] - t1[1])\n    v4_temp = (t4[0] - t1[0], t4[1] - t1[1])\n    \n    # Rotation matrices: (a, b, c, d) for [[a, b], [c, d]]\n    rotations = [\n        (1, 0, 0, 1),    # identity\n        (0, 1, -1, 0),   # 90 CW\n        (0, -1, 1, 0),   # 90 CCW\n        (-1, 0, 0, -1)   # 180\n    ]\n    \n    used_targets = set()\n    \n    for target_1 in all_1s:\n        # Find nearest 2 and 4\n        if not all_2s or not all_4s:\n            continue\n            \n        target_2 = min(all_2s, key=lambda x: abs(x[0]-target_1[0]) + abs(x[1]-target_1[1]))\n        target_4 = min(all_4s, key=lambda x: abs(x[0]-target_1[0]) + abs(x[1]-target_1[1]))\n        \n        # Skip if too far (not part of this group)\n        if abs(target_2[0]-target_1[0]) > 10 or abs(target_2[1]-target_1[1]) > 10:\n            continue\n        if abs(target_4[0]-target_1[0]) > 10 or abs(target_4[1]-target_1[1]) > 10:\n            continue\n            \n        v2_target = (target_2[0] - target_1[0], target_2[1] - target_1[1])\n        v4_target = (target_4[0] - target_1[0], target_4[1] - target_1[1])\n        \n        # Find matching rotation\n        for a, b, c, d in rotations:\n            v2_rot = (v2_temp[0]*a + v2_temp[1]*b, v2_temp[0]*c + v2_temp[1]*d)\n            v4_rot = (v4_temp[0]*a + v4_temp[1]*b, v4_temp[0]*c + v4_temp[1]*d)\n            \n            if v2_rot == v2_target and v4_rot == v4_target:\n                # Apply transformation\n                for (dr, dc), val in pattern.items():\n                    new_r = target_1[0] + dr*a + dc*b\n                    new_c = target_1[1] + dr*c + dc*d\n                    if 0 <= new_r < h and 0 <= new_c < w:\n                        output[new_r, new_c] = val\n                used_targets.add(target_1)\n                used_targets.add(target_2)\n                used_targets.add(target_4)\n                break\n    \n    return output.tolist()\n```",
+  "script": "import numpy as np\n\ndef solve(grid):\n    if not grid or not grid[0]:\n        return grid\n    \n    arr = np.array(grid, dtype=int)\n    h, w = arr.shape\n    output = np.zeros_like(arr)\n    \n    # Find connected components\n    visited = np.zeros_like(arr, dtype=bool)\n    \n    def get_component(sr, sc):\n        if visited[sr, sc] or arr[sr, sc] == 0:\n            return []\n        comp = []\n        stack = [(sr, sc)]\n        visited[sr, sc] = True\n        while stack:\n            r, c = stack.pop()\n            comp.append((r, c))\n            for dr, dc in [(-1,0),(1,0),(0,-1),(0,1)]:\n                nr, nc = r+dr, c+dc\n                if 0 <= nr < h and 0 <= nc < w and not visited[nr, nc] and arr[nr, nc] > 0:\n                    visited[nr, nc] = True\n                    stack.append((nr, nc))\n        return comp\n    \n    components = []\n    for r in range(h):\n        for c in range(w):\n            if arr[r, c] > 0 and not visited[r, c]:\n                comp = get_component(r, c)\n                if comp:\n                    components.append(comp)\n    \n    if not components:\n        return grid\n    \n    # Find template (component containing 1, 2, and 4)\n    template_comp = None\n    for comp in components:\n        vals = set(arr[r, c] for r, c in comp)\n        if {1, 2, 4}.issubset(vals):\n            if template_comp is None or len(comp) > len(template_comp):\n                template_comp = comp\n    \n    if template_comp is None:\n        return grid\n    \n    template_set = set(template_comp)\n    \n    # Get reference points in template (use first occurrence of each)\n    t1 = next((r, c) for r, c in template_comp if arr[r, c] == 1)\n    t2 = next((r, c) for r, c in template_comp if arr[r, c] == 2)\n    t4 = next((r, c) for r, c in template_comp if arr[r, c] == 4)\n    \n    # Store pattern relative to t1\n    pattern = {}\n    for r, c in template_comp:\n        pattern[(r - t1[0], c - t1[1])] = arr[r, c]\n    \n    # Find target markers not in template\n    all_1s = [(r, c) for r, c in np.argwhere(arr == 1) if (r, c) not in template_set]\n    all_2s = [(r, c) for r, c in np.argwhere(arr == 2) if (r, c) not in template_set]\n    all_4s = [(r, c) for r, c in np.argwhere(arr == 4) if (r, c) not in template_set]\n    \n    # Vectors in template\n    v2_temp = (t2[0] - t1[0], t2[1] - t1[1])\n    v4_temp = (t4[0] - t1[0], t4[1] - t1[1])\n    \n    # Rotation matrices: (a, b, c, d) for [[a, b], [c, d]]\n    rotations = [\n        (1, 0, 0, 1),    # identity\n        (0, 1, -1, 0),   # 90 CW\n        (0, -1, 1, 0),   # 90 CCW\n        (-1, 0, 0, -1)   # 180\n    ]\n    \n    used_targets = set()\n    \n    for target_1 in all_1s:\n        # Find nearest 2 and 4\n        if not all_2s or not all_4s:\n            continue\n            \n        target_2 = min(all_2s, key=lambda x: abs(x[0]-target_1[0]) + abs(x[1]-target_1[1]))\n        target_4 = min(all_4s, key=lambda x: abs(x[0]-target_1[0]) + abs(x[1]-target_1[1]))\n        \n        # Skip if too far (not part of this group)\n        if abs(target_2[0]-target_1[0]) > 10 or abs(target_2[1]-target_1[1]) > 10:\n            continue\n        if abs(target_4[0]-target_1[0]) > 10 or abs(target_4[1]-target_1[1]) > 10:\n            continue\n            \n        v2_target = (target_2[0] - target_1[0], target_2[1] - target_1[1])\n        v4_target = (target_4[0] - target_1[0], target_4[1] - target_1[1])\n        \n        # Find matching rotation\n        for a, b, c, d in rotations:\n            v2_rot = (v2_temp[0]*a + v2_temp[1]*b, v2_temp[0]*c + v2_temp[1]*d)\n            v4_rot = (v4_temp[0]*a + v4_temp[1]*b, v4_temp[0]*c + v4_temp[1]*d)\n            \n            if v2_rot == v2_target and v4_rot == v4_target:\n                # Apply transformation\n                for (dr, dc), val in pattern.items():\n                    new_r = target_1[0] + dr*a + dc*b\n                    new_c = target_1[1] + dr*c + dc*d\n                    if 0 <= new_r < h and 0 <= new_c < w:\n                        output[new_r, new_c] = val\n                used_targets.add(target_1)\n                used_targets.add(target_2)\n                used_targets.add(target_4)\n                break\n    \n    return output.tolist()",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 262,
+      "success_rate": 0.0
+    },
+    "dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'np' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'np' is not defined"
+    },
+    "stable": {
+      "index": 0,
+      "error": "name 'np' is not defined"
+    },
+    "dynamic50": {
+      "index": 0,
+      "error": "name 'np' is not defined"
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "name 'np' is not defined"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "name 'np' is not defined"
+    }
+  },
+  "evaluation_ok": true
+}

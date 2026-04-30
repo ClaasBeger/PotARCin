@@ -1,0 +1,62 @@
+{
+  "task_id": "6430c8c4",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n7 7 0 7\n0 7 7 0\n0 7 7 7\n0 7 7 0\n4 4 4 4\n0 0 0 0\n0 2 0 2\n2 2 2 0\n2 0 0 2\nOutput:\n0 0 3 0\n3 0 0 0\n0 0 0 0\n0 0 0 0\n\nExample 2:\n\nInput:\n0 0 7 7\n0 0 7 7\n0 7 7 0\n7 7 0 0\n4 4 4 4\n2 0 2 0\n0 2 0 2\n0 2 2 0\n0 0 2 0\nOutput:\n0 3 0 0\n3 0 0 0\n3 0 0 3\n0 0 0 3\n\nExample 3:\n\nInput:\n0 0 0 7\n0 7 7 7\n0 7 0 0\n0 7 7 7\n4 4 4 4\n0 0 2 0\n0 2 2 2\n2 2 0 0\n0 2 0 2\nOutput:\n3 3 0 0\n3 0 0 0\n0 0 3 3\n3 0 0 0\n\nExample 4:\n\nInput:\n7 0 7 0\n0 0 7 7\n7 0 7 7\n7 7 0 0\n4 4 4 4\n0 0 2 2\n0 0 0 0\n2 0 0 2\n0 2 0 2\nOutput:\n0 3 0 0\n3 3 0 0\n0 3 0 0\n0 0 3 0\n\nBelow is a test input grid.\n\nInput:\n7 7 7 7\n0 7 7 7\n7 0 0 0\n7 0 7 0\n4 4 4 4\n0 2 2 2\n0 0 0 0\n2 0 2 2\n0 2 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    # Find the separator row (all entries are 4)\n    sep_idx = None\n    for i, row in enumerate(grid):\n        if row and all(cell == 4 for cell in row):\n            sep_idx = i\n            break\n\n    if sep_idx is None:\n        # Fallback: split the grid into two equal halves\n        n = len(grid)\n        if n % 2 != 0:\n            raise ValueError(\"Grid must contain a separator row or have an even number of rows.\")\n        half = n // 2\n        top = grid[:half]\n        bottom = grid[half:]\n    else:\n        top = grid[:sep_idx]\n        bottom = grid[sep_idx + 1:]\n\n    # Verify matching dimensions\n    if len(top) != len(bottom):\n        raise ValueError(\"Top and bottom parts must have the same number of rows.\")\n    rows = len(top)\n    cols = len(top[0]) if rows else 0\n\n    # Build the output grid: 3 where both top and bottom cells are 0, otherwise 0\n    out = []\n    for r in range(rows):\n        out_row = []\n        for c in range(cols):\n            if top[r][c] == 0 and bottom[r][c] == 0:\n                out_row.append(3)\n            else:\n                out_row.append(0)\n        out.append(out_row)\n\n    return out",
+  "script": "def solve(grid):\n    # Find the separator row (all entries are 4)\n    sep_idx = None\n    for i, row in enumerate(grid):\n        if row and all(cell == 4 for cell in row):\n            sep_idx = i\n            break\n\n    if sep_idx is None:\n        # Fallback: split the grid into two equal halves\n        n = len(grid)\n        if n % 2 != 0:\n            raise ValueError(\"Grid must contain a separator row or have an even number of rows.\")\n        half = n // 2\n        top = grid[:half]\n        bottom = grid[half:]\n    else:\n        top = grid[:sep_idx]\n        bottom = grid[sep_idx + 1:]\n\n    # Verify matching dimensions\n    if len(top) != len(bottom):\n        raise ValueError(\"Top and bottom parts must have the same number of rows.\")\n    rows = len(top)\n    cols = len(top[0]) if rows else 0\n\n    # Build the output grid: 3 where both top and bottom cells are 0, otherwise 0\n    out = []\n    for r in range(rows):\n        out_row = []\n        for c in range(cols):\n            if top[r][c] == 0 and bottom[r][c] == 0:\n                out_row.append(3)\n            else:\n                out_row.append(0)\n        out.append(out_row)\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 4,
+      "total": 4,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 2,
+      "total": 1000,
+      "success_rate": 0.002
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "Grid must contain a separator row or have an even number of rows."
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "Grid must contain a separator row or have an even number of rows."
+    }
+  },
+  "evaluation_ok": true
+}

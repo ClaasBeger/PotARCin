@@ -1,0 +1,74 @@
+{
+  "task_id": "846bdb03",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 0 1 0 0 0 0 0 0 0\n0 0 0 2 0 1 1 1 0 0 0 0 0\n0 0 0 2 2 1 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0 0 0 0\n0 0 0 0 0 4 0 0 0 0 0 0 4\n0 0 0 0 0 2 0 0 0 0 0 0 1\n0 0 0 0 0 2 0 0 0 0 0 0 1\n0 0 0 0 0 2 0 0 0 0 0 0 1\n0 0 0 0 0 2 0 0 0 0 0 0 1\n0 0 0 0 0 4 0 0 0 0 0 0 4\nOutput:\n4 0 0 0 0 0 0 4\n2 2 2 0 1 0 0 1\n2 0 2 0 1 1 1 1\n2 0 2 2 1 0 0 1\n2 0 0 2 0 0 0 1\n4 0 0 0 0 0 0 4\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 3 0 8 0 8 0 0 0\n0 0 0 0 3 3 3 8 8 8 0 0 0\n0 0 0 0 0 3 0 8 0 8 0 0 0\n0 0 0 0 0 3 3 8 8 8 0 0 0\n0 0 0 0 0 0 0 8 0 8 0 0 0\n0 4 0 0 0 0 0 0 4 0 0 0 0\n0 8 0 0 0 0 0 0 3 0 0 0 0\n0 8 0 0 0 0 0 0 3 0 0 0 0\n0 8 0 0 0 0 0 0 3 0 0 0 0\n0 8 0 0 0 0 0 0 3 0 0 0 0\n0 8 0 0 0 0 0 0 3 0 0 0 0\n0 4 0 0 0 0 0 0 4 0 0 0 0\nOutput:\n4 0 0 0 0 0 0 4\n8 8 0 8 0 3 0 3\n8 8 8 8 3 3 3 3\n8 8 0 8 0 3 0 3\n8 8 8 8 3 3 0 3\n8 8 0 8 0 0 0 3\n4 0 0 0 0 0 0 4\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 4 0 0 0 0 4 0 0 0 0 0\n0 0 2 0 0 0 0 1 0 0 0 0 0\n0 0 2 0 0 0 0 1 0 0 0 0 0\n0 0 4 0 0 0 0 4 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 1 1 2 0 0 0 0 0 0 0\n0 0 0 0 1 2 2 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n4 0 0 0 0 4\n2 0 2 1 1 1\n2 2 2 1 0 1\n4 0 0 0 0 4\n\nExample 4:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 4 0 0 0 0 4 0 0\n0 0 0 0 0 7 0 0 0 0 3 0 0\n0 0 0 0 0 7 0 0 0 0 3 0 0\n0 0 0 0 0 7 0 0 0 0 3 0 0\n0 0 0 0 0 4 0 0 0 0 4 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 7 7 0 3 0 0 0 0\n0 0 0 0 0 7 7 3 3 0 0 0 0\n0 0 0 0 0 0 7 0 3 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n4 0 0 0 0 4\n7 7 7 0 3 3\n7 7 7 3 3 3\n7 0 7 0 3 3\n4 0 0 0 0 4\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 4 0 0 0 0 0 0 4 0 0 0 0\n0 2 0 0 0 0 0 0 8 0 0 0 0\n0 2 0 0 0 0 0 0 8 0 0 0 0\n0 2 0 0 0 0 0 0 8 0 0 0 0\n0 2 0 0 0 0 0 0 8 0 0 0 0\n0 4 0 0 0 0 0 0 4 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 8 0 8 2 0 0 0 0 0 0 0 0\n0 8 8 8 2 2 2 0 0 0 0 0 0\n0 8 0 0 0 2 0 0 0 0 0 0 0\n0 8 0 0 0 2 2 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    # Find the corner color (appears exactly four times and forms a rectangle)\n    from collections import Counter\n    non_zero = [(r, c, v) for r in range(len(grid)) for c in range(len(grid[0])) if grid[r][c] != 0]\n    if not non_zero:\n        return []\n    cnt = Counter(v for _, _, v in non_zero)\n    cand = None\n    for color, occ in cnt.items():\n        if occ == 4:\n            positions = [(r, c) for r, c, v in non_zero if v == color]\n            rows = {r for r, _ in positions}\n            cols = {c for _, c in positions}\n            if len(rows) == 2 and len(cols) == 2:\n                cand = color\n                min_r = min(r for r, _ in positions)\n                max_r = max(r for r, _ in positions)\n                min_c = min(c for _, c in positions)\n                max_c = max(c for _, c in positions)\n                break\n    if cand is None:\n        # fallback: use overall bounding box\n        min_r = min(r for r, _, _ in non_zero)\n        max_r = max(r for r, _, _ in non_zero)\n        min_c = min(c for _, c, _ in non_zero)\n        max_c = max(c for _, c, _ in non_zero)\n        cand = grid[min_r][min_c]\n\n    # output dimensions\n    out_h = max_r - min_r + 1\n    out_w = max_c - min_c + 1\n    out = [[0] * out_w for _ in range(out_h)]\n\n    # corners\n    out[0][0] = cand\n    out[0][out_w - 1] = cand\n    out[out_h - 1][0] = cand\n    out[out_h - 1][out_w - 1] = cand\n\n    # left and right border colors\n    left_col = min_c\n    right_col = max_c\n    left_color = None\n    right_color = None\n    for r in range(min_r + 1, max_r):\n        v = grid[r][left_col]\n        if v != 0 and v != cand:\n            left_color = v\n            break\n    for r in range(min_r + 1, max_r):\n        v = grid[r][right_col]\n        if v != 0 and v != cand:\n            right_color = v\n            break\n\n    # fill border columns\n    for r in range(1, out_h - 1):\n        out[r][0] = left_color\n        out[r][out_w - 1] = right_color\n\n    interior_h = out_h - 2\n    interior_w = out_w - 2\n    half_w = interior_w // 2\n\n    # helper to place a shape\n    def place_shape(color, border_col, start_col):\n        cells = [(r, c) for r in range(len(grid))\n                       for c in range(len(grid[0]))\n                       if grid[r][c] == color and c != border_col]\n        if not cells:\n            return\n        min_r_s = min(r for r, _ in cells)\n        max_r_s = max(r for r, _ in cells)\n        min_c_s = min(c for _, c in cells)\n        max_c_s = max(c for _, c in cells)\n        sh = max_r_s - min_r_s + 1\n        sw = max_c_s - min_c_s + 1\n\n        for r, c in cells:\n            ro = r - min_r_s\n            co = c - min_c_s\n            # vertical scaling (identity if sh == interior_h)\n            if sh > 1:\n                new_r = ro * (interior_h - 1) // (sh - 1)\n            else:\n                new_r = 0\n            # horizontal scaling (identity if sw == half_w)\n            if sw > 1:\n                new_c = co * (half_w - 1) // (sw - 1)\n            else:\n                new_c = 0\n            out_r = 1 + new_r\n            out_c = start_col + new_c\n            out[out_r][out_c] = color\n\n    # place left color shape (left half)\n    place_shape(left_color, left_col, 1)\n    # place right color shape (right half)\n    place_shape(right_color, right_col, half_w + 1)\n\n    return out",
+  "script": "def solve(grid):\n    # Find the corner color (appears exactly four times and forms a rectangle)\n    from collections import Counter\n    non_zero = [(r, c, v) for r in range(len(grid)) for c in range(len(grid[0])) if grid[r][c] != 0]\n    if not non_zero:\n        return []\n    cnt = Counter(v for _, _, v in non_zero)\n    cand = None\n    for color, occ in cnt.items():\n        if occ == 4:\n            positions = [(r, c) for r, c, v in non_zero if v == color]\n            rows = {r for r, _ in positions}\n            cols = {c for _, c in positions}\n            if len(rows) == 2 and len(cols) == 2:\n                cand = color\n                min_r = min(r for r, _ in positions)\n                max_r = max(r for r, _ in positions)\n                min_c = min(c for _, c in positions)\n                max_c = max(c for _, c in positions)\n                break\n    if cand is None:\n        # fallback: use overall bounding box\n        min_r = min(r for r, _, _ in non_zero)\n        max_r = max(r for r, _, _ in non_zero)\n        min_c = min(c for _, c, _ in non_zero)\n        max_c = max(c for _, c, _ in non_zero)\n        cand = grid[min_r][min_c]\n\n    # output dimensions\n    out_h = max_r - min_r + 1\n    out_w = max_c - min_c + 1\n    out = [[0] * out_w for _ in range(out_h)]\n\n    # corners\n    out[0][0] = cand\n    out[0][out_w - 1] = cand\n    out[out_h - 1][0] = cand\n    out[out_h - 1][out_w - 1] = cand\n\n    # left and right border colors\n    left_col = min_c\n    right_col = max_c\n    left_color = None\n    right_color = None\n    for r in range(min_r + 1, max_r):\n        v = grid[r][left_col]\n        if v != 0 and v != cand:\n            left_color = v\n            break\n    for r in range(min_r + 1, max_r):\n        v = grid[r][right_col]\n        if v != 0 and v != cand:\n            right_color = v\n            break\n\n    # fill border columns\n    for r in range(1, out_h - 1):\n        out[r][0] = left_color\n        out[r][out_w - 1] = right_color\n\n    interior_h = out_h - 2\n    interior_w = out_w - 2\n    half_w = interior_w // 2\n\n    # helper to place a shape\n    def place_shape(color, border_col, start_col):\n        cells = [(r, c) for r in range(len(grid))\n                       for c in range(len(grid[0]))\n                       if grid[r][c] == color and c != border_col]\n        if not cells:\n            return\n        min_r_s = min(r for r, _ in cells)\n        max_r_s = max(r for r, _ in cells)\n        min_c_s = min(c for _, c in cells)\n        max_c_s = max(c for _, c in cells)\n        sh = max_r_s - min_r_s + 1\n        sw = max_c_s - min_c_s + 1\n\n        for r, c in cells:\n            ro = r - min_r_s\n            co = c - min_c_s\n            # vertical scaling (identity if sh == interior_h)\n            if sh > 1:\n                new_r = ro * (interior_h - 1) // (sh - 1)\n            else:\n                new_r = 0\n            # horizontal scaling (identity if sw == half_w)\n            if sw > 1:\n                new_c = co * (half_w - 1) // (sw - 1)\n            else:\n                new_c = 0\n            out_r = 1 + new_r\n            out_c = start_col + new_c\n            out[out_r][out_c] = color\n\n    # place left color shape (left half)\n    place_shape(left_color, left_col, 1)\n    # place right color shape (right half)\n    place_shape(right_color, right_col, half_w + 1)\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 4,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 261,
+      "success_rate": 0.0
+    },
+    "dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "cannot access free variable 'v' where it is not associated with a value in enclosing scope"
+    },
+    "test": {
+      "index": 0,
+      "error": "cannot access free variable 'v' where it is not associated with a value in enclosing scope"
+    },
+    "stable": {
+      "index": 0,
+      "error": "cannot access free variable 'v' where it is not associated with a value in enclosing scope"
+    },
+    "dynamic50": {
+      "index": 0,
+      "error": "cannot access free variable 'v' where it is not associated with a value in enclosing scope"
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "cannot access free variable 'v' where it is not associated with a value in enclosing scope"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "cannot access free variable 'v' where it is not associated with a value in enclosing scope"
+    }
+  },
+  "evaluation_ok": true
+}
