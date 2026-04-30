@@ -274,24 +274,28 @@ def _touches8_cell(p: Pos, cells: Set[Pos]) -> bool:
     return False
 
 
-def _diagonal_seam_flanks(container: Set[Pos], dr: int, dc: int) -> Set[Pos]:
-    """Flank cells blocked by diagonal container-to-container seams.
+def _is_blocked_flank_for_cell(container: Set[Pos], r: int, c: int, nr: int, nc: int, dr: int, dc: int) -> bool:
+    """Whether flank (nr,nc) is blocked by a diagonal container seam at (r,c).
 
-    Any pair of diagonally adjacent container cells forms a closed seam between
-    the two orthogonal in-between cells. This seam rule is container-specific.
+    We only treat seams adjacent to the current container cell as blocking.
+    This prevents unrelated global seam matches from repeatedly dragging
+    payload that is merely nearby.
     """
     if dr == 0 or dc == 0:
-        return set()
-    blocked: Set[Pos] = set()
-    for r, c in container:
-        # Consider both diagonal orientations; use only "downward" pairs to
-        # avoid duplicating the same seam from both endpoints.
-        for ddr, ddc in ((1, 1), (1, -1)):
-            r2, c2 = r + ddr, c + ddc
-            if (r2, c2) in container:
-                blocked.add((r2, c))
-                blocked.add((r, c2))
-    return blocked
+        return False
+    d_fwd = (r + dr, c + dc) in container
+    d_back = (r - dr, c - dc) in container
+    d_side_v = (r + dr, c - dc) in container
+    d_side_h = (r - dr, c + dc) in container
+
+    # Candidate is the vertical flank for (r,c): (r+dr, c)
+    if nr == r + dr and nc == c:
+        # Block if either diagonal band around this flank is closed.
+        return (d_fwd and d_side_v) or (d_side_v and d_side_h)
+    # Candidate is the horizontal flank for (r,c): (r, c+dc)
+    if nr == r and nc == c + dc:
+        return (d_fwd and d_side_h) or (d_side_v and d_side_h)
+    return False
 
 
 def _step_push(grid: Grid, container: Set[Pos], dr: int, dc: int) -> tuple[bool, Set[Pos]]:
@@ -299,7 +303,6 @@ def _step_push(grid: Grid, container: Set[Pos], dr: int, dc: int) -> tuple[bool,
     w = len(grid[0]) if h else 0
     moving: Set[Pos] = set(container)
     container_next: Set[Pos] = {(r + dr, c + dc) for r, c in container}
-    seam_flanks = _diagonal_seam_flanks(container, dr, dc)
     seam_pushed: Set[Pos] = set()
     q = deque(container)
     blocked = False
@@ -317,7 +320,12 @@ def _step_push(grid: Grid, container: Set[Pos], dr: int, dc: int) -> tuple[bool,
                     break
                 if grid[nr][nc] != 0 and (nr, nc) not in moving:
                     moving.add((nr, nc))
-                    q.append((nr, nc))
+                    # For orthogonal movement, forward chains are 1D and should
+                    # propagate so payload is pushed rather than overwritten.
+                    # For diagonal movement we keep pickup local (flank logic
+                    # handles the corner barrier behavior separately).
+                    if dr == 0 or dc == 0:
+                        q.append((nr, nc))
                 continue
 
             # Diagonal flank contacts are only forced when they cross a blocked
@@ -327,7 +335,7 @@ def _step_push(grid: Grid, container: Set[Pos], dr: int, dc: int) -> tuple[bool,
                 continue
             if grid[nr][nc] in (0, LINE) or (nr, nc) in moving:
                 continue
-            if (nr, nc) not in seam_flanks:
+            if not _is_blocked_flank_for_cell(container, r, c, nr, nc, dr, dc):
                 continue
             moving.add((nr, nc))
             seam_pushed.add((nr, nc))
