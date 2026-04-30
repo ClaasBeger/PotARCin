@@ -1,0 +1,121 @@
+{
+  "task_id": "a416b8f3",
+  "test_idx": 0,
+  "model": "gemini-3.1-pro-preview",
+  "provider": "google",
+  "base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "max_train_demos": null,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below.\n\nExample 1\nInput:\n0 5 0\n5 5 2\n0 0 0\nOutput:\n0 5 0 0 5 0\n5 5 2 5 5 2\n0 0 0 0 0 0\n\nExample 2\nInput:\n3 0 0\n2 3 0\n2 1 8\n0 1 0\nOutput:\n3 0 0 3 0 0\n2 3 0 2 3 0\n2 1 8 2 1 8\n0 1 0 0 1 0\n\nExample 3\nInput:\n5 2 3 0\n2 5 3 0\n5 2 8 8\n0 0 6 0\nOutput:\n5 2 3 0 5 2 3 0\n2 5 3 0 2 5 3 0\n5 2 8 8 5 2 8 8\n0 0 6 0 0 0 6 0\n\nBelow is a test input grid. Predict the corresponding output grid by applying the rule you found.\nTest Input:\n4 0 0 0\n4 5 0 0\n0 5 6 0\n6 6 1 0\n0 0 0 1\n\nYour final answer must be ONLY a single Python list-of-lists grid for that output:\n[[...], ...]\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "[[4, 0, 0, 0, 4, 0, 0, 0], [4, 5, 0, 0, 4, 5, 0, 0], [0, 5, 6, 0, 0, 5, 6, 0], [6, 6, 1, 0, 6, 6, 1, 0], [0, 0, 0, 1, 0, 0, 0, 1]]",
+  "ground_truth": [
+    [
+      4,
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      5,
+      0,
+      0,
+      4,
+      5,
+      0,
+      0
+    ],
+    [
+      0,
+      5,
+      6,
+      0,
+      0,
+      5,
+      6,
+      0
+    ],
+    [
+      6,
+      6,
+      1,
+      0,
+      6,
+      6,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "evaluation_ok": true,
+  "prediction": [
+    [
+      4,
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      5,
+      0,
+      0,
+      4,
+      5,
+      0,
+      0
+    ],
+    [
+      0,
+      5,
+      6,
+      0,
+      0,
+      5,
+      6,
+      0
+    ],
+    [
+      6,
+      6,
+      1,
+      0,
+      6,
+      6,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "exact_match": true,
+  "metrics": {
+    "exact_match": 1.0
+  }
+}

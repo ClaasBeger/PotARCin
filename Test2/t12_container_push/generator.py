@@ -266,10 +266,40 @@ def _encountered_cells(r: int, c: int, dr: int, dc: int) -> list[Pos]:
     return cells
 
 
+def _touches8_cell(p: Pos, cells: Set[Pos]) -> bool:
+    pr, pc = p
+    for nr, nc in _neighbors8(pr, pc):
+        if (nr, nc) in cells:
+            return True
+    return False
+
+
+def _diagonal_seam_flanks(container: Set[Pos], dr: int, dc: int) -> Set[Pos]:
+    """Flank cells blocked by diagonal container-to-container seams.
+
+    Any pair of diagonally adjacent container cells forms a closed seam between
+    the two orthogonal in-between cells. This seam rule is container-specific.
+    """
+    if dr == 0 or dc == 0:
+        return set()
+    blocked: Set[Pos] = set()
+    for r, c in container:
+        # Consider both diagonal orientations; use only "downward" pairs to
+        # avoid duplicating the same seam from both endpoints.
+        for ddr, ddc in ((1, 1), (1, -1)):
+            r2, c2 = r + ddr, c + ddc
+            if (r2, c2) in container:
+                blocked.add((r2, c))
+                blocked.add((r, c2))
+    return blocked
+
+
 def _step_push(grid: Grid, container: Set[Pos], dr: int, dc: int) -> tuple[bool, Set[Pos]]:
     h = len(grid)
     w = len(grid[0]) if h else 0
     moving: Set[Pos] = set(container)
+    container_next: Set[Pos] = {(r + dr, c + dc) for r, c in container}
+    seam_flanks = _diagonal_seam_flanks(container, dr, dc)
     q = deque(container)
     blocked = False
 
@@ -289,14 +319,20 @@ def _step_push(grid: Grid, container: Set[Pos], dr: int, dc: int) -> tuple[bool,
                     q.append((nr, nc))
                 continue
 
-            # Diagonal flank contacts only collect pushable payload; they do not
-            # hard-block motion by themselves.
+            # Diagonal flank contacts are only forced when they cross a blocked
+            # seam formed by two diagonally connected container cells. This
+            # seam-blocking property is specific to container cells.
             if nr < 0 or nr >= h or nc < 0 or nc >= w:
                 continue
             if grid[nr][nc] in (0, LINE) or (nr, nc) in moving:
                 continue
+            if (nr, nc) not in seam_flanks:
+                continue
             moving.add((nr, nc))
-            q.append((nr, nc))
+            # Flank-contact payload is pushed by the container shell directly.
+            # Do not recurse push-through from this flank payload in the same
+            # step; this avoids unrelated long chains turning the whole step
+            # into a hard block.
 
     if blocked:
         return False, container
