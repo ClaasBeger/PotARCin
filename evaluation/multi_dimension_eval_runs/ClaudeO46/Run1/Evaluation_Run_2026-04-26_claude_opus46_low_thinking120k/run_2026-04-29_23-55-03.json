@@ -1,7 +1,7 @@
 {
   "mode": "batch_pending",
   "created_at": "2026-04-29_23-55-03",
-  "task_count": 104,
+  "task_count": 105,
   "run_tag": "Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k",
   "seed_mode": "fixed",
   "base_seed": 77,
@@ -9665,6 +9665,100 @@
         "inversion": {
           "ok": true,
           "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/d9f24cd1_inversion_eval_2026-04-30_14-06-27.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "d9fac9be",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 422,
+      "dimension_seeds": {
+        "classification_distribution": 1657666412,
+        "editing": 1254730508,
+        "inversion": 26580807
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/d9fac9be_definition_eval_2026-04-30_14-06-35.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 488,
+              "total": 1000,
+              "success_rate": 0.488
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/d9fac9be_distribution_classification_eval_2026-04-30_14-08-04.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/d9fac9be_constrained_generation_eval_2026-04-30_14-08-40.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/d9fac9be_editing_eval_2026-04-30_14-08-56.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/d9fac9be_inversion_eval_2026-04-30_14-09-04.json",
           "metrics": {
             "success_rate": 1.0
           },
