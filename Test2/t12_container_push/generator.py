@@ -253,6 +253,19 @@ def _sorted_for_move(cells: Set[Pos], dr: int, dc: int) -> list[Pos]:
     return sorted(cells, key=lambda rc: rc[0] * dr + rc[1] * dc, reverse=True)
 
 
+def _encountered_cells(r: int, c: int, dr: int, dc: int) -> list[Pos]:
+    """Cells a moving block face can encounter during one step.
+
+    For diagonal motion, also include the two orthogonal front-adjacent cells.
+    This prevents corner slip-through where payload can bypass via 8-neighborhood.
+    """
+    cells = [(r + dr, c + dc)]
+    if dr != 0 and dc != 0:
+        cells.append((r + dr, c))
+        cells.append((r, c + dc))
+    return cells
+
+
 def _step_push(grid: Grid, container: Set[Pos], dr: int, dc: int) -> tuple[bool, Set[Pos]]:
     h = len(grid)
     w = len(grid[0]) if h else 0
@@ -262,14 +275,26 @@ def _step_push(grid: Grid, container: Set[Pos], dr: int, dc: int) -> tuple[bool,
 
     while q and not blocked:
         r, c = q.popleft()
-        nr, nc = r + dr, c + dc
-        if nr < 0 or nr >= h or nc < 0 or nc >= w:
-            blocked = True
-            break
-        if grid[nr][nc] == LINE and (nr, nc) not in moving:
-            blocked = True
-            break
-        if grid[nr][nc] != 0 and (nr, nc) not in moving:
+        for i, (nr, nc) in enumerate(_encountered_cells(r, c, dr, dc)):
+            # Primary forward cell enforces hard collision/bounds.
+            if i == 0:
+                if nr < 0 or nr >= h or nc < 0 or nc >= w:
+                    blocked = True
+                    break
+                if grid[nr][nc] == LINE and (nr, nc) not in moving:
+                    blocked = True
+                    break
+                if grid[nr][nc] != 0 and (nr, nc) not in moving:
+                    moving.add((nr, nc))
+                    q.append((nr, nc))
+                continue
+
+            # Diagonal flank contacts only collect pushable payload; they do not
+            # hard-block motion by themselves.
+            if nr < 0 or nr >= h or nc < 0 or nc >= w:
+                continue
+            if grid[nr][nc] in (0, LINE) or (nr, nc) in moving:
+                continue
             moving.add((nr, nc))
             q.append((nr, nc))
 

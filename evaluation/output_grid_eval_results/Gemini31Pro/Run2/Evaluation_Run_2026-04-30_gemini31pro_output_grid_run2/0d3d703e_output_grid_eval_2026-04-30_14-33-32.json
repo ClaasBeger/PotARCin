@@ -1,0 +1,51 @@
+{
+  "task_id": "0d3d703e",
+  "test_idx": 0,
+  "model": "gemini-3.1-pro-preview",
+  "provider": "google",
+  "base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "max_train_demos": null,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below.\n\nExample 1\nInput:\n3 1 2\n3 1 2\n3 1 2\nOutput:\n4 5 6\n4 5 6\n4 5 6\n\nExample 2\nInput:\n2 3 8\n2 3 8\n2 3 8\nOutput:\n6 4 9\n6 4 9\n6 4 9\n\nExample 3\nInput:\n5 8 6\n5 8 6\n5 8 6\nOutput:\n1 9 2\n1 9 2\n1 9 2\n\nExample 4\nInput:\n9 4 2\n9 4 2\n9 4 2\nOutput:\n8 3 6\n8 3 6\n8 3 6\n\nBelow is a test input grid. Predict the corresponding output grid by applying the rule you found.\nTest Input:\n8 1 3\n8 1 3\n8 1 3\n\nYour final answer must be ONLY a single Python list-of-lists grid for that output:\n[[...], ...]\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "[[9, 5, 4], [9, 5, 4], [9, 5, 4]]",
+  "ground_truth": [
+    [
+      9,
+      5,
+      4
+    ],
+    [
+      9,
+      5,
+      4
+    ],
+    [
+      9,
+      5,
+      4
+    ]
+  ],
+  "evaluation_ok": true,
+  "prediction": [
+    [
+      9,
+      5,
+      4
+    ],
+    [
+      9,
+      5,
+      4
+    ],
+    [
+      9,
+      5,
+      4
+    ]
+  ],
+  "exact_match": true,
+  "metrics": {
+    "exact_match": 1.0
+  }
+}
