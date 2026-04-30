@@ -300,6 +300,7 @@ def _step_push(grid: Grid, container: Set[Pos], dr: int, dc: int) -> tuple[bool,
     moving: Set[Pos] = set(container)
     container_next: Set[Pos] = {(r + dr, c + dc) for r, c in container}
     seam_flanks = _diagonal_seam_flanks(container, dr, dc)
+    seam_pushed: Set[Pos] = set()
     q = deque(container)
     blocked = False
 
@@ -329,10 +330,23 @@ def _step_push(grid: Grid, container: Set[Pos], dr: int, dc: int) -> tuple[bool,
             if (nr, nc) not in seam_flanks:
                 continue
             moving.add((nr, nc))
-            # Flank-contact payload is pushed by the container shell directly.
-            # Do not recurse push-through from this flank payload in the same
-            # step; this avoids unrelated long chains turning the whole step
-            # into a hard block.
+            seam_pushed.add((nr, nc))
+            # Seams push this flank payload, but we avoid spawning new flank
+            # expansions from it in the same step.
+
+    # Direct forward support for seam-pushed cells only (no transitive closure).
+    # This preserves legitimate one-step pushes (e.g. sample-22 type) without
+    # growing long chains that can incorrectly block early.
+    for r, c in list(seam_pushed):
+        nr, nc = r + dr, c + dc
+        if nr < 0 or nr >= h or nc < 0 or nc >= w:
+            blocked = True
+            break
+        if grid[nr][nc] == LINE and (nr, nc) not in moving:
+            blocked = True
+            break
+        if grid[nr][nc] != 0 and (nr, nc) not in moving:
+            moving.add((nr, nc))
 
     if blocked:
         return False, container

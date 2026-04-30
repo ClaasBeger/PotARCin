@@ -1,0 +1,62 @@
+{
+  "task_id": "a1570a43",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n3 0 2 0 0 0 3\n0 2 2 0 0 0 0\n2 2 2 2 2 0 0\n0 2 0 0 0 0 0\n0 2 2 0 0 0 0\n0 0 0 0 0 0 0\n3 0 0 0 0 0 3\nOutput:\n3 0 0 0 0 0 3\n0 0 0 2 0 0 0\n0 0 2 2 0 0 0\n0 2 2 2 2 2 0\n0 0 2 0 0 0 0\n0 0 2 2 0 0 0\n3 0 0 0 0 0 3\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0\n0 3 0 0 0 0 0 3 0\n0 0 2 2 2 0 0 0 0\n2 2 2 0 0 0 0 0 0\n2 0 2 0 0 0 0 0 0\n2 2 2 2 0 0 0 0 0\n0 0 0 2 0 0 0 0 0\n0 3 0 0 0 0 0 3 0\n0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0\n0 3 0 0 0 0 0 3 0\n0 0 0 0 2 2 2 0 0\n0 0 2 2 2 0 0 0 0\n0 0 2 0 2 0 0 0 0\n0 0 2 2 2 2 0 0 0\n0 0 0 0 0 2 0 0 0\n0 3 0 0 0 0 0 3 0\n0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 2 2 0 0 0 0 0\n0 3 2 2 2 2 0 3 0 0\n0 0 0 0 2 2 2 0 0 0\n0 0 0 0 2 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 3 0 0 0 0 0 3 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 3 0 0 0 0 0 3 0 0\n0 0 0 2 2 0 0 0 0 0\n0 0 2 2 2 2 0 0 0 0\n0 0 0 0 2 2 2 0 0 0\n0 0 0 0 2 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 0\n0 3 0 0 0 0 0 3 0 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 4:\n\nInput:\n3 0 0 0 0 0 3 0\n0 0 0 2 0 0 0 0\n0 2 2 2 0 0 0 0\n0 2 0 0 0 0 0 0\n2 2 2 2 2 0 0 0\n0 2 0 0 0 0 0 0\n3 0 0 0 0 0 3 0\n0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0\nOutput:\n3 0 0 0 0 0 3 0\n0 0 0 0 2 0 0 0\n0 0 2 2 2 0 0 0\n0 0 2 0 0 0 0 0\n0 2 2 2 2 2 0 0\n0 0 2 0 0 0 0 0\n3 0 0 0 0 0 3 0\n0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0\n3 0 0 0 0 0 3 0\n2 0 0 0 0 0 0 0\n2 2 0 0 0 0 0 0\n2 2 2 0 0 0 0 0\n2 2 2 2 2 0 0 0\n2 0 0 0 0 0 0 0\n3 0 0 0 0 0 3 0\n0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    # Number of rows and columns\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    # Locate the four 3's that form the bounding rectangle\n    min_r3 = h\n    max_r3 = -1\n    min_c3 = w\n    max_c3 = -1\n    for i in range(h):\n        for j in range(w):\n            if grid[i][j] == 3:\n                if i < min_r3:\n                    min_r3 = i\n                if i > max_r3:\n                    max_r3 = i\n                if j < min_c3:\n                    min_c3 = j\n                if j > max_c3:\n                    max_c3 = j\n\n    # Locate all 2's\n    positions_2 = [(i, j) for i in range(h) for j in range(w) if grid[i][j] == 2]\n\n    # If there are no 2's, return the grid unchanged\n    if not positions_2:\n        return [row[:] for row in grid]\n\n    # Bounding box of the 2's\n    min_r2 = min(i for i, _ in positions_2)\n    max_r2 = max(i for i, _ in positions_2)\n    min_c2 = min(j for _, j in positions_2)\n    max_c2 = max(j for _, j in positions_2)\n\n    shape_h = max_r2 - min_r2 + 1\n    shape_w = max_c2 - min_c2 + 1\n\n    # Dimensions of the rectangle defined by the 3's\n    rect_h = max_r3 - min_r3 + 1\n    rect_w = max_c3 - min_c3 + 1\n\n    # Center the shape inside the rectangle\n    dr = (rect_h - shape_h) // 2\n    dc = (rect_w - shape_w) // 2\n\n    new_min_r = min_r3 + dr\n    new_min_c = min_c3 + dc\n\n    shift_r = new_min_r - min_r2\n    shift_c = new_min_c - min_c2\n\n    # Create output grid as a copy of the input\n    out = [row[:] for row in grid]\n\n    # Clear the original 2 positions\n    for i, j in positions_2:\n        out[i][j] = 0\n\n    # Place the 2's at their new centered positions\n    for i, j in positions_2:\n        ni = i + shift_r\n        nj = j + shift_c\n        out[ni][nj] = 2\n\n    return out",
+  "script": "def solve(grid):\n    # Number of rows and columns\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    # Locate the four 3's that form the bounding rectangle\n    min_r3 = h\n    max_r3 = -1\n    min_c3 = w\n    max_c3 = -1\n    for i in range(h):\n        for j in range(w):\n            if grid[i][j] == 3:\n                if i < min_r3:\n                    min_r3 = i\n                if i > max_r3:\n                    max_r3 = i\n                if j < min_c3:\n                    min_c3 = j\n                if j > max_c3:\n                    max_c3 = j\n\n    # Locate all 2's\n    positions_2 = [(i, j) for i in range(h) for j in range(w) if grid[i][j] == 2]\n\n    # If there are no 2's, return the grid unchanged\n    if not positions_2:\n        return [row[:] for row in grid]\n\n    # Bounding box of the 2's\n    min_r2 = min(i for i, _ in positions_2)\n    max_r2 = max(i for i, _ in positions_2)\n    min_c2 = min(j for _, j in positions_2)\n    max_c2 = max(j for _, j in positions_2)\n\n    shape_h = max_r2 - min_r2 + 1\n    shape_w = max_c2 - min_c2 + 1\n\n    # Dimensions of the rectangle defined by the 3's\n    rect_h = max_r3 - min_r3 + 1\n    rect_w = max_c3 - min_c3 + 1\n\n    # Center the shape inside the rectangle\n    dr = (rect_h - shape_h) // 2\n    dc = (rect_w - shape_w) // 2\n\n    new_min_r = min_r3 + dr\n    new_min_c = min_c3 + dc\n\n    shift_r = new_min_r - min_r2\n    shift_c = new_min_c - min_c2\n\n    # Create output grid as a copy of the input\n    out = [row[:] for row in grid]\n\n    # Clear the original 2 positions\n    for i, j in positions_2:\n        out[i][j] = 0\n\n    # Place the 2's at their new centered positions\n    for i, j in positions_2:\n        ni = i + shift_r\n        nj = j + shift_c\n        out[ni][nj] = 2\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 4,
+      "total": 4,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "list index out of range"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "'tuple' object does not support item assignment"
+    }
+  },
+  "evaluation_ok": true
+}
