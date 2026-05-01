@@ -1,0 +1,274 @@
+{
+  "task_id": "eb281b96",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 8 0 0 0 8 0 0 0 8 0 0 0 8 0 0\n0 8 0 8 0 8 0 8 0 8 0 8 0 8 0 8 0\n8 0 0 0 8 0 0 0 8 0 0 0 8 0 0 0 8\nOutput:\n0 0 8 0 0 0 8 0 0 0 8 0 0 0 8 0 0\n0 8 0 8 0 8 0 8 0 8 0 8 0 8 0 8 0\n8 0 0 0 8 0 0 0 8 0 0 0 8 0 0 0 8\n0 8 0 8 0 8 0 8 0 8 0 8 0 8 0 8 0\n0 0 8 0 0 0 8 0 0 0 8 0 0 0 8 0 0\n0 8 0 8 0 8 0 8 0 8 0 8 0 8 0 8 0\n8 0 0 0 8 0 0 0 8 0 0 0 8 0 0 0 8\n0 8 0 8 0 8 0 8 0 8 0 8 0 8 0 8 0\n0 0 8 0 0 0 8 0 0 0 8 0 0 0 8 0 0\n\nExample 2:\n\nInput:\n0 0 2 0 0 0 2 0 0 0 2 0 0 0 2 0 0\n0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0\n0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0\n2 0 0 0 2 0 0 0 2 0 0 0 2 0 0 0 2\nOutput:\n0 0 2 0 0 0 2 0 0 0 2 0 0 0 2 0 0\n0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0\n0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0\n2 0 0 0 2 0 0 0 2 0 0 0 2 0 0 0 2\n0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0\n0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0\n0 0 2 0 0 0 2 0 0 0 2 0 0 0 2 0 0\n0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0\n0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0\n2 0 0 0 2 0 0 0 2 0 0 0 2 0 0 0 2\n0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0\n0 2 0 2 0 2 0 2 0 2 0 2 0 2 0 2 0\n0 0 2 0 0 0 2 0 0 0 2 0 0 0 2 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 3 0 0 0 3 0 0 0 3 0 0 0 3 0 0\n0 3 0 3 0 3 0 3 0 3 0 3 0 3 0 3 0\n0 3 0 3 0 3 0 3 0 3 0 3 0 3 0 3 0\n0 3 0 3 0 3 0 3 0 3 0 3 0 3 0 3 0\n3 0 0 0 3 0 0 0 3 0 0 0 3 0 0 0 3\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    R = len(grid)\n    # Create zigzag index sequence: 0..R-1..0..R-1..0\n    period = 2 * (R - 1)\n    total = 2 * period + 1\n    result = []\n    for i in range(total):\n        mod = i % period\n        row_idx = mod if mod < R else period - mod\n        result.append(list(grid[row_idx]))\n    return result\n```",
+  "script": "def solve(grid):\n    R = len(grid)\n    # Create zigzag index sequence: 0..R-1..0..R-1..0\n    period = 2 * (R - 1)\n    total = 2 * period + 1\n    result = []\n    for i in range(total):\n        mod = i % period\n        row_idx = mod if mod < R else period - mod\n        result.append(list(grid[row_idx]))\n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 2,
+      "total": 2,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 36,
+      "total": 36,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 1000,
+      "total": 1000,
+      "success_rate": 1.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          2,
+          5,
+          6,
+          3,
+          4
+        ],
+        [
+          8,
+          5,
+          5,
+          9,
+          9
+        ],
+        [
+          3,
+          6,
+          4,
+          2,
+          8
+        ],
+        [
+          5,
+          2,
+          8,
+          1,
+          6
+        ]
+      ],
+      "expected": [
+        [
+          2,
+          5,
+          6,
+          3,
+          4
+        ],
+        [
+          8,
+          5,
+          5,
+          9,
+          9
+        ],
+        [
+          3,
+          6,
+          4,
+          2,
+          8
+        ],
+        [
+          5,
+          2,
+          8,
+          1,
+          6
+        ],
+        [
+          3,
+          6,
+          4,
+          2,
+          8
+        ],
+        [
+          8,
+          5,
+          5,
+          9,
+          9
+        ],
+        [
+          2,
+          5,
+          6,
+          3,
+          4
+        ],
+        [
+          8,
+          5,
+          5,
+          9,
+          9
+        ],
+        [
+          3,
+          6,
+          4,
+          2,
+          8
+        ],
+        [
+          5,
+          2,
+          8,
+          1,
+          6
+        ],
+        [
+          3,
+          6,
+          4,
+          2,
+          8
+        ],
+        [
+          8,
+          5,
+          5,
+          9,
+          9
+        ],
+        [
+          2,
+          5,
+          6,
+          3,
+          4
+        ]
+      ],
+      "got": [
+        [
+          2,
+          5,
+          6,
+          3,
+          4
+        ],
+        [
+          8,
+          5,
+          5,
+          9,
+          9
+        ],
+        [
+          3,
+          6,
+          4,
+          2,
+          8
+        ],
+        [
+          5,
+          2,
+          8,
+          1,
+          6
+        ],
+        [
+          3,
+          6,
+          4,
+          2,
+          8
+        ],
+        [
+          8,
+          5,
+          5,
+          9,
+          9
+        ],
+        [
+          2,
+          5,
+          6,
+          3,
+          4
+        ],
+        [
+          8,
+          5,
+          5,
+          9,
+          9
+        ],
+        [
+          3,
+          6,
+          4,
+          2,
+          8
+        ],
+        [
+          5,
+          2,
+          8,
+          1,
+          6
+        ],
+        [
+          3,
+          6,
+          4,
+          2,
+          8
+        ],
+        [
+          8,
+          5,
+          5,
+          9,
+          9
+        ],
+        [
+          2,
+          5,
+          6,
+          3,
+          4
+        ]
+      ]
+    }
+  },
+  "evaluation_ok": true
+}

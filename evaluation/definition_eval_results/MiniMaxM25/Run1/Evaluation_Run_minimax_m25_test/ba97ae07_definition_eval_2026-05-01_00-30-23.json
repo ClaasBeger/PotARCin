@@ -1,0 +1,62 @@
+{
+  "task_id": "ba97ae07",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n3 3 3 8 8 3 3 3 3 3 3 3 3\n3 3 3 8 8 3 3 3 3 3 3 3 3\n3 3 3 8 8 3 3 3 3 3 3 3 3\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n3 3 3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3 3 3\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 6 6 0 0 0 0 0\n0 0 6 6 0 0 0 0 0\n0 0 6 6 0 0 0 0 0\n1 1 1 1 1 1 1 1 1\n0 0 6 6 0 0 0 0 0\n0 0 6 6 0 0 0 0 0\n0 0 6 6 0 0 0 0 0\nOutput:\n0 0 6 6 0 0 0 0 0\n0 0 6 6 0 0 0 0 0\n0 0 6 6 0 0 0 0 0\n1 1 6 6 1 1 1 1 1\n0 0 6 6 0 0 0 0 0\n0 0 6 6 0 0 0 0 0\n0 0 6 6 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 1 0 0 0 0\n0 0 1 0 0 0 0\n0 0 1 0 0 0 0\n7 7 7 7 7 7 7\n0 0 1 0 0 0 0\n0 0 1 0 0 0 0\n0 0 1 0 0 0 0\n0 0 1 0 0 0 0\nOutput:\n0 0 1 0 0 0 0\n0 0 1 0 0 0 0\n0 0 1 0 0 0 0\n7 7 1 7 7 7 7\n0 0 1 0 0 0 0\n0 0 1 0 0 0 0\n0 0 1 0 0 0 0\n0 0 1 0 0 0 0\n\nExample 4:\n\nInput:\n0 3 0 0 0 0\n0 3 0 0 0 0\n0 3 0 0 0 0\n0 3 0 0 0 0\n2 3 2 2 2 2\n0 3 0 0 0 0\n0 3 0 0 0 0\n0 3 0 0 0 0\nOutput:\n0 3 0 0 0 0\n0 3 0 0 0 0\n0 3 0 0 0 0\n0 3 0 0 0 0\n2 2 2 2 2 2\n0 3 0 0 0 0\n0 3 0 0 0 0\n0 3 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 4 4 0 0\n0 0 4 4 0 0\n5 5 4 4 5 5\n5 5 4 4 5 5\n0 0 4 4 0 0\n0 0 4 4 0 0\n0 0 4 4 0 0\n0 0 4 4 0 0\n0 0 4 4 0 0\n0 0 4 4 0 0\n0 0 4 4 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    \"\"\"\n    Transform the grid according to the observed rule.\n    The input contains exactly two non\u2011zero colors forming an orthogonal\n    cross: a vertical line of one colour and a horizontal line of the other.\n    One of the two lines is incomplete at the intersection.\n    The rule completes the incomplete line by filling the missing cells\n    with its own colour, leaving the other line unchanged.\n    \"\"\"\n    if not grid:\n        return grid\n\n    rows = len(grid)\n    cols = len(grid[0])\n\n    # ------------------------------------------------------------------\n    # 1. Identify the two non\u2011zero colours (the lines)\n    # ------------------------------------------------------------------\n    non_zero = set()\n    for r in grid:\n        for v in r:\n            if v != 0:\n                non_zero.add(v)\n\n    # If the grid does not contain exactly two non\u2011zero colours,\n    # nothing needs to be changed.\n    if len(non_zero) != 2:\n        return grid\n\n    # ------------------------------------------------------------------\n    # 2. Compute bounding boxes for each colour\n    # ------------------------------------------------------------------\n    info = {}\n    for colour in non_zero:\n        min_r, max_r = rows, -1\n        min_c, max_c = cols, -1\n        cnt = 0\n        for i in range(rows):\n            for j in range(cols):\n                if grid[i][j] == colour:\n                    cnt += 1\n                    if i < min_r:\n                        min_r = i\n                    if i > max_r:\n                        max_r = i\n                    if j < min_c:\n                        min_c = j\n                    if j > max_c:\n                        max_c = j\n        info[colour] = {\n            'min_r': min_r,\n            'max_r': max_r,\n            'min_c': min_c,\n            'max_c': max_c,\n            'count': cnt\n        }\n\n    # ------------------------------------------------------------------\n    # 3. Decide which colour is the vertical line and which is horizontal\n    #    (based on the shape of the bounding box)\n    # ------------------------------------------------------------------\n    vertical_colour = None\n    horizontal_colour = None\n    for colour, box in info.items():\n        width = box['max_c'] - box['min_c'] + 1\n        height = box['max_r'] - box['min_r'] + 1\n        if width < height:\n            vertical_colour = colour\n        else:   # width >= height\n            horizontal_colour = colour\n\n    # In the given puzzles this simple heuristic always works.\n    # ------------------------------------------------------------------\n    # 4. Determine the rows that belong to the horizontal line\n    #    and the columns that belong to the vertical line.\n    # ------------------------------------------------------------------\n    v_cols = list(range(info[vertical_colour]['min_c'],\n                        info[vertical_colour]['max_c'] + 1))\n    h_rows = list(range(info[horizontal_colour]['min_r'],\n                        info[horizontal_colour]['max_r'] + 1))\n\n    # ------------------------------------------------------------------\n    # 5. Check which line is incomplete at the intersection\n    # ------------------------------------------------------------------\n    total_inter = len(v_cols) * len(h_rows)\n    v_present = 0\n    h_present = 0\n    for r in h_rows:\n        for c in v_cols:\n            val = grid[r][c]\n            if val == vertical_colour:\n                v_present += 1\n            if val == horizontal_colour:\n                h_present += 1\n\n    vertical_missing = v_present < total_inter\n    horizontal_missing = h_present < total_inter\n\n    # ------------------------------------------------------------------\n    # 6. Fill the missing cells\n    # ------------------------------------------------------------------\n    for r in h_rows:\n        for c in v_cols:\n            if vertical_missing and grid[r][c] != vertical_colour:\n                grid[r][c] = vertical_colour\n            if horizontal_missing and grid[r][c] != horizontal_colour:\n                grid[r][c] = horizontal_colour\n\n    return grid",
+  "script": "def solve(grid):\n    \"\"\"\n    Transform the grid according to the observed rule.\n    The input contains exactly two non\u2011zero colors forming an orthogonal\n    cross: a vertical line of one colour and a horizontal line of the other.\n    One of the two lines is incomplete at the intersection.\n    The rule completes the incomplete line by filling the missing cells\n    with its own colour, leaving the other line unchanged.\n    \"\"\"\n    if not grid:\n        return grid\n\n    rows = len(grid)\n    cols = len(grid[0])\n\n    # ------------------------------------------------------------------\n    # 1. Identify the two non\u2011zero colours (the lines)\n    # ------------------------------------------------------------------\n    non_zero = set()\n    for r in grid:\n        for v in r:\n            if v != 0:\n                non_zero.add(v)\n\n    # If the grid does not contain exactly two non\u2011zero colours,\n    # nothing needs to be changed.\n    if len(non_zero) != 2:\n        return grid\n\n    # ------------------------------------------------------------------\n    # 2. Compute bounding boxes for each colour\n    # ------------------------------------------------------------------\n    info = {}\n    for colour in non_zero:\n        min_r, max_r = rows, -1\n        min_c, max_c = cols, -1\n        cnt = 0\n        for i in range(rows):\n            for j in range(cols):\n                if grid[i][j] == colour:\n                    cnt += 1\n                    if i < min_r:\n                        min_r = i\n                    if i > max_r:\n                        max_r = i\n                    if j < min_c:\n                        min_c = j\n                    if j > max_c:\n                        max_c = j\n        info[colour] = {\n            'min_r': min_r,\n            'max_r': max_r,\n            'min_c': min_c,\n            'max_c': max_c,\n            'count': cnt\n        }\n\n    # ------------------------------------------------------------------\n    # 3. Decide which colour is the vertical line and which is horizontal\n    #    (based on the shape of the bounding box)\n    # ------------------------------------------------------------------\n    vertical_colour = None\n    horizontal_colour = None\n    for colour, box in info.items():\n        width = box['max_c'] - box['min_c'] + 1\n        height = box['max_r'] - box['min_r'] + 1\n        if width < height:\n            vertical_colour = colour\n        else:   # width >= height\n            horizontal_colour = colour\n\n    # In the given puzzles this simple heuristic always works.\n    # ------------------------------------------------------------------\n    # 4. Determine the rows that belong to the horizontal line\n    #    and the columns that belong to the vertical line.\n    # ------------------------------------------------------------------\n    v_cols = list(range(info[vertical_colour]['min_c'],\n                        info[vertical_colour]['max_c'] + 1))\n    h_rows = list(range(info[horizontal_colour]['min_r'],\n                        info[horizontal_colour]['max_r'] + 1))\n\n    # ------------------------------------------------------------------\n    # 5. Check which line is incomplete at the intersection\n    # ------------------------------------------------------------------\n    total_inter = len(v_cols) * len(h_rows)\n    v_present = 0\n    h_present = 0\n    for r in h_rows:\n        for c in v_cols:\n            val = grid[r][c]\n            if val == vertical_colour:\n                v_present += 1\n            if val == horizontal_colour:\n                h_present += 1\n\n    vertical_missing = v_present < total_inter\n    horizontal_missing = h_present < total_inter\n\n    # ------------------------------------------------------------------\n    # 6. Fill the missing cells\n    # ------------------------------------------------------------------\n    for r in h_rows:\n        for c in v_cols:\n            if vertical_missing and grid[r][c] != vertical_colour:\n                grid[r][c] = vertical_colour\n            if horizontal_missing and grid[r][c] != horizontal_colour:\n                grid[r][c] = horizontal_colour\n\n    return grid",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 4,
+      "total": 4,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 118,
+      "total": 1000,
+      "success_rate": 0.118
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "None"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "'tuple' object does not support item assignment"
+    }
+  },
+  "evaluation_ok": true
+}

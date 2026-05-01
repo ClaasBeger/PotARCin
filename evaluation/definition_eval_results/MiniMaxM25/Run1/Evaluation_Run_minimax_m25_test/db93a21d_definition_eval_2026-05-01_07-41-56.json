@@ -1,0 +1,56 @@
+{
+  "task_id": "db93a21d",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 9 9 0 0\n0 0 0 0 0 0 9 9 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 9 9 0 0 0 0 0 0 0\n0 9 9 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 3 9 9 3 0\n0 0 0 0 0 3 9 9 3 0\n0 0 0 0 0 3 3 3 3 0\n0 0 0 0 0 0 1 1 0 0\n0 0 0 0 0 0 1 1 0 0\n0 0 0 0 0 0 1 1 0 0\n3 3 3 3 0 0 1 1 0 0\n3 9 9 3 0 0 1 1 0 0\n3 9 9 3 0 0 1 1 0 0\n3 3 3 3 0 0 1 1 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 9 9 9 9 0 0 0\n0 0 0 0 0 0 0 0 9 9 9 9 0 0 0\n0 0 0 0 0 0 0 0 9 9 9 9 0 0 0\n0 0 0 0 0 0 0 0 9 9 9 9 0 0 0\n0 0 0 9 9 0 0 0 0 0 0 0 0 0 0\n0 0 0 9 9 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 9 9\n0 0 0 0 0 0 0 0 0 0 0 0 0 9 9\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 3 3 3 3 3 3 3 3 0\n0 0 0 0 0 0 3 3 3 3 3 3 3 3 0\n0 0 0 0 0 0 3 3 9 9 9 9 3 3 0\n0 0 0 0 0 0 3 3 9 9 9 9 3 3 0\n0 0 0 0 0 0 3 3 9 9 9 9 3 3 0\n0 0 3 3 3 3 3 3 9 9 9 9 3 3 0\n0 0 3 9 9 3 3 3 3 3 3 3 3 3 0\n0 0 3 9 9 3 3 3 3 3 3 3 3 3 0\n0 0 3 3 3 3 0 0 1 1 1 1 3 3 3\n0 0 0 1 1 0 0 0 1 1 1 1 3 9 9\n0 0 0 1 1 0 0 0 1 1 1 1 3 9 9\n0 0 0 1 1 0 0 0 1 1 1 1 3 3 3\n0 0 0 1 1 0 0 0 1 1 1 1 0 1 1\n0 0 0 1 1 0 0 0 1 1 1 1 0 1 1\n0 0 0 1 1 0 0 0 1 1 1 1 0 1 1\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 9 9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 9 9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 9 9 9 9 9 9 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 9 9 9 9 9 9 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 9 9 9 9 9 9 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 9 9 9 9 9 9 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 9 9 9 9 9 9 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 9 9 9 9 9 9 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 3 3 3 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 3 9 9 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 3 9 9 3 0 0 0 0 0 0 0 0 3 3 3 3 3 3 3\n0 3 3 3 3 0 0 0 0 0 0 0 0 3 3 3 3 3 3 3\n0 0 1 1 0 0 0 0 0 0 0 0 0 3 3 9 9 9 9 3\n0 0 1 1 0 0 0 0 0 0 0 0 0 3 3 9 9 9 9 3\n0 0 1 1 0 0 0 0 0 0 0 0 0 3 3 9 9 9 9 3\n0 0 1 3 3 3 3 3 3 3 3 3 3 3 3 9 9 9 9 3\n0 0 1 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3\n0 0 1 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3\n0 0 1 3 3 3 9 9 9 9 9 9 3 3 3 1 1 1 1 0\n0 0 1 3 3 3 9 9 9 9 9 9 3 3 3 1 1 1 1 0\n0 0 1 3 3 3 9 9 9 9 9 9 3 3 3 1 1 1 1 0\n0 0 1 3 3 3 9 9 9 9 9 9 3 3 3 1 1 1 1 0\n0 0 1 3 3 3 9 9 9 9 9 9 3 3 3 1 1 1 1 0\n0 0 1 3 3 3 9 9 9 9 9 9 3 3 3 1 1 1 1 0\n0 0 1 3 3 3 3 3 3 3 3 3 3 3 3 1 1 1 1 0\n0 0 1 3 3 3 3 3 3 3 3 3 3 3 3 1 1 1 1 0\n\nExample 4:\n\nInput:\n0 0 0 0 0 0 0 9 9 9 9 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 9 9 9 9 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 9 9 9 9 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 9 9 9 9 0 0 0 0 0 0 0 0 9 9 9 9 9 9\n0 0 9 9 9 9 0 0 0 0 0 0 0 0 9 9 9 9 9 9\n0 0 9 9 9 9 0 0 0 0 0 0 0 0 9 9 9 9 9 9\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 9 9\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 9 9\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 9 9\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 3 3 9 9 9 9 3 3 0 0 0 0 0 0 0\n0 0 0 0 0 3 3 9 9 9 9 3 3 0 0 0 0 0 0 0\n0 0 0 0 0 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 0 0 0 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0\n3 3 3 3 3 3 3 3 1 1 1 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 1 1 1 3 3 3 3 3 3 3 3 3\n3 3 9 9 9 9 3 3 1 1 1 3 3 3 3 3 3 3 3 3\n3 3 9 9 9 9 3 3 1 1 1 3 3 3 9 9 9 9 9 9\n3 3 9 9 9 9 3 3 1 1 1 3 3 3 9 9 9 9 9 9\n3 3 9 9 9 9 3 3 1 1 1 3 3 3 9 9 9 9 9 9\n3 3 3 3 3 3 3 3 1 1 1 3 3 3 9 9 9 9 9 9\n3 3 3 3 3 3 3 3 1 1 1 3 3 3 9 9 9 9 9 9\n0 0 1 1 1 1 0 1 1 1 1 3 3 3 9 9 9 9 9 9\n0 0 1 1 1 1 0 1 1 1 1 3 3 3 3 3 3 3 3 3\n0 0 1 1 1 1 0 1 1 1 1 3 3 3 3 3 3 3 3 3\n0 0 1 1 1 1 0 1 1 1 1 3 3 3 3 3 3 3 3 3\n0 0 1 1 1 1 0 1 1 1 1 0 0 0 1 1 1 1 1 1\n0 0 1 1 1 1 0 1 1 1 1 0 0 0 1 1 1 1 1 1\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 9 9 9 9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 9 9 9 9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 9 9 9 9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 9 9 9 9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 9 9 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 9 9 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 9 9 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 9 9 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 9 9 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 9 9 9 9 9 0 0 0\n0 0 0 0 9 9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 9 9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    if not grid:\n        return grid\n    h = len(grid)\n    w = len(grid[0])\n    out = [row[:] for row in grid]\n\n    # find components of color 9 using BFS (4\u2011connectivity)\n    seen = [[False] * w for _ in range(h)]\n    comps = []\n    for y in range(h):\n        for x in range(w):\n            if grid[y][x] == 9 and not seen[y][x]:\n                stack = [(y, x)]\n                seen[y][x] = True\n                comp = []\n                while stack:\n                    r, c = stack.pop()\n                    comp.append((r, c))\n                    for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):\n                        nr, nc = r + dr, c + dc\n                        if",
+  "script": "def solve(grid):\n    if not grid:\n        return grid\n    h = len(grid)\n    w = len(grid[0])\n    out = [row[:] for row in grid]\n\n    # find components of color 9 using BFS (4\u2011connectivity)\n    seen = [[False] * w for _ in range(h)]\n    comps = []\n    for y in range(h):\n        for x in range(w):\n            if grid[y][x] == 9 and not seen[y][x]:\n                stack = [(y, x)]\n                seen[y][x] = True\n                comp = []\n                while stack:\n                    r, c = stack.pop()\n                    comp.append((r, c))\n                    for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):\n                        nr, nc = r + dr, c + dc\n                        if",
+  "script_loaded": false,
+  "script_load_error": "invalid syntax (<string>, line 22)\nTraceback (most recent call last):\n  File \"/Users/claas/Documents/SFI/PotARCin/PotARCin/framework/dimensions/definition.py\", line 322, in evaluate_definition_script_on_task\n    fn = _load_script_callable(script)\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/claas/Documents/SFI/PotARCin/PotARCin/framework/dimensions/definition.py\", line 244, in _load_script_callable\n    exec(script, global_ns, local_ns)\n  File \"<string>\", line 22\n    if\n      ^\nSyntaxError: invalid syntax\n",
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 4,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 262,
+      "success_rate": 0.0
+    },
+    "dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

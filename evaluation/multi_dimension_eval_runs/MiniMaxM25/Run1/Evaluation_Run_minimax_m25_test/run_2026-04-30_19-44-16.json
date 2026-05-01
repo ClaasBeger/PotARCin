@@ -1,15 +1,15 @@
 {
   "mode": "batch_pending",
   "created_at": "2026-04-30_19-44-16",
-  "task_count": 13,
+  "task_count": 24,
   "run_tag": "Evaluation_Run_minimax_m25_test",
   "seed_mode": "fixed",
   "base_seed": 77,
   "batch_size": 100,
   "completed_before_count": 262,
   "last_completed_task_id_before": "af902bf9",
-  "interrupted": false,
-  "in_progress_task_id": null,
+  "interrupted": true,
+  "in_progress_task_id": "b8825c91",
   "runs": [
     {
       "task_id": "57aa92db",
@@ -1252,6 +1252,1039 @@
           "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b190f7f5_inversion_eval_2026-04-30_21-06-09.json",
           "metrics": {
             "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "b1948b0a",
+      "model": "minimax/minimax-m2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 352,
+      "dimension_seeds": {
+        "classification_distribution": 1221266993,
+        "editing": 615560594,
+        "inversion": 272330443
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b1948b0a_definition_eval_2026-04-30_21-06-23.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 1000,
+              "total": 1000,
+              "success_rate": 1.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b1948b0a_distribution_classification_eval_2026-04-30_21-07-50.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b1948b0a_constrained_generation_eval_2026-04-30_21-09-05.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b1948b0a_editing_eval_2026-04-30_21-09-18.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b1948b0a_inversion_eval_2026-04-30_21-09-28.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "b230c067",
+      "model": "minimax/minimax-m2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 353,
+      "dimension_seeds": {
+        "classification_distribution": 418981098,
+        "editing": 381400271,
+        "inversion": 1620200595
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b230c067_definition_eval_2026-04-30_21-11-06.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 262,
+              "success_rate": 0.9961832061068703
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 6,
+              "total": 1000,
+              "success_rate": 0.006
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b230c067_distribution_classification_eval_2026-04-30_21-12-29.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b230c067_constrained_generation_eval_2026-04-30_21-20-59.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b230c067_editing_eval_2026-04-30_21-21-33.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b230c067_inversion_eval_2026-04-30_21-21-54.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "b27ca6d3",
+      "model": "minimax/minimax-m2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 354,
+      "dimension_seeds": {
+        "classification_distribution": 918611670,
+        "editing": 849660250,
+        "inversion": 372199885
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b27ca6d3_definition_eval_2026-04-30_21-22-53.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 20,
+              "total": 1000,
+              "success_rate": 0.02
+            },
+            "re_arc_dynamic50": {
+              "ok": 5,
+              "total": 50,
+              "success_rate": 0.1
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b27ca6d3_distribution_classification_eval_2026-04-30_21-24-13.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b27ca6d3_constrained_generation_eval_2026-04-30_21-32-11.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b27ca6d3_editing_eval_2026-04-30_21-34-24.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b27ca6d3_inversion_eval_2026-04-30_21-36-58.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "b2862040",
+      "model": "minimax/minimax-m2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 355,
+      "dimension_seeds": {
+        "classification_distribution": 683587980,
+        "editing": 474472738,
+        "inversion": 1628174888
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b2862040_definition_eval_2026-04-30_21-40-08.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 4,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 261,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b2862040_distribution_classification_eval_2026-04-30_21-41-29.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b2862040_constrained_generation_eval_2026-04-30_21-50-33.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": false,
+          "error": "IncompleteRead(1133 bytes read)",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b2862040_inversion_eval_2026-04-30_21-52-26.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "b527c5c6",
+      "model": "minimax/minimax-m2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 356,
+      "dimension_seeds": {
+        "classification_distribution": 177269531,
+        "editing": 2024665576,
+        "inversion": 1092633127
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b527c5c6_definition_eval_2026-04-30_21-56-15.json",
+          "metrics": {
+            "train": {
+              "ok": 1,
+              "total": 4,
+              "success_rate": 0.25
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 106,
+              "total": 262,
+              "success_rate": 0.40458015267175573
+            },
+            "dynamic50": {
+              "ok": 20,
+              "total": 50,
+              "success_rate": 0.4
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b527c5c6_distribution_classification_eval_2026-04-30_21-57-41.json",
+          "metrics": {
+            "accuracy": 0.4,
+            "correct": 2,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b527c5c6_constrained_generation_eval_2026-04-30_22-09-48.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b527c5c6_editing_eval_2026-04-30_22-12-38.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b527c5c6_inversion_eval_2026-04-30_22-22-20.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "b548a754",
+      "model": "minimax/minimax-m2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 357,
+      "dimension_seeds": {
+        "classification_distribution": 790452967,
+        "editing": 1602276821,
+        "inversion": 268782853
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b548a754_definition_eval_2026-04-30_22-23-54.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 68,
+              "total": 1000,
+              "success_rate": 0.068
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b548a754_distribution_classification_eval_2026-04-30_22-25-14.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b548a754_constrained_generation_eval_2026-04-30_22-28-04.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b548a754_editing_eval_2026-04-30_22-29-57.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b548a754_inversion_eval_2026-04-30_22-31-19.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "b60334d2",
+      "model": "minimax/minimax-m2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 358,
+      "dimension_seeds": {
+        "classification_distribution": 1029289026,
+        "editing": 889427537,
+        "inversion": 1680454296
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b60334d2_definition_eval_2026-04-30_22-32-48.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 2,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b60334d2_distribution_classification_eval_2026-04-30_22-32-48.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b60334d2_constrained_generation_eval_2026-04-30_22-41-53.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b60334d2_editing_eval_2026-04-30_22-42-59.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b60334d2_inversion_eval_2026-04-30_22-55-28.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "b6afb2da",
+      "model": "minimax/minimax-m2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 359,
+      "dimension_seeds": {
+        "classification_distribution": 399615071,
+        "editing": 1732979232,
+        "inversion": 2105453473
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b6afb2da_definition_eval_2026-04-30_22-57-27.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 2,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b6afb2da_distribution_classification_eval_2026-04-30_22-57-27.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b6afb2da_constrained_generation_eval_2026-04-30_23-01-43.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b6afb2da_editing_eval_2026-04-30_23-03-04.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b6afb2da_inversion_eval_2026-04-30_23-04-11.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "b7249182",
+      "model": "minimax/minimax-m2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 360,
+      "dimension_seeds": {
+        "classification_distribution": 990441406,
+        "editing": 1316534472,
+        "inversion": 1042437491
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b7249182_definition_eval_2026-04-30_23-19-00.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 109,
+              "total": 1000,
+              "success_rate": 0.109
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b7249182_distribution_classification_eval_2026-04-30_23-20-20.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b7249182_constrained_generation_eval_2026-04-30_23-22-38.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b7249182_editing_eval_2026-04-30_23-23-32.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b7249182_inversion_eval_2026-04-30_23-24-29.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "b775ac94",
+      "model": "minimax/minimax-m2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 361,
+      "dimension_seeds": {
+        "classification_distribution": 559871530,
+        "editing": 1712226385,
+        "inversion": 1711739275
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b775ac94_definition_eval_2026-04-30_23-28-57.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 261,
+              "success_rate": 0.0
+            },
+            "dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b775ac94_distribution_classification_eval_2026-04-30_23-30-18.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b775ac94_constrained_generation_eval_2026-04-30_23-34-23.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b775ac94_editing_eval_2026-04-30_23-36-57.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b775ac94_inversion_eval_2026-04-30_23-39-25.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "b782dc8a",
+      "model": "minimax/minimax-m2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 362,
+      "dimension_seeds": {
+        "classification_distribution": 1565565596,
+        "editing": 1047130668,
+        "inversion": 1540621716
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b782dc8a_definition_eval_2026-04-30_23-41-09.json",
+          "metrics": {
+            "train": {
+              "ok": 2,
+              "total": 2,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 262,
+              "total": 262,
+              "success_rate": 1.0
+            },
+            "dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 8,
+              "total": 1000,
+              "success_rate": 0.008
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b782dc8a_distribution_classification_eval_2026-04-30_23-42-30.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b782dc8a_constrained_generation_eval_2026-04-30_23-45-43.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b782dc8a_editing_eval_2026-04-30_23-48-12.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Run1/Evaluation_Run_minimax_m25_test/b782dc8a_inversion_eval_2026-04-30_23-49-08.json",
+          "metrics": {
+            "success_rate": 1.0
           },
           "attempts": 1
         }

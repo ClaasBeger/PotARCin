@@ -1,15 +1,15 @@
 {
   "mode": "batch_pending",
   "created_at": "2026-04-30_19-43-46",
-  "task_count": 3,
+  "task_count": 4,
   "run_tag": "Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k",
   "seed_mode": "fixed",
   "base_seed": 77,
   "batch_size": 50,
   "completed_before_count": 363,
   "last_completed_task_id_before": "e8593010",
-  "interrupted": false,
-  "in_progress_task_id": null,
+  "interrupted": true,
+  "in_progress_task_id": "d07ae81c",
   "runs": [
     {
       "task_id": "a64e4611",
@@ -296,6 +296,72 @@
           "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/b775ac94_inversion_eval_2026-04-30_06-14-25.json",
           "metrics": {
             "success_rate": 1.0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        }
+      }
+    },
+    {
+      "task_id": "ce602527",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 395,
+      "dimension_seeds": {
+        "classification_distribution": 1592058403,
+        "editing": 1445912638,
+        "inversion": 90357282
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Anthropic SDK failed (No module named 'anthropic'); fallback HTTP failed: The read operation timed out",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 2
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/ce602527_distribution_classification_eval_2026-04-30_09-24-26.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/ce602527_constrained_generation_eval_2026-04-30_10-06-19.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": false,
+          "error": "Anthropic SDK failed (No module named 'anthropic'); fallback HTTP failed: The read operation timed out",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 2
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/ce602527_inversion_eval_2026-04-30_10-28-17.json",
+          "metrics": {
+            "success_rate": 0.0
           },
           "attempts": 0,
           "skipped_rerun": true

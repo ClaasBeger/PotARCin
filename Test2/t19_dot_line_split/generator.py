@@ -383,6 +383,40 @@ def _place_single_side(
     return False
 
 
+def _single_side_square_candidates(grid: Grid, a: Pos, b: Pos, side: int) -> list[tuple[int, int, int]]:
+    """Return valid square placements (r0, c0, x) for the side's single shape."""
+    h = len(grid)
+    w = len(grid[0]) if h else 0
+    cells = {
+        (r, c)
+        for r in range(h)
+        for c in range(w)
+        if grid[r][c] not in (BG, GRAY) and ((_cross(a, b, (r, c)) < 0) == (side < 0))
+    }
+    comps = _shape_components(cells)
+    if len(comps) != 1:
+        return []
+    comp = comps[0]
+    minr, maxr, minc, maxc = _bbox(comp)
+    x = max(maxr - minr + 1, maxc - minc + 1)
+
+    r0_lo = max(0, maxr - x + 1)
+    r0_hi = min(minr, h - x)
+    c0_lo = max(0, maxc - x + 1)
+    c0_hi = min(minc, w - x)
+    if r0_lo > r0_hi or c0_lo > c0_hi:
+        return []
+
+    out: list[tuple[int, int, int]] = []
+    for r0 in range(r0_lo, r0_hi + 1):
+        for c0 in range(c0_lo, c0_hi + 1):
+            rr1 = r0 + x - 1
+            cc1 = c0 + x - 1
+            if _rect_fits_side(a, b, side, r0, rr1, c0, cc1):
+                out.append((r0, c0, x))
+    return out
+
+
 def _place_multi_side(
     grid: Grid,
     rr: random.Random,
@@ -489,6 +523,18 @@ def generate(
         try:
             out = transform_t19(inp)
         except ValueError:
+            continue
+
+        # Reject single-shape sides where square placement is ambiguous.
+        ambiguous_single = False
+        for side in (-1, 1):
+            if side_mode[side] != "single":
+                continue
+            cands = _single_side_square_candidates(inp, a, b, side)
+            if len(cands) != 1:
+                ambiguous_single = True
+                break
+        if ambiguous_single:
             continue
 
         if out == inp:
