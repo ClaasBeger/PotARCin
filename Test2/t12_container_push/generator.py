@@ -283,18 +283,14 @@ def _is_blocked_flank_for_cell(container: Set[Pos], r: int, c: int, nr: int, nc:
     """
     if dr == 0 or dc == 0:
         return False
-    d_fwd = (r + dr, c + dc) in container
-    d_back = (r - dr, c - dc) in container
-    d_side_v = (r + dr, c - dc) in container
-    d_side_h = (r - dr, c + dc) in container
-
-    # Candidate is the vertical flank for (r,c): (r+dr, c)
+    # A flank is blocked only when the side-diagonal band is closed; this is
+    # the stable container seam that payload cannot slip through.
+    side_v = (r + dr, c - dc) in container
+    side_h = (r - dr, c + dc) in container
     if nr == r + dr and nc == c:
-        # Block if either diagonal band around this flank is closed.
-        return (d_fwd and d_side_v) or (d_side_v and d_side_h)
-    # Candidate is the horizontal flank for (r,c): (r, c+dc)
+        return side_v and side_h
     if nr == r and nc == c + dc:
-        return (d_fwd and d_side_h) or (d_side_v and d_side_h)
+        return side_v and side_h
     return False
 
 
@@ -302,59 +298,41 @@ def _step_push(grid: Grid, container: Set[Pos], dr: int, dc: int) -> tuple[bool,
     h = len(grid)
     w = len(grid[0]) if h else 0
     moving: Set[Pos] = set(container)
-    container_next: Set[Pos] = {(r + dr, c + dc) for r, c in container}
-    seam_pushed: Set[Pos] = set()
-    q = deque(container)
     blocked = False
 
-    while q and not blocked:
-        r, c = q.popleft()
-        for i, (nr, nc) in enumerate(_encountered_cells(r, c, dr, dc)):
-            # Primary forward cell enforces hard collision/bounds.
-            if i == 0:
+    # Diagonal-only exception: occupied cells on blocked diagonal seams move too.
+    if dr != 0 and dc != 0:
+        for r, c in container:
+            for nr, nc in _encountered_cells(r, c, dr, dc)[1:]:
+                if not _is_blocked_flank_for_cell(container, r, c, nr, nc, dr, dc):
+                    continue
                 if nr < 0 or nr >= h or nc < 0 or nc >= w:
+                    continue
+                if (nr, nc) in moving or grid[nr][nc] == 0:
+                    continue
+                if grid[nr][nc] == LINE:
                     blocked = True
                     break
-                if grid[nr][nc] == LINE and (nr, nc) not in moving:
-                    blocked = True
-                    break
-                if grid[nr][nc] != 0 and (nr, nc) not in moving:
-                    moving.add((nr, nc))
-                    # For orthogonal movement, forward chains are 1D and should
-                    # propagate so payload is pushed rather than overwritten.
-                    # For diagonal movement we keep pickup local (flank logic
-                    # handles the corner barrier behavior separately).
-                    if dr == 0 or dc == 0:
-                        q.append((nr, nc))
-                continue
+                moving.add((nr, nc))
+            if blocked:
+                break
 
-            # Diagonal flank contacts are only forced when they cross a blocked
-            # seam formed by two diagonally connected container cells. This
-            # seam-blocking property is specific to container cells.
+    # Overwrite closure: if a moving cell would overwrite an occupied cell,
+    # that occupant must be moved as well. This prevents vanishing cells.
+    changed = True
+    while changed and not blocked:
+        changed = False
+        for r, c in list(moving):
+            nr, nc = r + dr, c + dc
             if nr < 0 or nr >= h or nc < 0 or nc >= w:
-                continue
-            if grid[nr][nc] in (0, LINE) or (nr, nc) in moving:
-                continue
-            if not _is_blocked_flank_for_cell(container, r, c, nr, nc, dr, dc):
-                continue
-            moving.add((nr, nc))
-            seam_pushed.add((nr, nc))
-            # Seams push this flank payload, but we avoid spawning new flank
-            # expansions from it in the same step.
-
-    # Direct forward support for seam-pushed cells only (no transitive closure).
-    # This preserves legitimate one-step pushes (e.g. sample-22 type) without
-    # growing long chains that can incorrectly block early.
-    for r, c in list(seam_pushed):
-        nr, nc = r + dr, c + dc
-        if nr < 0 or nr >= h or nc < 0 or nc >= w:
-            blocked = True
-            break
-        if grid[nr][nc] == LINE and (nr, nc) not in moving:
-            blocked = True
-            break
-        if grid[nr][nc] != 0 and (nr, nc) not in moving:
-            moving.add((nr, nc))
+                blocked = True
+                break
+            if grid[nr][nc] == LINE and (nr, nc) not in moving:
+                blocked = True
+                break
+            if grid[nr][nc] != 0 and (nr, nc) not in moving:
+                moving.add((nr, nc))
+                changed = True
 
     if blocked:
         return False, container
