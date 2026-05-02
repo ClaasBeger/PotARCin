@@ -404,7 +404,8 @@ def generate(
             continue
         if tie_rows == 1 and rr.random() < 0.8:
             continue
-        destroyed = len(scene_ships) - (alive_mask.bit_count())
+        # Python 3.9 compatibility: int.bit_count() is 3.10+.
+        destroyed = len(scene_ships) - (bin(alive_mask).count("1"))
         if destroyed < max(3, len(shots) // 2):
             continue
 

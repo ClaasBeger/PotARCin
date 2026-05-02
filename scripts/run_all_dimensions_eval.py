@@ -26,6 +26,7 @@ from framework.dimensions.inversion import run_inversion_api_evaluation_once
 from framework.eval_paths import dimension_out_dirs, multi_run_summary_dir
 from framework.tasks.arc_dataset import iter_tasks, load_task
 from framework.tasks.base import TaskSource
+from framework.tasks.test2_dataset import iter_test2_tasks
 
 
 _DIMENSION_ORDER = (
@@ -565,6 +566,10 @@ def _all_task_ids() -> list[str]:
     return [t.task_id for t in iter_tasks(split="train", source=TaskSource.ORIGINAL_ARC)]
 
 
+def _all_test2_task_ids() -> list[str]:
+    return [t.task_id for t in iter_test2_tasks()]
+
+
 def _task_ids_from_subset_file(path: Path) -> list[str]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     ids = payload.get("selected_task_ids")
@@ -858,6 +863,12 @@ def main() -> None:
         ),
     )
     p.add_argument(
+        "--task-source",
+        default="arc_train",
+        choices=["arc_train", "test2"],
+        help="Task source for batch mode.",
+    )
+    p.add_argument(
         "--run-tag",
         default=None,
         help=(
@@ -902,8 +913,14 @@ def main() -> None:
         base_seed = None
         seed_mode = "none"
 
+    dataset_segment = "Test2" if args.task_source == "test2" else None
     if args.run_tag:
-        out_dirs = dimension_out_dirs(root_dir=ROOT_DIR, model=args.model, run_tag=args.run_tag)
+        out_dirs = dimension_out_dirs(
+            root_dir=ROOT_DIR,
+            model=args.model,
+            run_tag=args.run_tag,
+            dataset_segment=dataset_segment,
+        )
     else:
         out_dirs = {}
 
@@ -912,7 +929,12 @@ def main() -> None:
         if args.summary_out
         else (
             (
-                multi_run_summary_dir(root_dir=ROOT_DIR, model=args.model, run_tag=args.run_tag)
+                multi_run_summary_dir(
+                    root_dir=ROOT_DIR,
+                    model=args.model,
+                    run_tag=args.run_tag,
+                    dataset_segment=dataset_segment,
+                )
                 / f"run_{ts}.json"
             )
             if args.run_tag
@@ -940,6 +962,7 @@ def main() -> None:
             "created_at": ts,
             "task_count": len(runs_so_far),
             "run_tag": args.run_tag,
+            "task_source": args.task_source,
             "seed_mode": seed_mode,
             "base_seed": base_seed,
             "batch_size": args.batch_size,
@@ -973,6 +996,7 @@ def main() -> None:
             "created_at": ts,
             "task_count": 1,
             "run_tag": args.run_tag,
+            "task_source": args.task_source,
             "seed_mode": seed_mode,
             "base_seed": base_seed,
             "runs": [run],
@@ -991,15 +1015,16 @@ def main() -> None:
         if not subset_path.is_absolute():
             subset_path = ROOT_DIR / subset_path
         all_task_ids = _task_ids_from_subset_file(subset_path)
-        # Keep only ids that exist in ARC1 training split.
-        canonical_ids = set(_all_task_ids())
+        canonical_ids = (
+            set(_all_test2_task_ids()) if args.task_source == "test2" else set(_all_task_ids())
+        )
         all_task_ids = [tid for tid in all_task_ids if tid in canonical_ids]
         if not all_task_ids:
             raise SystemExit(
-                f"--task-subset-file resolved to zero valid ARC1 task ids: {subset_path}"
+                f"--task-subset-file resolved to zero valid task ids for source={args.task_source}: {subset_path}"
             )
     else:
-        all_task_ids = _all_task_ids()
+        all_task_ids = _all_test2_task_ids() if args.task_source == "test2" else _all_task_ids()
     completed_before = _completed_tasks_for_run_tag(all_task_ids, out_dirs)
     pending_task_ids = [tid for tid in all_task_ids if tid not in completed_before]
     task_ids = pending_task_ids[: args.batch_size]
@@ -1170,6 +1195,7 @@ def main() -> None:
         "created_at": ts,
         "task_count": len(runs),
         "run_tag": args.run_tag,
+        "task_source": args.task_source,
         "seed_mode": seed_mode,
         "base_seed": base_seed,
         "batch_size": args.batch_size,

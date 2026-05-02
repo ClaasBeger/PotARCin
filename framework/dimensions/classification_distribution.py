@@ -10,8 +10,10 @@ Other category masses are scaled to keep relative ratios and sum to 0.70.
 from __future__ import annotations
 
 import copy
+import json
 import random
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List, Literal, Optional, Sequence, Tuple
 
 from framework.corruption.cross_dynamic_mismatch import (
@@ -32,6 +34,7 @@ from framework.grids import (
 from framework.tasks.arc_dataset import load_task
 from framework.tasks.base import ArcTask, Verifier
 from framework.verifier_selection import select_verifier_for_task, valid_verifiers_for_task
+from framework.tasks.test2_dataset import TEST2_DIR, parse_test2_task_num
 
 Category = Literal[
     "instance_mismatch",
@@ -145,6 +148,38 @@ def _deterministic_demo_pair_for_query(task: ArcTask) -> GridPair:
 
 
 def _try_corrupted_pair(task_id: str, task: ArcTask, rng: random.Random) -> GridPair | None:
+    try:
+        tnum = parse_test2_task_num(task_id)
+    except ValueError:
+        tnum = None
+    if tnum is not None:
+        task_dir = next((p for p in TEST2_DIR.iterdir() if p.is_dir() and p.name.startswith(f"t{tnum}_")), None)
+        if task_dir is not None:
+            paths = sorted(task_dir.glob(f"t{tnum}_corrupted*.json"))
+            if not paths:
+                paths = sorted(task_dir.glob(f"t{tnum}_corrupt*.json"))
+            rng.shuffle(paths)
+            for p in paths:
+                try:
+                    payload = json.loads(Path(p).read_text(encoding="utf-8"))
+                except Exception:
+                    continue
+                test = payload.get("test")
+                if not isinstance(test, list) or not test:
+                    continue
+                ex = test[0]
+                if not isinstance(ex, dict):
+                    continue
+                inp = ex.get("input")
+                out = ex.get("output")
+                if not isinstance(inp, list) or not isinstance(out, list):
+                    continue
+                pair = GridPair(copy.deepcopy(inp), copy.deepcopy(out))
+                try:
+                    assert_int_grid_pair(pair, name="corrupted_verifier pair")
+                except Exception:
+                    continue
+                return pair
     if task.arc_gen_generator is None:
         return None
     for _ in range(8):

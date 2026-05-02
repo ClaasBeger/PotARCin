@@ -42,6 +42,12 @@ from framework.tasks.arc_dataset import (
     _load_arc_original,
     _make_arc_gen_generator,
 )
+from framework.tasks.test2_dataset import (
+    TEST2_DIR,
+    canonical_test2_task_id,
+    iter_test2_tasks,
+    parse_test2_task_num,
+)
 
 ARC_GEN_STABLE_ZIP = ROOT_DIR / "external" / "arc_gen_stable.zip"
 TASK_EMBEDDINGS_DIR = ROOT_DIR / "external" / "Task_Embeddings"
@@ -129,6 +135,10 @@ def _load_embedding_index() -> list[tuple[str, list[float]]]:
     for path in sorted(TASK_EMBEDDINGS_DIR.glob("*_task_token_embed.pt")):
         task_id = path.stem.replace("_task_token_embed", "")
         try:
+            task_id = canonical_test2_task_id(task_id)
+        except ValueError:
+            pass
+        try:
             obj = torch.load(path, map_location="cpu")
         except Exception:
             continue
@@ -153,6 +163,14 @@ def _nearest_tasks_by_embedding(
     if not idx:
         return []
     qvec: Optional[list[float]] = None
+    try:
+        query_task_id = canonical_test2_task_id(query_task_id)
+    except ValueError:
+        pass
+    try:
+        exclude_task_id = canonical_test2_task_id(exclude_task_id)
+    except ValueError:
+        pass
     for tid, vec in idx:
         if tid == query_task_id:
             qvec = vec
@@ -190,6 +208,11 @@ def _collect_dynamic_pairs(
     max_pairs: int,
 ) -> List[Tuple[str, str, str, GridPair]]:
     """Return (source, task_id, detail, pair) for ARC-GEN dynamic samples."""
+    canonical_exclude = exclude_task_id
+    try:
+        canonical_exclude = canonical_test2_task_id(exclude_task_id)
+    except ValueError:
+        pass
     tids = sorted(
         p.stem for p in ARC_ORIGINAL_DIR.glob("*.json") if p.stem != exclude_task_id
     )
@@ -210,6 +233,22 @@ def _collect_dynamic_pairs(
         except Exception:
             continue
         out.append(("arc_gen_dynamic", tid, f"dynamic[{len(out)}]", pair))
+    if TEST2_DIR.is_dir() and len(out) < max_pairs:
+        for task in iter_test2_tasks():
+            if len(out) >= max_pairs:
+                break
+            if task.task_id == canonical_exclude:
+                continue
+            if task.arc_gen_generator is None:
+                continue
+            try:
+                if rng is not None:
+                    pair = task.arc_gen_generator(1, rng=rng)[0]  # type: ignore[misc]
+                else:
+                    pair = task.arc_gen_generator(1)[0]  # type: ignore[misc]
+            except Exception:
+                continue
+            out.append(("test2_dynamic", task.task_id, f"dynamic[{len(out)}]", pair))
     return out
 
 
@@ -219,6 +258,11 @@ def _iter_pool_rows(
     *,
     num_dynamic: int,
 ) -> Iterator[Tuple[str, str, str, GridPair]]:
+    canonical_exclude = exclude_task_id
+    try:
+        canonical_exclude = canonical_test2_task_id(exclude_task_id)
+    except ValueError:
+        pass
     for path in sorted(ARC_ORIGINAL_DIR.glob("*.json")):
         tid = path.stem
         if tid == exclude_task_id:
@@ -238,6 +282,13 @@ def _iter_pool_rows(
 
     for row in _collect_dynamic_pairs(exclude_task_id, rng, max_pairs=num_dynamic):
         yield row
+
+    if TEST2_DIR.is_dir():
+        for task in iter_test2_tasks():
+            if task.task_id == canonical_exclude:
+                continue
+            for i, p in enumerate(task.train_pairs):
+                yield ("test2_train", task.task_id, f"train[{i}]", p)
 
 
 def find_nearest_alternative_instances(

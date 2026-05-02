@@ -24,8 +24,13 @@ def run_bucket(run_tag: str) -> str:
     return "Run2" if "run2" in run_tag.lower() else "Run1"
 
 
-def dimension_out_dirs(*, root_dir: Path, model: str, run_tag: str) -> dict[str, Path]:
-    leaf = Path(model_alias(model)) / run_bucket(run_tag) / run_tag
+def dimension_out_dirs(
+    *, root_dir: Path, model: str, run_tag: str, dataset_segment: str | None = None
+) -> dict[str, Path]:
+    leaf = Path(model_alias(model))
+    if dataset_segment:
+        leaf = leaf / dataset_segment
+    leaf = leaf / run_bucket(run_tag) / run_tag
     return {
         "definition": root_dir / "evaluation" / "definition_eval_results" / leaf,
         "classification_distribution": root_dir / "evaluation" / "classification_eval_results" / leaf,
@@ -35,15 +40,13 @@ def dimension_out_dirs(*, root_dir: Path, model: str, run_tag: str) -> dict[str,
     }
 
 
-def multi_run_summary_dir(*, root_dir: Path, model: str, run_tag: str) -> Path:
-    return (
-        root_dir
-        / "evaluation"
-        / "multi_dimension_eval_runs"
-        / model_alias(model)
-        / run_bucket(run_tag)
-        / run_tag
-    )
+def multi_run_summary_dir(
+    *, root_dir: Path, model: str, run_tag: str, dataset_segment: str | None = None
+) -> Path:
+    p = root_dir / "evaluation" / "multi_dimension_eval_runs" / model_alias(model)
+    if dataset_segment:
+        p = p / dataset_segment
+    return p / run_bucket(run_tag) / run_tag
 
 
 def output_grid_run_dir(*, root_dir: Path, model: str, run_tag: str) -> Path:

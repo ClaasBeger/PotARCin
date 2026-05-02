@@ -16,6 +16,7 @@ from framework.custom_verifiers import get_custom_verifier
 from framework.grids import Grid, GridPair
 from framework.tasks.base import ArcTask, TaskSource
 from framework.integrations.re_arc_adapter import get_re_arc_verifier
+from framework.tasks.test2_dataset import load_test2_task, parse_test2_task_num
 
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
@@ -804,6 +805,12 @@ def _load_alternative_verifiers(
 
 def load_task(task_id: str) -> ArcTask:
     """Load a single ARC task by ID, with attached synthetic data and verifiers."""
+    try:
+        parse_test2_task_num(task_id)
+        return load_test2_task(task_id)
+    except ValueError:
+        pass
+
     # Canonical ARC examples (including ground-truth test outputs).
     train_pairs, test_inputs, test_outputs = _load_arc_original(task_id)
 

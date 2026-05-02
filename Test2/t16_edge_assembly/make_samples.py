@@ -63,10 +63,11 @@ def main() -> None:
     out_json = root / "t16_samples_50.json"
     out_html = root / "t16_samples_50.html"
 
-    rng = random.Random(0)
+    master = random.Random(0)
     samples: list[dict[str, list[list[int]]]] = []
     for _ in range(50):
-        ex = generate(rng=rng)
+        stream = random.Random(master.getrandbits(64))
+        ex = generate(rng=stream)
         if verify_t16(ex["input"]) != ex["output"]:
             raise RuntimeError("Verifier mismatch on generated sample.")
         samples.append(ex)
@@ -78,10 +79,11 @@ def main() -> None:
         "<title>Test2/t16 50 samples</title></head>",
         "<body style='font-family:Segoe UI,sans-serif;background:#1a1a1a;color:#eee;max-width:1200px;margin:24px auto;'>",
         "<h1>Test2 t16 - 50 generated samples</h1>",
-        "<p>Rule: colored fragments are placed on grid edges. Assemble all edge fragments "
-        "into one connected target shape (translation-only assembly). Every interior grey "
-        "component matching that assembled shape is recolored to the fragment color. "
-        "Original edge fragments are erased.</p>",
+        "<p>King-linked colored orth-islands are one prototype each (including diagonal ties). "
+        "Valid targets are rigid orthogonal assemblies under translation only; prototypes may be placed "
+        "in any order when snapping onto the growing union (anchoring lex-first alone was insufficient). "
+        "Orth-grey blobs matching an assembly recolor; task-colored cells clear. Each pair satisfies "
+        "<code>verify_t16(input)==output</code>.</p>",
     ]
     for i, sample in enumerate(samples):
         parts.append(_pair_card(sample, i))

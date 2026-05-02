@@ -523,6 +523,34 @@ def _anthropic_messages_completion(
                 "type": "enabled",
                 "budget_tokens": thinking_budget_tokens,
             }
+        # Anthropic SDK requires streaming for requests that may exceed ~10 minutes.
+        # Use stream() first, then fall back to create() for compatibility.
+        stream_fn = getattr(client.messages, "stream", None)
+        if callable(stream_fn):
+            try:
+                with stream_fn(**req) as stream:
+                    parts: list[str] = []
+                    text_stream = getattr(stream, "text_stream", None)
+                    if text_stream is not None:
+                        for chunk in text_stream:
+                            if isinstance(chunk, str) and chunk:
+                                parts.append(chunk)
+                    # Some SDK versions expose the final message object.
+                    if not parts:
+                        final_msg = getattr(stream, "get_final_message", None)
+                        if callable(final_msg):
+                            msg = final_msg()
+                            for block in getattr(msg, "content", []) or []:
+                                txt = getattr(block, "text", None)
+                                if isinstance(txt, str) and txt.strip():
+                                    parts.append(txt)
+                    text = "".join(parts).strip()
+                    if text:
+                        return text
+            except Exception:
+                # Fall back to non-streaming path below, preserving behavior.
+                pass
+
         resp = client.messages.create(**req)
         parts: list[str] = []
         for block in getattr(resp, "content", []) or []:

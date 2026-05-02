@@ -18,6 +18,7 @@ from typing import Literal, Optional, Sequence, Tuple
 
 from framework.grids import GridPair, is_equal_grid
 from framework.tasks.base import ArcTask, Verifier
+from framework.tasks.test2_dataset import parse_test2_task_num
 
 VerifierSlot = Literal["re_arc", "google", "keymoon", "neurips", "custom"]
 
@@ -125,6 +126,16 @@ def select_verifier_for_task(
     csv_path: Path | None = None,
 ) -> Tuple[VerifierSlot, Verifier] | None:
     """Choose a verifier: CSV ordering first, optional instance dynamic check, then legacy probe."""
+    try:
+        parse_test2_task_num(task.task_id)
+        if task.verifier is None:
+            return None
+        if dynamic_pairs and not verifier_matches_pairs(task.verifier, dynamic_pairs):
+            return None
+        return "re_arc", task.verifier
+    except ValueError:
+        pass
+
     csv_order = _slots_for_task_id(task.task_id, csv_path)
     for slot in csv_order:
         fn = _callable_for_slot(task, slot)
@@ -142,6 +153,12 @@ def valid_verifiers_for_task(
     csv_path: Path | None = None,
 ) -> list[Tuple[VerifierSlot, Verifier]]:
     """Return all valid verifiers (train/test/stable/dynamic50), CSV order first."""
+    try:
+        parse_test2_task_num(task.task_id)
+        return [("re_arc", task.verifier)] if task.verifier is not None else []
+    except ValueError:
+        pass
+
     from framework.dimensions.classification_distribution import (
         verifier_matches_train_test_stable_dynamic50,
     )
