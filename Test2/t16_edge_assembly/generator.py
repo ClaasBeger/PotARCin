@@ -313,8 +313,12 @@ def _on_perimeter(r: int, c: int, h: int, w: int) -> bool:
     return r == 0 or c == 0 or r == h - 1 or c == w - 1
 
 
-def _enumerate_diagonal_singleton_chains_on_perimeter(h: int, w: int, length: int) -> list[set[Pos]]:
-    """Straight lattice-diagonal chains (train-style ridges / corner pairs), all cells on boundary."""
+def _enumerate_diagonal_singleton_chains_from_perimeter_anchor(h: int, w: int, length: int) -> list[set[Pos]]:
+    """Straight lattice-diagonal chains whose **first** cell is on the perimeter.
+
+    Interior cells along the ridge are allowed (matches authored ridges that dip one row/col inward).
+    Length ≥ 4 is impossible if every cell must stay on the boundary—that old rule suppressed longer chains.
+    """
     assert length >= 2
     dirs = ((1, 1), (1, -1), (-1, 1), (-1, -1))
     raw: list[set[Pos]] = []
@@ -327,7 +331,7 @@ def _enumerate_diagonal_singleton_chains_on_perimeter(h: int, w: int, length: in
                 ok = True
                 for k in range(length):
                     rr_, cc_ = r + k * dr, c + k * dc
-                    if not _in_bounds(h, w, rr_, cc_) or not _on_perimeter(rr_, cc_, h, w):
+                    if not _in_bounds(h, w, rr_, cc_):
                         ok = False
                         break
                     cells.append((rr_, cc_))
@@ -351,19 +355,23 @@ def _try_place_diagonal_singleton_chain(
     *,
     length: int,
 ) -> set[Pos] | None:
-    cand = _enumerate_diagonal_singleton_chains_on_perimeter(h, w, length)
-    rr.shuffle(cand)
-    for chain in cand:
-        acc = set(occupied)
-        ok = True
-        for cell in sorted(chain):
-            solo = {cell}
-            if not _can_place(solo, acc, h, w, forbid_adj4=True):
-                ok = False
-                break
-            acc |= solo
-        if ok:
-            return chain
+    cand = _enumerate_diagonal_singleton_chains_from_perimeter_anchor(h, w, length)
+    if not cand:
+        return None
+    # Several shuffles — ordering matters when singletons share rows/cols from sorting alone.
+    for _ in range(4):
+        rr.shuffle(cand)
+        for chain in cand:
+            acc = set(occupied)
+            ok = True
+            for cell in sorted(chain):
+                solo = {cell}
+                if not _can_place(solo, acc, h, w, forbid_adj4=True):
+                    ok = False
+                    break
+                acc |= solo
+            if ok:
+                return chain
     return None
 
 
@@ -374,6 +382,24 @@ def _raw_has_king_diagonal_bridge(frags: Sequence[set[Pos]]) -> bool:
             if _comps_king_touch(frags[i], frags[j]) and not _orthogonal_adjacent_cells(frags[i], frags[j]):
                 return True
     return False
+
+
+def _max_diag_singleton_chain_len(inp: Grid, color: int) -> int:
+    """Longest run of task-coloured monominos along one lattice-diagonal ray (king-only chain)."""
+    pts = {next(iter(f)) for f in _extract_components(inp, color) if len(f) == 1}
+    if not pts:
+        return 0
+    best = 0
+    dirs = ((1, 1), (1, -1), (-1, 1), (-1, -1))
+    for r, c in pts:
+        for dr, dc in dirs:
+            k = 0
+            cr, cc = r, c
+            while (cr, cc) in pts:
+                k += 1
+                cr, cc = cr + dr, cc + dc
+            best = max(best, k)
+    return best
 
 
 def _edge_offsets_for_piece(sig: ShapeSig, h: int, w: int, edge: str) -> list[Pos]:
@@ -474,36 +500,48 @@ def generate(
     max_h: int = 16,
     min_w: int = 11,
     max_w: int = 16,
+    ridge_chain_target: int | None = None,
 ) -> dict[str, Grid]:
     rr = rng or random.Random()
 
-    sketches = ["bare", "diag_pair", "diag_triple", "mixed"]
-    # Bias toward perimeter diagonal ridges/pairs like authored train examples.
-    sketch_w = [0.12, 0.31, 0.31, 0.26]
+    if ridge_chain_target is not None and ridge_chain_target not in (2, 3, 4):
+        raise ValueError("ridge_chain_target must be one of {2, 3, 4} or None")
 
-    for _ in range(22000):
-        h = rr.randint(min_h, max_h)
-        w = rr.randint(min_w, max_w)
+    # ``diag_triple`` is **always** three king-linked singletons (train-style ridge).
+    # Length-four ridges use ``diag_quad`` so triple sketches are not diluted toward quad.
+    sketches = ["bare", "diag_pair", "diag_triple", "diag_quad", "mixed"]
+    sketch_w = [0.07, 0.18, 0.38, 0.12, 0.25]
+
+    for _ in range(28000):
+        eff_min_h, eff_min_w = min_h, min_w
+        if ridge_chain_target in (3, 4):
+            eff_min_h = max(min_h, 13)
+            eff_min_w = max(min_w, 13)
+        h = rr.randint(eff_min_h, max_h)
+        w = rr.randint(eff_min_w, max_w)
         inp = _empty(h, w)
 
         color = rr.choice([1, 2, 3, 4, 6, 7, 8, 9])
-        sketch = rr.choices(sketches, weights=sketch_w, k=1)[0]
-        if sketch == "mixed":
-            sketch = "diag_triple" if rr.random() < 0.55 else "diag_pair"
-
         occupied: set[Pos] = set()
         forbid_king_near: set[Pos] | None = None
+        ridge_chain_len: int | None = None
 
-        if sketch == "diag_triple":
-            ridge = _try_place_diagonal_singleton_chain(rr, occupied, h, w, length=3)
-            if ridge is None:
-                continue
-            occupied |= ridge
-            forbid_king_near = set(ridge)
-            n_poly_extra = rr.randint(1, 2)
-            sizes = _biased_poly_sizes(rr, n_poly_extra, bare=False)
-        elif sketch == "diag_pair":
-            ridge = _try_place_diagonal_singleton_chain(rr, occupied, h, w, length=2)
+        if ridge_chain_target is not None:
+            sketch = "__ridge_target__"
+            ridge_chain_len = ridge_chain_target
+        else:
+            sketch = rr.choices(sketches, weights=sketch_w, k=1)[0]
+            if sketch == "diag_triple":
+                ridge_chain_len = 3
+            elif sketch == "diag_quad":
+                ridge_chain_len = 4
+            elif sketch == "diag_pair":
+                ridge_chain_len = 2
+            elif sketch == "mixed":
+                ridge_chain_len = rr.choices([2, 3, 4], weights=[0.22, 0.46, 0.32])[0]
+
+        if ridge_chain_len is not None:
+            ridge = _try_place_diagonal_singleton_chain(rr, occupied, h, w, length=ridge_chain_len)
             if ridge is None:
                 continue
             occupied |= ridge
@@ -546,7 +584,10 @@ def generate(
                     inp[r][c] = color
 
         raw_frags = _extract_components(inp, color)
-        if sketch in ("diag_pair", "diag_triple"):
+        if ridge_chain_target is not None:
+            if _max_diag_singleton_chain_len(inp, color) < ridge_chain_target:
+                continue
+        if ridge_chain_len is not None:
             if not _raw_has_king_diagonal_bridge(raw_frags):
                 continue
         elif sketch == "bare":

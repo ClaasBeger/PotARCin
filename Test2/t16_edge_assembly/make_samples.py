@@ -10,6 +10,25 @@ from pathlib import Path
 from generator import generate
 from verifier import verify_t16
 
+
+def _generate_one(master: random.Random, ridge_chain_target: int | None) -> dict[str, list[list[int]]]:
+    """``ridge_chain_target`` forces a perimeter diagonal singleton ridge of that length when possible."""
+    phases: list[tuple[int | None, int]] = [(ridge_chain_target, 480)]
+    if ridge_chain_target is not None:
+        phases.append((None, 720))
+
+    for tgt, budget in phases:
+        for _ in range(budget):
+            stream = random.Random(master.getrandbits(64))
+            try:
+                ex = generate(rng=stream, ridge_chain_target=tgt)
+            except RuntimeError:
+                continue
+            if verify_t16(ex["input"]) != ex["output"]:
+                raise RuntimeError("Verifier mismatch on generated sample.")
+            return ex
+    raise RuntimeError("failed to sample valid t16 instance for HTML pack")
+
 _COLORS = {
     0: "#000000",
     1: "#0074D9",
@@ -64,13 +83,13 @@ def main() -> None:
     out_html = root / "t16_samples_50.html"
 
     master = random.Random(0)
+    # Stratify so the HTML pack reliably shows train-style ridges (rejection hides them otherwise).
+    ridge_quota = ([3] * 28) + ([2] * 8) + ([4] * 5) + ([None] * 9)
+    master.shuffle(ridge_quota)
+
     samples: list[dict[str, list[list[int]]]] = []
-    for _ in range(50):
-        stream = random.Random(master.getrandbits(64))
-        ex = generate(rng=stream)
-        if verify_t16(ex["input"]) != ex["output"]:
-            raise RuntimeError("Verifier mismatch on generated sample.")
-        samples.append(ex)
+    for forced_ridge in ridge_quota:
+        samples.append(_generate_one(master, forced_ridge))
 
     out_json.write_text(json.dumps({"train": samples}, indent=2), encoding="utf-8")
 
@@ -81,7 +100,8 @@ def main() -> None:
         "<h1>Test2 t16 - 50 generated samples</h1>",
         "<p>King-linked colored orth-islands are one prototype each (including diagonal ties). "
         "Valid targets are rigid orthogonal assemblies under translation only; prototypes may be placed "
-        "in any order when snapping onto the growing union (anchoring lex-first alone was insufficient). "
+        "in any order when snapping onto the growing union. About half of this pack forces a perimeter "
+        "diagonal ridge of length 3–4 monominos so those motifs show up despite downstream rejection. "
         "Orth-grey blobs matching an assembly recolor; task-colored cells clear. Each pair satisfies "
         "<code>verify_t16(input)==output</code>.</p>",
     ]
