@@ -82,7 +82,12 @@ def _load_test2_task(task_id: str, test2_root: Path) -> ArcTask:
 
 
 def _has_logged_result(out_dir: Path, task_id: str) -> bool:
-    return any(out_dir.glob(f"{task_id}_output_grid_eval_*.json"))
+    # Do not treat failure artifacts (`..._output_grid_eval_error_...json`) as completed.
+    for p in out_dir.glob(f"{task_id}_output_grid_eval_*.json"):
+        if "_output_grid_eval_error_" in p.name:
+            continue
+        return True
+    return False
 
 
 def _test2_run_dir(*, root_dir: Path, model: str, run_tag: str) -> Path:
@@ -95,6 +100,46 @@ def _test2_run_dir(*, root_dir: Path, model: str, run_tag: str) -> Path:
         / run_bucket(run_tag)
         / run_tag
     )
+
+
+def _artifact_task_id(task_id: str) -> str:
+    return f"test2_t{_parse_task_num(task_id)}"
+
+
+def _write_failure_artifact(
+    *,
+    out_dir: Path,
+    task_id: str,
+    test_idx: int,
+    model: str,
+    provider: str | None,
+    reasoning_effort: str | None,
+    tools_enabled: bool,
+    max_train_demos: int | None,
+    attempts: int,
+    attempt_errors: list[dict[str, Any]],
+) -> Path:
+    ts = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    artifact_task_id = _artifact_task_id(task_id)
+    out_path = out_dir / f"{artifact_task_id}_output_grid_eval_error_{ts}.json"
+    payload = {
+        "task_id": artifact_task_id,
+        "source_task_id": task_id,
+        "test_idx": test_idx,
+        "model": model,
+        "provider": provider,
+        "reasoning_effort": reasoning_effort,
+        "tools_enabled": tools_enabled,
+        "max_train_demos": max_train_demos,
+        "evaluation_ok": False,
+        "exact_match": None,
+        "metrics": None,
+        "attempts": attempts,
+        "attempt_errors": attempt_errors,
+        "error": attempt_errors[-1]["error"] if attempt_errors else "unknown error",
+    }
+    out_path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
+    return out_path
 
 
 def _run_one_task(
@@ -112,6 +157,7 @@ def _run_one_task(
     retry_backoff_s: float,
 ) -> dict[str, Any]:
     attempts = max(1, retries + 1)
+    attempt_errors: list[dict[str, Any]] = []
     for attempt in range(1, attempts + 1):
         try:
             task = _load_test2_task(task_id, test2_root)
@@ -136,17 +182,38 @@ def _run_one_task(
             }
         except Exception as e:
             msg = str(e)
-            if attempt < attempts and _is_transient_error(msg):
+            transient = _is_transient_error(msg)
+            attempt_errors.append(
+                {
+                    "attempt": attempt,
+                    "error": f"{type(e).__name__}: {e}",
+                    "transient": transient,
+                }
+            )
+            if attempt < attempts and transient:
                 time.sleep(retry_backoff_s * attempt)
                 continue
+            err_path = _write_failure_artifact(
+                out_dir=out_dir,
+                task_id=task_id,
+                test_idx=test_idx,
+                model=model,
+                provider=provider,
+                reasoning_effort=reasoning_effort,
+                tools_enabled=tools_enabled,
+                max_train_demos=max_train_demos,
+                attempts=attempt,
+                attempt_errors=attempt_errors,
+            )
             return {
                 "task_id": task_id,
                 "attempts": attempt,
-                "result_path": None,
+                "result_path": str(err_path),
                 "evaluation_ok": False,
                 "exact_match": None,
                 "metrics": None,
                 "error": f"{type(e).__name__}: {e}",
+                "attempt_errors": attempt_errors,
             }
     raise RuntimeError("test2 output-grid batch: internal retry loop fell through")
 
@@ -209,7 +276,7 @@ def main() -> None:
     if args.skip_completed:
         filtered: list[str] = []
         for tid in task_ids:
-            artifact_tid = f"test2_t{_parse_task_num(tid)}"
+            artifact_tid = _artifact_task_id(tid)
             if _has_logged_result(out_dir, artifact_tid):
                 skipped_completed += 1
             else:
@@ -267,8 +334,21 @@ def main() -> None:
             exact_ok += 1
         if not row.get("evaluation_ok"):
             failed += 1
+            print(
+                f"  -> FAILED attempt={row.get('attempts')} "
+                f"error={row.get('error')} "
+                f"logged={row.get('result_path')}",
+                flush=True,
+            )
             if not args.continue_on_error:
                 break
+        else:
+            print(
+                f"  -> ok attempt={row.get('attempts')} "
+                f"exact_match={row.get('exact_match')} "
+                f"logged={row.get('result_path')}",
+                flush=True,
+            )
         if args.delay_s > 0 and i + 1 < len(task_ids):
             time.sleep(args.delay_s)
 
