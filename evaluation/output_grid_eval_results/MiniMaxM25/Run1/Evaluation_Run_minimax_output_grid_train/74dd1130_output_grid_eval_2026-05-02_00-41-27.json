@@ -1,0 +1,51 @@
+{
+  "task_id": "74dd1130",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "max_train_demos": null,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below.\n\nExample 1\nInput:\n2 2 1\n1 5 1\n5 2 2\nOutput:\n2 1 5\n2 5 2\n1 1 2\n\nExample 2\nInput:\n2 2 5\n6 2 2\n5 5 5\nOutput:\n2 6 5\n2 2 5\n5 2 5\n\nExample 3\nInput:\n9 9 5\n5 5 8\n5 8 9\nOutput:\n9 5 5\n9 5 8\n5 8 9\n\nExample 4\nInput:\n2 6 6\n2 1 1\n2 6 2\nOutput:\n2 2 2\n6 1 6\n6 1 2\n\nBelow is a test input grid. Predict the corresponding output grid by applying the rule you found.\nTest Input:\n9 3 4\n9 4 4\n9 3 4\n\nYour final answer must be ONLY a single Python list-of-lists grid for that output:\n[[...], ...]\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "[[9,9,9],[3,4,3],[4,4,4]]",
+  "ground_truth": [
+    [
+      9,
+      9,
+      9
+    ],
+    [
+      3,
+      4,
+      3
+    ],
+    [
+      4,
+      4,
+      4
+    ]
+  ],
+  "evaluation_ok": true,
+  "prediction": [
+    [
+      9,
+      9,
+      9
+    ],
+    [
+      3,
+      4,
+      3
+    ],
+    [
+      4,
+      4,
+      4
+    ]
+  ],
+  "exact_match": true,
+  "metrics": {
+    "exact_match": 1.0
+  }
+}

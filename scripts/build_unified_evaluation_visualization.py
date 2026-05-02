@@ -12,6 +12,7 @@ Output defaults to ``Demonstrations/unified_evaluations/<task_id>_unified_evalua
 
 from __future__ import annotations
 
+import os
 import argparse
 import json
 import random
@@ -21,6 +22,13 @@ from pathlib import Path
 from typing import Any, Optional
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
+# Matplotlib may be imported transitively; default ~/.matplotlib is often not writable in
+# sandboxes/CI, forcing a fresh temp cache + font rebuild in every process.
+_mpl_cfg = ROOT_DIR / ".mplconfig"
+_mpl_cfg.mkdir(parents=True, exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(_mpl_cfg))
+os.environ.setdefault("MPLBACKEND", "Agg")
+
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 

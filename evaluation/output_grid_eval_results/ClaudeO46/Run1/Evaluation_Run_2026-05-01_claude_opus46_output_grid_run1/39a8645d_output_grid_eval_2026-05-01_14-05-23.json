@@ -1,0 +1,51 @@
+{
+  "task_id": "39a8645d",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "max_train_demos": null,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below.\n\nExample 1\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 8 0 8 0 0 0 0 0 0 0 0 0\n0 0 0 8 0 0 0 0 0 0 8 0 8 0\n0 0 8 0 8 0 0 0 0 0 0 8 0 0\n0 0 0 0 0 0 0 0 0 0 8 0 8 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 8 0 8 0 0 0 2 0 2 0 0\n0 0 0 0 8 0 0 0 0 2 0 2 0 0\n0 0 0 8 0 8 0 0 0 0 2 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 2 0 2 0 0 0 0 0 0 0 0 0 0\n0 2 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n8 0 8\n0 8 0\n8 0 8\n\nExample 2\nInput:\n0 0 0 0 0 0 0 1 0 1 0 0 0 0\n0 0 4 0 0 0 0 1 1 1 0 0 0 0\n0 0 0 4 4 0 0 0 1 0 0 0 0 0\n0 0 4 0 0 0 0 0 0 0 0 4 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 4 4\n0 0 0 0 0 0 2 0 2 0 0 4 0 0\n0 1 0 1 0 0 0 2 0 0 0 0 0 0\n0 1 1 1 0 0 2 0 2 0 0 0 0 0\n0 0 1 0 0 0 0 0 0 4 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 4 4 0 0\n0 0 4 0 0 0 0 0 0 4 0 0 0 0\n0 0 0 4 4 0 0 0 0 0 0 1 0 1\n0 0 4 0 0 0 0 0 0 0 0 1 1 1\n0 0 0 0 0 0 0 0 0 0 0 0 1 0\nOutput:\n4 0 0\n0 4 4\n4 0 0\n\nExample 3\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 8 0 0 0 0 0 6 6 0 0 0\n0 0 8 8 8 0 0 0 0 6 6 0 0 0\n0 0 0 8 0 0 0 0 0 0 0 6 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 8 0 0 0 0\n0 0 0 0 0 0 0 0 8 8 8 0 0 0\n0 0 0 0 0 0 0 0 0 8 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 8 0\n8 8 8\n0 8 0\n\nBelow is a test input grid. Predict the corresponding output grid by applying the rule you found.\nTest Input:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 3 0 3 0 0 0 0 2 0 0 0\n0 0 0 0 3 3 0 0 0 2 2 2 0 0\n0 0 0 3 0 3 0 0 0 2 2 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 8 0 0 0 0 0 0\n0 2 0 0 0 0 8 0 8 0 0 0 0 0\n2 2 2 0 0 0 0 8 0 0 0 0 0 0\n2 2 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 2 0 0 0 3 0 3 0 0\n0 0 0 0 2 2 2 0 0 0 3 3 0 0\n0 0 0 0 2 2 0 0 0 3 0 3 0 0\n\nYour final answer must be ONLY a single Python list-of-lists grid for that output:\n[[...], ...]\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "Looking at the examples, I need to find which shape (identified by color) appears the **most times** in the grid. That shape is the output.\n\n**Example 1:** Color 8 appears 3 times, color 2 appears 2 times \u2192 output is the **8** shape.\n**Example 2:** Color 4 appears 4 times, color 1 appears 3 times, color 2 appears 1 time \u2192 output is the **4** shape.\n**Example 3:** Color 8 appears 2 times, color 6 appears 1 time \u2192 output is the **8** shape.\n\n**Test Input:**\n- Color **2** appears **3 times** (at rows 2\u20134/cols 9\u201311, rows 8\u201310/cols 0\u20132, rows 11\u201313/cols 4\u20136)\n- Color 3 appears 2 times\n- Color 8 appears 1 time\n\nThe most frequent shape is the **2** pattern:\n\n```\n0 2 0\n2 2 2\n2 2 0\n```\n\n[[0, 2, 0], [2, 2, 2], [2, 2, 0]]",
+  "ground_truth": [
+    [
+      0,
+      2,
+      0
+    ],
+    [
+      2,
+      2,
+      2
+    ],
+    [
+      2,
+      2,
+      0
+    ]
+  ],
+  "evaluation_ok": true,
+  "prediction": [
+    [
+      0,
+      2,
+      0
+    ],
+    [
+      2,
+      2,
+      2
+    ],
+    [
+      2,
+      2,
+      0
+    ]
+  ],
+  "exact_match": true,
+  "metrics": {
+    "exact_match": 1.0
+  }
+}

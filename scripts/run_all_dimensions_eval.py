@@ -167,6 +167,16 @@ def run_all_dimensions_for_task(
                 "metrics": dim_payload.get("metrics"),
                 "attempts": 1,
             }
+        if _has_model_response(dim_payload):
+            # Policy: once a model response exists and is persisted, the dimension
+            # is considered completed (evaluation may still carry an error string).
+            return {
+                "ok": True,
+                "result_path": dim_payload.get("result_path"),
+                "metrics": dim_payload.get("metrics"),
+                "attempts": 1,
+                "evaluation_error": str(dim_payload.get("error") or "evaluation_ok is false"),
+            }
         return {
             "ok": False,
             "error": str(dim_payload.get("error") or "evaluation_ok is false"),
@@ -174,6 +184,23 @@ def run_all_dimensions_for_task(
             "metrics": dim_payload.get("metrics"),
             "attempts": 1,
         }
+
+    def _has_model_response(dim_payload: dict[str, Any]) -> bool:
+        raw = dim_payload.get("raw_response")
+        if isinstance(raw, str) and raw.strip():
+            return True
+        rp = dim_payload.get("result_path")
+        if not isinstance(rp, str) or not rp.strip():
+            return False
+        try:
+            p = Path(rp)
+            if not p.is_file():
+                return False
+            payload = json.loads(p.read_text(encoding="utf-8"))
+            raw2 = payload.get("raw_response")
+            return isinstance(raw2, str) and bool(raw2.strip())
+        except Exception:
+            return False
 
     def _run(name: str, fn: Callable[[], dict[str, Any]]) -> dict[str, Any]:
         attempts = max(1, int(dimension_retries) + 1)
@@ -189,6 +216,14 @@ def run_all_dimensions_for_task(
                     last_err = str(res.get("error") or "evaluation_ok is false")
                     last_result_path = res.get("result_path") if isinstance(res.get("result_path"), str) else None
                     last_metrics = res.get("metrics")
+                    if _has_model_response(res):
+                        return {
+                            "ok": True,
+                            "result_path": last_result_path,
+                            "metrics": last_metrics,
+                            "attempts": attempt,
+                            "evaluation_error": last_err,
+                        }
                     # Retry transient API failures even when dimensions report them as
                     # evaluation_ok=false payloads (not raised exceptions).
                     if attempt < attempts and _is_transient_error(last_err):

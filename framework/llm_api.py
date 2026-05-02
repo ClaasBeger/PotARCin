@@ -494,6 +494,12 @@ def _anthropic_messages_completion(
     max_tokens = 4096
     if thinking_budget_tokens is not None:
         max_tokens = max(max_tokens, thinking_budget_tokens + 1024)
+    # Allow one-off Anthropic timeout overrides for long-running calls.
+    # This only controls model-response waiting (SDK + fallback HTTP), not
+    # post-response evaluation (e.g., definition script execution).
+    anth_to = int(os.environ.get("POTARCIN_ANTHROPIC_TIMEOUT_S", "0").strip() or 0)
+    if anth_to > 0:
+        timeout_s = anth_to
     sdk_timeout_s = max(timeout_s, 900)  # keep Claude requests generous by default (15 min minimum)
     max_attempts = 3
 

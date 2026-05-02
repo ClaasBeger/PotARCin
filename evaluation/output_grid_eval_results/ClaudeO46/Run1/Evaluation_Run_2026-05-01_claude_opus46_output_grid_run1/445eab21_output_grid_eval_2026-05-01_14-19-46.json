@@ -1,0 +1,37 @@
+{
+  "task_id": "445eab21",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "max_train_demos": null,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below.\n\nExample 1\nInput:\n0 7 7 7 7 0 0 0 0 0\n0 7 0 0 7 0 0 0 0 0\n0 7 0 0 7 0 0 0 0 0\n0 7 7 7 7 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 8 8 8 8 8 0 0\n0 0 0 8 0 0 0 8 0 0\n0 0 0 8 0 0 0 8 0 0\n0 0 0 8 8 8 8 8 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n8 8\n8 8\n\nExample 2\nInput:\n6 6 6 6 6 0 0 0 0 0\n6 0 0 0 6 0 0 0 0 0\n6 0 0 0 6 0 0 0 0 0\n6 6 6 6 6 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 7 7 7 7 7 7 0 0\n0 0 7 0 0 0 0 7 0 0\n0 0 7 0 0 0 0 7 0 0\n0 0 7 7 7 7 7 7 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n7 7\n7 7\n\nExample 3\nInput:\n0 4 4 4 4 4 4 0 0 0\n0 4 0 0 0 0 4 0 0 0\n0 4 0 0 0 0 4 0 0 0\n0 4 0 0 0 0 4 0 0 0\n0 4 0 0 0 0 4 0 0 0\n0 4 0 0 0 0 4 0 0 0\n0 4 4 4 4 4 4 0 0 0\n0 0 0 0 0 0 0 2 2 2\n0 0 0 0 0 0 0 2 0 2\n0 0 0 0 0 0 0 2 2 2\nOutput:\n4 4\n4 4\n\nBelow is a test input grid. Predict the corresponding output grid by applying the rule you found.\nTest Input:\n3 3 3 3 3 0 9 9 9 9\n3 0 0 0 3 0 9 0 0 9\n3 0 0 0 3 0 9 0 0 9\n3 0 0 0 3 0 9 0 0 9\n3 0 0 0 3 0 9 0 0 9\n3 0 0 0 3 0 9 0 0 9\n3 0 0 0 3 0 9 0 0 9\n3 0 0 0 3 0 9 0 0 9\n3 3 3 3 3 0 9 0 0 9\n0 0 0 0 0 0 9 9 9 9\n\nYour final answer must be ONLY a single Python list-of-lists grid for that output:\n[[...], ...]\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "Looking at the examples, I need to find two rectangles, compare their **interior areas**, and output the **color of the larger interior** as a 2\u00d72 grid.\n\n**Example verification:**\n- Ex1: 7-interior=2\u00d72=4, 8-interior=2\u00d73=6 \u2192 output **8** (larger)\n- Ex2: 6-interior=2\u00d73=6, 7-interior=2\u00d74=8 \u2192 output **7** (larger)\n- Ex3: 4-interior=5\u00d74=20, 2-interior=1\u00d71=1 \u2192 output **4** (larger)\n\n**Test input:**\n- 3-box: rows 0\u20138, cols 0\u20134 \u2192 interior 7\u00d73 = **21**\n- 9-box: rows 0\u20139, cols 6\u20139 \u2192 interior 8\u00d72 = **16**\n\nColor **3** has the larger interior.\n\n[[3, 3], [3, 3]]",
+  "ground_truth": [
+    [
+      3,
+      3
+    ],
+    [
+      3,
+      3
+    ]
+  ],
+  "evaluation_ok": true,
+  "prediction": [
+    [
+      3,
+      3
+    ],
+    [
+      3,
+      3
+    ]
+  ],
+  "exact_match": true,
+  "metrics": {
+    "exact_match": 1.0
+  }
+}

@@ -1,15 +1,13 @@
 {
   "mode": "batch_pending",
   "created_at": "2026-05-01_09-49-44",
-  "task_count": 3,
+  "task_count": 4,
   "run_tag": "Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k",
   "seed_mode": "fixed",
   "base_seed": 77,
   "batch_size": 4,
   "completed_before_count": 395,
   "last_completed_task_id_before": "ff28f65a",
-  "interrupted": false,
-  "in_progress_task_id": null,
   "runs": [
     {
       "task_id": "ce602527",
@@ -266,6 +264,73 @@
         "inversion": {
           "ok": true,
           "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/f8a8fe49_inversion_eval_2026-05-01_03-32-09.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        }
+      }
+    },
+    {
+      "task_id": "f8c80d96",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 468,
+      "dimension_seeds": {
+        "classification_distribution": 880261983,
+        "editing": 1635318346,
+        "inversion": 250684330
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Anthropic SDK failed (Streaming is required for operations that may take longer than 10 minutes. See https://github.com/anthropics/anthropic-sdk-python#long-requests for more details); fallback HTTP failed: The read operation timed out",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 2
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/f8c80d96_distribution_classification_eval_2026-05-01_11-05-21.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/f8c80d96_constrained_generation_eval_2026-05-01_04-38-52.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/f8c80d96_editing_eval_2026-05-01_04-40-11.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run1/Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k/f8c80d96_inversion_eval_2026-05-01_04-42-46.json",
           "metrics": {
             "success_rate": 1.0
           },

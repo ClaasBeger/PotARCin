@@ -1,9 +1,12 @@
 """Build unified evaluation HTML pages for every task in a multi-dimension run summary.
 
 Reads ``task_id`` values from ``evaluation/multi_dimension_eval_runs/run_*.json`` and
-invokes ``build_unified_evaluation_visualization.py`` for each task so the latest
-per-task eval JSONs under ``evaluation/`` are shown (same logic as
+runs ``build_unified_evaluation_visualization`` for each task so the latest per-task
+eval JSONs under ``evaluation/`` are shown (same logic as
 ``Demonstrations/unified_evaluations``).
+
+By default the builder module is loaded **once** and ``main()`` is called in-process
+for each task (fast). Use ``--subprocess-per-task`` only when you need process isolation.
 
 Usage::
 
@@ -15,7 +18,9 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
+import os
 import subprocess
 import sys
 from html import escape
@@ -23,6 +28,27 @@ from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 BUILD_SCRIPT = ROOT_DIR / "scripts" / "build_unified_evaluation_visualization.py"
+
+
+def _ensure_matplotlib_config_dir() -> None:
+    """Avoid per-process Matplotlib font-cache rebuilds when ~/.matplotlib is not writable."""
+    d = ROOT_DIR / ".mplconfig"
+    d.mkdir(parents=True, exist_ok=True)
+    os.environ.setdefault("MPLCONFIGDIR", str(d))
+    os.environ.setdefault("MPLBACKEND", "Agg")
+
+
+def _load_builder_module():
+    _ensure_matplotlib_config_dir()
+    spec = importlib.util.spec_from_file_location(
+        "build_unified_evaluation_visualization",
+        BUILD_SCRIPT,
+    )
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Cannot load builder module from {BUILD_SCRIPT}")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
 
 
 def _run_entries(path: Path) -> list[dict]:
@@ -163,6 +189,14 @@ def main() -> None:
         action="store_true",
         help="Do not rebuild pages; only inject Prev/Next nav into existing HTML files in --out-dir.",
     )
+    p.add_argument(
+        "--subprocess-per-task",
+        action="store_true",
+        help=(
+            "Spawn a new Python interpreter for each task (slow; isolates failures). "
+            "Default is in-process: load the builder once and reuse imports (much faster)."
+        ),
+    )
     args = p.parse_args()
 
     run_path = args.run_json if args.run_json.is_absolute() else ROOT_DIR / args.run_json
@@ -190,6 +224,8 @@ def main() -> None:
 
     if not BUILD_SCRIPT.is_file():
         raise SystemExit(f"Missing builder script: {BUILD_SCRIPT}")
+
+    builder = None if args.subprocess_per_task else _load_builder_module()
 
     failed: list[str] = []
     for i, entry in enumerate(entries, 1):
@@ -228,10 +264,35 @@ def main() -> None:
             cmd += ["--editing-json", str(ed_path)]
         if inv_path:
             cmd += ["--inversion-json", str(inv_path)]
-        proc = subprocess.run(cmd, cwd=str(ROOT_DIR))
-        if proc.returncode != 0:
-            failed.append(tid)
-            print(f"  WARNING: builder failed for {tid} (exit {proc.returncode})")
+
+        if args.subprocess_per_task:
+            _ensure_matplotlib_config_dir()
+            proc = subprocess.run(cmd, cwd=str(ROOT_DIR))
+            if proc.returncode != 0:
+                failed.append(tid)
+                print(f"  WARNING: builder failed for {tid} (exit {proc.returncode})")
+        else:
+            assert builder is not None
+            argv_bak = sys.argv[:]
+            try:
+                sys.argv = cmd[1:]
+                builder.main()
+            except SystemExit as e:
+                c = e.code
+                if c is None or c is False:
+                    code = 0
+                elif isinstance(c, int):
+                    code = c
+                else:
+                    code = 1
+                if code != 0:
+                    failed.append(tid)
+                    print(f"  WARNING: builder failed for {tid} (exit {code})")
+            except Exception as e:
+                failed.append(tid)
+                print(f"  WARNING: builder failed for {tid}: {e}")
+            finally:
+                sys.argv = argv_bak
 
     if failed:
         print(f"Failed ({len(failed)}): {', '.join(failed)}")

@@ -1,0 +1,12 @@
+# Batch 5 Strict Full-Task Accuracy
+
+- Run tag: Evaluation_Run_2026-04-26_claude_opus46_low_thinking120k
+- Tasks: 50
+- Strict full-task pass: 21/50 (42.00%)
+
+## Dimension pass counts (strict)
+- definition: 32/50 (64.00%)
+- classification_distribution: 42/50 (84.00%)
+- constrained_generation: 38/50 (76.00%)
+- editing: 45/50 (90.00%)
+- inversion: 45/50 (90.00%)

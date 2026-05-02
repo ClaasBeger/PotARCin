@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Evaluations — bc1d5164</title>
+<style>
+:root {
+  --bg: #0f1115;
+  --surface: #171a21;
+  --border: #2a3140;
+  --text: #e8eaed;
+  --muted: #9aa0a6;
+  --accent: #5c9ded;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+h1 {
+  font-weight: 600;
+  font-size: 1.75rem;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+.sub {
+  color: var(--muted);
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 2rem;
+}
+section h2 {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+}
+.demo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  justify-content: center;
+}
+.pair-card {
+  border: 3px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  background: #12151c;
+}
+.pair-title {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+.pair-io {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.iolabel {
+  font-size: 0.7rem;
+  color: var(--muted);
+  width: 3.2rem;
+  flex-shrink: 0;
+  padding-top: 0.35rem;
+}
+.grid .row { display: flex; }
+.cell {
+  display: inline-block;
+  border: 1px solid rgba(255,255,255,0.12);
+  vertical-align: top;
+}
+.class-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+.class-item {
+  flex: 0 1 200px;
+}
+.badge {
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 0.35rem;
+}
+.class-answers {
+  font-size: 0.72rem;
+  text-align: center;
+  margin-bottom: 0.45rem;
+  color: #aeb4bf;
+}
+.class-answers.class-mismatch {
+  color: #f5b041;
+  font-weight: 500;
+}
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+.arrow {
+  font-size: 2rem;
+  color: var(--muted);
+  font-weight: 300;
+  user-select: none;
+}
+pre.code {
+  background: #0c0e12;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow: auto;
+  max-height: 420px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+.note {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.75rem;
+}
+.metrics {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+.section-summary {
+  margin: 0 0 1.25rem;
+  font-size: 0.95rem;
+  color: #c4c7ce;
+  line-height: 1.55;
+}
+.section-summary p {
+  margin: 0 0 0.65rem;
+}
+.section-summary p:last-child {
+  margin-bottom: 0;
+}
+.section-footer {
+  margin-top: 1.35rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.section-footer .note {
+  margin-top: 0;
+}
+.cg-center {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.cg-side-by-side {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1.75rem;
+  max-width: 100%;
+}
+.single-grid-card .pair-io.single-io {
+  margin-bottom: 0;
+}
+.single-grid-card {
+  min-width: min(100%, 280px);
+  padding: 1rem 1.25rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Unified evaluation overview</h1>
+<p class="sub">Task <code>bc1d5164</code> — all five dimensions at a glance.</p>
+<!-- task-nav-links -->
+<nav class="tasknav">
+<a class="tasknav-link" href="bbc9ae5d_unified_evaluation.html">← Prev</a>
+<a class="tasknav-link" href="index.html">Index</a>
+<a class="tasknav-link" href="bd4472b8_unified_evaluation.html">Next →</a>
+</nav>
+<style>
+.tasknav { display:flex; gap: 12px; align-items:center; margin: 0.75rem 0 1.5rem; }
+.tasknav-link, .tasknav-disabled {
+  display:inline-block;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid #2a3140;
+  background: #12151c;
+  color: #5c9ded;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.tasknav-link:hover { filter: brightness(1.15); }
+.tasknav-disabled { color: #9aa0a6; opacity: 0.65; cursor: not-allowed; }
+</style>
+
+
+<section>
+<h2>1. Training demonstrations</h2>
+<div class="demo-grid"><div class="pair-card" style="border-color:#2a3140;"><div class="pair-title">Training 1</div><div class="pair-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div></div></div><div class="pair-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div></div></div></div><div class="pair-card" style="border-color:#2a3140;"><div class="pair-title">Training 2</div><div class="pair-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span></div></div></div><div class="pair-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span></div></div></div></div><div class="pair-card" style="border-color:#2a3140;"><div class="pair-title">Training 3</div><div class="pair-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span></div></div></div><div class="pair-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span></div></div></div></div><div class="pair-card" style="border-color:#2a3140;"><div class="pair-title">Training 4</div><div class="pair-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span></div></div></div><div class="pair-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span><span class="cell" style="width:16px;height:16px;background:#FFDC00;"></span></div></div></div></div><div class="pair-card" style="border-color:#2a3140;"><div class="pair-title">Training 5</div><div class="pair-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span></div></div></div><div class="pair-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span></div></div></div></div></div>
+</section>
+
+<section>
+<h2>2. Definition</h2>
+<div class="section-summary"><p>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.</p><p>Your script must define exactly one callable entrypoint:
+def solve(grid):
+where `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.</p></div><pre class="code">def solve(grid):
+    rows = len(grid)
+    cols = len(grid[0])
+    left = [row[:2] for row in grid]
+    right = [row[5:] for row in grid]
+    out = [[0]*3 for _ in range(rows)]
+    for i in range(rows):
+        out[i][0] = left[i][0] or right[i][0]
+        out[i][1] = left[i][1] or right[i][1]
+        out[i][2] = right[i][1]
+    # Rethink: left is cols 0-1, right is cols 5-6, output is 3 wide
+    # Actually let me re-examine: 7 cols, 3 zero cols in middle (2,3,4), left=0,1 right=5,6
+    # Output 3 cols... OR with overlap? col0=left0|right0, col1=left1|right1, but right has 2 cols mapped to what?
+    
+    # Let me just check: right side cols 5,6 mapped to output cols 1,2? left cols 0,1 mapped to 0,1?
+    out2 = [[0]*3 for _ in range(rows)]
+    for i in range(rows):
+        out2[i][0] = left[i][0] or right[i][0]
+        out2[i][1] = left[i][1] or right[i][1]
+        out2[i][2] = right[i][1]
+    # Nope, let me recheck example 1
+    # Left: col0,1 = [0,8],[8,8],[0,0],[8,8],[0,8]
+    # Right: col5,6 = [8,0],[8,8],[0,0],[8,8],[8,0]
+    # Output: [0,8,0],[8,8,8],[0,8,0] — 3 rows not 5!
+    
+    # Rows also collapse: top 2 and bottom 2 with middle removed
+    # Top: rows 0,1; Bottom: rows 3,4; middle row 2 removed
+    # OR top and bottom, keep middle... wait output is 3 rows from 5
+    
+    # Rows 0+4, 1+3, row2 stays? Let me check ex1:
+    # Row0 OR Row4: [0|0,8|8,0|0,0|0,0|0,8|8,0|0] = [0,8,0,0,0,8,0] 
+    # Row1 OR Row3: [8|8,8|8,0|0,0|0,0|0,8|8,8|8] = [8,8,0,0,0,8,8]
+    # Row2: [0,0,0,0,0,0,0]
+    # Then cols: col0|col5, col1|col6... no wait output col mapping
+    # After row merge we have 3 rows of 7 cols, then col0 OR col5 -&gt; out0, col1 OR col6 -&gt; out1... but output is 3 cols
+    # Hmm: col0,col1 and col5,col6. That&#x27;s 4 cols -&gt; 3? Maybe col0, col1|col5, col6
+    
+    # Row0|4 = [0,8,0,0,0,8,0] -&gt; col0=0, col1|col5=8|8=8, col6=0 -&gt; [0,8,0] ✓
+    # Row1|3 = [8,8,0,0,0,8,8] -&gt; 8, 8|8=8, 8 -&gt; [8,8,8] ✓
+    # Row2 = [0,0,0,0,0,0,0] -&gt; 0,0|0,0 -&gt; [0,0,0]... but expected [0,8,0]
+    # Nope. Hmm wait output middle row is [0,8,0]. Let me reconsider: maybe no middle row collapse, just OR all overlapping.
+    
+    # Maybe: left block = rows0-4, cols0-1; right block = rows0-4, cols5-6. Overlay them as 5x2 each, OR, giving 5x2... but output is 3x3.
+    # 
+    # Actually maybe top-left(2x2), top-right(2x2), bottom-left(2x2), bottom-right(2x2) all OR into one 2x2, plus edges?
+    # This is getting complex. Let me look more carefully.
+    
+    # Output is always 3 rows from 5, 3 cols from 7. The zero region is 3x3 in the center (rows1-3 or row2, cols2-4).
+    
+    # Maybe fold: left onto right and top onto bottom
+    # 7 cols -&gt; fold around center col 3: col0&lt;-&gt;col6, col1&lt;-&gt;col5, col2&lt;-&gt;col4, col3 stays
+    # 5 rows -&gt; fold around center row 2: row0&lt;-&gt;row4, row1&lt;-&gt;row3, row2 stays
+    # Then OR all folded versions, take one quadrant
+    
+    # For ex1 after folding cols: OR col0|col6, col1|col5, col2|col4 -&gt; 4 cols (0-3)
+    # Then fold rows similarly -&gt; 3 rows
+    # Output should be 3x4? No, 3x3. Hmm col3 is always 0 (center), so maybe just cols 0,1,2 after fold = 3 cols.
+    
+    # Let me verify: fold cols: new_col0 = col0|col6, new_col1=col1|col5, new_col2=col2|col4, new_col3=col3
+    # fold rows: new_row0=row0|row4, new_row1=row1|row3, new_row2=row2
+    # Take 3x4 but col2 and col3 are always 0, so output is just new_col0,new_col1 ... wait that&#x27;s only 2.
+    
+    # Ex1 row0: [0,8,0,0,0,8,0]. col0|col6=0, col1|col5=8|8=8, col2|col4=0
+    # row4: [0,8,0,0,0,8,0]. Same.
+    # new_row0 = [0,8,0,0] taking cols0-3 after fold
+    # But output row0 is [0,8,0]. So it&#x27;s [0,8,0] = [new_col0, new_col1, new_col2] = [0,8,0]. ✓
+    
+    # Ex1 row1|row3 fold: both [8,8,0,0,0,8,8]. col0|6=8|8=8, col1|5=8|8=8, col2|4=0 -&gt; [8,8,0]. But expected [8,8,8]. ✗
+    
+    # Hmm. Let me re-examine. Output row1 is [8,8,8]. Where does the third 8 come from?
+    # 
+    # Maybe it&#x27;s not symmetric folding. Let me reconsider the structure.
+    # Left part: cols 0,1 (2 cols), Right part: cols 5,6 (2 cols). Output: 3 cols.
+    # Maybe output = [left_col0, left_col1 OR right_col0, right_col1]?
+    
+    # Ex1: left=[[0,8],[8,8],[0,0],[8,8],[0,8]], right=[[8,0],[8,8],[0,0],[8,8],[8,0]]
+    # merged cols: [0, 8|8, 0], [8, 8|8, 8], [0,0|0,0], [8,8|8,8], [0,8|8,0] = [0,8,0],[8,8,8],[0,0,0],[8,8,8],[0,8,0]
+    # Then fold rows 0|4, 1|3, 2: [0|0,8|8,0|0],[8|8,8|8,8|8],[0,0,0] = [0,8,0],[8,8,8],[0,0,0]
+    # But expected row2 = [0,8,0] not [0,0,0]. Hmm.
+    
+    # Let me check ex2 with this scheme:
+    # left=[[2,2],[0,0],[0,0],[0,2],[2,0]], right=[[2,2],[0,2],[0,0],[2,0],[0,2]]
+    # merged: [2,2|2,2],[0,0|0,2],[0,0|0,0],[0,2|2,0],[2,0|0,2] = [2,2,2],[0,0,2],[0,0,0],[0,2,0],[2,0,2]
+    # fold rows 0|4,1|3,2: [2|2,2|0,2|2],[0|0,0|2,2|0],[0,0,0] = [2,2,2],[0,2,2],[0,0,0]
+    # Expected: [2,2,2],[0,2,2],[2,0,2]. Row2 wrong again.
+    
+    # So middle row: expected [2,0,2] but I get [0,0,0]. The middle row (row2) is always all zeros. So something else contributes.
+    # 
+    # What if it&#x27;s not just left/right but also considers some other part? Or the fold is different?
+    # 
+    # Actually wait—maybe the grid has a different structure. Let me look at it as two 5x3 overlapping grids:
+    # Pattern A: cols 0-2, Pattern B: cols 4-6. They share/overlap at... no, cols 2-4 are always 0.
+    
+    # Cols 0,1,_,_,_,5,6 -&gt; what if output maps as: A=cols(0,1,2), B=cols(4,5,6), OR them?
+    # Ex1 A: [[0,8,0],[8,8,0],[0,0,0],[8,8,0],[0,8,0]], B: [[0,8,0],[0,8,8],[0,0,0],[0,8,8],[0,8,0]]
+    # A|B: [[0,8,0],[8,8,8],[0,0,0],[8,8,8],[0,8,0]]
+    # Then fold rows: [0|0,8|8,0|0],[8|8,8|8,8|8],[0,0,0] = same as before. Middle row still [0,0,0].
+    
+    # Hmm but expected middle row of ex1 is [0,8,0], ex2 is [2,0,2], ex5 is [0,0,3].
+    # For ex5: input row2 is all 0s. Output row2=[0,0,3].
+    
+    # What if there&#x27;s no row folding and it&#x27;s 5 rows -&gt; 5 rows but... output is only 3 rows.
+    # 
+    # Wait, I miscounted. Let me recount. Ex1 output is 3x3. Input is 5x7.
+    # 
+    # What if top 2 rows OR bottom 2 rows (reversed), and middle row stays?
+    # Top: rows 0,1. Bottom reversed: rows 4,3.
+    # OR: row0|row4, row1|row3. Plus row2. = 3 rows.
+    # 
+    # With the col merging (A|B where A=cols0-2, B=cols4-6):
+    # After A|B on all 5 rows, then rowmerge:
+    # Ex1: A|B rows = [[0,8,0],[8,8,8],[0,0,0],[8,8,8],[0,8,0]]
+    # row0|row4=[0,8,0], row1|row3=[8,8,8], row2=[0,0,0]
+    # Output expected: [0,8,0],[8,8,8],[0,8,0]. My row2 is [0,0,0] not [0,8,0].
+    
+    # Hmm. What if col3 also contributes? Col3 in ex1 is all 0 so doesn&#x27;t matter.
+    # 
+    # What if the rule is different: maybe it&#x27;s just OR of 4 corners, each being a partial grid?
+    # Top-left: rows0-1, cols0-2 (but cols often only have data in 0-1)
+    # Top-right: rows0-1, cols4-6
+    # Bottom-left: rows3-4, cols0-2
+    # Bottom-right: rows3-4, cols4-6
+    # Center: row2, cols... 
+    # 
+    # I need to think differently. Let me look at ex1 output [0,8,0] for row2 (middle).
+    # None of the input rows have nonzero in the middle cols. So where does the 8 come from?
+    # It must come from the arrangement of the non-zero values in the left/right blocks.
+    
+    # OH WAIT. Maybe it&#x27;s OR of left half and right half where left = cols 0-2 and right = cols 4-6:
+    # Ex1 col2 is always 0, col4 is always 0. So A and B have zeros in their inner columns.
+    # 
+    # What if it&#x27;s not OR but something else? Like... the output is a single pattern that, when placed at both left and right positions, would produce the input?
+    # 
+    # Actually, the pattern might be: the output P is placed at cols 0-2 AND at cols 4-6, and the input = P at left + P at right (OR). So we need to find P such that P = left OR right.
+    # 
+    # But that gives [0,0,0] for middle row in ex1, while expected is [0,8,0].
+    
+    # Let me recount ex1 input carefully:
+    # Row 0: 0 8 0 0 0 8 0
+    # Row 1: 8 8 0 0 0 8 8
+    # Row 2: 0 0 0 0 0 0 0
+    # Row 3: 8 8 0 0 0 8 8
+    # Row 4: 0 8 0 0 0 8 0
+    
+    # And output: [0,8,0],[8,8,8],[0,8,0] — wait that&#x27;s only 3 rows.
+    # The input has vertical symmetry (row0=row4, row1=row3) and the non-zero parts in left (cols0-1) mirror right (cols5-6).
+    # 
+    # Hmm, left cols0-1 of row0: [0,8]. Right cols5-6: [8,0]. These are reversed!
+    # So maybe: left_part cols 0,1 and right_part cols 6,5 (reversed), then OR?
+    # 
+    # Left: [0,8], [8,8], [0,0], [8,8], [0,8]
+    # Right reversed: [0,8], [8,8], [0,0], [8,8], [0,8]
+    # OR = same = [0,8], [8,8], [0,0], [8,8], [0,8]
+    # Still only 2 columns not 3.
+    
+    # I think the output might be: the unique non-zero pattern when considering the input as having a 3x3 tile placed at top-left corner AND bottom-right corner (or some other pair of positions).
+    
+    # Let me try: output is a 3x3 pattern P. It&#x27;s stamped at positions (0,0) and (2,4)? 
+    # Stamp at (0,0): rows0-2, cols0-2
+    # Stamp at (2,4): rows2-4, cols4-6
+    # Input = OR of both stamps.
+    
+    # Ex1: stamp1 at (0,0) with P=[0,8,0;8,8,8;0,8,0]:
+    # rows0-2, cols0-2 get P. stamp2 at (2,4): rows2-4, cols4-6 get P.
+    # Row0: [0,8,0,0,0,0,0]
+    # Row1: [8,8,8,0,0,0,0]  -- but input row1 has 0 at col2!
+    # Nope.
+    
+    # Stamp positions (0,0) and (0,4):
+    # stamp1: rows0-2,cols0-2; stamp2: rows0-2,cols4-6
+    # But then rows3-4 wouldn&#x27;t have any nonzero values, which contradicts input.
+    
+    # Let me try 4 stamps: (0,0),(0,4),(2,0),(2,4) — tiling a 5x7 with 3x3 overlapping?
+    # 5 rows: stamp at rows 0-2 and rows 2-4.
+    # 7 cols: stamp at cols 0-2 and cols 4-6.
+    # So 4 stamps: (0,0),(0,4),(2,0),(2,4).
+    # Input = OR of all 4 stamps of P.
+    
+    # P = [0,8,0;8,8,8;0,8,0]. Let&#x27;s verify:
+    # Stamp(0,0): rows0-2,cols0-2:
+    #   (0,0)=0,(0,1)=8,(0,2)=0
+    #   (1,0)=8,(1,1)=8,(1,2)=8
+    #   (2,0)=0,(2,1)=8,(2,2)=0
+    # Stamp(0,4): rows0-2,cols4-6:
+    #   (0,4)=0,(0,5)=8,(0,6)=0
+    #   (1,4)=8,(1,5)=8,(1,6)=8  -- but input (1,4)=0!
+    # Nope again.
+    
+    # OK, different approach. Let me look at the examples differently.
+    # 
+    # What if there are exactly two 5x3 halves: left (cols 0-2) and right (cols 4-6), and we OR them?
+    # Ex1 left (cols 0,1,2): [0,8,0],[8,8,0],[0,0,0],[8,8,0],[0,8,0]
+    # Ex1 right (cols 4,5,6): [0,8,0],[0,8,8],[0,0,0],[0,8,8],[0,8,0]
+    # OR: [0,8,0],[8,8,8],[0,0,0],[8,8,8],[0,8,0]
+    # This is a 5x3 grid. Then we also fold rows: rows0|4, rows1|3, row2:
+    # [0|0,8|8,0|0] = [0,8,0]
+    # [8|8,8|8,8|8] = [8,8,8]  
+    # [0,0,0]
+    # Result: [0,8,0],[8,8,8],[0,0,0] but expected [0,8,0],[8,8,8],[0,8,0].
+    # Middle row is wrong!
+    
+    # Unless... we also OR row2 with something. What if we OR all: left|right gives 5x3, then top|bottom where top=rows0-2, bottom=rows2-4 (overlapping at row2)?
+    # top: [0,8,0],[8,8,8],[0,0,0]
+    # bottom: [0,0,0],[8,8,8],[0,8,0]
+    # OR: [0,8,0],[8,8,8],[0,8,0] ✓!
+    
+    # Let me verify with ex2:
+    # Left (cols0-2): [2,2,0],[0,0,0],[0,0,0],[0,2,0],[2,0,0]
+    # Right (cols4-6): [0,2,2],[0,0,2],[0,0,0],[0,2,0],[0,0,2]
+    # OR: [2,2,2],[0,0,2],[0,0,0],[0,2,0],[2,0,2]
+    # Top (rows0-2): [2,2,2],[0,0,2],[0,0,0]
+    # Bottom (rows2-4): [0,0,0],[0,2,0],[2,0,2]
+    # OR: [2,2,2],[0,2,2],[2,0,2] ✓!
+    
+    # Let me verify ex4:
+    # Left: [4,0,0],[0,0,0],[0,0,0],[0,0,0],[4,0,0]
+    # Right: [0,0,4],[0,0,0],[0,0,0],[0,0,0],[0,4,4]  -- wait col4 of row4: input is [4,0,0,0,0,4,4], cols4,5,6 = [0,4,4]
+    # OR: [4,0,4],[0,0,0],[0,0,0],[0,0,0],[4,4,4]
+    # Top(0-2): [4,0,4],[0,0,0],[0,0,0]
+    # Bottom(2-4): [0,0,0],[0,0,0],[4,4,4]
+    # OR: [4,0,4],[0,0,0],[4,4,4] ✓!
+
+    # Great! The rule is:
+    # 1. Split into left (cols 0-2) and right (cols 4-6), OR them -&gt; 5x3
+    # 2. Split into top (rows 0-2) and bottom (rows 2-4), OR them -&gt; 3x3
+    
+    rows = len(grid)
+    cols = len(grid[0])
+    
+    mid_col = cols // 2  # 3 for 7-wide
+    mid_row = rows // 2  # 2 for 5-tall
+    
+    # Step 1: OR left and right halves
+    merged = []
+    for r in range(rows):
+        row = []
+        for c in range(mid_col):
+            row.append(grid[r][c] | grid[r][c + mid_col + 1])
+        merged.append(row)
+    
+    # Step 2: OR top and bottom halves (overlapping at middle row)
+    result = []
+    for r in range(mid_row + 1):
+        row = []
+        for c in range(mid_col):
+            row.append(merged[r][c] | merged[r + mid_row][c])
+        result.append(row)
+    
+    return result</pre><div class="section-footer"><p class="note">Source: latest definition eval — <code>bc1d5164_definition_eval_2026-04-30_07-10-36.json</code>. Model: claude-opus-4-6.</p><div class="metrics">Metrics snapshot: train 1.0, test 1.0, ARC-GEN stable 1.0, dynamic50 1.0, Re-ARC stable 0.259, re_arc_dynamic50 0.0</div></div>
+</section>
+
+<section>
+<h2>3. Classification (distribution)</h2>
+<div class="section-summary"><p>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as the training examples (1 = same distribution / consistent, 0 = not).</p></div><div class="class-row"><div class="class-item"><div class="badge">Test 0 (instance_mismatch)</div><div class="class-answers">Gold: <b>0</b> · Model: <b>0</b> · ✓ match</div><div class="pair-card" style="border-color:#e74c3c;"><div class="pair-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#870C25;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#870C25;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#870C25;"></span><span class="cell" style="width:16px;height:16px;background:#870C25;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#870C25;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#870C25;"></span><span class="cell" style="width:16px;height:16px;background:#870C25;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#870C25;"></span></div></div></div><div class="pair-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#870C25;"></span><span class="cell" style="width:16px;height:16px;background:#870C25;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#870C25;"></span><span class="cell" style="width:16px;height:16px;background:#870C25;"></span><span class="cell" style="width:16px;height:16px;background:#870C25;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#870C25;"></span><span class="cell" style="width:16px;height:16px;background:#870C25;"></span></div></div></div></div></div><div class="class-item"><div class="badge">Test 1 (h_arc_incorrect)</div><div class="class-answers">Gold: <b>0</b> · Model: <b>0</b> · ✓ match</div><div class="pair-card" style="border-color:#e74c3c;"><div class="pair-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span></div></div></div><div class="pair-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div></div></div></div></div><div class="class-item"><div class="badge">Test 2 (dynamic_correct)</div><div class="class-answers">Gold: <b>1</b> · Model: <b>1</b> · ✓ match</div><div class="pair-card" style="border-color:#2ecc71;"><div class="pair-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span></div></div></div><div class="pair-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#2ECC40;"></span></div></div></div></div></div><div class="class-item"><div class="badge">Test 3 (corrupted_verifier)</div><div class="class-answers">Gold: <b>0</b> · Model: <b>0</b> · ✓ match</div><div class="pair-card" style="border-color:#e74c3c;"><div class="pair-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span></div></div></div><div class="pair-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span><span class="cell" style="width:16px;height:16px;background:#FF4136;"></span></div></div></div></div></div><div class="class-item"><div class="badge">Test 4 (corrupted_verifier)</div><div class="class-answers">Gold: <b>0</b> · Model: <b>0</b> · ✓ match</div><div class="pair-card" style="border-color:#e74c3c;"><div class="pair-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span></div></div></div><div class="pair-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#7FDBFF;"></span></div></div></div></div></div></div><div class="section-footer"><p class="note">Source: <code>bc1d5164_distribution_classification_eval_2026-04-30_07-12-36.json</code>. Pairs come from the saved eval (<code>test_pairs</code> if present, otherwise parsed from the logged <code>prompt</code>) — not re-sampled. Eval seed: <b>503430779</b>. Card border: ground truth same-distribution (green = 1, red = 0).</p><p class="note" style="margin-top:0.85rem">Raw model response:</p><pre class="code">Looking at the training examples, I identify the rule:
+
+- The 5×7 input has four 2×2 blocks in corners (rows 0-1/cols 0-1, rows 0-1/cols 5-6, rows 3-4/cols 0-1, rows 3-4/cols 5-6).
+- These overlap into a 3×3 grid (top-left→[0:2,0:2], top-right→[0:2,1:3], bottom-left→[1:3,0:2], bottom-right→[1:3,1:3]) using OR.
+
+Verifying each test:
+
+- **Test 0**: Center cell should be 0 (from OR), but output shows 9. ✗  
+- **Test 1**: Center cell should be 0, but output shows 1. ✗  
+- **Test 2**: All cells match the OR rule. ✓  
+- **Test 3**: Bottom-left should be 0, but output shows 2. ✗  
+- **Test 4**: Output is 3×1 instead of 3×3. ✗  
+
+[0, 0, 1, 0, 0]</pre></div>
+</section>
+
+<section>
+<h2>4. Constrained generation</h2>
+<div class="section-summary"><p>Find the common rule that maps an input grid to an output grid given the examples below.</p><p>Generate one NEW input/output pair that follows the same transformation rule.
+- Do NOT copy any demonstration pair exactly.
+- The generated input and output must be different (non-trivial transformation).
+- Your pair must be consistent with the same underlying rule.</p></div><p class="note" style="text-align:center;margin:0 0 0.75rem">Model pair status: <b>valid under rule</b></p><div class="cg-center"><div class="cg-side-by-side"><div class="pair-card single-grid-card" style="border-color:#2ecc71;"><div class="pair-title">Generated input</div><div class="pair-io single-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span></div><div class="row"><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span></div><div class="row"><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span></div></div></div></div><div class="pair-card single-grid-card" style="border-color:#2ecc71;"><div class="pair-title">Generated output</div><div class="pair-io single-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span></div><div class="row"><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span></div><div class="row"><span class="cell" style="width:28px;height:28px;background:#000000;"></span><span class="cell" style="width:28px;height:28px;background:#0074D9;"></span><span class="cell" style="width:28px;height:28px;background:#000000;"></span></div></div></div></div></div></div><div class="section-footer"><p class="note">Source: constrained-generation eval — <code>bc1d5164_constrained_generation_eval_2026-04-30_07-13-52.json</code>.</p><div class="metrics">Metrics snapshot: success_rate=1.0, demo_copy=0, no_change=0, verifier_missing=0, verifier_mismatch=0</div></div>
+</section>
+
+<section>
+<h2>5. Editing</h2>
+<div class="section-summary"><p>Find the common rule that maps an input grid to an output grid given the examples below.</p><p>The following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.</p><p>Candidate pair:
+Input:
+0 0 0 0 0 1 1
+1 0 0 0 0 0 0
+0 0 0 0 0 0 0
+0 0 0 0 0 0 0
+0 1 0 0 0 0 1
+Output:
+0 1 1
+1 0 0
+0 1 0</p></div><div class="flow"><div class="pair-card" style="border-color:#e74c3c;"><div class="pair-title">Corrupted (candidate)</div><div class="pair-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span></div></div></div><div class="pair-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div></div></div></div><div class="arrow" aria-hidden="true">→</div><div class="pair-card" style="border-color:#2ecc71;"><div class="pair-title">Model-corrected pair (success)</div><div class="pair-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span></div></div></div><div class="pair-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:16px;height:16px;background:#000000;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span><span class="cell" style="width:16px;height:16px;background:#0074D9;"></span></div></div></div></div></div><div class="section-footer"><p class="note">Source: editing eval — <code>bc1d5164_editing_eval_2026-04-30_07-14-48.json</code>.</p></div>
+</section>
+
+<section>
+<h2>6. Inversion</h2>
+<div class="section-summary"><p>Find the common rule that maps an input grid to an output grid given the examples below.</p><p>Now infer an input grid that would produce the following output by applying the same rule.</p></div><div class="flow"><div class="pair-card single-grid-card" style="border-color:#2ecc71;"><div class="pair-title">Model-generated input (valid under rule)</div><div class="pair-io single-io"><span class="iolabel">Input</span><div class="grid"><div class="row"><span class="cell" style="width:20px;height:20px;background:#FF4136;"></span><span class="cell" style="width:20px;height:20px;background:#FF4136;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:20px;height:20px;background:#FF4136;"></span><span class="cell" style="width:20px;height:20px;background:#FF4136;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#FF4136;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span></div></div></div></div><div class="arrow" aria-hidden="true">←</div><div class="pair-card single-grid-card" style="border-color:#5c9ded;"><div class="pair-title">Given output (target)</div><div class="pair-io single-io"><span class="iolabel">Output</span><div class="grid"><div class="row"><span class="cell" style="width:20px;height:20px;background:#FF4136;"></span><span class="cell" style="width:20px;height:20px;background:#FF4136;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:20px;height:20px;background:#FF4136;"></span><span class="cell" style="width:20px;height:20px;background:#FF4136;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span></div><div class="row"><span class="cell" style="width:20px;height:20px;background:#000000;"></span><span class="cell" style="width:20px;height:20px;background:#FF4136;"></span><span class="cell" style="width:20px;height:20px;background:#000000;"></span></div></div></div></div></div><div class="section-footer"><p class="note">Source: inversion eval — <code>bc1d5164_inversion_eval_2026-04-30_07-15-19.json</code>. Exact reference-input match: <b>no</b>.</p></div>
+</section>
+
+</div>
+</body>
+</html>
