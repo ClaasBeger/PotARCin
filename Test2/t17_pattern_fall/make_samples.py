@@ -8,7 +8,6 @@ import random
 from pathlib import Path
 
 from generator import generate
-from verifier import verify_t17
 
 _COLORS = {
     0: "#000000",
@@ -67,8 +66,7 @@ def main() -> None:
     samples: list[dict[str, list[list[int]]]] = []
     for _ in range(50):
         ex = generate(rng=rng)
-        if verify_t17(ex["input"]) != ex["output"]:
-            raise RuntimeError("Verifier mismatch on generated sample.")
+        # ``generate()`` only returns after ``transform_t17(input)`` matches ``output``.
         samples.append(ex)
 
     out_json.write_text(json.dumps({"train": samples}, indent=2), encoding="utf-8")

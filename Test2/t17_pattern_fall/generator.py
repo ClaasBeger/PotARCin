@@ -1,23 +1,26 @@
 """Generator for Test2/t17 (pattern fall).
 
-There is exactly **one** prototype (no rotations): a fixed set of foreground cells in
-the plane, **king-connected** (edge or diagonal adjacency counts *within* that stencil).
-The prototype is never a single cell.
+The prototype is always **fully visible** somewhere on the grid (an unclipped copy),
+with at least one placement **strictly inside** the outer border (not on row/column 0
+or the last row/column).
 
-Each *placement* is a translation of that stencil. Viewport clipping can hide parts above,
-below, or beside the grid; shifting is by **one prototype height** (vertical span).
+**Inference.** Prefer strictly interior 4‑connected foreground blobs of size 2–10
+(unique normalised shape, or most frequent among ties). If that does not determine the
+prototype (merged blobs, ambiguous fragments), fall back to the **largest** ``n``≤10
+connected shape that **occurs as an induced subgraph of the foreground** (orthogonal
+connectivity first, then king) and admits an exact disjoint cover of the foreground.
 
-**Between** different placements of the same prototype, diagonal touching must **not**
-merge them into one instance (only orthogonal edge contact merges on the visible grid).
+The fallback never scans the full catalogue of fixed ``n``‑ominoes (that was
+prohibitively slow); it only considers shapes that literally appear on the grid.
 
-``generate()`` only samples common cases; authored puzzles may use rarer geometry.
+``generate()`` samples orth‑connected prototypes with two fully interior placements.
 """
 
 from __future__ import annotations
 
 import random
 from collections import Counter, deque
-from typing import Iterable, List, Tuple
+from typing import Callable, Iterable, List, Tuple
 
 Grid = List[List[int]]
 Pos = Tuple[int, int]
@@ -34,45 +37,64 @@ def _in_bounds(h: int, w: int, r: int, c: int) -> bool:
     return 0 <= r < h and 0 <= c < w
 
 
-def _neighbors4(r: int, c: int) -> Iterable[Pos]:
-    yield (r + 1, c)
-    yield (r - 1, c)
-    yield (r, c + 1)
-    yield (r, c - 1)
+def _max_orth_component_size(fg: set[Pos]) -> int:
+    """Largest 4‑connected size among cells in ``fg`` (induced on the grid)."""
+    if not fg:
+        return 0
+    seen: set[Pos] = set()
+    best = 0
+    for start in sorted(fg):
+        if start in seen:
+            continue
+        q = deque([start])
+        seen.add(start)
+        comp: set[Pos] = {start}
+        while q:
+            r, c = q.popleft()
+            for nr, nc in _neighbors4(r, c):
+                p = (nr, nc)
+                if p in fg and p not in seen:
+                    seen.add(p)
+                    comp.add(p)
+                    q.append(p)
+        if len(comp) > best:
+            best = len(comp)
+    return best
 
 
-def _neighbors8(r: int, c: int) -> Iterable[Pos]:
-    for dr in (-1, 0, 1):
-        for dc in (-1, 0, 1):
-            if dr or dc:
-                yield (r + dr, c + dc)
+def _max_king_component_size(fg: set[Pos]) -> int:
+    """Largest 8‑connected size among ``fg``."""
+    if not fg:
+        return 0
+    seen: set[Pos] = set()
+    best = 0
+    for start in sorted(fg):
+        if start in seen:
+            continue
+        q = deque([start])
+        seen.add(start)
+        comp: set[Pos] = {start}
+        while q:
+            r, c = q.popleft()
+            for nr, nc in _neighbors8(r, c):
+                p = (nr, nc)
+                if p in fg and p not in seen:
+                    seen.add(p)
+                    comp.add(p)
+                    q.append(p)
+        if len(comp) > best:
+            best = len(comp)
+    return best
 
 
-def _king_connected(sig: ShapeSig) -> bool:
-    """True iff cells of ``sig`` are connected under king (8-neighbor) moves."""
-    cells = set(sig)
-    if not cells:
-        return False
-    start = next(iter(cells))
-    seen = {start}
-    stack = [start]
-    while stack:
-        r, c = stack.pop()
-        for nr, nc in _neighbors8(r, c):
-            if (nr, nc) in cells and (nr, nc) not in seen:
-                seen.add((nr, nc))
-                stack.append((nr, nc))
-    return len(seen) == len(cells)
-
-
-def _extract_components(grid: Grid, color: int) -> list[set[Pos]]:
-    h = len(grid)
-    w = len(grid[0]) if h else 0
+def _orth_connected_components(inp: Grid, color: int) -> list[set[Pos]]:
+    h = len(inp)
+    w = len(inp[0]) if h else 0
     seen: set[Pos] = set()
     comps: list[set[Pos]] = []
     for r in range(h):
         for c in range(w):
-            if grid[r][c] != color or (r, c) in seen:
+            if inp[r][c] != color or (r, c) in seen:
                 continue
             q = deque([(r, c)])
             seen.add((r, c))
@@ -81,17 +103,57 @@ def _extract_components(grid: Grid, color: int) -> list[set[Pos]]:
                 rr, cc = q.popleft()
                 comp.add((rr, cc))
                 for nr, nc in _neighbors4(rr, cc):
-                    if _in_bounds(h, w, nr, nc) and grid[nr][nc] == color and (nr, nc) not in seen:
+                    if _in_bounds(h, w, nr, nc) and inp[nr][nc] == color and (nr, nc) not in seen:
                         seen.add((nr, nc))
                         q.append((nr, nc))
             comps.append(comp)
     return comps
 
 
-def _bbox(cells: set[Pos]) -> tuple[int, int, int, int]:
-    rs = [r for r, _ in cells]
-    cs = [c for _, c in cells]
-    return min(rs), min(cs), max(rs), max(cs)
+def _is_strictly_interior(comp: set[Pos], h: int, w: int) -> bool:
+    if not comp:
+        return False
+    return (
+        min(r for r, _ in comp) > 0
+        and max(r for r, _ in comp) < h - 1
+        and min(c for _, c in comp) > 0
+        and max(c for _, c in comp) < w - 1
+    )
+
+
+def _try_infer_proto_from_interior_blobs(
+    inp: Grid, color: int
+) -> tuple[ShapeSig, list[tuple[int, int]]] | None:
+    """Use strictly interior 4‑connected blobs of size 2–10 (unique or most frequent)."""
+    h = len(inp)
+    w = len(inp[0]) if h else 0
+    fg0 = {(r, c) for r in range(h) for c in range(w) if inp[r][c] == color}
+    sigs: list[ShapeSig] = []
+    for comp in _orth_connected_components(inp, color):
+        if not _is_strictly_interior(comp, h, w):
+            continue
+        if 2 <= len(comp) <= 10:
+            sigs.append(_normalize(comp))
+    if not sigs:
+        return None
+    if len(sigs) == 1:
+        sig = sigs[0]
+        anchors = _try_infer_anchors_for_proto(inp, color, sig, fg0)
+        return (sig, anchors) if anchors is not None else None
+    cnt = Counter(sigs)
+    max_c = max(cnt.values())
+    for sig in sorted(s for s, c in cnt.items() if c == max_c):
+        anchors = _try_infer_anchors_for_proto(inp, color, sig, fg0)
+        if anchors is not None:
+            return sig, anchors
+    return None
+
+
+def _neighbors4(r: int, c: int) -> Iterable[Pos]:
+    yield (r + 1, c)
+    yield (r - 1, c)
+    yield (r, c + 1)
+    yield (r, c - 1)
 
 
 def _normalize(cells: Iterable[Pos]) -> ShapeSig:
@@ -101,6 +163,47 @@ def _normalize(cells: Iterable[Pos]) -> ShapeSig:
     min_r = min(r for r, _ in cells_t)
     min_c = min(c for _, c in cells_t)
     return tuple(sorted((r - min_r, c - min_c) for r, c in cells_t))
+
+
+def _neighbors8(r: int, c: int) -> Iterable[Pos]:
+    for dr in (-1, 0, 1):
+        for dc in (-1, 0, 1):
+            if dr or dc:
+                yield (r + dr, c + dc)
+
+
+def _induced_connected_exact_size(
+    fg: set[Pos],
+    neighbor_iter: Callable[[int, int], Iterable[Pos]],
+    n: int,
+    max_calls: int,
+) -> set[ShapeSig]:
+    """Connected ``n``‑subsets of ``fg`` (``neighbor_iter``), translation‑normalised. Pruned to exact size only."""
+    uniq: set[ShapeSig] = set()
+    calls = 0
+
+    def rec(active: frozenset[Pos]) -> None:
+        nonlocal calls
+        calls += 1
+        if calls > max_calls:
+            return
+        na = len(active)
+        if na == n:
+            uniq.add(_normalize(active))
+            return
+        if na > n:
+            return
+        cand: set[Pos] = set()
+        for r, c in active:
+            for nr, nc in neighbor_iter(r, c):
+                if (nr, nc) in fg and (nr, nc) not in active:
+                    cand.add((nr, nc))
+        for nb in sorted(cand):
+            rec(active | {nb})
+
+    for start in sorted(fg):
+        rec(frozenset({start}))
+    return uniq
 
 
 def _draw_shape(grid: Grid, color: int, sig: ShapeSig, top: int, left: int) -> None:
@@ -121,50 +224,47 @@ def _visible_from_anchor(sig: ShapeSig, top: int, left: int, h: int, w: int) -> 
     return out
 
 
-def _touches_boundary(comp: set[Pos], h: int, w: int) -> bool:
-    return any(r == 0 or c == 0 or r == h - 1 or c == w - 1 for r, c in comp)
-
-
-def _infer_anchor_for_component(
-    comp: set[Pos],
-    sig: ShapeSig,
-    h: int,
-    w: int,
-) -> tuple[int, int]:
-    if not comp:
-        raise ValueError("empty component is not allowed")
+def _strict_interior_full_placement_count(sig: ShapeSig, fg: set[Pos], h: int, w: int) -> int:
+    """How many anchors place a full unclipped copy strictly inside the outer border and inside ``fg``."""
     max_r = max(r for r, _ in sig)
     max_c = max(c for _, c in sig)
-    candidates: list[tuple[int, int]] = []
-    # Allow clipping by any border; this supports top-completion and bottom cut-offs.
+    n = 0
     for top in range(-max_r, h):
         for left in range(-max_c, w):
-            if _visible_from_anchor(sig, top, left, h, w) == comp:
-                candidates.append((top, left))
-    if not candidates:
-        raise ValueError("could not infer anchor for component")
-    # Deterministic tie-break for ambiguous clipped fragments.
-    candidates.sort(key=lambda p: (p[0], p[1]))
-    return candidates[0]
+            vis = _visible_from_anchor(sig, top, left, h, w)
+            if len(vis) != len(sig) or not vis.issubset(fg):
+                continue
+            if min(r for r, _ in vis) <= 0:
+                continue
+            if max(r for r, _ in vis) >= h - 1:
+                continue
+            if min(c for _, c in vis) <= 0:
+                continue
+            if max(c for _, c in vis) >= w - 1:
+                continue
+            n += 1
+    return n
 
 
-def _infer_anchors_for_proto(inp: Grid, color: int, sig: ShapeSig) -> list[tuple[int, int]]:
-    """Infer placement anchors for a single prototype across the whole grid.
+def _strict_interior_full_placement_exists(sig: ShapeSig, fg: set[Pos], h: int, w: int) -> bool:
+    """True iff some anchor places the entire prototype on-grid, strictly inside the border (unclipped copy)."""
+    return _strict_interior_full_placement_count(sig, fg, h, w) > 0
 
-    Placements can touch and merge in the visible grid, so we cannot assume one
-    connected component corresponds to one placement. Instead, solve an exact
-    cover over all viewport-clipped prototype placements.
-    """
+
+def _try_infer_anchors_for_proto(
+    inp: Grid, color: int, sig: ShapeSig, fg: set[Pos] | None = None
+) -> list[tuple[int, int]] | None:
+    """Return anchors whose disjoint clipped placements cover all ``color`` cells, or ``None``."""
     h = len(inp)
     w = len(inp[0]) if h else 0
-    fg = {(r, c) for r in range(h) for c in range(w) if inp[r][c] == color}
+    if fg is None:
+        fg = {(r, c) for r in range(h) for c in range(w) if inp[r][c] == color}
     if not fg:
         return []
 
     max_r = max(r for r, _ in sig)
     max_c = max(c for _, c in sig)
 
-    # Deduplicate by visible cell-set; keep deterministic representative anchor.
     vis_to_anchor: dict[frozenset[Pos], tuple[int, int]] = {}
     for top in range(-max_r, h):
         for left in range(-max_c, w):
@@ -176,7 +276,7 @@ def _infer_anchors_for_proto(inp: Grid, color: int, sig: ShapeSig) -> list[tuple
                 vis_to_anchor[vis] = (top, left)
 
     if not vis_to_anchor:
-        raise ValueError("no feasible clipped placements for inferred prototype")
+        return None
 
     sets = sorted(vis_to_anchor.items(), key=lambda kv: (-len(kv[0]), kv[1]))
     cell_to_set_ids: dict[Pos, list[int]] = {p: [] for p in fg}
@@ -185,7 +285,7 @@ def _infer_anchors_for_proto(inp: Grid, color: int, sig: ShapeSig) -> list[tuple
             cell_to_set_ids[p].append(idx)
 
     if any(len(cell_to_set_ids[p]) == 0 for p in fg):
-        raise ValueError("prototype cannot explain all foreground cells")
+        return None
 
     covered: set[Pos] = set()
     chosen_ids: list[int] = []
@@ -193,15 +293,13 @@ def _infer_anchors_for_proto(inp: Grid, color: int, sig: ShapeSig) -> list[tuple
     def _dfs_cover() -> bool:
         if len(covered) == len(fg):
             return True
-        # Branch on the tightest uncovered cell first.
         uncovered = [p for p in fg if p not in covered]
         pivot = min(
             uncovered,
             key=lambda p: sum(1 for sid in cell_to_set_ids[p] if not (sets[sid][0] & covered)),
         )
         cands = [sid for sid in cell_to_set_ids[pivot] if not (sets[sid][0] & covered)]
-        # Deterministic: larger placement first, then anchor order from `sets`.
-        cands.sort(key=lambda sid: -len(sets[sid][0]))
+        cands.sort(key=lambda sid: (-len(sets[sid][0]), sets[sid][1]))
         for sid in cands:
             vis, _anchor = sets[sid]
             if vis & covered:
@@ -215,9 +313,70 @@ def _infer_anchors_for_proto(inp: Grid, color: int, sig: ShapeSig) -> list[tuple
         return False
 
     if not _dfs_cover():
-        raise ValueError("could not decompose foreground into clipped prototype placements")
+        return None
 
     return [sets[sid][1] for sid in chosen_ids]
+
+
+def _infer_anchors_for_proto(inp: Grid, color: int, sig: ShapeSig) -> list[tuple[int, int]]:
+    out = _try_infer_anchors_for_proto(inp, color, sig)
+    if out is None:
+        raise ValueError("could not decompose foreground into clipped prototype placements")
+    return out
+
+
+def _resolve_proto_signature(inp: Grid, color: int) -> tuple[ShapeSig, list[tuple[int, int]]]:
+    """Interior blobs first; else largest induced foreground shape (orth, then king) with exact cover."""
+    hinted = _try_infer_proto_from_interior_blobs(inp, color)
+    if hinted is not None:
+        return hinted
+
+    h = len(inp)
+    w = len(inp[0]) if h else 0
+    fg = {(r, c) for r in range(h) for c in range(w) if inp[r][c] == color}
+
+    nf = len(fg)
+    max_orth = _max_orth_component_size(fg)
+    max_king = _max_king_component_size(fg)
+    for neighbors, budget, n_hi in (
+        (_neighbors4, 200_000, min(10, nf, max_orth)),
+        (_neighbors8, 400_000, min(10, nf, max_king)),
+    ):
+        if n_hi < 2:
+            continue
+        for n in range(n_hi, 1, -1):
+            raw = _induced_connected_exact_size(fg, neighbors, n, max_calls=budget)
+            scored: list[tuple[int, ShapeSig]] = []
+            for s in raw:
+                pc = _strict_interior_full_placement_count(s, fg, h, w)
+                if pc > 0:
+                    scored.append((-pc, s))
+            scored.sort(key=lambda t: (t[0], t[1]))
+            for _neg_pc, sig in scored:
+                anchors = _try_infer_anchors_for_proto(inp, color, sig, fg)
+                if anchors is not None:
+                    return sig, anchors
+
+    raise ValueError("no prototype (2–10 cells, orth or king) tiles the foreground")
+
+
+def _pattern_fall_output(
+    inp: Grid,
+    color: int,
+    proto_sig: ShapeSig,
+    anchors: list[tuple[int, int]] | None = None,
+) -> Grid:
+    """Stamp each inferred anchor placement downward by the prototype height (authoritative rule)."""
+    h = len(inp)
+    w = len(inp[0]) if h else 0
+    if anchors is None:
+        anchors = _infer_anchors_for_proto(inp, color, proto_sig)
+    shape_h = max(r for r, _ in proto_sig) + 1
+    anchors = sorted(set(anchors))
+    out = _empty(h, w)
+    for top, left in anchors:
+        _draw_shape(out, color, proto_sig, top + shape_h, left)
+    return out
 
 
 def transform_t17(inp: Grid) -> Grid:
@@ -233,40 +392,15 @@ def transform_t17(inp: Grid) -> Grid:
         raise ValueError("expected exactly one foreground color")
     color = colors[0]
 
-    comps = _extract_components(inp, color)
-    if not comps:
+    fg = {(r, c) for r in range(h) for c in range(w) if inp[r][c] == color}
+    if not fg:
         raise ValueError("no foreground components found")
 
-    interior: list[set[Pos]] = []
-    for comp in comps:
-        r0, c0, r1, c1 = _bbox(comp)
-        if r0 > 0 and r1 < h - 1 and c0 > 0 and c1 < w - 1:
-            interior.append(comp)
-    if not interior:
-        raise ValueError("need at least one full interior instance to infer shape")
-
-    # Prefer larger interior clips so tiny dots do not dominate prototype choice.
-    sig_counter = Counter(_normalize(c) for c in interior)
-    proto_sig = max(sig_counter.items(), key=lambda kv: (len(kv[0]), kv[1]))[0]
-    if not proto_sig:
-        raise ValueError("invalid empty prototype")
-    if len(proto_sig) < 2:
-        raise ValueError("prototype is too small")
-    if not _king_connected(proto_sig):
-        raise ValueError("prototype must be king-connected")
-    shape_h = max(r for r, _ in proto_sig) + 1
-
-    anchors = _infer_anchors_for_proto(inp, color, proto_sig)
-
-    anchors = sorted(set(anchors))
-    out = _empty(h, w)
-    for top, left in anchors:
-        _draw_shape(out, color, proto_sig, top + shape_h, left)
-    return out
+    proto_sig, anchors = _resolve_proto_signature(inp, color)
+    return _pattern_fall_output(inp, color, proto_sig, anchors)
 
 
 def _random_connected_shape(rr: random.Random, height: int, width: int) -> ShapeSig:
-    # Start with one cell per row, connected row-to-row.
     cols: list[int] = [rr.randint(0, width - 1)]
     for _r in range(1, height):
         prev = cols[-1]
@@ -274,11 +408,14 @@ def _random_connected_shape(rr: random.Random, height: int, width: int) -> Shape
         cols.append(rr.choice(cands))
 
     cells: set[Pos] = {(r, c) for r, c in enumerate(cols)}
-    extra = rr.randint(1, max(2, height + width))
-    for _ in range(extra):
+    max_cells = 10
+    max_extra = max(0, max_cells - len(cells))
+    extra_n = rr.randint(0, min(max(2, height + width), max_extra))
+    for _ in range(extra_n):
         r = rr.randint(0, height - 1)
         c = rr.randint(0, width - 1)
-        # Keep additions adjacent to existing cells to preserve connectivity.
+        if len(cells) >= max_cells:
+            break
         if any((nr, nc) in cells for nr, nc in _neighbors4(r, c)):
             cells.add((r, c))
     return _normalize(cells)
@@ -294,7 +431,8 @@ def generate(
 ) -> dict[str, Grid]:
     rr = rng or random.Random()
 
-    for _ in range(1400):
+    # Enough placement draws per candidate grid; low values waste outer iterations.
+    for _ in range(1000):
         h = rr.randint(min_h, max_h)
         w = rr.randint(min_w, max_w)
         color = rr.choice([1, 2, 3, 4, 6, 7, 8, 9])
@@ -302,20 +440,19 @@ def generate(
         shape_h = rr.randint(2, min(6, h - 4))
         shape_w = rr.randint(2, min(6, w - 4))
         sig = _random_connected_shape(rr, shape_h, shape_w)
-        if len(sig) < 3:
+        if not (2 <= len(sig) <= 10):
             continue
 
         n_instances = rr.randint(6, 16)
         anchors: list[tuple[int, int]] = []
         occupied: set[Pos] = set()
-        # Track component starts for style balancing.
         top_cut_count = 0
         bot_cut_count = 0
         left_cut_count = 0
         right_cut_count = 0
         full_count = 0
 
-        for _j in range(n_instances * 6):
+        for _j in range(n_instances * 14):
             if len(anchors) >= n_instances:
                 break
             top = rr.randint(-shape_h + 1, h - 1)
@@ -323,7 +460,6 @@ def generate(
             visible = _visible_from_anchor(sig, top, left, h, w)
             if not visible:
                 continue
-            # Keep instances separated so components stay interpretable.
             expanded = set(visible)
             for r, c in list(visible):
                 for nr, nc in _neighbors4(r, c):
@@ -354,7 +490,6 @@ def generate(
             continue
         if full_count < 2:
             continue
-        # Edge clipping is common in your examples, but not mandatory every time.
         if rr.random() < 0.75 and (top_cut_count + bot_cut_count) == 0:
             continue
         if rr.random() < 0.7 and (left_cut_count + right_cut_count) == 0:
