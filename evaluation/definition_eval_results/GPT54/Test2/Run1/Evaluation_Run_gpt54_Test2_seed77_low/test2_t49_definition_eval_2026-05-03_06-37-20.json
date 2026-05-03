@@ -1,0 +1,62 @@
+{
+  "task_id": "test2_t49",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 1 1 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0\n0 1 1 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 1 1 0 0 0 0 0 1 1 0 1 1 0 0 0 1 1 0\n0 1 1 0 0 0 0 0 1 1 0 1 1 0 0 0 1 1 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 1 1 0 0 0 1 1 0 0 0 1 1 0 0 0 0 0 0\n0 1 1 0 0 0 1 1 0 0 0 1 1 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 1 1 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0\n0 1 1 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0\n0 5 5 0 0 0 0 0 0 0 0 5 5 0 0 0 0 0 0\n0 5 5 0 0 0 0 0 0 0 0 5 5 0 0 0 0 0 0\n0 1 1 0 0 0 0 0 1 1 5 1 1 5 5 5 1 1 0\n0 1 1 0 0 0 0 0 1 1 5 1 1 5 5 5 1 1 0\n0 5 5 0 0 0 0 0 0 0 0 5 5 0 0 0 0 0 0\n0 5 5 0 0 0 0 0 0 0 0 5 5 0 0 0 0 0 0\n0 5 5 0 0 0 0 0 0 0 0 5 5 0 0 0 0 0 0\n0 5 5 0 0 0 0 0 0 0 0 5 5 0 0 0 0 0 0\n0 1 1 5 5 5 1 1 5 5 5 1 1 0 0 0 0 0 0\n0 1 1 5 5 5 1 1 5 5 5 1 1 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 4 4 0 0 0 4 4 0 0 0 0 0\n0 0 0 4 4 0 0 0 4 4 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 4 4 0 0 4 4 0\n0 0 0 0 0 0 0 0 4 4 0 0 4 4 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 4 4 0 0 0 0 0\n0 0 0 0 0 0 0 0 4 4 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 4 4 0 0 0 4 4 0 0 4 4 0\n0 0 0 4 4 0 0 0 4 4 0 0 4 4 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 4 4 5 5 5 4 4 0 0 0 0 0\n0 0 0 4 4 5 5 5 4 4 0 0 0 0 0\n0 0 0 0 0 0 0 0 5 5 0 0 0 0 0\n0 0 0 0 0 0 0 0 5 5 0 0 0 0 0\n0 0 0 0 0 0 0 0 4 4 5 5 4 4 0\n0 0 0 0 0 0 0 0 4 4 5 5 4 4 0\n0 0 0 0 0 0 0 0 5 5 0 0 0 0 0\n0 0 0 0 0 0 0 0 4 4 0 0 0 0 0\n0 0 0 0 0 0 0 0 4 4 0 0 0 0 0\n0 0 0 0 0 0 0 0 5 5 0 0 0 0 0\n0 0 0 0 0 0 0 0 5 5 0 0 0 0 0\n0 0 0 4 4 5 5 5 4 4 5 5 4 4 0\n0 0 0 4 4 5 5 5 4 4 5 5 4 4 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 3 3 0 0 0 0 0 0 0 3 3 0 0 0\n0 3 3 0 0 0 0 0 0 0 3 3 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 3 3 0 0 0 0 3 3 0 0 0\n0 0 0 0 3 3 0 0 0 0 3 3 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 3 3 0 0 3 3 0 0 0\n0 0 0 0 0 0 3 3 0 0 3 3 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 3 3 5 5 5 5 5 5 5 3 3 0 0 0\n0 3 3 5 5 5 5 5 5 5 3 3 0 0 0\n0 0 0 0 0 0 0 0 0 0 5 5 0 0 0\n0 0 0 0 3 3 5 5 5 5 3 3 0 0 0\n0 0 0 0 3 3 5 5 5 5 3 3 0 0 0\n0 0 0 0 0 0 0 0 0 0 5 5 0 0 0\n0 0 0 0 0 0 0 0 0 0 5 5 0 0 0\n0 0 0 0 0 0 3 3 5 5 3 3 0 0 0\n0 0 0 0 0 0 3 3 5 5 3 3 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 0 0 0 2 2 0 0 0 0\n0 0 0 2 2 0 0 0 2 2 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 0 2 2 0 0 2 2 0 0\n0 0 0 2 2 0 2 2 0 0 2 2 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 0 2 2 0 0\n0 0 0 2 2 0 0 0 0 0 2 2 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    # Find 2x2 colored blocks as connected components of non-zero cells.\n    visited = [[False] * w for _ in range(h)]\n    blocks = []\n\n    for r in range(h):\n        for c in range(w):\n            if grid[r][c] == 0 or visited[r][c]:\n                continue\n            color = grid[r][c]\n            stack = [(r, c)]\n            visited[r][c] = True\n            cells = []\n\n            while stack:\n                x, y = stack.pop()\n                cells.append((x, y))\n                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                    nx, ny = x + dx, y + dy\n                    if 0 <= nx < h and 0 <= ny < w and not visited[nx][ny] and grid[nx][ny] == color:\n                        visited[nx][ny] = True\n                        stack.append((nx, ny))\n\n            min_r = min(x for x, _ in cells)\n            max_r = max(x for x, _ in cells)\n            min_c = min(y for _, y in cells)\n            max_c = max(y for _, y in cells)\n\n            blocks.append({\n                \"color\": color,\n                \"r\": min_r,\n                \"c\": min_c,\n                \"r2\": max_r,\n                \"c2\": max_c,\n            })\n\n    n = len(blocks)\n    if n <= 1:\n        return [row[:] for row in grid]\n\n    # Candidate edges: consecutive blocks in the same row or column.\n    edges = []\n\n    rows = {}\n    cols = {}\n    for i, b in enumerate(blocks):\n        rows.setdefault(b[\"r\"], []).append(i)\n        cols.setdefault(b[\"c\"], []).append(i)\n\n    for r, inds in rows.items():\n        inds.sort(key=lambda i: blocks[i][\"c\"])\n        for a, b in zip(inds, inds[1:]):\n            gap = blocks[b][\"c\"] - blocks[a][\"c2\"] - 1\n            if gap >= 0:\n                edges.append((gap, a, b, \"h\"))\n\n    for c, inds in cols.items():\n        inds.sort(key=lambda i: blocks[i][\"r\"])\n        for a, b in zip(inds, inds[1:]):\n            gap = blocks[b][\"r\"] - blocks[a][\"r2\"] - 1\n            if gap >= 0:\n                edges.append((gap, a, b, \"v\"))\n\n    # Kruskal MST over the block graph.\n    parent = list(range(n))\n    rank = [0] * n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return False\n        if rank[ra] < rank[rb]:\n            parent[ra] = rb\n        elif rank[ra] > rank[rb]:\n            parent[rb] = ra\n        else:\n            parent[rb] = ra\n            rank[ra] += 1\n        return True\n\n    edges.sort(key=lambda x: (x[0], x[3], x[1], x[2]))\n    chosen = []\n    for gap, a, b, kind in edges:\n        if union(a, b):\n            chosen.append((a, b, kind))\n\n    # Draw connectors with color 5.\n    out = [row[:] for row in grid]\n\n    for a, b, kind in chosen:\n        A = blocks[a]\n        B = blocks[b]\n        if kind == \"h\":\n            r1, r2 = A[\"r\"], A[\"r2\"]\n            start = A[\"c2\"] + 1\n            end = B[\"c\"] - 1\n            for r in range(r1, r2 + 1):\n                for c in range(start, end + 1):\n                    if out[r][c] == 0:\n                        out[r][c] = 5\n        else:\n            c1, c2 = A[\"c\"], A[\"c2\"]\n            start = A[\"r2\"] + 1\n            end = B[\"r\"] - 1\n            for r in range(start, end + 1):\n                for c in range(c1, c2 + 1):\n                    if out[r][c] == 0:\n                        out[r][c] = 5\n\n    return out",
+  "script": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    # Find 2x2 colored blocks as connected components of non-zero cells.\n    visited = [[False] * w for _ in range(h)]\n    blocks = []\n\n    for r in range(h):\n        for c in range(w):\n            if grid[r][c] == 0 or visited[r][c]:\n                continue\n            color = grid[r][c]\n            stack = [(r, c)]\n            visited[r][c] = True\n            cells = []\n\n            while stack:\n                x, y = stack.pop()\n                cells.append((x, y))\n                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                    nx, ny = x + dx, y + dy\n                    if 0 <= nx < h and 0 <= ny < w and not visited[nx][ny] and grid[nx][ny] == color:\n                        visited[nx][ny] = True\n                        stack.append((nx, ny))\n\n            min_r = min(x for x, _ in cells)\n            max_r = max(x for x, _ in cells)\n            min_c = min(y for _, y in cells)\n            max_c = max(y for _, y in cells)\n\n            blocks.append({\n                \"color\": color,\n                \"r\": min_r,\n                \"c\": min_c,\n                \"r2\": max_r,\n                \"c2\": max_c,\n            })\n\n    n = len(blocks)\n    if n <= 1:\n        return [row[:] for row in grid]\n\n    # Candidate edges: consecutive blocks in the same row or column.\n    edges = []\n\n    rows = {}\n    cols = {}\n    for i, b in enumerate(blocks):\n        rows.setdefault(b[\"r\"], []).append(i)\n        cols.setdefault(b[\"c\"], []).append(i)\n\n    for r, inds in rows.items():\n        inds.sort(key=lambda i: blocks[i][\"c\"])\n        for a, b in zip(inds, inds[1:]):\n            gap = blocks[b][\"c\"] - blocks[a][\"c2\"] - 1\n            if gap >= 0:\n                edges.append((gap, a, b, \"h\"))\n\n    for c, inds in cols.items():\n        inds.sort(key=lambda i: blocks[i][\"r\"])\n        for a, b in zip(inds, inds[1:]):\n            gap = blocks[b][\"r\"] - blocks[a][\"r2\"] - 1\n            if gap >= 0:\n                edges.append((gap, a, b, \"v\"))\n\n    # Kruskal MST over the block graph.\n    parent = list(range(n))\n    rank = [0] * n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return False\n        if rank[ra] < rank[rb]:\n            parent[ra] = rb\n        elif rank[ra] > rank[rb]:\n            parent[rb] = ra\n        else:\n            parent[rb] = ra\n            rank[ra] += 1\n        return True\n\n    edges.sort(key=lambda x: (x[0], x[3], x[1], x[2]))\n    chosen = []\n    for gap, a, b, kind in edges:\n        if union(a, b):\n            chosen.append((a, b, kind))\n\n    # Draw connectors with color 5.\n    out = [row[:] for row in grid]\n\n    for a, b, kind in chosen:\n        A = blocks[a]\n        B = blocks[b]\n        if kind == \"h\":\n            r1, r2 = A[\"r\"], A[\"r2\"]\n            start = A[\"c2\"] + 1\n            end = B[\"c\"] - 1\n            for r in range(r1, r2 + 1):\n                for c in range(start, end + 1):\n                    if out[r][c] == 0:\n                        out[r][c] = 5\n        else:\n            c1, c2 = A[\"c\"], A[\"c2\"]\n            start = A[\"r2\"] + 1\n            end = B[\"r\"] - 1\n            for r in range(start, end + 1):\n                for c in range(c1, c2 + 1):\n                    if out[r][c] == 0:\n                        out[r][c] = 5\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "p_arc_stable": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "p_arc_stable": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

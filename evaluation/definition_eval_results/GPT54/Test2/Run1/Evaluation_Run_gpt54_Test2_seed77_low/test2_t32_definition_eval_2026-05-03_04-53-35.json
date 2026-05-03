@@ -1,0 +1,62 @@
+{
+  "task_id": "test2_t32",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n3 3 3 0 8 8 8\n3 3 3 0 8 8 8\n2 2 2 0 4 4 4\n2 2 2 0 4 4 4\n1 1 1 0 3 3 3\n1 1 1 0 3 3 3\n7 7 7 0 9 9 9\n7 7 7 0 9 9 9\n5 5 5 5 5 5 5\n2 2 2 0 0 0 0\n1 1 1 0 0 0 0\n1 1 1 0 0 0 0\n1 1 1 0 0 0 0\n3 3 3 0 0 0 0\n7 7 7 0 0 0 0\n7 7 7 0 0 0 0\n2 2 2 0 0 0 0\n2 2 2 0 0 0 0\n7 7 7 0 0 0 0\n3 3 3 0 0 0 0\nOutput:\n3 3 3 0 8 8 8\n3 3 3 0 8 8 8\n2 2 2 0 4 4 4\n2 2 2 0 4 4 4\n1 1 1 0 3 3 3\n1 1 1 0 3 3 3\n7 7 7 0 9 9 9\n7 7 7 0 9 9 9\n5 5 5 5 5 5 5\n2 2 2 0 4 4 4\n1 1 1 0 3 3 3\n1 1 1 0 3 3 3\n1 1 1 0 3 3 3\n3 3 3 0 8 8 8\n7 7 7 0 9 9 9\n7 7 7 0 9 9 9\n2 2 2 0 4 4 4\n2 2 2 0 4 4 4\n7 7 7 0 9 9 9\n3 3 3 0 8 8 8\n\nExample 2:\n\nInput:\n1 1 1 1 0 9 9 9 9\n9 9 9 9 0 6 6 6 6\n8 8 8 8 0 4 4 4 4\n6 6 6 6 0 2 2 2 2\n4 4 4 4 0 7 7 7 7\n3 3 3 3 0 1 1 1 1\n2 2 2 2 0 8 8 8 8\n7 7 7 7 0 3 3 3 3\n5 5 5 5 5 5 5 5 5\n0 0 0 0 0 2 2 2 2\n0 0 0 0 0 2 2 2 2\n0 0 0 0 0 1 1 1 1\n0 0 0 0 0 1 1 1 1\n0 0 0 0 0 6 6 6 6\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 6 6 6 6\n0 0 0 0 0 6 6 6 6\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 3 3 3 3\nOutput:\n1 1 1 1 0 9 9 9 9\n9 9 9 9 0 6 6 6 6\n8 8 8 8 0 4 4 4 4\n6 6 6 6 0 2 2 2 2\n4 4 4 4 0 7 7 7 7\n3 3 3 3 0 1 1 1 1\n2 2 2 2 0 8 8 8 8\n7 7 7 7 0 3 3 3 3\n5 5 5 5 5 5 5 5 5\n6 6 6 6 0 2 2 2 2\n6 6 6 6 0 2 2 2 2\n3 3 3 3 0 1 1 1 1\n3 3 3 3 0 1 1 1 1\n9 9 9 9 0 6 6 6 6\n0 0 0 0 0 0 0 0 0\n9 9 9 9 0 6 6 6 6\n9 9 9 9 0 6 6 6 6\n0 0 0 0 0 0 0 0 0\n7 7 7 7 0 3 3 3 3\n\nBelow is a test input grid.\n\nInput:\n3 3 0 2 2\n6 6 0 8 8\n1 1 0 9 9\n4 4 0 3 3\n9 9 0 1 1\n2 2 0 6 6\n7 7 0 7 7\n8 8 0 4 4\n5 5 5 5 5\n0 0 0 8 8\n3 3 0 0 0\n0 0 0 7 7\n0 0 0 7 7\n0 0 0 6 6\n0 0 0 6 6\n0 0 0 8 8\n9 9 0 0 0\n9 9 0 0 0\n1 1 0 0 0\n0 0 0 2 2\n4 4 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0])\n\n    # Find the horizontal separator row: a full row of the same non-zero value\n    sep_row = None\n    for i, row in enumerate(grid):\n        if len(set(row)) == 1 and row[0] != 0:\n            sep_row = i\n            break\n\n    if sep_row is None:\n        return [row[:] for row in grid]\n\n    # Find vertical divider columns: columns that are all zero in the top section\n    divider_cols = []\n    for c in range(w):\n        if all(grid[r][c] == 0 for r in range(sep_row)):\n            divider_cols.append(c)\n\n    if not divider_cols:\n        return [row[:] for row in grid]\n\n    left_end = divider_cols[0]\n    right_start = divider_cols[-1] + 1\n\n    def region_value(row, start, end):\n        vals = {row[c] for c in range(start, end) if row[c] != 0}\n        if len(vals) == 1:\n            return next(iter(vals))\n        return 0\n\n    # Build mappings from the top example area\n    forward = {}\n    inverse = {}\n    for r in range(sep_row):\n        lv = region_value(grid[r], 0, left_end)\n        rv = region_value(grid[r], right_start, w)\n        if lv != 0 and rv != 0:\n            forward[lv] = rv\n            inverse[rv] = lv\n\n    out = [row[:] for row in grid]\n\n    # Fill the bottom area using the learned mapping\n    for r in range(sep_row + 1, h):\n        lv = region_value(out[r], 0, left_end)\n        rv = region_value(out[r], right_start, w)\n\n        if lv != 0 and rv == 0 and lv in forward:\n            fill = forward[lv]\n            for c in range(right_start, w):\n                out[r][c] = fill\n        elif rv != 0 and lv == 0 and rv in inverse:\n            fill = inverse[rv]\n            for c in range(0, left_end):\n                out[r][c] = fill\n\n    return out",
+  "script": "def solve(grid):\n    h = len(grid)\n    w = len(grid[0])\n\n    # Find the horizontal separator row: a full row of the same non-zero value\n    sep_row = None\n    for i, row in enumerate(grid):\n        if len(set(row)) == 1 and row[0] != 0:\n            sep_row = i\n            break\n\n    if sep_row is None:\n        return [row[:] for row in grid]\n\n    # Find vertical divider columns: columns that are all zero in the top section\n    divider_cols = []\n    for c in range(w):\n        if all(grid[r][c] == 0 for r in range(sep_row)):\n            divider_cols.append(c)\n\n    if not divider_cols:\n        return [row[:] for row in grid]\n\n    left_end = divider_cols[0]\n    right_start = divider_cols[-1] + 1\n\n    def region_value(row, start, end):\n        vals = {row[c] for c in range(start, end) if row[c] != 0}\n        if len(vals) == 1:\n            return next(iter(vals))\n        return 0\n\n    # Build mappings from the top example area\n    forward = {}\n    inverse = {}\n    for r in range(sep_row):\n        lv = region_value(grid[r], 0, left_end)\n        rv = region_value(grid[r], right_start, w)\n        if lv != 0 and rv != 0:\n            forward[lv] = rv\n            inverse[rv] = lv\n\n    out = [row[:] for row in grid]\n\n    # Fill the bottom area using the learned mapping\n    for r in range(sep_row + 1, h):\n        lv = region_value(out[r], 0, left_end)\n        rv = region_value(out[r], right_start, w)\n\n        if lv != 0 and rv == 0 and lv in forward:\n            fill = forward[lv]\n            for c in range(right_start, w):\n                out[r][c] = fill\n        elif rv != 0 and lv == 0 and rv in inverse:\n            fill = inverse[rv]\n            for c in range(0, left_end):\n                out[r][c] = fill\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 2,
+      "total": 2,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "p_arc_stable": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "p_arc_stable": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

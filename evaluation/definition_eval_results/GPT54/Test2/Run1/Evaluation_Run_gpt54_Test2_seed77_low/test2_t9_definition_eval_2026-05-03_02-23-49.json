@@ -1,0 +1,624 @@
+{
+  "task_id": "test2_t9",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 1 0 0 0 0 4 0\n0 0 1 0 0 0 0 0 4\n1 1 1 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 9 9 9 9 0 0\n0 8 0 9 0 0 0 0 0\n8 0 0 9 0 0 0 0 0\n0 0 0 9 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\nOutput:\n9 9 9 9\n9 4 8 1\n9 8 4 1\n9 1 1 1\n\nExample 2:\n\nInput:\n0 0 4 0 0 0 3 3\n0 4 0 0 0 0 3 0\n4 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0\n0 8 0 0 0 0 0 0\n0 0 0 0 0 0 0 0\n0 0 0 0 5 5 0 0\nOutput:\n3 3 4\n3 4 8\n4 5 5\n\nExample 3:\n\nInput:\n0 1 1 0 0 0 4 0 0 0 0 0\n0 1 0 0 0 0 0 4 0 6 0 0\n0 0 0 5 0 0 0 0 6 0 0 0\n0 0 0 5 0 0 0 0 0 0 0 0\n4 0 0 5 0 0 0 0 9 0 0 0\n0 4 0 5 0 0 0 9 0 0 0 0\n0 0 0 5 5 0 9 0 0 0 0 0\n0 0 0 0 0 9 0 0 0 0 0 0\n8 8 0 0 0 0 0 0 0 2 0 0\n8 8 0 0 0 0 0 0 0 0 2 0\n0 0 0 0 3 3 3 0 0 0 0 2\n0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n5 1 1 4 9\n5 1 2 9 4\n5 4 9 2 6\n5 9 4 6 2\n5 5 3 3 3\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 8\n0 1 1 0 0 8\n0 1 0 0 0 0\n0 1 0 0 0 0\n0 0 0 0 0 0\n2 0 0 0 5 5\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    from collections import deque\n    import math\n\n    H, W = len(grid), len(grid[0])\n\n    # Find 4-connected components of non-zero cells.\n    seen = [[False] * W for _ in range(H)]\n    comps = []\n    for r in range(H):\n        for c in range(W):\n            if grid[r][c] != 0 and not seen[r][c]:\n                color = grid[r][c]\n                q = deque([(r, c)])\n                seen[r][c] = True\n                cells = []\n                while q:\n                    x, y = q.popleft()\n                    cells.append((x, y))\n                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        nx, ny = x + dx, y + dy\n                        if 0 <= nx < H and 0 <= ny < W and not seen[nx][ny] and grid[nx][ny] == color:\n                            seen[nx][ny] = True\n                            q.append((nx, ny))\n                minr = min(r for r, _ in cells)\n                minc = min(c for _, c in cells)\n                norm = sorted((r - minr, c - minc) for r, c in cells)\n                h = max(r for r, _ in norm) + 1\n                w = max(c for _, c in norm) + 1\n                area = len(norm)\n                comps.append({\n                    \"color\": color,\n                    \"cells\": tuple(norm),\n                    \"h\": h,\n                    \"w\": w,\n                    \"area\": area,\n                    \"top\": minr,\n                    \"left\": minc,\n                })\n\n    if not comps:\n        return [[0]]\n\n    def is_filled_rectangle(comp):\n        return comp[\"area\"] == comp[\"h\"] * comp[\"w\"] and comp[\"area\"] > 1\n\n    # Choose components to keep so total area is a perfect square side n,\n    # preferring n = max component side and, if needed, dropping filled rectangles.\n    total_area = sum(c[\"area\"] for c in comps)\n    base_n = max(max(c[\"h\"], c[\"w\"]) for c in comps)\n\n    keep_indices = None\n    n = base_n\n\n    if total_area == base_n * base_n:\n        keep_indices = list(range(len(comps)))\n    else:\n        # Try dropping a small number of components so remaining area == base_n^2.\n        need_drop = total_area - base_n * base_n\n        idxs = list(range(len(comps)))\n\n        best = None\n\n        def score(drop_set):\n            dropped = [comps[i] for i in drop_set]\n            rect_bonus = sum(1 for c in dropped if is_filled_rectangle(c))\n            area_sum = sum(c[\"area\"] for c in dropped)\n            # Prefer dropping filled rectangles, then fewer components, then smaller top-left.\n            return (-rect_bonus, len(drop_set), area_sum,\n                    [(comps[i][\"top\"], comps[i][\"left\"]) for i in sorted(drop_set)])\n\n        def dfs_choose(i, rem, chosen):\n            nonlocal best\n            if rem == 0:\n                sc = score(chosen)\n                if best is None or sc < best[0]:\n                    best = (sc, chosen[:])\n                return\n            if rem < 0 or i == len(idxs):\n                return\n            # prune\n            max_possible = sum(comps[j][\"area\"] for j in idxs[i:])\n            if max_possible < rem:\n                return\n            # choose current\n            chosen.append(idxs[i])\n            dfs_choose(i + 1, rem - comps[idxs[i]][\"area\"], chosen)\n            chosen.pop()\n            # skip current\n            dfs_choose(i + 1, rem, chosen)\n\n        if need_drop >= 0:\n            dfs_choose(0, need_drop, [])\n            if best is not None:\n                drop = set(best[1])\n                keep_indices = [i for i in range(len(comps)) if i not in drop]\n\n    if keep_indices is None:\n        # Fallback: choose largest square not exceeding total area.\n        n = int(math.isqrt(total_area))\n        target = n * n\n        idxs = list(range(len(comps)))\n        best = None\n\n        def dfs_subset(i, rem, chosen):\n            nonlocal best\n            if rem == 0:\n                kept = chosen[:]\n                max_side = max(max(comps[j][\"h\"], comps[j][\"w\"]) for j in kept) if kept else 0\n                if max_side <= n:\n                    dropped = [k for k in idxs if k not in set(kept)]\n                    sc = (\n                        sum(1 for j in dropped if not is_filled_rectangle(comps[j])),\n                        len(dropped),\n                        [(comps[j][\"top\"], comps[j][\"left\"]) for j in dropped]\n                    )\n                    if best is None or sc < best[0]:\n                        best = (sc, kept)\n                return\n            if rem < 0 or i == len(idxs):\n                return\n            dfs_subset(i + 1, rem - comps[idxs[i]][\"area\"], chosen + [idxs[i]])\n            dfs_subset(i + 1, rem, chosen)\n\n        dfs_subset(0, target, [])\n        keep_indices = best[1] if best else list(range(len(comps)))\n\n    kept = [comps[i] for i in keep_indices]\n    n = max(max(c[\"h\"], c[\"w\"]) for c in kept)\n\n    # Sanity: if area still too big, shrink by subset to exactly n*n if possible.\n    kept_area = sum(c[\"area\"] for c in kept)\n    if kept_area != n * n:\n        target = n * n\n        idxs = list(range(len(kept)))\n        best = None\n\n        def dfs_keep(i, rem, chosen):\n            nonlocal best\n            if rem == 0:\n                sc = (\n                    len([j for j in idxs if j not in set(chosen)]),\n                    [(kept[j][\"top\"], kept[j][\"left\"]) for j in idxs if j not in set(chosen)]\n                )\n                if best is None or sc < best[0]:\n                    best = (sc, chosen[:])\n                return\n            if rem < 0 or i == len(idxs):\n                return\n            dfs_keep(i + 1, rem - kept[idxs[i]][\"area\"], chosen + [idxs[i]])\n            dfs_keep(i + 1, rem, chosen)\n\n        dfs_keep(0, target, [])\n        if best:\n            kept = [kept[i] for i in best[1]]\n\n    # Prepare placements.\n    # Sort bigger/more constrained pieces first.\n    kept = sorted(\n        kept,\n        key=lambda c: (-c[\"area\"], -(c[\"h\"] + c[\"w\"]), c[\"top\"], c[\"left\"], c[\"color\"])\n    )\n\n    board = [[0] * n for _ in range(n)]\n    all_cells = {(r, c) for r in range(n) for c in range(n)}\n\n    placements = []\n    for comp in kept:\n        poss = []\n        for dr in range(n - comp[\"h\"] + 1):\n            for dc in range(n - comp[\"w\"] + 1):\n                cells = tuple((dr + r, dc + c) for r, c in comp[\"cells\"])\n                poss.append((dr, dc, cells))\n        # Bias toward positions matching original relative location.\n        max_top = max(c[\"top\"] for c in kept) if kept else 0\n        max_left = max(c[\"left\"] for c in kept) if kept else 0\n        target_r = 0 if max_top == 0 else round(comp[\"top\"] * max(0, n - comp[\"h\"]) / max_top)\n        target_c = 0 if max_left == 0 else round(comp[\"left\"] * max(0, n - comp[\"w\"]) / max_left)\n        poss.sort(key=lambda x: (abs(x[0] - target_r) + abs(x[1] - target_c), x[0], x[1]))\n        placements.append(poss)\n\n    used = set()\n    result = None\n\n    # Exact cover style backtracking.\n    def backtrack(placed_mask):\n        nonlocal result\n        if result is not None:\n            return True\n        if placed_mask == (1 << len(kept)) - 1:\n            if len(used) == n * n:\n                result = [row[:] for row in board]\n                return True\n            return False\n\n        # Choose next component with fewest fitting placements.\n        best_i = None\n        best_options = None\n        for i, comp in enumerate(kept):\n            if (placed_mask >> i) & 1:\n                continue\n            opts = []\n            for dr, dc, cells in placements[i]:\n                ok = True\n                for r, c in cells:\n                    if (r, c) in used:\n                        ok = False\n                        break\n                if ok:\n                    opts.append(cells)\n            if not opts:\n                return False\n            if best_options is None or len(opts) < len(best_options):\n                best_options = opts\n                best_i = i\n\n        comp = kept[best_i]\n        for cells in best_options:\n            for r, c in cells:\n                used.add((r, c))\n                board[r][c] = comp[\"color\"]\n            if backtrack(placed_mask | (1 << best_i)):\n                return True\n            for r, c in cells:\n                used.remove((r, c))\n                board[r][c] = 0\n        return False\n\n    backtrack(0)\n\n    if result is not None:\n        return result\n\n    # Final fallback: greedy placement.\n    out = [[0] * n for _ in range(n)]\n    used = set()\n    for i, comp in enumerate(kept):\n        placed = False\n        for dr, dc, cells in placements[i]:\n            if all((r, c) not in used for r, c in cells):\n                for r, c in cells:\n                    out[r][c] = comp[\"color\"]\n                    used.add((r, c))\n                placed = True\n                break\n        if not placed:\n            # place anywhere overlapping not allowed; leave if impossible\n            pass\n    return out",
+  "script": "def solve(grid):\n    from collections import deque\n    import math\n\n    H, W = len(grid), len(grid[0])\n\n    # Find 4-connected components of non-zero cells.\n    seen = [[False] * W for _ in range(H)]\n    comps = []\n    for r in range(H):\n        for c in range(W):\n            if grid[r][c] != 0 and not seen[r][c]:\n                color = grid[r][c]\n                q = deque([(r, c)])\n                seen[r][c] = True\n                cells = []\n                while q:\n                    x, y = q.popleft()\n                    cells.append((x, y))\n                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        nx, ny = x + dx, y + dy\n                        if 0 <= nx < H and 0 <= ny < W and not seen[nx][ny] and grid[nx][ny] == color:\n                            seen[nx][ny] = True\n                            q.append((nx, ny))\n                minr = min(r for r, _ in cells)\n                minc = min(c for _, c in cells)\n                norm = sorted((r - minr, c - minc) for r, c in cells)\n                h = max(r for r, _ in norm) + 1\n                w = max(c for _, c in norm) + 1\n                area = len(norm)\n                comps.append({\n                    \"color\": color,\n                    \"cells\": tuple(norm),\n                    \"h\": h,\n                    \"w\": w,\n                    \"area\": area,\n                    \"top\": minr,\n                    \"left\": minc,\n                })\n\n    if not comps:\n        return [[0]]\n\n    def is_filled_rectangle(comp):\n        return comp[\"area\"] == comp[\"h\"] * comp[\"w\"] and comp[\"area\"] > 1\n\n    # Choose components to keep so total area is a perfect square side n,\n    # preferring n = max component side and, if needed, dropping filled rectangles.\n    total_area = sum(c[\"area\"] for c in comps)\n    base_n = max(max(c[\"h\"], c[\"w\"]) for c in comps)\n\n    keep_indices = None\n    n = base_n\n\n    if total_area == base_n * base_n:\n        keep_indices = list(range(len(comps)))\n    else:\n        # Try dropping a small number of components so remaining area == base_n^2.\n        need_drop = total_area - base_n * base_n\n        idxs = list(range(len(comps)))\n\n        best = None\n\n        def score(drop_set):\n            dropped = [comps[i] for i in drop_set]\n            rect_bonus = sum(1 for c in dropped if is_filled_rectangle(c))\n            area_sum = sum(c[\"area\"] for c in dropped)\n            # Prefer dropping filled rectangles, then fewer components, then smaller top-left.\n            return (-rect_bonus, len(drop_set), area_sum,\n                    [(comps[i][\"top\"], comps[i][\"left\"]) for i in sorted(drop_set)])\n\n        def dfs_choose(i, rem, chosen):\n            nonlocal best\n            if rem == 0:\n                sc = score(chosen)\n                if best is None or sc < best[0]:\n                    best = (sc, chosen[:])\n                return\n            if rem < 0 or i == len(idxs):\n                return\n            # prune\n            max_possible = sum(comps[j][\"area\"] for j in idxs[i:])\n            if max_possible < rem:\n                return\n            # choose current\n            chosen.append(idxs[i])\n            dfs_choose(i + 1, rem - comps[idxs[i]][\"area\"], chosen)\n            chosen.pop()\n            # skip current\n            dfs_choose(i + 1, rem, chosen)\n\n        if need_drop >= 0:\n            dfs_choose(0, need_drop, [])\n            if best is not None:\n                drop = set(best[1])\n                keep_indices = [i for i in range(len(comps)) if i not in drop]\n\n    if keep_indices is None:\n        # Fallback: choose largest square not exceeding total area.\n        n = int(math.isqrt(total_area))\n        target = n * n\n        idxs = list(range(len(comps)))\n        best = None\n\n        def dfs_subset(i, rem, chosen):\n            nonlocal best\n            if rem == 0:\n                kept = chosen[:]\n                max_side = max(max(comps[j][\"h\"], comps[j][\"w\"]) for j in kept) if kept else 0\n                if max_side <= n:\n                    dropped = [k for k in idxs if k not in set(kept)]\n                    sc = (\n                        sum(1 for j in dropped if not is_filled_rectangle(comps[j])),\n                        len(dropped),\n                        [(comps[j][\"top\"], comps[j][\"left\"]) for j in dropped]\n                    )\n                    if best is None or sc < best[0]:\n                        best = (sc, kept)\n                return\n            if rem < 0 or i == len(idxs):\n                return\n            dfs_subset(i + 1, rem - comps[idxs[i]][\"area\"], chosen + [idxs[i]])\n            dfs_subset(i + 1, rem, chosen)\n\n        dfs_subset(0, target, [])\n        keep_indices = best[1] if best else list(range(len(comps)))\n\n    kept = [comps[i] for i in keep_indices]\n    n = max(max(c[\"h\"], c[\"w\"]) for c in kept)\n\n    # Sanity: if area still too big, shrink by subset to exactly n*n if possible.\n    kept_area = sum(c[\"area\"] for c in kept)\n    if kept_area != n * n:\n        target = n * n\n        idxs = list(range(len(kept)))\n        best = None\n\n        def dfs_keep(i, rem, chosen):\n            nonlocal best\n            if rem == 0:\n                sc = (\n                    len([j for j in idxs if j not in set(chosen)]),\n                    [(kept[j][\"top\"], kept[j][\"left\"]) for j in idxs if j not in set(chosen)]\n                )\n                if best is None or sc < best[0]:\n                    best = (sc, chosen[:])\n                return\n            if rem < 0 or i == len(idxs):\n                return\n            dfs_keep(i + 1, rem - kept[idxs[i]][\"area\"], chosen + [idxs[i]])\n            dfs_keep(i + 1, rem, chosen)\n\n        dfs_keep(0, target, [])\n        if best:\n            kept = [kept[i] for i in best[1]]\n\n    # Prepare placements.\n    # Sort bigger/more constrained pieces first.\n    kept = sorted(\n        kept,\n        key=lambda c: (-c[\"area\"], -(c[\"h\"] + c[\"w\"]), c[\"top\"], c[\"left\"], c[\"color\"])\n    )\n\n    board = [[0] * n for _ in range(n)]\n    all_cells = {(r, c) for r in range(n) for c in range(n)}\n\n    placements = []\n    for comp in kept:\n        poss = []\n        for dr in range(n - comp[\"h\"] + 1):\n            for dc in range(n - comp[\"w\"] + 1):\n                cells = tuple((dr + r, dc + c) for r, c in comp[\"cells\"])\n                poss.append((dr, dc, cells))\n        # Bias toward positions matching original relative location.\n        max_top = max(c[\"top\"] for c in kept) if kept else 0\n        max_left = max(c[\"left\"] for c in kept) if kept else 0\n        target_r = 0 if max_top == 0 else round(comp[\"top\"] * max(0, n - comp[\"h\"]) / max_top)\n        target_c = 0 if max_left == 0 else round(comp[\"left\"] * max(0, n - comp[\"w\"]) / max_left)\n        poss.sort(key=lambda x: (abs(x[0] - target_r) + abs(x[1] - target_c), x[0], x[1]))\n        placements.append(poss)\n\n    used = set()\n    result = None\n\n    # Exact cover style backtracking.\n    def backtrack(placed_mask):\n        nonlocal result\n        if result is not None:\n            return True\n        if placed_mask == (1 << len(kept)) - 1:\n            if len(used) == n * n:\n                result = [row[:] for row in board]\n                return True\n            return False\n\n        # Choose next component with fewest fitting placements.\n        best_i = None\n        best_options = None\n        for i, comp in enumerate(kept):\n            if (placed_mask >> i) & 1:\n                continue\n            opts = []\n            for dr, dc, cells in placements[i]:\n                ok = True\n                for r, c in cells:\n                    if (r, c) in used:\n                        ok = False\n                        break\n                if ok:\n                    opts.append(cells)\n            if not opts:\n                return False\n            if best_options is None or len(opts) < len(best_options):\n                best_options = opts\n                best_i = i\n\n        comp = kept[best_i]\n        for cells in best_options:\n            for r, c in cells:\n                used.add((r, c))\n                board[r][c] = comp[\"color\"]\n            if backtrack(placed_mask | (1 << best_i)):\n                return True\n            for r, c in cells:\n                used.remove((r, c))\n                board[r][c] = 0\n        return False\n\n    backtrack(0)\n\n    if result is not None:\n        return result\n\n    # Final fallback: greedy placement.\n    out = [[0] * n for _ in range(n)]\n    used = set()\n    for i, comp in enumerate(kept):\n        placed = False\n        for dr, dc, cells in placements[i]:\n            if all((r, c) not in used for r, c in cells):\n                for r, c in cells:\n                    out[r][c] = comp[\"color\"]\n                    used.add((r, c))\n                placed = True\n                break\n        if not placed:\n            # place anywhere overlapping not allowed; leave if impossible\n            pass\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "p_arc_stable": {
+      "ok": 6,
+      "total": 50,
+      "success_rate": 0.12
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 1,
+      "total": 50,
+      "success_rate": 0.02
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        [
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          9,
+          9,
+          9,
+          9,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          0,
+          9,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          9,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          9,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          9,
+          9,
+          9,
+          9
+        ],
+        [
+          9,
+          4,
+          8,
+          1
+        ],
+        [
+          9,
+          8,
+          4,
+          1
+        ],
+        [
+          9,
+          1,
+          1,
+          1
+        ]
+      ],
+      "got": [
+        [
+          9,
+          9,
+          9,
+          9
+        ],
+        [
+          9,
+          4,
+          4,
+          1
+        ],
+        [
+          9,
+          8,
+          8,
+          1
+        ],
+        [
+          9,
+          1,
+          1,
+          1
+        ]
+      ]
+    },
+    "test": null,
+    "p_arc_stable": {
+      "index": 1,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          7,
+          7
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          7
+        ],
+        [
+          0,
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          7,
+          7
+        ],
+        [
+          0,
+          4,
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          4,
+          0,
+          0,
+          0,
+          6,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          0,
+          0,
+          0,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          4,
+          7,
+          7,
+          7
+        ],
+        [
+          4,
+          4,
+          4,
+          7,
+          7
+        ],
+        [
+          4,
+          4,
+          6,
+          7,
+          7
+        ],
+        [
+          4,
+          6,
+          6,
+          6,
+          6
+        ]
+      ],
+      "got": [
+        [
+          4,
+          4,
+          0,
+          0
+        ],
+        [
+          4,
+          4,
+          4,
+          0
+        ],
+        [
+          4,
+          4,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "stable": null,
+    "generator_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          6,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          7,
+          7,
+          7,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          7,
+          7,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          7,
+          7,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          7,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          2,
+          2,
+          0,
+          0,
+          7,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          2,
+          2,
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          7,
+          7,
+          7,
+          7,
+          6,
+          6
+        ],
+        [
+          7,
+          7,
+          7,
+          6,
+          6,
+          6
+        ],
+        [
+          7,
+          7,
+          7,
+          6,
+          6,
+          6
+        ],
+        [
+          7,
+          7,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          7,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      ],
+      "got": [
+        [
+          0,
+          7,
+          7,
+          7,
+          7
+        ],
+        [
+          0,
+          7,
+          7,
+          7,
+          0
+        ],
+        [
+          0,
+          7,
+          7,
+          7,
+          0
+        ],
+        [
+          0,
+          7,
+          7,
+          0,
+          0
+        ],
+        [
+          0,
+          7,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

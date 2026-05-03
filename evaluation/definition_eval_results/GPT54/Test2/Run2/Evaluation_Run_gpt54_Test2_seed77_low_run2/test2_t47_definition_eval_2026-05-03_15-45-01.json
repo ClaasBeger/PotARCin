@@ -1,0 +1,68 @@
+{
+  "task_id": "test2_t47",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n4 4 2 4 4 4 5 4 4 4 3 4 4\n4 4 2 2 4 4 5 3 4 3 4 4 4\n4 2 4 2 2 4 5 3 4 3 4 4 4\n4 4 4 4 4 4 5 4 4 3 4 3 3\n2 2 4 2 4 4 5 3 4 4 4 4 3\n4 4 4 4 2 2 5 3 3 3 4 4 3\nOutput:\n0 0 2 3 0 0\n3 0 0 2 0 0\n3 2 3 2 2 0\n0 0 3 0 3 3\n0 2 0 2 0 3\n3 3 3 0 2 0\n\nExample 2:\n\nInput:\n8 8 8 8 7 8 8\n8 8 7 8 8 8 8\n8 7 8 7 8 7 8\n7 7 8 8 8 7 8\n8 8 8 7 8 8 8\n8 7 8 8 7 8 7\n8 7 7 7 8 8 8\n5 5 5 5 5 5 5\n8 8 6 8 8 8 6\n8 6 6 6 8 8 8\n8 6 6 8 6 6 8\n6 6 8 6 8 6 8\n8 8 6 8 8 8 6\n8 6 6 6 6 8 8\n8 8 6 8 8 8 8\nOutput:\n0 0 6 0 7 0 6\n0 6 0 6 0 0 0\n0 0 6 7 6 0 0\n0 0 0 6 0 0 0\n0 0 6 7 0 0 6\n0 0 6 6 0 0 7\n0 7 0 7 0 0 0\n\nBelow is a test input grid.\n\nInput:\n1 1 1 4 4 5 1 1 1 9 1\n4 4 1 1 4 5 9 9 1 9 9\n1 1 4 1 1 5 1 1 1 1 1\n1 4 4 4 1 5 9 1 9 9 1\n4 1 4 1 1 5 1 1 1 9 1\n4 4 4 1 1 5 1 9 1 1 1\n1 1 1 4 1 5 1 9 9 9 1\n1 4 1 1 4 5 1 9 1 9 1\n1 4 4 1 1 5 1 9 1 1 1\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    h, w = len(grid), len(grid[0])\n\n    def find_separator():\n        # Full row of a single repeated color\n        for r in range(h):\n            if all(grid[r][c] == grid[r][0] for c in range(w)):\n                return (\"row\", r)\n        # Full column of a single repeated color\n        for c in range(w):\n            if all(grid[r][c] == grid[0][c] for r in range(h)):\n                return (\"col\", c)\n        return None\n\n    def most_frequent(subgrid):\n        counts = {}\n        for row in subgrid:\n            for v in row:\n                counts[v] = counts.get(v, 0) + 1\n        return max(counts, key=counts.get)\n\n    sep = find_separator()\n    if sep is None:\n        return grid\n\n    kind, idx = sep\n\n    if kind == \"row\":\n        top = [row[:] for row in grid[:idx]]\n        bottom = [row[:] for row in grid[idx + 1:]]\n        bg1 = most_frequent(top)\n        bg2 = most_frequent(bottom)\n        out = []\n        for r in range(len(top)):\n            new_row = []\n            for c in range(len(top[0])):\n                a = top[r][c]\n                b = bottom[r][c]\n                fa = (a != bg1)\n                fb = (b != bg2)\n                if fa and not fb:\n                    new_row.append(a)\n                elif fb and not fa:\n                    new_row.append(b)\n                else:\n                    new_row.append(0)\n            out.append(new_row)\n        return out\n\n    else:\n        left = [row[:idx] for row in grid]\n        right = [row[idx + 1:] for row in grid]\n        bg1 = most_frequent(left)\n        bg2 = most_frequent(right)\n        out = []\n        for r in range(len(left)):\n            new_row = []\n            for c in range(len(left[0])):\n                a = left[r][c]\n                b = right[r][c]\n                fa = (a != bg1)\n                fb = (b != bg2)\n                if fa and not fb:\n                    new_row.append(a)\n                elif fb and not fa:\n                    new_row.append(b)\n                else:\n                    new_row.append(0)\n            out.append(new_row)\n        return out",
+  "script": "def solve(grid):\n    h, w = len(grid), len(grid[0])\n\n    def find_separator():\n        # Full row of a single repeated color\n        for r in range(h):\n            if all(grid[r][c] == grid[r][0] for c in range(w)):\n                return (\"row\", r)\n        # Full column of a single repeated color\n        for c in range(w):\n            if all(grid[r][c] == grid[0][c] for r in range(h)):\n                return (\"col\", c)\n        return None\n\n    def most_frequent(subgrid):\n        counts = {}\n        for row in subgrid:\n            for v in row:\n                counts[v] = counts.get(v, 0) + 1\n        return max(counts, key=counts.get)\n\n    sep = find_separator()\n    if sep is None:\n        return grid\n\n    kind, idx = sep\n\n    if kind == \"row\":\n        top = [row[:] for row in grid[:idx]]\n        bottom = [row[:] for row in grid[idx + 1:]]\n        bg1 = most_frequent(top)\n        bg2 = most_frequent(bottom)\n        out = []\n        for r in range(len(top)):\n            new_row = []\n            for c in range(len(top[0])):\n                a = top[r][c]\n                b = bottom[r][c]\n                fa = (a != bg1)\n                fb = (b != bg2)\n                if fa and not fb:\n                    new_row.append(a)\n                elif fb and not fa:\n                    new_row.append(b)\n                else:\n                    new_row.append(0)\n            out.append(new_row)\n        return out\n\n    else:\n        left = [row[:idx] for row in grid]\n        right = [row[idx + 1:] for row in grid]\n        bg1 = most_frequent(left)\n        bg2 = most_frequent(right)\n        out = []\n        for r in range(len(left)):\n            new_row = []\n            for c in range(len(left[0])):\n                a = left[r][c]\n                b = right[r][c]\n                fa = (a != bg1)\n                fb = (b != bg2)\n                if fa and not fb:\n                    new_row.append(a)\n                elif fb and not fa:\n                    new_row.append(b)\n                else:\n                    new_row.append(0)\n            out.append(new_row)\n        return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 2,
+      "total": 2,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "p_arc_stable": {
+      "ok": 17,
+      "total": 50,
+      "success_rate": 0.34
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 16,
+      "total": 50,
+      "success_rate": 0.32
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "p_arc_stable": {
+      "index": 1,
+      "error": "max() arg is an empty sequence"
+    },
+    "stable": null,
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "max() arg is an empty sequence"
+    },
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

@@ -1,0 +1,74 @@
+{
+  "task_id": "test2_t47",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n4 4 2 4 4 4 5 4 4 4 3 4 4\n4 4 2 2 4 4 5 3 4 3 4 4 4\n4 2 4 2 2 4 5 3 4 3 4 4 4\n4 4 4 4 4 4 5 4 4 3 4 3 3\n2 2 4 2 4 4 5 3 4 4 4 4 3\n4 4 4 4 2 2 5 3 3 3 4 4 3\nOutput:\n0 0 2 3 0 0\n3 0 0 2 0 0\n3 2 3 2 2 0\n0 0 3 0 3 3\n0 2 0 2 0 3\n3 3 3 0 2 0\n\nExample 2:\n\nInput:\n8 8 8 8 7 8 8\n8 8 7 8 8 8 8\n8 7 8 7 8 7 8\n7 7 8 8 8 7 8\n8 8 8 7 8 8 8\n8 7 8 8 7 8 7\n8 7 7 7 8 8 8\n5 5 5 5 5 5 5\n8 8 6 8 8 8 6\n8 6 6 6 8 8 8\n8 6 6 8 6 6 8\n6 6 8 6 8 6 8\n8 8 6 8 8 8 6\n8 6 6 6 6 8 8\n8 8 6 8 8 8 8\nOutput:\n0 0 6 0 7 0 6\n0 6 0 6 0 0 0\n0 0 6 7 6 0 0\n0 0 0 6 0 0 0\n0 0 6 7 0 0 6\n0 0 6 6 0 0 7\n0 7 0 7 0 0 0\n\nBelow is a test input grid.\n\nInput:\n1 1 1 4 4 5 1 1 1 9 1\n4 4 1 1 4 5 9 9 1 9 9\n1 1 4 1 1 5 1 1 1 1 1\n1 4 4 4 1 5 9 1 9 9 1\n4 1 4 1 1 5 1 1 1 9 1\n4 4 4 1 1 5 1 9 1 1 1\n1 1 1 4 1 5 1 9 9 9 1\n1 4 1 1 4 5 1 9 1 9 1\n1 4 4 1 1 5 1 9 1 1 1\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "from collections import Counter\n\ndef solve(grid):\n    if not grid:\n        return []\n\n    n = len(grid)\n    m = len(grid[0])\n\n    # Find separator: constant column or row that splits the grid into equal halves\n    split_type = None\n    split_index = None\n\n    # Try constant column\n    for col in range(m):\n        val = grid[0][col]\n        if all(grid[r][col] == val for r in range(n)):\n            left_w = col\n            right_w = m - col - 1\n            if left_w == right_w:\n                split_type = 'vertical'\n                split_index = col\n                break\n\n    # If no column found, try constant row\n    if split_type is None:\n        for row in range(n):\n            val = grid[row][0]\n            if all(grid[row][c] == val for c in range(m)):\n                top_h = row\n                bottom_h = n - row - 1\n                if top_h == bottom_h:\n                    split_type = 'horizontal'\n                    split_index = row\n                    break\n\n    # If no clear split, return the original grid\n    if split_type is None:\n        return grid\n\n    # ---------- vertical split (column separator) ----------\n    if split_type == 'vertical':\n        col = split_index\n        w = col  # width of each half\n        left_half = [row[:col] for row in grid]\n        right_half = [row[col+1:] for row in grid]\n\n        # Determine special value in each half (the value that is not the background)\n        left_vals = [v for row in left_half for v in row]\n        cnt_left = Counter(left_vals)\n        bg_left = max(cnt_left, key=cnt_left.get)\n        specials_left = [v for v in cnt_left if v != bg_left]\n        special_left = specials_left[0] if specials_left else None\n\n        right_vals = [v for row in right_half for v in row]\n        cnt_right = Counter(right_vals)\n        bg_right = max(cnt_right, key=cnt_right.get)\n        specials_right = [v for v in cnt_right if v != bg_right]\n        special_right = specials_right[0] if specials_right else None\n\n        # Build output\n        out = []\n        for i in range(n):\n            out_row = []\n            for j in range(w):\n                lv = left_half[i][j]\n                rv = right_half[i][j]\n                if lv == special_left and rv == special_right:\n                    out_val = 0\n                elif lv == special_left:\n                    out_val = special_left\n                elif rv == special_right:\n                    out_val = special_right\n                else:\n                    out_val = 0\n                out_row.append(out_val)\n            out.append(out_row)\n        return out\n\n    # ---------- horizontal split (row separator) ----------\n    else:\n        row = split_index\n        h = row  # height of each half\n        top_half = grid[:row]\n        bottom_half = grid[row+1:]\n\n        # Special values in top and bottom halves\n        top_vals = [v for r in top_half for v in r]\n        cnt_top = Counter(top_vals)\n        bg_top = max(cnt_top, key=cnt_top.get)\n        specials_top = [v for v in cnt_top if v != bg_top]\n        special_top = specials_top[0] if specials_top else None\n\n        bottom_vals = [v for r in bottom_half for v in r]\n        cnt_bottom = Counter(bottom_vals)\n        bg_bottom = max(cnt_bottom, key=cnt_bottom.get)\n        specials_bottom = [v for v in cnt_bottom if v != bg_bottom]\n        special_bottom = specials_bottom[0] if specials_bottom else None\n\n        out = []\n        for i in range(h):\n            out_row = []\n            for j in range(m):\n                tv = top_half[i][j]\n                bv = bottom_half[i][j]\n                if tv == special_top and bv == special_bottom:\n                    out_val = 0\n                elif tv == special_top:\n                    out_val = special_top\n                elif bv == special_bottom:\n                    out_val = special_bottom\n                else:\n                    out_val = 0\n                out_row.append(out_val)\n            out.append(out_row)\n        return out",
+  "script": "from collections import Counter\n\ndef solve(grid):\n    if not grid:\n        return []\n\n    n = len(grid)\n    m = len(grid[0])\n\n    # Find separator: constant column or row that splits the grid into equal halves\n    split_type = None\n    split_index = None\n\n    # Try constant column\n    for col in range(m):\n        val = grid[0][col]\n        if all(grid[r][col] == val for r in range(n)):\n            left_w = col\n            right_w = m - col - 1\n            if left_w == right_w:\n                split_type = 'vertical'\n                split_index = col\n                break\n\n    # If no column found, try constant row\n    if split_type is None:\n        for row in range(n):\n            val = grid[row][0]\n            if all(grid[row][c] == val for c in range(m)):\n                top_h = row\n                bottom_h = n - row - 1\n                if top_h == bottom_h:\n                    split_type = 'horizontal'\n                    split_index = row\n                    break\n\n    # If no clear split, return the original grid\n    if split_type is None:\n        return grid\n\n    # ---------- vertical split (column separator) ----------\n    if split_type == 'vertical':\n        col = split_index\n        w = col  # width of each half\n        left_half = [row[:col] for row in grid]\n        right_half = [row[col+1:] for row in grid]\n\n        # Determine special value in each half (the value that is not the background)\n        left_vals = [v for row in left_half for v in row]\n        cnt_left = Counter(left_vals)\n        bg_left = max(cnt_left, key=cnt_left.get)\n        specials_left = [v for v in cnt_left if v != bg_left]\n        special_left = specials_left[0] if specials_left else None\n\n        right_vals = [v for row in right_half for v in row]\n        cnt_right = Counter(right_vals)\n        bg_right = max(cnt_right, key=cnt_right.get)\n        specials_right = [v for v in cnt_right if v != bg_right]\n        special_right = specials_right[0] if specials_right else None\n\n        # Build output\n        out = []\n        for i in range(n):\n            out_row = []\n            for j in range(w):\n                lv = left_half[i][j]\n                rv = right_half[i][j]\n                if lv == special_left and rv == special_right:\n                    out_val = 0\n                elif lv == special_left:\n                    out_val = special_left\n                elif rv == special_right:\n                    out_val = special_right\n                else:\n                    out_val = 0\n                out_row.append(out_val)\n            out.append(out_row)\n        return out\n\n    # ---------- horizontal split (row separator) ----------\n    else:\n        row = split_index\n        h = row  # height of each half\n        top_half = grid[:row]\n        bottom_half = grid[row+1:]\n\n        # Special values in top and bottom halves\n        top_vals = [v for r in top_half for v in r]\n        cnt_top = Counter(top_vals)\n        bg_top = max(cnt_top, key=cnt_top.get)\n        specials_top = [v for v in cnt_top if v != bg_top]\n        special_top = specials_top[0] if specials_top else None\n\n        bottom_vals = [v for r in bottom_half for v in r]\n        cnt_bottom = Counter(bottom_vals)\n        bg_bottom = max(cnt_bottom, key=cnt_bottom.get)\n        specials_bottom = [v for v in cnt_bottom if v != bg_bottom]\n        special_bottom = specials_bottom[0] if specials_bottom else None\n\n        out = []\n        for i in range(h):\n            out_row = []\n            for j in range(m):\n                tv = top_half[i][j]\n                bv = bottom_half[i][j]\n                if tv == special_top and bv == special_bottom:\n                    out_val = 0\n                elif tv == special_top:\n                    out_val = special_top\n                elif bv == special_bottom:\n                    out_val = special_bottom\n                else:\n                    out_val = 0\n                out_row.append(out_val)\n            out.append(out_row)\n        return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 2,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "p_arc_stable": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "p_arc_stable": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "stable": null,
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

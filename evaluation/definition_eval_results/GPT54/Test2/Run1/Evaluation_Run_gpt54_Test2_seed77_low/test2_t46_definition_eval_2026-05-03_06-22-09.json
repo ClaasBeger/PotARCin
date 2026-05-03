@@ -1,0 +1,514 @@
+{
+  "task_id": "test2_t46",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 5 8 0\n0 4 5 0 0\n5 5 5 5 5\n0 0 5 7 0\n3 0 5 0 0\nOutput:\n7 3 5 8 4\n8 4 5 3 7\n5 5 5 5 5\n4 8 5 7 3\n3 7 5 4 8\n\nExample 2:\n\nInput:\n0 0 5 0 0\n0 1 5 6 0\n5 5 5 5 5\n0 0 5 0 0\n8 0 5 0 9\nOutput:\n6 8 5 9 1\n9 1 5 6 8\n5 5 5 5 5\n1 9 5 8 6\n8 6 5 1 9\n\nExample 3:\n\nInput:\n7 0 5 0 0\n0 0 5 3 0\n5 5 5 5 5\n0 2 5 0 0\n0 0 5 0 1\nOutput:\n7 3 5 1 2\n2 1 5 3 7\n5 5 5 5 5\n1 2 5 7 3\n3 7 5 2 1\n\nBelow is a test input grid.\n\nInput:\n0 0 5 0 8\n0 6 5 0 0\n5 5 5 5 5\n3 0 5 0 0\n0 0 5 4 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    n = len(grid)\n    m = len(grid[0])\n    cr, cc = n // 2, m // 2\n\n    # Extract the four non-zero values from the four quadrants\n    quads = {\n        \"TL\": None,\n        \"TR\": None,\n        \"BL\": None,\n        \"BR\": None,\n    }\n\n    for r in range(n):\n        for c in range(m):\n            if r == cr or c == cc:\n                continue\n            v = grid[r][c]\n            if v == 0:\n                continue\n            if r < cr and c < cc:\n                quads[\"TL\"] = (v, r, c)\n            elif r < cr and c > cc:\n                quads[\"TR\"] = (v, r, c)\n            elif r > cr and c < cc:\n                quads[\"BL\"] = (v, r, c)\n            else:\n                quads[\"BR\"] = (v, r, c)\n\n    a = quads[\"TL\"][0]\n    b = quads[\"TR\"][0]\n    c = quads[\"BL\"][0]\n    d = quads[\"BR\"][0]\n\n    # Local 2x2 positions inside each quadrant\n    tla = (quads[\"TL\"][1], quads[\"TL\"][2])\n    trb = (quads[\"TR\"][1], quads[\"TR\"][2])\n    blc = (quads[\"BL\"][1], quads[\"BL\"][2])\n    brd = (quads[\"BR\"][1], quads[\"BR\"][2])\n\n    # Normalize to local coords in {0,1}x{0,1}\n    tl_pos = (tla[0], tla[1])\n    tr_pos = (trb[0], trb[1] - (cc + 1))\n    bl_pos = (blc[0] - (cr + 1), blc[1])\n    br_pos = (brd[0] - (cr + 1), brd[1] - (cc + 1))\n\n    # Templates inferred from examples\n    template1 = [\n        [d, c, b, a],\n        [b, a, c, d],\n        [a, b, d, c],\n        [c, d, a, b],\n    ]\n    template2 = [\n        [b, c, d, a],\n        [d, a, b, c],\n        [a, d, c, b],\n        [c, b, a, d],\n    ]\n    template3 = [\n        [a, b, d, c],\n        [c, d, b, a],\n        [d, c, a, b],\n        [b, a, c, d],\n    ]\n\n    # Choose template by observed positional pattern\n    if tl_pos == (0, 0):\n        outer = template3\n    elif tr_pos == (0, 0) or bl_pos == (1, 1) or br_pos == (1, 1):\n        outer = template2\n    else:\n        outer = template1\n\n    out = [row[:] for row in grid]\n\n    rr = [r for r in range(n) if r != cr]\n    cc_list = [c for c in range(m) if c != cc]\n\n    for i, r in enumerate(rr):\n        for j, c0 in enumerate(cc_list):\n            out[r][c0] = outer[i][j]\n\n    return out",
+  "script": "def solve(grid):\n    n = len(grid)\n    m = len(grid[0])\n    cr, cc = n // 2, m // 2\n\n    # Extract the four non-zero values from the four quadrants\n    quads = {\n        \"TL\": None,\n        \"TR\": None,\n        \"BL\": None,\n        \"BR\": None,\n    }\n\n    for r in range(n):\n        for c in range(m):\n            if r == cr or c == cc:\n                continue\n            v = grid[r][c]\n            if v == 0:\n                continue\n            if r < cr and c < cc:\n                quads[\"TL\"] = (v, r, c)\n            elif r < cr and c > cc:\n                quads[\"TR\"] = (v, r, c)\n            elif r > cr and c < cc:\n                quads[\"BL\"] = (v, r, c)\n            else:\n                quads[\"BR\"] = (v, r, c)\n\n    a = quads[\"TL\"][0]\n    b = quads[\"TR\"][0]\n    c = quads[\"BL\"][0]\n    d = quads[\"BR\"][0]\n\n    # Local 2x2 positions inside each quadrant\n    tla = (quads[\"TL\"][1], quads[\"TL\"][2])\n    trb = (quads[\"TR\"][1], quads[\"TR\"][2])\n    blc = (quads[\"BL\"][1], quads[\"BL\"][2])\n    brd = (quads[\"BR\"][1], quads[\"BR\"][2])\n\n    # Normalize to local coords in {0,1}x{0,1}\n    tl_pos = (tla[0], tla[1])\n    tr_pos = (trb[0], trb[1] - (cc + 1))\n    bl_pos = (blc[0] - (cr + 1), blc[1])\n    br_pos = (brd[0] - (cr + 1), brd[1] - (cc + 1))\n\n    # Templates inferred from examples\n    template1 = [\n        [d, c, b, a],\n        [b, a, c, d],\n        [a, b, d, c],\n        [c, d, a, b],\n    ]\n    template2 = [\n        [b, c, d, a],\n        [d, a, b, c],\n        [a, d, c, b],\n        [c, b, a, d],\n    ]\n    template3 = [\n        [a, b, d, c],\n        [c, d, b, a],\n        [d, c, a, b],\n        [b, a, c, d],\n    ]\n\n    # Choose template by observed positional pattern\n    if tl_pos == (0, 0):\n        outer = template3\n    elif tr_pos == (0, 0) or bl_pos == (1, 1) or br_pos == (1, 1):\n        outer = template2\n    else:\n        outer = template1\n\n    out = [row[:] for row in grid]\n\n    rr = [r for r in range(n) if r != cr]\n    cc_list = [c for c in range(m) if c != cc]\n\n    for i, r in enumerate(rr):\n        for j, c0 in enumerate(cc_list):\n            out[r][c0] = outer[i][j]\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 2,
+      "total": 3,
+      "success_rate": 0.6666666666666666
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "p_arc_stable": {
+      "ok": 1,
+      "total": 50,
+      "success_rate": 0.02
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 2,
+      "total": 50,
+      "success_rate": 0.04
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          5,
+          8,
+          0
+        ],
+        [
+          0,
+          4,
+          5,
+          0,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          0,
+          0,
+          5,
+          7,
+          0
+        ],
+        [
+          3,
+          0,
+          5,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          7,
+          3,
+          5,
+          8,
+          4
+        ],
+        [
+          8,
+          4,
+          5,
+          3,
+          7
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          4,
+          8,
+          5,
+          7,
+          3
+        ],
+        [
+          3,
+          7,
+          5,
+          4,
+          8
+        ]
+      ],
+      "got": [
+        [
+          8,
+          3,
+          5,
+          7,
+          4
+        ],
+        [
+          7,
+          4,
+          5,
+          8,
+          3
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          4,
+          7,
+          5,
+          3,
+          8
+        ],
+        [
+          3,
+          8,
+          5,
+          4,
+          7
+        ]
+      ]
+    },
+    "test": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          5,
+          0,
+          8
+        ],
+        [
+          0,
+          6,
+          5,
+          0,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          3,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          4,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          3,
+          5,
+          6,
+          8
+        ],
+        [
+          8,
+          6,
+          5,
+          3,
+          4
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          3,
+          4,
+          5,
+          8,
+          6
+        ],
+        [
+          6,
+          8,
+          5,
+          4,
+          3
+        ]
+      ],
+      "got": [
+        [
+          4,
+          3,
+          5,
+          8,
+          6
+        ],
+        [
+          8,
+          6,
+          5,
+          3,
+          4
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          6,
+          8,
+          5,
+          4,
+          3
+        ],
+        [
+          3,
+          4,
+          5,
+          6,
+          8
+        ]
+      ]
+    },
+    "p_arc_stable": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          1,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          4,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          0,
+          9,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          8,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          1,
+          5,
+          9,
+          8
+        ],
+        [
+          9,
+          8,
+          5,
+          4,
+          1
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          8,
+          9,
+          5,
+          1,
+          4
+        ],
+        [
+          1,
+          4,
+          5,
+          8,
+          9
+        ]
+      ],
+      "got": [
+        [
+          8,
+          9,
+          5,
+          4,
+          1
+        ],
+        [
+          4,
+          1,
+          5,
+          9,
+          8
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          1,
+          4,
+          5,
+          8,
+          9
+        ],
+        [
+          9,
+          8,
+          5,
+          1,
+          4
+        ]
+      ]
+    },
+    "stable": null,
+    "generator_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          6,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          7
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          0,
+          0,
+          5,
+          3,
+          0
+        ],
+        [
+          0,
+          8,
+          5,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          6,
+          7,
+          5,
+          8,
+          3
+        ],
+        [
+          8,
+          3,
+          5,
+          6,
+          7
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          7,
+          6,
+          5,
+          3,
+          8
+        ],
+        [
+          3,
+          8,
+          5,
+          7,
+          6
+        ]
+      ],
+      "got": [
+        [
+          6,
+          7,
+          5,
+          3,
+          8
+        ],
+        [
+          8,
+          3,
+          5,
+          7,
+          6
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          3,
+          8,
+          5,
+          6,
+          7
+        ],
+        [
+          7,
+          6,
+          5,
+          8,
+          3
+        ]
+      ]
+    },
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

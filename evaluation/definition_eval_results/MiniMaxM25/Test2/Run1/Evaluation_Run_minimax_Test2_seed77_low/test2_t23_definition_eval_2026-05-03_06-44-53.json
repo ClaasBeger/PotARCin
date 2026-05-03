@@ -1,0 +1,74 @@
+{
+  "task_id": "test2_t23",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n1 1 1 0 0 3 3 3 3 0\n1 0 0 0 3 3 0 0 3 3\n1 2 0 3 0 0 0 0 0 3\n1 2 0 3 0 0 4 0 0 0\n0 2 0 3 0 4 4 0 0 0\n0 2 0 3 0 4 0 0 2 0\n4 0 0 0 0 4 0 2 0 0\n4 0 0 0 0 0 2 2 0 0\n4 4 4 0 0 2 2 0 0 0\n0 0 0 3 3 3 3 0 0 1\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 5 5 5 5 5 5 0 0\n0 5 5 5 5 0 0 0 0 0\n0 0 0 5 0 0 0 0 0 0\n0 0 0 5 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n6 6 6 6 4 0 0 0 8 0 0\n6 0 0 0 0 4 0 0 8 0 0\n6 0 0 0 0 0 4 0 8 0 0\n6 0 8 8 8 0 0 4 0 0 6\n0 0 8 0 0 0 0 0 4 0 6\n0 0 8 0 0 0 0 0 6 6 6\n0 0 8 8 0 0 0 0 0 0 6\n0 0 3 3 3 3 6 0 0 0 6\n4 0 0 0 4 6 8 8 8 8 6\n0 0 0 0 6 0 0 0 0 0 0\n3 3 3 6 0 0 0 4 4 4 4\nOutput:\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 5 5 0 0 0 0 0 0\n0 0 0 5 5 0 0 0 0 0 0\n0 5 5 5 5 5 5 5 5 5 0\n0 0 0 5 5 0 0 0 5 0 0\n0 0 0 5 5 0 0 0 5 0 0\n0 0 0 5 5 0 0 0 5 0 0\n0 0 0 5 5 0 0 5 5 5 0\n0 5 5 5 0 0 0 0 5 0 0\n0 0 5 5 0 0 0 0 5 0 0\n0 0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n8 8 8 8 0 0 0 0 0 1 0 0\n0 0 0 0 4 4 4 1 1 1 0 3\n3 3 0 0 0 0 0 1 0 1 1 3\n0 3 3 0 0 0 0 1 0 1 0 3\n0 0 3 3 0 0 0 0 0 0 0 7\n7 0 8 3 3 0 0 0 0 0 8 7\n7 0 8 0 3 3 0 6 0 8 8 8\n7 0 8 0 0 0 0 6 0 0 0 0\n7 6 0 0 0 0 4 6 1 1 1 1\n0 6 0 0 0 4 4 1 0 0 7 7\n0 6 0 6 6 0 4 0 0 0 0 0\n0 6 6 6 7 7 4 0 0 0 3 3\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 5 0 0 0 0 0 0 0 0 0\n0 0 5 0 0 0 5 0 0 0 0 0\n0 0 5 5 5 5 5 5 5 5 5 0\n0 0 5 0 0 0 5 0 0 5 0 5\n0 5 5 5 5 5 5 5 5 5 5 5\n0 0 0 5 5 5 5 5 5 5 0 5\n0 0 0 0 0 0 5 0 0 5 0 5\n0 0 5 5 5 5 5 0 0 0 0 5\n0 0 0 0 0 0 0 0 0 0 0 5\n0 0 0 0 0 0 0 0 0 0 0 5\n0 0 0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 6 6 6 6 6 0 0 0\n2 2 2 0 0 0 0 8 8 8\n2 0 0 9 3 3 3 0 0 6\n2 0 0 0 9 0 7 0 0 6\n0 0 0 0 0 9 0 7 0 6\n8 8 0 0 0 0 0 0 7 6\n6 6 6 0 9 7 3 0 0 7\n0 8 0 9 0 7 3 0 0 0\n0 8 9 0 0 7 3 2 2 2\n0 9 0 0 0 7 8 8 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\nfrom collections import deque\nfrom typing import List\n\ndef solve(grid: List[List[int]]) -> List[List[int]]:\n    n = len(grid)\n    m = len(grid[0]) if n else 0\n\n    # -------- find connected components for each colour ----------\n    visited = [[False] * m for _ in range(n)]\n    comps_by_colour = {}\n\n    for i in range(n):\n        for j in range(m):\n            val = grid[i][j]\n            if val == 0 or visited[i][j]:\n                continue\n            # BFS for this component\n            q = deque()\n            q.append((i, j))\n            visited[i][j] = True\n            cells = []\n            while q:\n                r, c = q.popleft()\n                cells.append((r, c))\n                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                    nr, nc = r + dr, c + dc\n                    if 0 <= nr < n and 0 <= nc < m:\n                        if not visited[nr][nc] and grid[nr][nc] == val:\n                            visited[nr][nc] = True\n                            q.append((nr, nc))\n            comps_by_colour.setdefault(val, []).append(cells)\n\n    # -------- choose the colour that has exactly three components,\n    #            preferring the one whose components touch the fewest borders ----------\n    target = None\n    best_border = None\n    for colour, comps in comps_by_colour.items():\n        if len(comps) != 3:\n            continue\n        border_cnt = 0\n        for comp in comps:\n            if any(r == 0 or r == n - 1 or c == 0 or c == m - 1 for r, c in comp):\n                border_cnt += 1\n        if best_border is None or border_cnt < best_border:\n            best_border = border_cnt\n            target = colour\n        elif border_cnt == best_border and (target is None or colour < target):\n            target = colour\n\n    # if no colour with three components, return a zero grid (should not happen)\n    if target is None:\n        return [[0] * m for _ in range(n)]\n\n    comps = comps_by_colour[target]\n\n    # -------- compute bounding boxes for each component ----------\n    boxes = []\n    for comp in comps:\n        rows = [r for r, _ in comp]\n        cols = [c for _, c in comp]\n        boxes.append((min(rows), max(rows), min(cols), max(cols)))  # (min_r, max_r, min_c, max_c)\n\n    # identify leftmost / rightmost / topmost / bottommost components\n    left_box = min(boxes, key=lambda b: b[2])\n    right_box = max(boxes, key=lambda b: b[3])\n    top_box = min(boxes, key=lambda b: b[0])\n    bottom_box = max(boxes, key=lambda b: b[0])\n\n    # middle component is the one that is neither top nor bottom\n    middle_box = None\n    for b in boxes:\n        if b != top_box and b != bottom_box:\n            middle_box = b\n            break\n\n    # -------- compute columns for the two vertical lines ----------\n    left_col = (left_box[2] + left_box[3]) // 2\n    right_col = (right_box[2] + right_box[3]) // 2\n    if left_col > right_col:\n        left_col, right_col = right_col, left_col\n\n    # -------- compute row for the horizontal line ----------\n    median_row = (top_box[0] + bottom_box[1]) // 2\n    horiz_row = min(middle_box[0], median_row)\n\n    # -------- build output grid ----------\n    out = [[0] * m for _ in range(n)]\n\n    # vertical lines: start one row below the top component and finish one row above the bottom component\n    r_start = top_box[0] + 1\n    r_end = bottom_box[0] - 1\n    if r_start <= r_end:\n        for r in range(r_start, r_end + 1):\n            if 0 <= left_col < m:\n                out[r][left_col] = 5\n            if 0 <= right_col < m:\n                out[r][right_col] = 5\n\n    # horizontal line\n    if 0 <= horiz_row < n:\n        for c in range(left_col, right_col + 1):\n            if 0 <= c < m:\n                out[horiz_row][c] = 5\n\n    return out\n```",
+  "script": "from collections import deque\nfrom typing import List\n\ndef solve(grid: List[List[int]]) -> List[List[int]]:\n    n = len(grid)\n    m = len(grid[0]) if n else 0\n\n    # -------- find connected components for each colour ----------\n    visited = [[False] * m for _ in range(n)]\n    comps_by_colour = {}\n\n    for i in range(n):\n        for j in range(m):\n            val = grid[i][j]\n            if val == 0 or visited[i][j]:\n                continue\n            # BFS for this component\n            q = deque()\n            q.append((i, j))\n            visited[i][j] = True\n            cells = []\n            while q:\n                r, c = q.popleft()\n                cells.append((r, c))\n                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                    nr, nc = r + dr, c + dc\n                    if 0 <= nr < n and 0 <= nc < m:\n                        if not visited[nr][nc] and grid[nr][nc] == val:\n                            visited[nr][nc] = True\n                            q.append((nr, nc))\n            comps_by_colour.setdefault(val, []).append(cells)\n\n    # -------- choose the colour that has exactly three components,\n    #            preferring the one whose components touch the fewest borders ----------\n    target = None\n    best_border = None\n    for colour, comps in comps_by_colour.items():\n        if len(comps) != 3:\n            continue\n        border_cnt = 0\n        for comp in comps:\n            if any(r == 0 or r == n - 1 or c == 0 or c == m - 1 for r, c in comp):\n                border_cnt += 1\n        if best_border is None or border_cnt < best_border:\n            best_border = border_cnt\n            target = colour\n        elif border_cnt == best_border and (target is None or colour < target):\n            target = colour\n\n    # if no colour with three components, return a zero grid (should not happen)\n    if target is None:\n        return [[0] * m for _ in range(n)]\n\n    comps = comps_by_colour[target]\n\n    # -------- compute bounding boxes for each component ----------\n    boxes = []\n    for comp in comps:\n        rows = [r for r, _ in comp]\n        cols = [c for _, c in comp]\n        boxes.append((min(rows), max(rows), min(cols), max(cols)))  # (min_r, max_r, min_c, max_c)\n\n    # identify leftmost / rightmost / topmost / bottommost components\n    left_box = min(boxes, key=lambda b: b[2])\n    right_box = max(boxes, key=lambda b: b[3])\n    top_box = min(boxes, key=lambda b: b[0])\n    bottom_box = max(boxes, key=lambda b: b[0])\n\n    # middle component is the one that is neither top nor bottom\n    middle_box = None\n    for b in boxes:\n        if b != top_box and b != bottom_box:\n            middle_box = b\n            break\n\n    # -------- compute columns for the two vertical lines ----------\n    left_col = (left_box[2] + left_box[3]) // 2\n    right_col = (right_box[2] + right_box[3]) // 2\n    if left_col > right_col:\n        left_col, right_col = right_col, left_col\n\n    # -------- compute row for the horizontal line ----------\n    median_row = (top_box[0] + bottom_box[1]) // 2\n    horiz_row = min(middle_box[0], median_row)\n\n    # -------- build output grid ----------\n    out = [[0] * m for _ in range(n)]\n\n    # vertical lines: start one row below the top component and finish one row above the bottom component\n    r_start = top_box[0] + 1\n    r_end = bottom_box[0] - 1\n    if r_start <= r_end:\n        for r in range(r_start, r_end + 1):\n            if 0 <= left_col < m:\n                out[r][left_col] = 5\n            if 0 <= right_col < m:\n                out[r][right_col] = 5\n\n    # horizontal line\n    if 0 <= horiz_row < n:\n        for c in range(left_col, right_col + 1):\n            if 0 <= c < m:\n                out[horiz_row][c] = 5\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "p_arc_stable": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "p_arc_stable": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "stable": null,
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

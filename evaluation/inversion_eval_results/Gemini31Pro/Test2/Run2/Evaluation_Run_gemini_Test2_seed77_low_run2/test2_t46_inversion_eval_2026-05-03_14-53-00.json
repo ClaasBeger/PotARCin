@@ -1,0 +1,127 @@
+{
+  "task_id": "test2_t46",
+  "model": "gemini-3.1-pro-preview",
+  "provider": "google",
+  "base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 304874889,
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n0 0 5 8 0\n0 4 5 0 0\n5 5 5 5 5\n0 0 5 7 0\n3 0 5 0 0\nOutput:\n7 3 5 8 4\n8 4 5 3 7\n5 5 5 5 5\n4 8 5 7 3\n3 7 5 4 8\n\nExample 2:\nInput:\n0 0 5 0 0\n0 1 5 6 0\n5 5 5 5 5\n0 0 5 0 0\n8 0 5 0 9\nOutput:\n6 8 5 9 1\n9 1 5 6 8\n5 5 5 5 5\n1 9 5 8 6\n8 6 5 1 9\n\nExample 3:\nInput:\n7 0 5 0 0\n0 0 5 3 0\n5 5 5 5 5\n0 2 5 0 0\n0 0 5 0 1\nOutput:\n7 3 5 1 2\n2 1 5 3 7\n5 5 5 5 5\n1 2 5 7 3\n3 7 5 2 1\n\nNow infer an input grid that would produce the following output by applying the same rule.\nDesired output:\n2 1 5 4 9\n9 4 5 1 2\n5 5 5 5 5\n4 9 5 2 1\n1 2 5 9 4\n\nYour final answer must be ONLY a single Python list-of-lists grid:\n[[...], ...]\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "```python\n[\n    [2, 0, 5, 4, 0],\n    [0, 0, 5, 0, 0],\n    [5, 5, 5, 5, 5],\n    [0, 0, 5, 0, 0],\n    [1, 0, 5, 9, 0]\n]\n```",
+  "desired_output": [
+    [
+      2,
+      1,
+      5,
+      4,
+      9
+    ],
+    [
+      9,
+      4,
+      5,
+      1,
+      2
+    ],
+    [
+      5,
+      5,
+      5,
+      5,
+      5
+    ],
+    [
+      4,
+      9,
+      5,
+      2,
+      1
+    ],
+    [
+      1,
+      2,
+      5,
+      9,
+      4
+    ]
+  ],
+  "reference_input": [
+    [
+      2,
+      0,
+      5,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      5,
+      1,
+      0
+    ],
+    [
+      5,
+      5,
+      5,
+      5,
+      5
+    ],
+    [
+      0,
+      9,
+      5,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      5,
+      0,
+      4
+    ]
+  ],
+  "evaluation_ok": true,
+  "prediction_input": [
+    [
+      2,
+      0,
+      5,
+      4,
+      0
+    ],
+    [
+      0,
+      0,
+      5,
+      0,
+      0
+    ],
+    [
+      5,
+      5,
+      5,
+      5,
+      5
+    ],
+    [
+      0,
+      0,
+      5,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      5,
+      9,
+      0
+    ]
+  ],
+  "metrics": {
+    "success_rate": 0.0
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "task_id": "test2_t38",
+  "test_idx": 0,
+  "model": "gemini-3.1-pro-preview",
+  "provider": "google",
+  "base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n2 0 0 0 0 0 0 0\n2 2 0 0 0 0 0 0\n8 0 2 0 0 0 0 0\n2 2 2 2 0 0 0 0\n2 0 0 0 2 0 0 0\n2 2 0 0 2 2 0 0\n2 0 8 0 2 0 2 0\n2 2 2 2 2 2 8 2\nOutput:\n8 0\n8 2\n\nExample 2:\n\nInput:\n3 3 0 3 3 0 0 0 0\n3 0 4 3 0 3 0 0 0\n3 3 3 3 3 3 0 0 0\n3 3 0 0 0 0 3 3 0\n3 0 3 0 0 0 4 0 3\n3 4 3 0 0 0 3 3 3\n3 3 0 3 3 0 3 3 0\n3 0 3 3 0 3 3 0 3\n3 3 3 3 3 3 3 3 4\nOutput:\n3 3 0\n4 0 4\n3 4 4\n\nExample 3:\n\nInput:\n1 0 0 0 0 0 0 0\n1 1 0 0 0 0 0 0\n0 1 0 0 0 0 0 0\n1 0 1 0 0 0 0 0\n1 1 1 5 0 0 0 0\n0 1 0 1 0 0 0 0\n0 0 1 0 0 0 0 0\n0 0 1 1 0 0 0 0\n0 0 0 1 0 0 0 0\n1 0 0 0 1 0 0 0\n5 1 0 0 1 1 0 0\n0 1 0 0 0 1 0 0\n1 0 1 0 1 0 1 0\n1 1 5 1 1 1 1 1\n0 1 0 1 0 1 0 1\n0 0 1 0 0 0 1 0\n0 0 1 1 0 0 1 1\n0 0 0 1 0 0 0 1\n0 0 0 0 1 0 0 0\n0 0 0 0 1 5 0 0\n0 0 0 0 0 1 0 0\n0 0 0 0 1 0 1 0\n0 0 0 0 1 1 1 1\n0 0 0 0 0 1 0 1\n0 0 0 0 0 0 1 0\n0 0 0 0 0 0 1 1\n0 0 0 0 0 0 0 1\nOutput:\n1 0\n5 5\n0 1\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 6 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 6 6 9 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 6 0 0 6 0 0 6 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 6 6 6 6 6 6 6 6 6 0 0 0 0 0 0 0 0 0\n0 0 0 0 6 0 0 0 0 0 0 0 0 6 0 0 0 0 0 0 0 0 6 0 0 0 0\n0 0 0 6 6 6 0 0 0 0 0 0 6 9 6 0 0 0 0 0 0 6 6 6 0 0 0\n0 6 0 0 6 0 0 6 0 0 6 0 0 6 0 0 6 0 0 6 0 0 6 0 0 6 0\n6 6 6 6 6 9 6 6 6 6 6 6 6 6 6 6 6 6 6 6 9 6 6 6 6 6 6\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    H = len(grid)\n    W = len(grid[0])\n    \n    # Find all non-zero pixels and count their frequencies\n    color_counts = {}\n    non_zeros = []\n    \n    for r in range(H):\n        for c in range(W):\n            v = grid[r][c]\n            if v != 0:\n                color_counts[v] = color_counts.get(v, 0) + 1\n                non_zeros.append((r, c, v))\n                \n    main_color = max(color_counts.keys(), key=lambda k: color_counts[k])\n    \n    # Try all possible block sizes\n    best_r, best_c = H, W\n    \n    for r in range(1, H + 1):\n        for c in range(1, W + 1):\n            # Check if this could be the base fractal size\n            # We assume the fractal has depth D > 1, so grid bounding box or size matches r^D x c^D\n            # Actually, just check if the number of non-zero projected positions N satisfies N^D == len(non_zeros)\n            \n            projected = set()\n            for x, y, v in non_zeros:\n                projected.add((x % r, y % c))\n                \n            N = len(projected)\n            if N == 0: continue\n            \n            # Check if there exists an integer D >= 1 such that N^D == len(non_zeros)\n            # and r^D == bounding_box_height, etc. We can just use a simple heuristic:\n            # D is log(len(non_zeros)) / log(N)\n            D = 1\n            n_pow = N\n            while n_pow < len(non_zeros):\n                n_pow *= N\n                D += 1\n                \n            if n_pow == len(non_zeros) and D > 1:\n                # Plausible base size\n                best_r, best_c = r, c\n                break\n        if best_r != H:\n            break\n\n    if best_r == H and best_c == W:\n        # Fallback if the clean power relation wasn't found\n        for r in range(1, H):\n            for c in range(1, W):\n                projected = set((x % r, y % c) for x, y, v in non_zeros)\n                if len(projected) > 0 and len(projected) * 2 <= r * c:\n                    best_r, best_c = r, c\n                    break\n            if best_r != H:\n                break\n\n    output = [[0 for _ in range(best_c)] for _ in range(best_r)]\n    \n    # Fill with main color\n    for x, y, v in non_zeros:\n        output[x % best_r][y % best_c] = main_color\n        \n    # Overwrite with anomaly colors\n    for x, y, v in non_zeros:\n        if v != main_color:\n            output[x % best_r][y % best_c] = v\n            \n    return output\n```",
+  "script": "def solve(grid):\n    H = len(grid)\n    W = len(grid[0])\n    \n    # Find all non-zero pixels and count their frequencies\n    color_counts = {}\n    non_zeros = []\n    \n    for r in range(H):\n        for c in range(W):\n            v = grid[r][c]\n            if v != 0:\n                color_counts[v] = color_counts.get(v, 0) + 1\n                non_zeros.append((r, c, v))\n                \n    main_color = max(color_counts.keys(), key=lambda k: color_counts[k])\n    \n    # Try all possible block sizes\n    best_r, best_c = H, W\n    \n    for r in range(1, H + 1):\n        for c in range(1, W + 1):\n            # Check if this could be the base fractal size\n            # We assume the fractal has depth D > 1, so grid bounding box or size matches r^D x c^D\n            # Actually, just check if the number of non-zero projected positions N satisfies N^D == len(non_zeros)\n            \n            projected = set()\n            for x, y, v in non_zeros:\n                projected.add((x % r, y % c))\n                \n            N = len(projected)\n            if N == 0: continue\n            \n            # Check if there exists an integer D >= 1 such that N^D == len(non_zeros)\n            # and r^D == bounding_box_height, etc. We can just use a simple heuristic:\n            # D is log(len(non_zeros)) / log(N)\n            D = 1\n            n_pow = N\n            while n_pow < len(non_zeros):\n                n_pow *= N\n                D += 1\n                \n            if n_pow == len(non_zeros) and D > 1:\n                # Plausible base size\n                best_r, best_c = r, c\n                break\n        if best_r != H:\n            break\n\n    if best_r == H and best_c == W:\n        # Fallback if the clean power relation wasn't found\n        for r in range(1, H):\n            for c in range(1, W):\n                projected = set((x % r, y % c) for x, y, v in non_zeros)\n                if len(projected) > 0 and len(projected) * 2 <= r * c:\n                    best_r, best_c = r, c\n                    break\n            if best_r != H:\n                break\n\n    output = [[0 for _ in range(best_c)] for _ in range(best_r)]\n    \n    # Fill with main color\n    for x, y, v in non_zeros:\n        output[x % best_r][y % best_c] = main_color\n        \n    # Overwrite with anomaly colors\n    for x, y, v in non_zeros:\n        if v != main_color:\n            output[x % best_r][y % best_c] = v\n            \n    return output",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "p_arc_stable": {
+      "ok": null,
+      "total": 50,
+      "success_rate": null
+    },
+    "stable": {
+      "ok": null,
+      "total": 0,
+      "success_rate": null
+    },
+    "generator_dynamic50": {
+      "ok": null,
+      "total": 50,
+      "success_rate": null
+    },
+    "re_arc_stable": {
+      "ok": null,
+      "total": 0,
+      "success_rate": null
+    },
+    "re_arc_dynamic50": {
+      "ok": null,
+      "total": 0,
+      "success_rate": null
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "solve() timed out after 60s"
+    },
+    "test": {
+      "index": 0,
+      "error": "solve() timed out after 60s"
+    },
+    "p_arc_stable": {
+      "index": 10,
+      "error": "excessive-timeouts: first 15 evaluated candidates all timed out; aborting definition evaluation"
+    },
+    "stable": {
+      "error": "excessive-timeouts: split not evaluated"
+    },
+    "generator_dynamic50": {
+      "error": "excessive-timeouts: split not evaluated"
+    },
+    "re_arc_stable": {
+      "error": "excessive-timeouts: split not evaluated"
+    },
+    "re_arc_dynamic50": {
+      "error": "excessive-timeouts: split not evaluated"
+    }
+  },
+  "evaluation_ok": false,
+  "error": "excessive-timeouts: first 15 evaluated candidates all timed out"
+}

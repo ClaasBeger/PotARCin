@@ -1,0 +1,62 @@
+{
+  "task_id": "test2_t44",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 7 7 7 7 7 7 7 7 7 7 7 7 7 0 0\n0 0 7 0 0 0 0 0 0 0 0 0 0 0 7 0 0\n0 0 7 0 5 5 5 5 5 5 5 5 5 0 7 0 0\n0 0 7 0 5 0 0 0 0 0 0 0 5 0 7 0 0\n0 0 7 0 5 0 4 4 4 4 4 0 5 0 7 0 0\n0 0 7 0 5 0 4 0 0 0 4 0 5 0 7 0 0\n0 0 7 0 0 0 4 0 1 0 0 0 5 0 7 0 0\n0 0 7 0 5 0 4 0 0 0 4 0 5 0 7 0 0\n0 0 7 0 5 0 4 4 4 4 4 0 5 0 7 0 0\n0 0 7 0 5 0 0 0 0 0 0 0 5 0 7 0 0\n0 0 7 0 5 5 5 5 5 5 5 5 5 0 7 0 0\n0 0 7 0 0 0 0 0 0 0 0 0 0 0 7 0 0\n0 0 7 7 7 7 7 7 0 7 7 7 7 7 7 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n4 4 4\n5 0 0\n7 7 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 9 9 9 9 9 9 9 9 9 9 9 0 0\n0 0 9 4 4 4 4 0 4 4 4 4 9 0 0\n0 0 9 4 1 1 1 1 1 1 1 4 9 0 0\n0 0 9 4 1 8 8 8 8 8 1 4 9 0 0\n0 0 9 4 1 8 3 3 3 8 1 4 9 0 0\n0 0 9 4 1 0 3 7 3 8 1 4 0 0 7\n0 0 9 4 1 8 3 0 3 8 1 4 9 0 0\n0 0 9 4 1 8 8 8 8 8 1 4 9 0 0\n0 0 9 4 1 1 1 0 1 1 1 4 9 0 0\n0 0 9 4 4 4 4 4 4 4 4 4 9 0 0\n0 0 9 9 9 9 9 9 9 9 9 9 9 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n3 3 3\n8 8 0\n1 1 1\n4 0 0\n0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 2 2 2 2 2 2 2 2 0 2 2 2 2 2 2 2 2 0 0\n0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0\n0 2 0 4 4 4 4 4 4 4 4 4 4 4 4 4 0 2 0 0\n0 2 0 4 0 0 0 0 0 0 0 0 0 0 0 4 0 2 0 0\n0 2 0 4 0 3 3 3 3 3 3 3 3 3 0 4 0 2 0 0\n0 2 0 4 0 3 0 0 0 0 0 0 0 3 0 4 0 2 0 0\n0 2 0 4 0 3 0 2 2 2 2 2 0 3 0 4 0 2 0 0\n0 2 0 4 0 3 0 2 0 0 0 2 0 3 0 4 0 2 0 0\n0 2 0 0 0 3 0 2 0 8 0 2 0 0 0 4 0 2 0 8\n0 2 0 4 0 3 0 2 0 0 0 2 0 3 0 4 0 2 0 0\n0 2 0 4 0 3 0 2 2 0 2 2 0 3 0 4 0 2 0 0\n0 2 0 4 0 3 0 0 0 0 0 0 0 3 0 4 0 2 0 0\n0 2 0 4 0 3 3 3 3 3 3 3 3 3 0 4 0 2 0 0\n0 2 0 4 0 0 0 0 0 0 0 0 0 0 0 4 0 2 0 0\n0 2 0 4 4 4 4 4 4 4 4 4 4 4 4 4 0 2 0 0\n0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0\n0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n2 2 2\n0 0 0\n4 4 0\n2 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0\n0 1 1 1 1 1 1 1 1 1 0\n0 1 3 3 3 3 3 3 3 1 0\n0 1 3 6 6 6 6 6 3 1 0\n0 1 3 6 8 8 8 6 3 1 0\n0 0 3 0 8 7 8 6 0 1 0\n0 1 3 6 8 0 8 6 3 1 0\n0 1 3 6 6 6 6 6 3 1 0\n0 1 3 3 3 3 3 3 3 1 0\n0 1 1 1 1 1 1 1 1 1 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 7 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    from collections import Counter, deque\n\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    # Count colors\n    cnt = Counter()\n    for row in grid:\n        cnt.update(row)\n\n    # Candidate marker color: nonzero color with the fewest cells, typically 2\n    nonzero_colors = [c for c in cnt if c != 0]\n    marker_color = min(nonzero_colors, key=lambda c: cnt[c])\n\n    # Collect connected components for all nonzero, non-marker colors\n    visited = [[False] * w for _ in range(h)]\n    comps = []\n\n    for r in range(h):\n        for c in range(w):\n            color = grid[r][c]\n            if color == 0 or color == marker_color or visited[r][c]:\n                continue\n            q = deque([(r, c)])\n            visited[r][c] = True\n            cells = []\n            while q:\n                x, y = q.popleft()\n                cells.append((x, y))\n                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                    nx, ny = x + dx, y + dy\n                    if 0 <= nx < h and 0 <= ny < w and not visited[nx][ny] and grid[nx][ny] == color:\n                        visited[nx][ny] = True\n                        q.append((nx, ny))\n            rs = [x for x, _ in cells]\n            cs = [y for _, y in cells]\n            comps.append({\n                \"color\": color,\n                \"cells\": set(cells),\n                \"r0\": min(rs),\n                \"r1\": max(rs),\n                \"c0\": min(cs),\n                \"c1\": max(cs),\n                \"area\": (max(rs) - min(rs) + 1) * (max(cs) - min(cs) + 1),\n            })\n\n    # Outer component = largest bounding box\n    outer = max(comps, key=lambda x: x[\"area\"])\n\n    # Find the marker cell outside the outer bounding box to determine entry side\n    marker_cells = [(r, c) for r in range(h) for c in range(w) if grid[r][c] == marker_color]\n\n    def outside_bbox(pos, comp):\n        r, c = pos\n        return not (comp[\"r0\"] <= r <= comp[\"r1\"] and comp[\"c0\"] <= c <= comp[\"c1\"])\n\n    outside_marker = None\n    for pos in marker_cells:\n        if outside_bbox(pos, outer):\n            outside_marker = pos\n            break\n    if outside_marker is None:\n        outside_marker = marker_cells[0]\n\n    mr, mc = outside_marker\n    if mr < outer[\"r0\"]:\n        marker_side = \"top\"\n    elif mr > outer[\"r1\"]:\n        marker_side = \"bottom\"\n    elif mc < outer[\"c0\"]:\n        marker_side = \"left\"\n    else:\n        marker_side = \"right\"\n\n    # Side order is counterclockwise from the marker side:\n    # top -> left -> bottom -> right -> top\n    side_order = [\"top\", \"left\", \"bottom\", \"right\"]\n    side_index = {s: i for i, s in enumerate(side_order)}\n\n    def gap_side(comp):\n        color = comp[\"color\"]\n        cells = comp[\"cells\"]\n        r0, r1, c0, c1 = comp[\"r0\"], comp[\"r1\"], comp[\"c0\"], comp[\"c1\"]\n\n        top_count = sum((r0, c) in cells for c in range(c0, c1 + 1))\n        bottom_count = sum((r1, c) in cells for c in range(c0, c1 + 1))\n        left_count = sum((r, c0) in cells for r in range(r0, r1 + 1))\n        right_count = sum((r, c1) in cells for r in range(r0, r1 + 1))\n\n        top_full = c1 - c0 + 1\n        bottom_full = c1 - c0 + 1\n        left_full = r1 - r0 + 1\n        right_full = r1 - r0 + 1\n\n        deficits = {\n            \"top\": top_full - top_count,\n            \"left\": left_full - left_count,\n            \"bottom\": bottom_full - bottom_count,\n            \"right\": right_full - right_count,\n        }\n\n        # Choose the side with the largest deficit\n        return max(side_order, key=lambda s: deficits[s])\n\n    # Order components from inner to outer\n    comps.sort(key=lambda x: x[\"area\"])\n\n    out = []\n    start_idx = side_index[marker_side]\n\n    for comp in comps:\n        gside = gap_side(comp)\n        d = (side_index[gside] - start_idx) % 4\n        color = comp[\"color\"]\n        row = [color] * d + [0] * (3 - d)\n        out.append(row)\n\n    return out",
+  "script": "def solve(grid):\n    from collections import Counter, deque\n\n    h = len(grid)\n    w = len(grid[0]) if h else 0\n\n    # Count colors\n    cnt = Counter()\n    for row in grid:\n        cnt.update(row)\n\n    # Candidate marker color: nonzero color with the fewest cells, typically 2\n    nonzero_colors = [c for c in cnt if c != 0]\n    marker_color = min(nonzero_colors, key=lambda c: cnt[c])\n\n    # Collect connected components for all nonzero, non-marker colors\n    visited = [[False] * w for _ in range(h)]\n    comps = []\n\n    for r in range(h):\n        for c in range(w):\n            color = grid[r][c]\n            if color == 0 or color == marker_color or visited[r][c]:\n                continue\n            q = deque([(r, c)])\n            visited[r][c] = True\n            cells = []\n            while q:\n                x, y = q.popleft()\n                cells.append((x, y))\n                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                    nx, ny = x + dx, y + dy\n                    if 0 <= nx < h and 0 <= ny < w and not visited[nx][ny] and grid[nx][ny] == color:\n                        visited[nx][ny] = True\n                        q.append((nx, ny))\n            rs = [x for x, _ in cells]\n            cs = [y for _, y in cells]\n            comps.append({\n                \"color\": color,\n                \"cells\": set(cells),\n                \"r0\": min(rs),\n                \"r1\": max(rs),\n                \"c0\": min(cs),\n                \"c1\": max(cs),\n                \"area\": (max(rs) - min(rs) + 1) * (max(cs) - min(cs) + 1),\n            })\n\n    # Outer component = largest bounding box\n    outer = max(comps, key=lambda x: x[\"area\"])\n\n    # Find the marker cell outside the outer bounding box to determine entry side\n    marker_cells = [(r, c) for r in range(h) for c in range(w) if grid[r][c] == marker_color]\n\n    def outside_bbox(pos, comp):\n        r, c = pos\n        return not (comp[\"r0\"] <= r <= comp[\"r1\"] and comp[\"c0\"] <= c <= comp[\"c1\"])\n\n    outside_marker = None\n    for pos in marker_cells:\n        if outside_bbox(pos, outer):\n            outside_marker = pos\n            break\n    if outside_marker is None:\n        outside_marker = marker_cells[0]\n\n    mr, mc = outside_marker\n    if mr < outer[\"r0\"]:\n        marker_side = \"top\"\n    elif mr > outer[\"r1\"]:\n        marker_side = \"bottom\"\n    elif mc < outer[\"c0\"]:\n        marker_side = \"left\"\n    else:\n        marker_side = \"right\"\n\n    # Side order is counterclockwise from the marker side:\n    # top -> left -> bottom -> right -> top\n    side_order = [\"top\", \"left\", \"bottom\", \"right\"]\n    side_index = {s: i for i, s in enumerate(side_order)}\n\n    def gap_side(comp):\n        color = comp[\"color\"]\n        cells = comp[\"cells\"]\n        r0, r1, c0, c1 = comp[\"r0\"], comp[\"r1\"], comp[\"c0\"], comp[\"c1\"]\n\n        top_count = sum((r0, c) in cells for c in range(c0, c1 + 1))\n        bottom_count = sum((r1, c) in cells for c in range(c0, c1 + 1))\n        left_count = sum((r, c0) in cells for r in range(r0, r1 + 1))\n        right_count = sum((r, c1) in cells for r in range(r0, r1 + 1))\n\n        top_full = c1 - c0 + 1\n        bottom_full = c1 - c0 + 1\n        left_full = r1 - r0 + 1\n        right_full = r1 - r0 + 1\n\n        deficits = {\n            \"top\": top_full - top_count,\n            \"left\": left_full - left_count,\n            \"bottom\": bottom_full - bottom_count,\n            \"right\": right_full - right_count,\n        }\n\n        # Choose the side with the largest deficit\n        return max(side_order, key=lambda s: deficits[s])\n\n    # Order components from inner to outer\n    comps.sort(key=lambda x: x[\"area\"])\n\n    out = []\n    start_idx = side_index[marker_side]\n\n    for comp in comps:\n        gside = gap_side(comp)\n        d = (side_index[gside] - start_idx) % 4\n        color = comp[\"color\"]\n        row = [color] * d + [0] * (3 - d)\n        out.append(row)\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "p_arc_stable": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "p_arc_stable": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

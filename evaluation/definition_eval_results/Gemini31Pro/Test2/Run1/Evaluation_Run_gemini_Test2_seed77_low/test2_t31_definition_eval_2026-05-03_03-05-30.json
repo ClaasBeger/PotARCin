@@ -1,0 +1,62 @@
+{
+  "task_id": "test2_t31",
+  "test_idx": 0,
+  "model": "gemini-3.1-pro-preview",
+  "provider": "google",
+  "base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0\n0 4 4 0 0 0 0 3 0 0 0 0 0 0 0\n0 4 4 0 0 0 0 3 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 3 0 0 0 4 4 0 0\n0 0 0 8 8 0 0 3 0 0 0 4 4 0 0\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0\n0 0 7 7 0 0 0 3 0 0 0 0 0 0 0\n0 0 7 7 0 0 0 3 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 3 0 4 4 0 0 0 0\n0 0 0 0 0 0 0 3 0 4 4 0 0 0 0\n0 0 0 8 8 0 0 3 0 0 0 4 4 0 0\n0 0 0 8 8 0 0 3 0 0 0 4 4 0 0\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 3 0 0 7 7 0 0 0\n0 0 0 0 0 0 0 3 0 0 7 7 0 0 0\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 6 6 0 0 0 0 0 3 0 0 0 0 0 0 0 0\n0 6 6 0 0 2 2 0 3 0 0 0 0 1 1 0 0\n0 0 0 0 0 2 2 0 3 0 0 0 0 1 1 0 0\n0 0 0 0 0 0 0 0 3 0 4 4 0 0 0 0 0\n0 0 0 0 0 0 0 0 3 0 4 4 0 0 1 1 0\n0 0 0 0 0 0 0 0 3 0 0 0 0 0 1 1 0\n0 4 4 0 8 8 0 0 3 0 0 0 0 0 0 0 0\n0 4 4 0 8 8 0 0 3 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 3 0 6 6 0 0 0 0 0\n0 0 0 0 0 2 2 0 3 0 6 6 0 1 1 0 0\n0 0 0 0 0 2 2 0 3 0 0 0 0 1 1 0 0\n0 4 4 0 0 0 0 0 3 0 0 0 0 0 0 0 0\n0 4 4 0 0 1 1 0 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 1 1 0 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 3 0 4 4 0 8 8 0 0\n0 0 0 0 0 0 0 0 3 0 4 4 0 8 8 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 3 0 0 0 0 0\n0 0 6 6 0 3 0 0 8 8 0\n0 0 6 6 0 3 0 0 8 8 0\n0 0 0 0 0 3 0 0 0 0 0\n0 0 0 4 4 3 0 2 2 0 0\n0 0 0 4 4 3 0 2 2 0 0\nOutput:\n0 0 0 0 0 3 0 0 0 0 0\n0 0 6 6 0 3 0 0 8 8 0\n0 0 6 6 0 3 0 0 8 8 0\n0 0 0 0 0 3 0 0 0 0 0\n0 2 2 0 0 3 0 0 0 4 4\n0 2 2 0 0 3 0 0 0 4 4\n\nBelow is a test input grid.\n\nInput:\n0 0 2 2 0 0 0 3 0 0 0 0 0 7 7\n0 0 2 2 0 0 0 3 0 0 0 0 0 7 7\n0 8 8 0 0 0 0 3 0 0 0 0 0 0 0\n0 8 8 4 4 0 0 3 0 0 0 0 0 0 0\n0 0 0 4 4 0 0 3 0 0 0 9 9 0 0\n0 0 0 0 0 0 0 3 0 0 0 9 9 0 0\n0 0 0 0 0 0 0 3 9 9 0 0 0 0 0\n0 0 0 0 0 0 0 3 9 9 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    R = len(grid)\n    if R == 0:\n        return []\n    C_len = len(grid[0])\n    \n    # Find the vertical line of 3s\n    line_c = -1\n    for c in range(C_len):\n        if all(grid[r][c] == 3 for r in range(R)):\n            line_c = c\n            break\n            \n    visited = set()\n    components = []\n    \n    # Identify all connected components (blocks)\n    for r in range(R):\n        for c in range(C_len):\n            if c != line_c and grid[r][c] != 0 and (r, c) not in visited:\n                comp = []\n                q = [(r, c)]\n                visited.add((r, c))\n                color = grid[r][c]\n                while q:\n                    curr_r, curr_c = q.pop(0)\n                    comp.append((curr_r, curr_c, color))\n                    for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]:\n                        nr, nc = curr_r + dr, curr_c + dc\n                        if 0 <= nr < R and 0 <= nc < C_len and nc != line_c:\n                            # Group by same color\n                            if grid[nr][nc] == color and (nr, nc) not in visited:\n                                visited.add((nr, nc))\n                                q.append((nr, nc))\n                components.append(comp)\n                \n    new_grid = [[0] * C_len for _ in range(R)]\n    for r in range(R):\n        if line_c != -1:\n            new_grid[r][line_c] = 3\n            \n    # Attempt to move each component\n    for comp in components:\n        can_move = True\n        target_comp = []\n        for r, c, color in comp:\n            if c < line_c:\n                tc = c + line_c + 1\n            else:\n                tc = c - line_c - 1\n                \n            target_comp.append((r, tc, color))\n            \n            # Check if the target is out of bounds or occupied in the original grid\n            if tc < 0 or tc >= C_len or grid[r][tc] != 0:\n                can_move = False\n                \n        if can_move:\n            for r, c, color in target_comp:\n                new_grid[r][c] = color\n        else:\n            for r, c, color in comp:\n                new_grid[r][c] = color\n                \n    return new_grid\n```",
+  "script": "def solve(grid):\n    R = len(grid)\n    if R == 0:\n        return []\n    C_len = len(grid[0])\n    \n    # Find the vertical line of 3s\n    line_c = -1\n    for c in range(C_len):\n        if all(grid[r][c] == 3 for r in range(R)):\n            line_c = c\n            break\n            \n    visited = set()\n    components = []\n    \n    # Identify all connected components (blocks)\n    for r in range(R):\n        for c in range(C_len):\n            if c != line_c and grid[r][c] != 0 and (r, c) not in visited:\n                comp = []\n                q = [(r, c)]\n                visited.add((r, c))\n                color = grid[r][c]\n                while q:\n                    curr_r, curr_c = q.pop(0)\n                    comp.append((curr_r, curr_c, color))\n                    for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]:\n                        nr, nc = curr_r + dr, curr_c + dc\n                        if 0 <= nr < R and 0 <= nc < C_len and nc != line_c:\n                            # Group by same color\n                            if grid[nr][nc] == color and (nr, nc) not in visited:\n                                visited.add((nr, nc))\n                                q.append((nr, nc))\n                components.append(comp)\n                \n    new_grid = [[0] * C_len for _ in range(R)]\n    for r in range(R):\n        if line_c != -1:\n            new_grid[r][line_c] = 3\n            \n    # Attempt to move each component\n    for comp in components:\n        can_move = True\n        target_comp = []\n        for r, c, color in comp:\n            if c < line_c:\n                tc = c + line_c + 1\n            else:\n                tc = c - line_c - 1\n                \n            target_comp.append((r, tc, color))\n            \n            # Check if the target is out of bounds or occupied in the original grid\n            if tc < 0 or tc >= C_len or grid[r][tc] != 0:\n                can_move = False\n                \n        if can_move:\n            for r, c, color in target_comp:\n                new_grid[r][c] = color\n        else:\n            for r, c, color in comp:\n                new_grid[r][c] = color\n                \n    return new_grid",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "p_arc_stable": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "p_arc_stable": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

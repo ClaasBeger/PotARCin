@@ -1,0 +1,62 @@
+{
+  "task_id": "test2_t32",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n3 3 3 0 8 8 8\n3 3 3 0 8 8 8\n2 2 2 0 4 4 4\n2 2 2 0 4 4 4\n1 1 1 0 3 3 3\n1 1 1 0 3 3 3\n7 7 7 0 9 9 9\n7 7 7 0 9 9 9\n5 5 5 5 5 5 5\n2 2 2 0 0 0 0\n1 1 1 0 0 0 0\n1 1 1 0 0 0 0\n1 1 1 0 0 0 0\n3 3 3 0 0 0 0\n7 7 7 0 0 0 0\n7 7 7 0 0 0 0\n2 2 2 0 0 0 0\n2 2 2 0 0 0 0\n7 7 7 0 0 0 0\n3 3 3 0 0 0 0\nOutput:\n3 3 3 0 8 8 8\n3 3 3 0 8 8 8\n2 2 2 0 4 4 4\n2 2 2 0 4 4 4\n1 1 1 0 3 3 3\n1 1 1 0 3 3 3\n7 7 7 0 9 9 9\n7 7 7 0 9 9 9\n5 5 5 5 5 5 5\n2 2 2 0 4 4 4\n1 1 1 0 3 3 3\n1 1 1 0 3 3 3\n1 1 1 0 3 3 3\n3 3 3 0 8 8 8\n7 7 7 0 9 9 9\n7 7 7 0 9 9 9\n2 2 2 0 4 4 4\n2 2 2 0 4 4 4\n7 7 7 0 9 9 9\n3 3 3 0 8 8 8\n\nExample 2:\n\nInput:\n1 1 1 1 0 9 9 9 9\n9 9 9 9 0 6 6 6 6\n8 8 8 8 0 4 4 4 4\n6 6 6 6 0 2 2 2 2\n4 4 4 4 0 7 7 7 7\n3 3 3 3 0 1 1 1 1\n2 2 2 2 0 8 8 8 8\n7 7 7 7 0 3 3 3 3\n5 5 5 5 5 5 5 5 5\n0 0 0 0 0 2 2 2 2\n0 0 0 0 0 2 2 2 2\n0 0 0 0 0 1 1 1 1\n0 0 0 0 0 1 1 1 1\n0 0 0 0 0 6 6 6 6\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 6 6 6 6\n0 0 0 0 0 6 6 6 6\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 3 3 3 3\nOutput:\n1 1 1 1 0 9 9 9 9\n9 9 9 9 0 6 6 6 6\n8 8 8 8 0 4 4 4 4\n6 6 6 6 0 2 2 2 2\n4 4 4 4 0 7 7 7 7\n3 3 3 3 0 1 1 1 1\n2 2 2 2 0 8 8 8 8\n7 7 7 7 0 3 3 3 3\n5 5 5 5 5 5 5 5 5\n6 6 6 6 0 2 2 2 2\n6 6 6 6 0 2 2 2 2\n3 3 3 3 0 1 1 1 1\n3 3 3 3 0 1 1 1 1\n9 9 9 9 0 6 6 6 6\n0 0 0 0 0 0 0 0 0\n9 9 9 9 0 6 6 6 6\n9 9 9 9 0 6 6 6 6\n0 0 0 0 0 0 0 0 0\n7 7 7 7 0 3 3 3 3\n\nBelow is a test input grid.\n\nInput:\n3 3 0 2 2\n6 6 0 8 8\n1 1 0 9 9\n4 4 0 3 3\n9 9 0 1 1\n2 2 0 6 6\n7 7 0 7 7\n8 8 0 4 4\n5 5 5 5 5\n0 0 0 8 8\n3 3 0 0 0\n0 0 0 7 7\n0 0 0 7 7\n0 0 0 6 6\n0 0 0 6 6\n0 0 0 8 8\n9 9 0 0 0\n9 9 0 0 0\n1 1 0 0 0\n0 0 0 2 2\n4 4 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    if not grid:\n        return grid\n    rows = len(grid)\n    cols = len(grid[0])\n    sep = cols // 2\n\n    # Build mapping from rows where both halves contain non\u2011zero values\n    left_to_right = {}\n    right_to_left = {}\n    for row in grid:\n        left_vals = row[:sep]\n        right_vals = row[sep+1:]\n        left_val = next((x for x in left_vals if x != 0), 0)\n        right_val = next((x for x in right_vals if x != 0), 0)\n        if left_val != 0 and right_val != 0:\n            left_to_right[left_val] = right_val\n            right_to_left[right_val] = left_val\n\n    # Transform each row\n    out = []\n    for row in grid:\n        left_vals = row[:sep]\n        sep_val = row[sep]\n        right_vals = row[sep+1:]\n\n        left_val = next((x for x in left_vals if x != 0), 0)\n        right_val = next((x for x in right_vals if x != 0), 0)\n\n        # missing left side -> fill from right side\n        if left_val == 0 and right_val != 0:\n            fill = right_to_left.get(right_val, 0)\n            if fill != 0:\n                new_left = [fill] * len(left_vals)\n            else:\n                new_left = left_vals\n            new_right = right_vals\n        # missing right side -> fill from left side\n        elif left_val != 0 and right_val == 0:\n            fill = left_to_right.get(left_val, 0)\n            if fill != 0:\n                new_right = [fill] * len(right_vals)\n            else:\n                new_right = right_vals\n            new_left = left_vals\n        else:\n            new_left = left_vals\n            new_right = right_vals\n\n        out.append(new_left + [sep_val] + new_right)\n\n    return out",
+  "script": "def solve(grid):\n    if not grid:\n        return grid\n    rows = len(grid)\n    cols = len(grid[0])\n    sep = cols // 2\n\n    # Build mapping from rows where both halves contain non\u2011zero values\n    left_to_right = {}\n    right_to_left = {}\n    for row in grid:\n        left_vals = row[:sep]\n        right_vals = row[sep+1:]\n        left_val = next((x for x in left_vals if x != 0), 0)\n        right_val = next((x for x in right_vals if x != 0), 0)\n        if left_val != 0 and right_val != 0:\n            left_to_right[left_val] = right_val\n            right_to_left[right_val] = left_val\n\n    # Transform each row\n    out = []\n    for row in grid:\n        left_vals = row[:sep]\n        sep_val = row[sep]\n        right_vals = row[sep+1:]\n\n        left_val = next((x for x in left_vals if x != 0), 0)\n        right_val = next((x for x in right_vals if x != 0), 0)\n\n        # missing left side -> fill from right side\n        if left_val == 0 and right_val != 0:\n            fill = right_to_left.get(right_val, 0)\n            if fill != 0:\n                new_left = [fill] * len(left_vals)\n            else:\n                new_left = left_vals\n            new_right = right_vals\n        # missing right side -> fill from left side\n        elif left_val != 0 and right_val == 0:\n            fill = left_to_right.get(left_val, 0)\n            if fill != 0:\n                new_right = [fill] * len(right_vals)\n            else:\n                new_right = right_vals\n            new_left = left_vals\n        else:\n            new_left = left_vals\n            new_right = right_vals\n\n        out.append(new_left + [sep_val] + new_right)\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 2,
+      "total": 2,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "p_arc_stable": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "p_arc_stable": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}
