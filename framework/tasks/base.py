@@ -68,9 +68,13 @@ class ArcTask:
     re_arc_synthetic_pairs: Optional[List[GridPair]] = None
     arc_gen_synthetic_pairs: Optional[List[GridPair]] = None
 
+    # Test2 only: ``t<n>_samples_50.json`` in the task subdirectory (P-ARC stable pool).
+    test2_p_arc_stable_pairs: Optional[List[GridPair]] = None
+
     # Generators return new synthetic pairs when called with the desired
     # number of examples.
     re_arc_generator: Optional[Callable[[int], List[GridPair]]] = None
+    # Task synthetic pair generator (ARC pipeline and/or Test2 ``generator.py``).
     # Optional ``rng=`` keyword seeds each example independently; see
     # ``framework.tasks.arc_dataset._make_arc_gen_generator``.
     arc_gen_generator: Optional[Callable[..., List[GridPair]]] = None

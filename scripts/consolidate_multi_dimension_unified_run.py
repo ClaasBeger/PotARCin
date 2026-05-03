@@ -88,11 +88,17 @@ def _dim_report(task_id: str, dim: str, dim_dirs: dict[str, Path]) -> tuple[dict
 def _strict_definition_pass(run: dict) -> bool:
     d = (((run.get("dimensions") or {}).get("definition")) or {})
     m = d.get("metrics") or {}
-    for k in ("train", "test", "stable", "dynamic50"):
-        mm = m.get(k)
+    if not isinstance(m, dict) or not m:
+        return False
+    for _k, mm in m.items():
         if not isinstance(mm, dict):
             return False
-        if mm.get("ok") != mm.get("total"):
+        if "ok" not in mm or "total" not in mm:
+            continue
+        tot = mm.get("total")
+        if not isinstance(tot, int) or tot <= 0:
+            continue
+        if mm.get("ok") != tot:
             return False
     return True
 

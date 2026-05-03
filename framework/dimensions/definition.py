@@ -24,6 +24,7 @@ from framework.dimensions.base import (
 from framework.grids import Grid, GridPair, is_equal_grid
 from framework.llm_api import request_text_completion, resolve_provider_config
 from framework.tasks.base import ArcTask, DimensionName, Verifier
+from framework.tasks.test2_dataset import parse_test2_task_num
 
 
 # In the definition dimension, the prediction is typically a Python program
@@ -271,31 +272,67 @@ def evaluate_definition_script_on_task(
     arc_gen_dynamic_rng: Optional[random.Random] = None,
     re_arc_dynamic_n: int = 50,
 ) -> dict[str, Any]:
-    """Evaluate a solved definition script across all configured splits."""
+    """Evaluate a solved definition script across all configured splits.
+
+    Dynamically drawn pairs always come from ``task.arc_gen_generator`` (the task's
+    synthetic generator: ARC pipeline on ARC tasks, ``generator.py`` on Test2). Metrics
+    label that split ``generator_dynamic{N}`` (e.g. ``generator_dynamic50``).
+    Parameters retain ``arc_gen_*`` names for backward compatibility with callers.
+    """
     if not task.train_pairs:
         raise ValueError(f"Task {task.task_id} has no training pairs.")
     if test_idx < 0 or test_idx >= len(task.test_inputs) or test_idx >= len(task.test_outputs):
         raise ValueError(f"Invalid test_idx={test_idx} for task {task.task_id}.")
 
     arc_dyn_n = int(arc_gen_dynamic_n)
-    arc_dyn_key = "dynamic50" if arc_dyn_n == 50 else f"dynamic{arc_dyn_n}"
+    # ``task.arc_gen_generator``: ARC train pipeline and/or Test2 per-task ``generator.py``.
+    gen_dyn_key = "generator_dynamic50" if arc_dyn_n == 50 else f"generator_dynamic{arc_dyn_n}"
     re_dyn_n = int(re_arc_dynamic_n)
     re_dyn_key = "re_arc_dynamic50" if re_dyn_n == 50 else f"re_arc_dynamic{re_dyn_n}"
 
-    eval_sets: dict[str, list[dict[str, Grid]]] = {
-        "train": [{"input": p.input, "output": p.output} for p in task.train_pairs],
-        "test": [{"input": task.test_inputs[test_idx], "output": task.test_outputs[test_idx]}],
-        "stable": [
+    try:
+        parse_test2_task_num(task.task_id)
+        is_test2 = True
+    except ValueError:
+        is_test2 = False
+
+    train_rows = [{"input": p.input, "output": p.output} for p in task.train_pairs]
+    if is_test2:
+        n_te = min(len(task.test_inputs), len(task.test_outputs))
+        test_rows = [
+            {"input": task.test_inputs[i], "output": task.test_outputs[i]} for i in range(n_te)
+        ]
+        p_arc_rows = [
             {"input": p.input, "output": p.output}
-            for p in (task.arc_gen_synthetic_pairs or [])
-        ],
-        arc_dyn_key: [],
-        "re_arc_stable": [
-            {"input": p.input, "output": p.output}
-            for p in (task.re_arc_synthetic_pairs or [])
-        ],
-        re_dyn_key: [],
-    }
+            for p in (task.test2_p_arc_stable_pairs or [])
+        ]
+        eval_sets: dict[str, list[dict[str, Grid]]] = {
+            "train": train_rows,
+            "test": test_rows,
+            "p_arc_stable": p_arc_rows,
+            "stable": [],
+            gen_dyn_key: [],
+            "re_arc_stable": [
+                {"input": p.input, "output": p.output}
+                for p in (task.re_arc_synthetic_pairs or [])
+            ],
+            re_dyn_key: [],
+        }
+    else:
+        eval_sets = {
+            "train": train_rows,
+            "test": [{"input": task.test_inputs[test_idx], "output": task.test_outputs[test_idx]}],
+            "stable": [
+                {"input": p.input, "output": p.output}
+                for p in (task.arc_gen_synthetic_pairs or [])
+            ],
+            gen_dyn_key: [],
+            "re_arc_stable": [
+                {"input": p.input, "output": p.output}
+                for p in (task.re_arc_synthetic_pairs or [])
+            ],
+            re_dyn_key: [],
+        }
     if task.arc_gen_generator is not None:
         n = arc_dyn_n
         if n <= 0:
@@ -306,7 +343,7 @@ def evaluate_definition_script_on_task(
             except TypeError:
                 # Backward compatibility for generators without rng=.
                 dyn = task.arc_gen_generator(n)
-        eval_sets[arc_dyn_key] = [{"input": p.input, "output": p.output} for p in dyn]
+        eval_sets[gen_dyn_key] = [{"input": p.input, "output": p.output} for p in dyn]
     if task.re_arc_generator is not None:
         n = re_dyn_n
         dyn = task.re_arc_generator(n) if n > 0 else []
@@ -416,10 +453,15 @@ def run_definition_api_evaluation(
     even if script evaluation crashes (``evaluation_ok`` false, ``error`` set).
 
     Evaluation checks the generated script on:
-    - all train pairs
-    - selected test example (by test_idx)
-    - all ARC-GEN stable pairs
-    - 50 ARC-GEN dynamic pairs
+
+    - **ARC / general**: all train pairs; one test pair (``test_idx``); committed
+      stable pairs from ``arc_gen_synthetic_pairs`` where present; and
+      ``arc_gen_dynamic_n`` fresh pairs from ``task.arc_gen_generator`` (default 50),
+      recorded under ``generator_dynamic{N}`` in metrics.
+    - **Test2**: all train and **all** published test pairs from ``Test2/t<n>.json``;
+      **p_arc_stable** from ``t<n>_samples_50.json``; plus ``arc_gen_dynamic_n`` pairs
+      from that task's ``generator.py`` (default 50). The prompt still shows one test
+      input (``test_idx``).
     """
     if not task.train_pairs:
         raise ValueError(f"Task {task.task_id} has no training pairs.")

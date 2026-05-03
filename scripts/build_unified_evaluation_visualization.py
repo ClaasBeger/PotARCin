@@ -528,12 +528,18 @@ def main() -> None:
                     return
                 parts.append(f"{label} {sr}")
 
-            # Stable ordering, while still surfacing non-default dynamic sample sizes
-            # such as dynamic1000 / re_arc_dynamic1000 in stress runs.
+            # Stable ordering; dynamic pairs come from ``task.arc_gen_generator`` (metrics
+            # key ``generator_dynamic{N}``; legacy ``dynamic{N}`` still supported).
             _append_metric("train", "train")
             _append_metric("test", "test")
-            _append_metric("stable", "ARC-GEN stable")
-            for key in sorted(k for k in m.keys() if str(k).startswith("dynamic")):
+            _append_metric("p_arc_stable", "P-ARC stable")
+            _append_metric("stable", "stable pool")
+            for key in sorted(
+                k
+                for k in m.keys()
+                if str(k).startswith("generator_dynamic")
+                or str(k).startswith("dynamic")
+            ):
                 _append_metric(str(key), str(key))
             _append_metric("re_arc_stable", "Re-ARC stable")
             for key in sorted(k for k in m.keys() if str(k).startswith("re_arc_dynamic")):
@@ -547,7 +553,7 @@ def main() -> None:
         vhint = ""
         if picked:
             slot, _fn = picked
-            vhint = f" A reference verifier is available (<code>{escape(slot)}</code>) that matches train/test/ARC-GEN checks."
+            vhint = f" A reference verifier is available (<code>{escape(slot)}</code>) that matches train/test/generator checks."
         def_body = (
             '<p class="note">No definition eval JSON under <code>evaluation/definition_eval_results/</code>. '
             f"Run a definition eval to record a synthesized <code>solve</code> script.{vhint}</p>"

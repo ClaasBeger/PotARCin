@@ -1,8 +1,8 @@
 """Verifier selection using optional ``task_valid_verifiers.csv`` (offline audit).
 
 Runtimes should prefer CSV slot order and avoid scanning every verifier with full
-train/test/stable/dynamic50 checks. When a dimension has instance-specific ARC-GEN
-pairs (the dynamic sample actually used), pass them as ``dynamic_pairs``; the first
+train/test/stable and generator-sampled (``task.arc_gen_generator``) checks. When a
+dimension has instance-specific generated pairs, pass them as ``dynamic_pairs``; the first
 CSV-listed verifier that both exists on :class:`~framework.tasks.base.ArcTask` and
 matches those pairs is returned. If none match, falls back to the legacy full probe
 (:func:`~framework.dimensions.classification_distribution.verifier_matches_train_test_stable_dynamic50`).
@@ -152,7 +152,7 @@ def valid_verifiers_for_task(
     *,
     csv_path: Path | None = None,
 ) -> list[Tuple[VerifierSlot, Verifier]]:
-    """Return all valid verifiers (train/test/stable/dynamic50), CSV order first."""
+    """Return all valid verifiers (train/test/stable + 50 ``arc_gen`` samples), CSV order first."""
     try:
         parse_test2_task_num(task.task_id)
         return [("re_arc", task.verifier)] if task.verifier is not None else []

@@ -192,6 +192,32 @@ def _nearest_tasks_by_embedding(
     return scored[: max(1, k)]
 
 
+def _load_train_pairs_for_task_id(task_id: str) -> List[GridPair]:
+    """Return canonical training pairs for *task_id* (ARC-AGI-1 hash or ``test2_t<n>``).
+
+    Returns an empty list if neither source resolves. Used by the embedding
+    retrieval fast path so Test2 task ids returned by the embedding index can be
+    materialized into instance-level pairs alongside ARC1 hits.
+    """
+    try:
+        parse_test2_task_num(task_id)
+        is_test2 = True
+    except ValueError:
+        is_test2 = False
+    if is_test2:
+        try:
+            from framework.tasks.test2_dataset import load_test2_task
+            task = load_test2_task(task_id)
+        except Exception:
+            return []
+        return list(task.train_pairs)
+    try:
+        train, _, _ = _load_arc_original(task_id)
+        return list(train)
+    except Exception:
+        return []
+
+
 def _iter_arc_gen_stable_task_ids() -> List[str]:
     if not ARC_GEN_STABLE_ZIP.exists():
         return []
@@ -308,6 +334,9 @@ def find_nearest_alternative_instances(
     """
     if criterion == "task_embedding":
         # Fast path: task-level nearest neighbors in embedding space.
+        # Pool covers both ARC-AGI-1 train tasks and Test2 tasks: ARC1 ids load
+        # via :func:`_load_arc_original`; Test2 ids (``test2_t<n>``) load via
+        # :func:`load_test2_task` so retrieval can mix both sources.
         nearest = _nearest_tasks_by_embedding(
             query_task_id=exclude_task_id,
             exclude_task_id=exclude_task_id,
@@ -319,11 +348,10 @@ def find_nearest_alternative_instances(
                 tuple[tuple[tuple[int, ...], ...], tuple[tuple[int, ...], ...]]
             ] = set()
             for tid, tdist in nearest:
-                try:
-                    train, _, _ = _load_arc_original(tid)
-                except Exception:
+                train_pairs = _load_train_pairs_for_task_id(tid)
+                if not train_pairs:
                     continue
-                for i, pair in enumerate(train):
+                for i, pair in enumerate(train_pairs):
                     key = (
                         tuple(tuple(row) for row in pair.input),
                         tuple(tuple(row) for row in pair.output),

@@ -12,6 +12,8 @@ from typing import Any, Iterable, List, Literal, Optional, Sequence
 
 from framework.corruption.golf_ast import GolfSource, load_and_corrupt_golf_verifier
 from framework.corruption.h_arc import load_h_arc_incorrect_outputs_for_task
+from framework.corruption.p_arc import sample_p_arc_pair
+from framework.corruption.test2_verifier_ast import load_and_corrupt_test2_verifier
 from framework.corruption.verifier_ast import load_and_corrupt_re_arc_verifier
 from framework.dimensions.base import (
     DimensionConfig,
@@ -31,15 +33,23 @@ from framework.grids import (
     sample_flip_count_favor_one,
 )
 from framework.tasks.base import ArcTask, DimensionName
+from framework.tasks.test2_dataset import parse_test2_task_num, test2_task_subdir
 from framework.llm_api import request_text_completion, resolve_provider_config
 
-EditingVariant = Literal["h_arc_incorrect", "corrupted_verifier", "ground_truth", "color_flip"]
+EditingVariant = Literal["p_arc_incorrect", "corrupted_verifier", "ground_truth", "color_flip"]
 
-# Noticeable differences with H-ARC most likely.
-_EDITING_BASE_WEIGHTS: dict[Literal["h_arc_incorrect", "corrupted_verifier", "color_flip"], float] = {
-    "h_arc_incorrect": 0.56,
+# Noticeable differences with P-ARC / H-ARC pools most likely.
+_EDITING_BASE_WEIGHTS: dict[Literal["p_arc_incorrect", "corrupted_verifier", "color_flip"], float] = {
+    "p_arc_incorrect": 0.56,
     "corrupted_verifier": 0.26,
     "color_flip": 0.18,
+}
+
+# Test2: less color_flip, more P-ARC + corrupted verifier (same sum).
+_EDITING_BASE_WEIGHTS_TEST2: dict[Literal["p_arc_incorrect", "corrupted_verifier", "color_flip"], float] = {
+    "p_arc_incorrect": 0.62,
+    "corrupted_verifier": 0.32,
+    "color_flip": 0.06,
 }
 
 
@@ -384,31 +394,58 @@ def run_editing_api_evaluation_once(
     return result
 
 
-def _editing_variant_weights(include_true: bool) -> dict[EditingVariant, float]:
+def _editing_variant_weights(task: ArcTask, include_true: bool) -> dict[EditingVariant, float]:
+    try:
+        parse_test2_task_num(task.task_id)
+        test2 = True
+    except ValueError:
+        test2 = False
     if not include_true:
+        base = _EDITING_BASE_WEIGHTS_TEST2 if test2 else _EDITING_BASE_WEIGHTS
         return {
-            "h_arc_incorrect": _EDITING_BASE_WEIGHTS["h_arc_incorrect"],
-            "corrupted_verifier": _EDITING_BASE_WEIGHTS["corrupted_verifier"],
-            "color_flip": _EDITING_BASE_WEIGHTS["color_flip"],
+            "p_arc_incorrect": base["p_arc_incorrect"],
+            "corrupted_verifier": base["corrupted_verifier"],
+            "color_flip": base["color_flip"],
         }
     # include_true=True: ground truth is 3rd most likely (below corrupted_verifier, above color_flip).
+    if test2:
+        return {
+            "p_arc_incorrect": 0.52,
+            "corrupted_verifier": 0.26,
+            "ground_truth": 0.18,
+            "color_flip": 0.04,
+        }
     return {
-        "h_arc_incorrect": 0.48,
+        "p_arc_incorrect": 0.48,
         "corrupted_verifier": 0.22,
         "ground_truth": 0.18,
         "color_flip": 0.12,
     }
 
 
-def _sample_editing_variant(rng: random.Random, *, include_true: bool) -> EditingVariant:
-    wmap = _editing_variant_weights(include_true)
+def _sample_editing_variant(task: ArcTask, rng: random.Random, *, include_true: bool) -> EditingVariant:
+    wmap = _editing_variant_weights(task, include_true)
     cats = list(wmap.keys())
     w = [wmap[c] for c in cats]
     (picked,) = rng.choices(cats, weights=w, k=1)
     return picked
 
 
-def _try_h_arc_incorrect(task: ArcTask, rng: random.Random) -> tuple[GridPair, GridPair] | None:
+def _try_p_arc_incorrect(task: ArcTask, rng: random.Random) -> tuple[GridPair, GridPair] | None:
+    try:
+        parse_test2_task_num(task.task_id)
+        is_test2 = True
+    except ValueError:
+        is_test2 = False
+    if is_test2:
+        wrong = sample_p_arc_pair(task, rng)
+        if wrong is None or task.verifier is None:
+            return None
+        inp = copy.deepcopy(wrong.input)
+        gold_out = task.verifier(copy.deepcopy(inp))
+        corrupted = GridPair(copy.deepcopy(inp), copy.deepcopy(wrong.output))
+        target = GridPair(copy.deepcopy(inp), copy.deepcopy(gold_out))
+        return corrupted, target
     if not task.test_inputs or not task.test_outputs:
         return None
     rows = load_h_arc_incorrect_outputs_for_task(task.task_id, exclude_evaluation=True)
@@ -426,6 +463,42 @@ def _try_h_arc_incorrect(task: ArcTask, rng: random.Random) -> tuple[GridPair, G
 def _try_corrupted_verifier(task: ArcTask, rng: random.Random) -> tuple[GridPair, GridPair] | None:
     if task.arc_gen_generator is None:
         return None
+    try:
+        tnum = parse_test2_task_num(task.task_id)
+    except ValueError:
+        tnum = None
+    if tnum is not None and task.verifier is not None:
+        try:
+            td = test2_task_subdir(tnum)
+        except FileNotFoundError:
+            td = None
+        if td is not None:
+            for _ in range(14):
+                try:
+                    gold = copy.deepcopy(task.arc_gen_generator(1, rng=rng)[0])
+                except Exception:
+                    try:
+                        gold = copy.deepcopy(task.arc_gen_generator(1)[0])
+                    except Exception:
+                        continue
+                inp = copy.deepcopy(gold.input)
+                try:
+                    cfn, _, _ = load_and_corrupt_test2_verifier(
+                        task.task_id,
+                        tnum,
+                        td,
+                        rng=rng,
+                        gold_fn=task.verifier,
+                        sample_input=inp,
+                        max_attempts=36,
+                        max_normalized_cell_edit_distance=None,
+                    )
+                    bad = cfn(copy.deepcopy(inp))
+                    return GridPair(inp, bad), GridPair(
+                        copy.deepcopy(inp), copy.deepcopy(gold.output)
+                    )
+                except Exception:
+                    continue
     for _ in range(10):
         try:
             gold = copy.deepcopy(task.arc_gen_generator(1)[0])
@@ -557,10 +630,10 @@ def sample_editing_pair(
     """Return (corrupted_pair, corrected_pair, source)."""
     for _ in range(120):
         try:
-            src = _sample_editing_variant(rng, include_true=include_true)
+            src = _sample_editing_variant(task, rng, include_true=include_true)
             picked: tuple[GridPair, GridPair] | None = None
-            if src == "h_arc_incorrect":
-                picked = _try_h_arc_incorrect(task, rng)
+            if src == "p_arc_incorrect":
+                picked = _try_p_arc_incorrect(task, rng)
             elif src == "corrupted_verifier":
                 picked = _try_corrupted_verifier(task, rng)
             elif src == "ground_truth":

@@ -1,6 +1,6 @@
 """Build 5-way distribution classification items (ARC-GEN, corruption, flips, retrieval, mismatch).
 
-Includes an H-ARC human-error corruption source (same task, incorrect outputs).
+Includes **P-ARC** plausible-wrong outputs (PotARC hand-authored pairs on Test2; H-ARC CSV pool on ARC1).
 
 Only ``dynamic_correct`` is a positive label; its sampling mass is set so that across
 five independent draws, **E[# correct] ≈ 1.5** (i.e. P(dynamic_correct) = 0.30).
@@ -10,10 +10,8 @@ Other category masses are scaled to keep relative ratios and sum to 0.70.
 from __future__ import annotations
 
 import copy
-import json
 import random
 from dataclasses import dataclass
-from pathlib import Path
 from typing import List, Literal, Optional, Sequence, Tuple
 
 from framework.corruption.cross_dynamic_mismatch import (
@@ -21,8 +19,9 @@ from framework.corruption.cross_dynamic_mismatch import (
     synthetic_input_borrowed_output_pair,
 )
 from framework.corruption.golf_ast import GolfSource, load_and_corrupt_golf_verifier
-from framework.corruption.h_arc import load_h_arc_incorrect_outputs_for_task
 from framework.corruption.nearest_inputs import find_nearest_alternative_instances
+from framework.corruption.p_arc import sample_p_arc_pair
+from framework.corruption.test2_verifier_ast import load_and_corrupt_test2_verifier
 from framework.corruption.verifier_ast import load_and_corrupt_re_arc_verifier
 from framework.grids import (
     GridPair,
@@ -33,30 +32,50 @@ from framework.grids import (
 )
 from framework.tasks.arc_dataset import load_task
 from framework.tasks.base import ArcTask, Verifier
-from framework.verifier_selection import select_verifier_for_task, valid_verifiers_for_task
-from framework.tasks.test2_dataset import TEST2_DIR, parse_test2_task_num
+from framework.tasks.test2_dataset import parse_test2_task_num, test2_task_subdir
+from framework.verifier_selection import (
+    VerifierSlot,
+    select_verifier_for_task,
+    valid_verifiers_for_task,
+)
 
 Category = Literal[
     "instance_mismatch",
     "corrupted_verifier",
-    "h_arc_incorrect",
+    "p_arc_incorrect",
     "color_flip",
     "dynamic_correct",
     "retrieval",
 ]
 
-VerifierSlot = Literal["re_arc", "google", "keymoon", "neurips", "custom"]
-
 # Relative sampling weights (sum = 1).
 _CATEGORY_WEIGHTS: dict[Category, float] = {
-    "h_arc_incorrect": 0.235,
+    "p_arc_incorrect": 0.235,
     "instance_mismatch": 0.215,
     "corrupted_verifier": 0.13,
     "dynamic_correct": 0.25,
     "retrieval": 0.10333333333333333,
     "color_flip": 0.06666666666666667,
 }
+
+# Test2: lower retrieval / color_flip mass → higher P-ARC + corrupted verifier (ARC defaults unchanged).
+_CATEGORY_WEIGHTS_TEST2: dict[Category, float] = {
+    "p_arc_incorrect": 0.265,
+    "instance_mismatch": 0.215,
+    "corrupted_verifier": 0.160,
+    "dynamic_correct": 0.25,
+    "retrieval": 0.07333333333333333,
+    "color_flip": 0.03666666666666667,
+}
 _SECOND_RETRIEVAL_WEIGHT_FACTOR = 0.35
+
+
+def _category_weights_for_task(task_id: str) -> dict[Category, float]:
+    try:
+        parse_test2_task_num(task_id)
+        return dict(_CATEGORY_WEIGHTS_TEST2)
+    except ValueError:
+        return dict(_CATEGORY_WEIGHTS)
 
 # If a sampled corruption/category cannot yield a valid candidate quickly,
 # stop trying that type and resample category.
@@ -69,9 +88,11 @@ _MAX_SAME_TYPE_TRIES = 10
 _MAX_RANK_LADDER_TRIES = 3
 
 
-def _sample_category(rng: random.Random, allowed: Sequence[Category]) -> Category:
+def _sample_category(
+    rng: random.Random, allowed: Sequence[Category], weights: dict[Category, float]
+) -> Category:
     cats = list(allowed)
-    w = [_CATEGORY_WEIGHTS[c] for c in cats]
+    w = [weights[c] for c in cats]
     (c,) = rng.choices(cats, weights=w, k=1)
     return c
 
@@ -153,33 +174,36 @@ def _try_corrupted_pair(task_id: str, task: ArcTask, rng: random.Random) -> Grid
     except ValueError:
         tnum = None
     if tnum is not None:
-        task_dir = next((p for p in TEST2_DIR.iterdir() if p.is_dir() and p.name.startswith(f"t{tnum}_")), None)
-        if task_dir is not None:
-            paths = sorted(task_dir.glob(f"t{tnum}_corrupted*.json"))
-            if not paths:
-                paths = sorted(task_dir.glob(f"t{tnum}_corrupt*.json"))
-            rng.shuffle(paths)
-            for p in paths:
-                try:
-                    payload = json.loads(Path(p).read_text(encoding="utf-8"))
-                except Exception:
-                    continue
-                test = payload.get("test")
-                if not isinstance(test, list) or not test:
-                    continue
-                ex = test[0]
-                if not isinstance(ex, dict):
-                    continue
-                inp = ex.get("input")
-                out = ex.get("output")
-                if not isinstance(inp, list) or not isinstance(out, list):
-                    continue
-                pair = GridPair(copy.deepcopy(inp), copy.deepcopy(out))
-                try:
-                    assert_int_grid_pair(pair, name="corrupted_verifier pair")
-                except Exception:
-                    continue
-                return pair
+        if task.verifier is None or task.arc_gen_generator is None:
+            return None
+        try:
+            task_dir = test2_task_subdir(tnum)
+        except FileNotFoundError:
+            return None
+        for _ in range(16):
+            try:
+                pair = copy.deepcopy(task.arc_gen_generator(1, rng=rng)[0])  # type: ignore[misc]
+                inp = copy.deepcopy(pair.input)
+            except Exception:
+                continue
+            try:
+                cfn, _, _tag = load_and_corrupt_test2_verifier(
+                    task_id,
+                    tnum,
+                    task_dir,
+                    rng=rng,
+                    gold_fn=task.verifier,
+                    sample_input=inp,
+                    max_attempts=36,
+                    max_normalized_cell_edit_distance=None,
+                )
+                bad = cfn(copy.deepcopy(inp))
+                out_pair = GridPair(inp, bad)
+                assert_int_grid_pair(out_pair, name="corrupted_verifier pair")
+                return out_pair
+            except Exception:
+                continue
+        return None
     if task.arc_gen_generator is None:
         return None
     for _ in range(8):
@@ -324,19 +348,12 @@ def _try_instance_mismatch(
     return synthetic_input_borrowed_output_pair(m)
 
 
-def _try_h_arc_pair(task: ArcTask, rng: random.Random) -> GridPair | None:
-    if not task.test_inputs:
+def _try_p_arc_pair(task: ArcTask, rng: random.Random) -> GridPair | None:
+    pair = sample_p_arc_pair(task, rng)
+    if pair is None:
         return None
-    rows = load_h_arc_incorrect_outputs_for_task(task.task_id, exclude_evaluation=True)
-    if not rows:
-        return None
-    weights = [max(1, r.count) for r in rows]
-    (picked,) = rng.choices(rows, weights=weights, k=1)
-    inp = copy.deepcopy(rng.choice(task.test_inputs))
-    out = copy.deepcopy(picked.output_grid)
-    pair = GridPair(inp, out)
     try:
-        assert_int_grid_pair(pair, name="h_arc_incorrect pair")
+        assert_int_grid_pair(pair, name="p_arc_incorrect pair")
     except Exception:
         return None
     return pair
@@ -383,19 +400,20 @@ def _draw_category(
     rng: random.Random,
     *,
     retrieval_count: int,
+    weights: dict[Category, float],
 ) -> Category:
-    allowed: List[Category] = list(_CATEGORY_WEIGHTS.keys())
+    allowed: List[Category] = list(weights.keys())
     if retrieval_count >= 2:
         allowed = [c for c in allowed if c != "retrieval"]
-        return _sample_category(rng, allowed)
+        return _sample_category(rng, allowed, weights)
     if retrieval_count >= 1:
         w = [
-            (_CATEGORY_WEIGHTS[c] * _SECOND_RETRIEVAL_WEIGHT_FACTOR) if c == "retrieval" else _CATEGORY_WEIGHTS[c]
+            (weights[c] * _SECOND_RETRIEVAL_WEIGHT_FACTOR) if c == "retrieval" else weights[c]
             for c in allowed
         ]
         (picked,) = rng.choices(allowed, weights=w, k=1)
         return picked
-    return _sample_category(rng, allowed)
+    return _sample_category(rng, allowed, weights)
 
 
 def _pair_matches_task_rule(task: ArcTask, pair: GridPair, verifier: Verifier | None = None) -> bool:
@@ -518,13 +536,23 @@ def _build_one_item(
         if pair is None:
             return None, False, meta, False
         meta["kind"] = "corrupted_verifier"
+        try:
+            parse_test2_task_num(task_id)
+            meta["corruption_source"] = "test2_verifier_ast"
+        except ValueError:
+            meta["corruption_source"] = "ast_pruned_or_golf_verifier"
         return pair, False, meta, False
 
-    if cat == "h_arc_incorrect":
-        pair = _try_h_arc_pair(task, rng)
+    if cat == "p_arc_incorrect":
+        pair = _try_p_arc_pair(task, rng)
         if pair is None:
             return None, False, meta, False
-        meta["kind"] = "h_arc_incorrect_submission"
+        try:
+            parse_test2_task_num(task.task_id)
+            meta["p_arc_source"] = "test2_hand_json"
+        except ValueError:
+            meta["p_arc_source"] = "h_arc_csv"
+        meta["kind"] = "p_arc_plausible_wrong"
         return pair, False, meta, False
 
     # retrieval (deterministic query + ranked neighbors; no RNG)
@@ -570,6 +598,7 @@ def sample_distribution_classification_batch(
     # Guard: demonstrations should always be valid integer grids; fail fast if not.
     for p in demonstrations:
         assert_int_grid_pair(p, name="demonstration pair")
+    cat_weights = _category_weights_for_task(task_id)
     items: List[DistributionClassificationItem] = []
     retrieval_count = 0
     retrieval_task_ids: set[str] = set()
@@ -577,7 +606,7 @@ def sample_distribution_classification_batch(
     for slot in range(5):
         item: Optional[DistributionClassificationItem] = None
         for _attempt in range(12):
-            cat = _draw_category(rng, retrieval_count=retrieval_count)
+            cat = _draw_category(rng, retrieval_count=retrieval_count, weights=cat_weights)
             # Keep retrying within the same category so collision re-samples preserve type.
             _max_tries = (
                 _MAX_RANK_LADDER_TRIES

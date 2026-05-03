@@ -1,364 +1,3503 @@
 {
   "schema_fixes": 0,
   "task_count": 50,
-  "tasks_with_issues": [
-    "test2_t6",
-    "test2_t16",
-    "test2_t17",
-    "test2_t20",
-    "test2_t27"
-  ],
+  "tasks_with_issues": [],
   "corrupted_rejection_pass_count": 50,
+  "dynamic_samples_per_task": 300,
+  "retrieval_k_per_task": 12,
   "tasks": [
     {
       "task_id": "test2_t1",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 2,
+          "retrieval": 1,
+          "corrupted_verifier": 1,
+          "instance_mismatch": 1
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "3bdb4ada"
+          },
+          {
+            "slot": 2,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t2",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 2,
+          "corrupted_verifier": 1,
+          "retrieval": 1,
+          "instance_mismatch": 1
+        },
+        "items": [
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "ea32f347"
+          },
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t3",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 4,
+          "retrieval": 1
+        },
+        "items": [
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t21"
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t4",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 2,
+          "color_flip": 1,
+          "retrieval": 2
+        },
+        "items": [
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "1f0c79e5"
+          },
+          {
+            "slot": 2,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 1,
+            "query_task": "46f33fce"
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t5",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "instance_mismatch": 2,
+          "dynamic_correct": 2,
+          "retrieval": 1
+        },
+        "items": [
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "46442a0e"
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t6",
-      "train_ok": false,
+      "verifier_slot": "re_arc",
+      "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 4,
+          "retrieval": 1
+        },
+        "items": [
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "af902bf9"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t7",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 4,
+          "retrieval": 1
+        },
+        "items": [
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "a2fd1cf0"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t8",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "corrupted_verifier": 2,
+          "instance_mismatch": 1,
+          "retrieval": 1,
+          "dynamic_correct": 1
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t21"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t9",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 2,
+          "instance_mismatch": 2,
+          "color_flip": 1
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t10",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "instance_mismatch": 2,
+          "dynamic_correct": 2
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "67a3c6ac"
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t11",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "instance_mismatch": 3,
+          "dynamic_correct": 1
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "2bcee788"
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t12",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 2,
+          "dynamic_correct": 2,
+          "instance_mismatch": 1
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "b527c5c6"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 1,
+            "query_task": "8d510a79"
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t13",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 2,
+          "instance_mismatch": 1,
+          "color_flip": 1,
+          "retrieval": 1
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "95990924"
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t14",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 3,
+          "retrieval": 2
+        },
+        "items": [
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 1,
+            "query_task": "54d9e175"
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t6"
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t15",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "color_flip": 1,
+          "instance_mismatch": 2,
+          "retrieval": 1,
+          "dynamic_correct": 1
+        },
+        "items": [
+          {
+            "slot": 2,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t10"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t16",
-      "train_ok": false,
+      "verifier_slot": "re_arc",
+      "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 3,
+          "instance_mismatch": 1,
+          "retrieval": 1
+        },
+        "items": [
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "264363fd"
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t17",
-      "train_ok": false,
-      "test_ok": false,
+      "verifier_slot": "re_arc",
+      "train_ok": true,
+      "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 3,
+          "retrieval": 1,
+          "instance_mismatch": 1
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t19"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t18",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 2,
+          "corrupted_verifier": 1,
+          "instance_mismatch": 1,
+          "retrieval": 1
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "d364b489"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t19",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "instance_mismatch": 3,
+          "dynamic_correct": 1
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t4"
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t20",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
-      "dynamic_ok": false,
-      "corrupted_rejected": true
+      "dynamic_ok": true,
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "color_flip": 1,
+          "corrupted_verifier": 1,
+          "retrieval": 1,
+          "dynamic_correct": 2
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "a1570a43"
+          },
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t21",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "instance_mismatch": 3,
+          "dynamic_correct": 1
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "31aa019c"
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t22",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 3,
+          "retrieval": 1,
+          "instance_mismatch": 1
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "f35d900a"
+          },
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t23",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "color_flip": 1,
+          "dynamic_correct": 2,
+          "retrieval": 2
+        },
+        "items": [
+          {
+            "slot": 4,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t24"
+          },
+          {
+            "slot": 3,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 1,
+            "query_task": "ce4f8723"
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t24",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "color_flip": 1,
+          "dynamic_correct": 2,
+          "instance_mismatch": 1
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t23"
+          },
+          {
+            "slot": 2,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t25",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "instance_mismatch": 1,
+          "dynamic_correct": 2,
+          "retrieval": 1,
+          "corrupted_verifier": 1
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t10"
+          },
+          {
+            "slot": 2,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t26",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "dynamic_correct": 4
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "4938f0c2"
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t27",
+      "verifier_slot": "re_arc",
       "train_ok": true,
-      "test_ok": false,
+      "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 3,
+          "retrieval": 2
+        },
+        "items": [
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t19"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 1,
+            "query_task": "test2_t26"
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t28",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "dynamic_correct": 2,
+          "instance_mismatch": 1,
+          "corrupted_verifier": 1
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t16"
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t29",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "instance_mismatch": 2,
+          "dynamic_correct": 2
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t4"
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t30",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "dynamic_correct": 3,
+          "instance_mismatch": 1
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "25d487eb"
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t31",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "corrupted_verifier": 1,
+          "color_flip": 1,
+          "dynamic_correct": 2
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t50"
+          },
+          {
+            "slot": 4,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t32",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 3,
+          "retrieval": 2
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 1,
+            "query_task": "test2_t26"
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "82819916"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t33",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 2,
+          "dynamic_correct": 2,
+          "instance_mismatch": 1
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 1,
+            "query_task": "be94b721"
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "ae4f1146"
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t34",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 2,
+          "instance_mismatch": 1,
+          "dynamic_correct": 1,
+          "color_flip": 1
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "9ecd008a"
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 1,
+            "query_task": "test2_t19"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t35",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "dynamic_correct": 2,
+          "corrupted_verifier": 1,
+          "instance_mismatch": 1
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t37"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t36",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "instance_mismatch": 1,
+          "retrieval": 2,
+          "dynamic_correct": 2
+        },
+        "items": [
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 1,
+            "query_task": "264363fd"
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t6"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t37",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "corrupted_verifier": 2,
+          "retrieval": 1,
+          "dynamic_correct": 1,
+          "instance_mismatch": 1
+        },
+        "items": [
+          {
+            "slot": 2,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t21"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t38",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "instance_mismatch": 2,
+          "retrieval": 1,
+          "corrupted_verifier": 1,
+          "dynamic_correct": 1
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "7837ac64"
+          },
+          {
+            "slot": 2,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t39",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "instance_mismatch": 2,
+          "dynamic_correct": 2
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t2"
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t40",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 3,
+          "retrieval": 2
+        },
+        "items": [
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t20"
+          },
+          {
+            "slot": 2,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 1,
+            "query_task": "test2_t29"
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t41",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 3,
+          "retrieval": 2
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 1,
+            "query_task": "test2_t14"
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "99fa7670"
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t42",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 3,
+          "corrupted_verifier": 1,
+          "retrieval": 1
+        },
+        "items": [
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "d07ae81c"
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t43",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 1,
+          "color_flip": 1,
+          "retrieval": 1,
+          "instance_mismatch": 2
+        },
+        "items": [
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "1f642eb9"
+          },
+          {
+            "slot": 4,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t44",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 2,
+          "retrieval": 2,
+          "corrupted_verifier": 1
+        },
+        "items": [
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "9ecd008a"
+          },
+          {
+            "slot": 3,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 1,
+            "query_task": "f8ff0b80"
+          },
+          {
+            "slot": 4,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t45",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "dynamic_correct": 2,
+          "color_flip": 1,
+          "instance_mismatch": 1
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t47"
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t46",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "retrieval": 1,
+          "dynamic_correct": 2,
+          "instance_mismatch": 2
+        },
+        "items": [
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "27a28665"
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t47",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "color_flip": 1,
+          "dynamic_correct": 3,
+          "retrieval": 1
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t45"
+          },
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t48",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "corrupted_verifier": 1,
+          "retrieval": 1,
+          "color_flip": 2,
+          "dynamic_correct": 1
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t46"
+          },
+          {
+            "slot": 2,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t49",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "arc1",
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "corrupted_verifier": 1,
+          "color_flip": 1,
+          "instance_mismatch": 1,
+          "retrieval": 1,
+          "dynamic_correct": 1
+        },
+        "items": [
+          {
+            "slot": 3,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 4,
+            "category": "color_flip",
+            "kind": "color_flip",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "97999447"
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     },
     {
       "task_id": "test2_t50",
+      "verifier_slot": "re_arc",
       "train_ok": true,
       "test_ok": true,
       "dynamic_ok": true,
-      "corrupted_rejected": true
+      "dynamic_failure": null,
+      "corrupted_rejected": true,
+      "retrieval": {
+        "k": 12,
+        "sources": [
+          "test2"
+        ],
+        "neighbor_count": 12,
+        "error": null
+      },
+      "classification_smoke": {
+        "ok": true,
+        "categories": {
+          "dynamic_correct": 2,
+          "corrupted_verifier": 1,
+          "instance_mismatch": 1,
+          "retrieval": 1
+        },
+        "items": [
+          {
+            "slot": 4,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 1,
+            "category": "dynamic_correct",
+            "kind": "arc_gen_dynamic_correct",
+            "same_distribution": true,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 2,
+            "category": "corrupted_verifier",
+            "kind": "corrupted_verifier",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 3,
+            "category": "instance_mismatch",
+            "kind": "same_task_instance_mismatch",
+            "same_distribution": false,
+            "rank": null,
+            "query_task": null
+          },
+          {
+            "slot": 0,
+            "category": "retrieval",
+            "kind": "retrieval_nearest",
+            "same_distribution": false,
+            "rank": 0,
+            "query_task": "test2_t37"
+          }
+        ],
+        "failed_negatives": [],
+        "failed_positives": []
+      }
     }
   ]
 }

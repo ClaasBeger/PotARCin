@@ -63,6 +63,11 @@ def _task_dir(task_num: int) -> Path:
     return mapping[task_num]
 
 
+def test2_task_subdir(task_num: int) -> Path:
+    """Return ``Test2/t<task_num>_*/`` directory for a task number (1..50)."""
+    return _task_dir(task_num)
+
+
 def _load_module(path: Path, module_name: str) -> ModuleType:
     spec = importlib.util.spec_from_file_location(module_name, path)
     if spec is None or spec.loader is None:
@@ -204,6 +209,27 @@ def _load_test2_generator(task_num: int) -> Optional[Callable[..., list[GridPair
     return _gen
 
 
+def _load_test2_p_arc_stable_pairs(task_num: int) -> list[GridPair]:
+    """Load ``t<n>_samples_50.json`` ``train`` array (50 committed pairs per task)."""
+    td = _task_dir(task_num)
+    path = td / f"t{task_num}_samples_50.json"
+    if not path.is_file():
+        return []
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    train = payload.get("train")
+    if not isinstance(train, list):
+        return []
+    out: list[GridPair] = []
+    for i, ex in enumerate(train):
+        if not isinstance(ex, dict):
+            continue
+        inp, outg = ex.get("input"), ex.get("output")
+        if not is_int_grid(inp) or not is_int_grid(outg):
+            raise ValueError(f"{path}: invalid train[{i}] grid(s)")
+        out.append(GridPair(inp, outg))
+    return out
+
+
 def load_test2_task(task_id: str) -> ArcTask:
     task_num = parse_test2_task_num(task_id)
     task_json = TEST2_DIR / f"t{task_num}.json"
@@ -237,6 +263,7 @@ def load_test2_task(task_id: str) -> ArcTask:
 
     verifier = _load_test2_verifier(task_num)
     generator = _load_test2_generator(task_num)
+    p_arc_stable = _load_test2_p_arc_stable_pairs(task_num)
 
     return ArcTask(
         task_id=canonical_test2_task_id(task_id),
@@ -245,6 +272,7 @@ def load_test2_task(task_id: str) -> ArcTask:
         test_outputs=test_outputs,
         verifier=verifier,
         arc_gen_generator=generator,
+        test2_p_arc_stable_pairs=p_arc_stable,
     )
 
 

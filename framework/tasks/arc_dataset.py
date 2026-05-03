@@ -554,7 +554,20 @@ def _make_arc_gen_generator(
     Pass ``rng=`` to draw independent seeds from that :class:`~random.Random`
     instance so successive examples are **stochastic** but still reproducible
     when *rng* is seeded (e.g. evaluation batch seed).
+
+    Test2 task ids (``test2_t<n>``) are routed through the per-task
+    ``Test2/<task_dir>/generator.py`` so callers using ``_make_arc_gen_generator``
+    by id (e.g. cross-dynamic mismatch sampler) keep working for Test2.
     """
+    try:
+        parse_test2_task_num(task_id)
+        is_test2 = True
+    except ValueError:
+        is_test2 = False
+    if is_test2:
+        from framework.tasks.test2_dataset import _load_test2_generator, parse_test2_task_num as _parse_t2
+        return _load_test2_generator(_parse_t2(task_id))
+
     lookup = _arc_gen_id_to_task_num_and_generator(task_id)
     if lookup is None:
         return None
