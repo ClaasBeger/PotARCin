@@ -2,7 +2,8 @@
 
 Generated inputs contain several colored anchor shapes. The shapes can be
 partitioned into one or two square arrangements. Within each arrangement, the
-member shapes tile a filled 3x3, 4x4, or 5x5 square when rotations are allowed.
+member shapes tile a filled 3x3, 4x4, or 5x5 square when rotations are allowed
+(up to five pieces on a 5x5).
 For each member shape, the output completes that square around the anchor while
 keeping that anchor fixed in place and orientation.
 """
@@ -85,8 +86,8 @@ def _placements_for(shape: Shape, k: int) -> List[Shape]:
 def _random_connected_partition(rr: random.Random, k: int, m: int) -> Tuple[Shape, ...] | None:
     """Randomly partition a k x k square into m connected pieces.
 
-    This intentionally explores a broad variety of two-, three-, and four-piece
-    square decompositions.  All pieces are 4-connected.
+    This intentionally explores two- through five-piece square decompositions.
+    All pieces are 4-connected.
     """
     cells = [(r, c) for r in range(k) for c in range(k)]
     cell_set = set(cells)
@@ -223,6 +224,7 @@ def _choose_group_specs(rr: random.Random) -> List[Tuple[int, int]]:
         [(4, 4)],
         [(5, 3)],
         [(5, 4)],
+        [(5, 5)],
         [(3, 2), (3, 2)],
         [(3, 2), (4, 3)],
         [(3, 2), (4, 4)],

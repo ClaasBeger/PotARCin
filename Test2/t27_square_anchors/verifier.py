@@ -1,8 +1,8 @@
 """Verifier for t27: square completion around each anchor shape.
 
 Valid inputs contain several monochrome objects, identified by color.  The
-objects can be partitioned into one or two groups.  Within each group, the member
-shapes can be rotated and packed to form one filled k x k square.  For every
+objects can be partitioned into one or two groups.  Within each group (at most five
+shapes), those shapes can be rotated and packed to form one filled k x k square.  For every
 member shape, the output places a full copy of that square so that the member
 itself remains fixed in its original input position and orientation.
 """
@@ -166,7 +166,7 @@ def _tilings_for_group(objs: Sequence[dict], group: Sequence[int], k: int, ancho
 def _candidate_groups(objs: Sequence[dict]) -> List[Tuple[Tuple[int, ...], int]]:
     n = len(objs)
     cands: List[Tuple[Tuple[int, ...], int]] = []
-    for m in range(2, min(4, n) + 1):
+    for m in range(2, min(5, n) + 1):
         for group in combinations(range(n), m):
             area = sum(len(objs[i]["shape"]) for i in group)
             k = isqrt(area)

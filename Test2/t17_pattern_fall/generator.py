@@ -1,4 +1,17 @@
-"""Generator for Test2/t17: recurring shape instances shift downward by shape height."""
+"""Generator for Test2/t17 (pattern fall).
+
+There is exactly **one** prototype (no rotations): a fixed set of foreground cells in
+the plane, **king-connected** (edge or diagonal adjacency counts *within* that stencil).
+The prototype is never a single cell.
+
+Each *placement* is a translation of that stencil. Viewport clipping can hide parts above,
+below, or beside the grid; shifting is by **one prototype height** (vertical span).
+
+**Between** different placements of the same prototype, diagonal touching must **not**
+merge them into one instance (only orthogonal edge contact merges on the visible grid).
+
+``generate()`` only samples common cases; authored puzzles may use rarer geometry.
+"""
 
 from __future__ import annotations
 
@@ -26,6 +39,30 @@ def _neighbors4(r: int, c: int) -> Iterable[Pos]:
     yield (r - 1, c)
     yield (r, c + 1)
     yield (r, c - 1)
+
+
+def _neighbors8(r: int, c: int) -> Iterable[Pos]:
+    for dr in (-1, 0, 1):
+        for dc in (-1, 0, 1):
+            if dr or dc:
+                yield (r + dr, c + dc)
+
+
+def _king_connected(sig: ShapeSig) -> bool:
+    """True iff cells of ``sig`` are connected under king (8-neighbor) moves."""
+    cells = set(sig)
+    if not cells:
+        return False
+    start = next(iter(cells))
+    seen = {start}
+    stack = [start]
+    while stack:
+        r, c = stack.pop()
+        for nr, nc in _neighbors8(r, c):
+            if (nr, nc) in cells and (nr, nc) not in seen:
+                seen.add((nr, nc))
+                stack.append((nr, nc))
+    return len(seen) == len(cells)
 
 
 def _extract_components(grid: Grid, color: int) -> list[set[Pos]]:
@@ -111,6 +148,78 @@ def _infer_anchor_for_component(
     return candidates[0]
 
 
+def _infer_anchors_for_proto(inp: Grid, color: int, sig: ShapeSig) -> list[tuple[int, int]]:
+    """Infer placement anchors for a single prototype across the whole grid.
+
+    Placements can touch and merge in the visible grid, so we cannot assume one
+    connected component corresponds to one placement. Instead, solve an exact
+    cover over all viewport-clipped prototype placements.
+    """
+    h = len(inp)
+    w = len(inp[0]) if h else 0
+    fg = {(r, c) for r in range(h) for c in range(w) if inp[r][c] == color}
+    if not fg:
+        return []
+
+    max_r = max(r for r, _ in sig)
+    max_c = max(c for _, c in sig)
+
+    # Deduplicate by visible cell-set; keep deterministic representative anchor.
+    vis_to_anchor: dict[frozenset[Pos], tuple[int, int]] = {}
+    for top in range(-max_r, h):
+        for left in range(-max_c, w):
+            vis = frozenset(_visible_from_anchor(sig, top, left, h, w))
+            if not vis or not vis.issubset(fg):
+                continue
+            prev = vis_to_anchor.get(vis)
+            if prev is None or (top, left) < prev:
+                vis_to_anchor[vis] = (top, left)
+
+    if not vis_to_anchor:
+        raise ValueError("no feasible clipped placements for inferred prototype")
+
+    sets = sorted(vis_to_anchor.items(), key=lambda kv: (-len(kv[0]), kv[1]))
+    cell_to_set_ids: dict[Pos, list[int]] = {p: [] for p in fg}
+    for idx, (vis, _anchor) in enumerate(sets):
+        for p in vis:
+            cell_to_set_ids[p].append(idx)
+
+    if any(len(cell_to_set_ids[p]) == 0 for p in fg):
+        raise ValueError("prototype cannot explain all foreground cells")
+
+    covered: set[Pos] = set()
+    chosen_ids: list[int] = []
+
+    def _dfs_cover() -> bool:
+        if len(covered) == len(fg):
+            return True
+        # Branch on the tightest uncovered cell first.
+        uncovered = [p for p in fg if p not in covered]
+        pivot = min(
+            uncovered,
+            key=lambda p: sum(1 for sid in cell_to_set_ids[p] if not (sets[sid][0] & covered)),
+        )
+        cands = [sid for sid in cell_to_set_ids[pivot] if not (sets[sid][0] & covered)]
+        # Deterministic: larger placement first, then anchor order from `sets`.
+        cands.sort(key=lambda sid: -len(sets[sid][0]))
+        for sid in cands:
+            vis, _anchor = sets[sid]
+            if vis & covered:
+                continue
+            chosen_ids.append(sid)
+            covered.update(vis)
+            if _dfs_cover():
+                return True
+            chosen_ids.pop()
+            covered.difference_update(vis)
+        return False
+
+    if not _dfs_cover():
+        raise ValueError("could not decompose foreground into clipped prototype placements")
+
+    return [sets[sid][1] for sid in chosen_ids]
+
+
 def transform_t17(inp: Grid) -> Grid:
     if not inp or not inp[0]:
         raise ValueError("input grid must be non-empty")
@@ -128,7 +237,7 @@ def transform_t17(inp: Grid) -> Grid:
     if not comps:
         raise ValueError("no foreground components found")
 
-    interior = []
+    interior: list[set[Pos]] = []
     for comp in comps:
         r0, c0, r1, c1 = _bbox(comp)
         if r0 > 0 and r1 < h - 1 and c0 > 0 and c1 < w - 1:
@@ -136,22 +245,19 @@ def transform_t17(inp: Grid) -> Grid:
     if not interior:
         raise ValueError("need at least one full interior instance to infer shape")
 
-    # Infer prototype from full interior copies, prioritizing larger motifs
-    # to avoid tiny clipped fragments dominating by frequency.
+    # Prefer larger interior clips so tiny dots do not dominate prototype choice.
     sig_counter = Counter(_normalize(c) for c in interior)
     proto_sig = max(sig_counter.items(), key=lambda kv: (len(kv[0]), kv[1]))[0]
     if not proto_sig:
         raise ValueError("invalid empty prototype")
-    if len(proto_sig) < 3:
+    if len(proto_sig) < 2:
         raise ValueError("prototype is too small")
+    if not _king_connected(proto_sig):
+        raise ValueError("prototype must be king-connected")
     shape_h = max(r for r, _ in proto_sig) + 1
 
-    anchors: list[tuple[int, int]] = []
-    for comp in comps:
-        anchor = _infer_anchor_for_component(comp, proto_sig, h, w)
-        anchors.append(anchor)
+    anchors = _infer_anchors_for_proto(inp, color, proto_sig)
 
-    # Keep only unique anchors in case of accidental duplicate inference.
     anchors = sorted(set(anchors))
     out = _empty(h, w)
     for top, left in anchors:
