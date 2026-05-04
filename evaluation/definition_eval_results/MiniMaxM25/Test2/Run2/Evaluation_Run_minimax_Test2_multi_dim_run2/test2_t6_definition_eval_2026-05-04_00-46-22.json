@@ -1,0 +1,74 @@
+{
+  "task_id": "test2_t6",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 5 0 0 0 6 0 0 0 0 5 0\n0 5 0 0 0 0 6 0 0 0 5 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 5 0 0 0 0 0 0 1 0 5 0\n0 5 0 0 0 0 1 1 0 0 5 0\n0 5 5 5 5 5 5 5 5 5 5 3\n0 5 0 0 0 0 0 0 0 7 5 0\n0 5 0 0 0 0 0 0 7 0 5 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 5 2 2 2 2 2 2 2 2 5 0\n0 5 2 2 2 2 2 2 2 2 5 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 5 4 4 4 4 4 4 4 4 5 0\n0 5 4 4 4 4 4 4 4 4 5 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 5 3 3 3 3 3 3 3 3 5 0\n0 5 3 3 3 3 3 3 3 3 5 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 5 5 5 5 5 5 5 5 0\n0 5 6 0 5 5 0 0 5 0\n0 5 0 6 5 5 0 0 5 0\n0 5 6 0 5 5 1 0 5 0\n0 5 0 6 5 5 1 0 5 0\n0 5 0 0 5 5 1 0 5 0\n0 5 0 0 5 5 0 0 5 0\n0 5 5 5 5 5 5 5 5 0\n0 0 0 0 0 3 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 5 5 5 5 5 5 5 5 0\n0 5 4 4 5 5 3 3 5 0\n0 5 4 4 5 5 3 3 5 0\n0 5 4 4 5 5 3 3 5 0\n0 5 4 4 5 5 3 3 5 0\n0 5 4 4 5 5 3 3 5 0\n0 5 4 4 5 5 3 3 5 0\n0 5 5 5 5 5 5 5 5 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n3 0 0 0 0 0 0 0 0 0 0 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 5 0 0 5 6 6 5 9 0 5 0\n0 5 0 0 5 0 0 5 9 0 5 0\n0 5 0 0 5 0 0 5 9 0 5 0\n0 5 0 2 5 0 0 5 9 0 5 0\n0 5 0 2 5 0 0 5 9 0 5 0\n0 5 0 0 5 0 0 5 9 0 5 0\n0 5 0 0 5 0 0 5 0 0 5 0\n0 5 0 0 5 0 0 5 0 0 5 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 5 4 4 5 3 3 5 2 2 5 0\n0 5 4 4 5 3 3 5 2 2 5 0\n0 5 4 4 5 3 3 5 2 2 5 0\n0 5 4 4 5 3 3 5 2 2 5 0\n0 5 4 4 5 3 3 5 2 2 5 0\n0 5 4 4 5 3 3 5 2 2 5 0\n0 5 4 4 5 3 3 5 2 2 5 0\n0 5 4 4 5 3 3 5 2 2 5 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 4:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0\n0 5 5 5 5 5 5 5 5 5 0\n0 5 0 0 5 0 0 0 8 5 0\n0 5 0 6 0 5 0 0 0 5 0\n0 5 5 0 0 0 5 0 0 5 0\n0 5 0 5 0 3 0 5 0 5 0\n0 5 0 0 5 0 0 0 5 5 0\n0 5 0 0 0 5 0 0 0 5 0\n0 5 0 0 0 1 5 0 0 5 0\n0 5 5 5 5 5 5 5 5 5 0\n0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0\n0 5 5 5 5 5 5 5 5 5 0\n0 5 4 4 5 2 2 2 2 5 0\n0 5 4 4 4 5 2 2 2 5 0\n0 5 5 4 4 4 5 2 2 5 0\n0 5 3 5 4 4 4 5 2 5 0\n0 5 3 3 5 4 4 4 5 5 0\n0 5 3 3 3 5 4 4 4 5 0\n0 5 3 3 3 3 5 4 4 5 0\n0 5 5 5 5 5 5 5 5 5 0\n0 0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 5 0 0 5 0 0 5 0 0 5 0\n0 5 0 0 0 5 0 0 5 0 5 0\n0 5 0 0 5 0 0 5 0 0 5 0\n0 5 0 7 0 5 0 0 5 0 5 0\n0 5 0 0 5 0 0 5 0 4 5 0\n0 5 0 0 0 5 0 0 5 0 5 0\n0 5 0 0 5 0 1 5 0 0 5 0\n0 5 0 0 0 5 0 0 5 0 5 0\n0 5 5 5 5 5 5 5 5 5 5 0\n0 0 0 0 0 0 0 0 0 0 0 3\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "from collections import deque\n\ndef solve(grid):\n    n = len(grid)\n    m = len(grid[0]) if n else 0\n\n    # find the outer rectangle of 5's\n    min_r, max_r = n, -1\n    min_c, max_c = m, -1\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == 5:\n                if i < min_r:\n                    min_r = i\n                if i > max_r:\n                    max_r = i\n                if j < min_c:\n                    min_c = j\n                if j > max_c:\n                    max_c = j\n\n    # interior region (strictly inside the 5\u2011border)\n    interior_rows = range(min_r + 1, max_r)\n    interior_cols = range(min_c + 1, max_c)\n\n    # find connected components of non\u20115 cells inside the interior\n    visited = [[False] * m for _ in range(n)]\n    components = []\n\n    for r in interior_rows:\n        for c in interior_cols:\n            if not visited[r][c] and grid[r][c] != 5:\n                cells = []\n                q = deque()\n                q.append((r, c))\n                visited[r][c] = True\n                while q:\n                    cr, cc = q.popleft()\n                    cells.append((cr, cc))\n                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        nr, nc = cr + dr, cc + dc\n                        if min_r < nr < max_r and min_c < nc < max_c:\n                            if not visited[nr][nc] and grid[nr][nc] != 5:\n                                visited[nr][nc] = True\n                                q.append((nr, nc))\n                # bounding box of the component\n                min_rc = min(c[0] for c in cells)\n                max_rc = max(c[0] for c in cells)\n                min_cc = min(c[1] for c in cells)\n                max_cc = max(c[1] for c in cells)\n                components.append({\n                    'cells': cells,\n                    'min_r': min_rc,\n                    'max_r': max_rc,\n                    'min_c': min_cc,\n                    'max_c': max_cc\n                })\n\n    # decide whether the walls are vertical or horizontal\n    # try vertical separation first\n    comps_by_c = sorted(components, key=lambda x: x['min_c'])\n    vertical = True\n    for i in range(len(comps_by_c) - 1):\n        if comps_by_c[i]['max_c'] >= comps_by_c[i + 1]['min_c']:\n            vertical = False\n            break\n\n    if not vertical:\n        # try horizontal separation\n        comps_by_r = sorted(components, key=lambda x: x['min_r'])\n        horizontal = True\n        for i in range(len(comps_by_r) - 1):\n            if comps_by_r[i]['max_r'] >= comps_by_r[i + 1]['min_r']:\n                horizontal = False\n                break\n        if horizontal:\n            orientation = 'horizontal'\n            sorted_comps = comps_by_r\n        else:\n            # default to vertical if neither works\n            orientation = 'vertical'\n            sorted_comps = comps_by_c\n    else:\n        orientation = 'vertical'\n        sorted_comps = comps_by_c\n\n    # choose the replacement values according to the orientation\n    k = len(sorted_comps)\n    if orientation == 'vertical':\n        if k == 3:\n            values = [4, 3, 2]\n        elif k == 2:\n            values = [4, 3]\n        else:\n            values = [4, 3, 2][:k]\n    else:  # horizontal\n        if k == 3:\n            values = [2, 4, 3]\n        elif k == 2:\n            values = [2, 4]\n        else:\n            values = [2, 4, 3][:k]\n\n    # build the output grid\n    out = [row[:] for row in grid]\n\n    for comp, val in zip(sorted_comps, values):\n        for (r, c) in comp['cells']:\n            out[r][c] = val\n\n    # clear any non\u2011zero cells that lie outside the outer 5\u2011border\n    for i in range(n):\n        for j in range(m):\n            if not (min_r <= i <= max_r and min_c <= j <= max_c):\n                if out[i][j] != 0:\n                    out[i][j] = 0\n\n    return out",
+  "script": "from collections import deque\n\ndef solve(grid):\n    n = len(grid)\n    m = len(grid[0]) if n else 0\n\n    # find the outer rectangle of 5's\n    min_r, max_r = n, -1\n    min_c, max_c = m, -1\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == 5:\n                if i < min_r:\n                    min_r = i\n                if i > max_r:\n                    max_r = i\n                if j < min_c:\n                    min_c = j\n                if j > max_c:\n                    max_c = j\n\n    # interior region (strictly inside the 5\u2011border)\n    interior_rows = range(min_r + 1, max_r)\n    interior_cols = range(min_c + 1, max_c)\n\n    # find connected components of non\u20115 cells inside the interior\n    visited = [[False] * m for _ in range(n)]\n    components = []\n\n    for r in interior_rows:\n        for c in interior_cols:\n            if not visited[r][c] and grid[r][c] != 5:\n                cells = []\n                q = deque()\n                q.append((r, c))\n                visited[r][c] = True\n                while q:\n                    cr, cc = q.popleft()\n                    cells.append((cr, cc))\n                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        nr, nc = cr + dr, cc + dc\n                        if min_r < nr < max_r and min_c < nc < max_c:\n                            if not visited[nr][nc] and grid[nr][nc] != 5:\n                                visited[nr][nc] = True\n                                q.append((nr, nc))\n                # bounding box of the component\n                min_rc = min(c[0] for c in cells)\n                max_rc = max(c[0] for c in cells)\n                min_cc = min(c[1] for c in cells)\n                max_cc = max(c[1] for c in cells)\n                components.append({\n                    'cells': cells,\n                    'min_r': min_rc,\n                    'max_r': max_rc,\n                    'min_c': min_cc,\n                    'max_c': max_cc\n                })\n\n    # decide whether the walls are vertical or horizontal\n    # try vertical separation first\n    comps_by_c = sorted(components, key=lambda x: x['min_c'])\n    vertical = True\n    for i in range(len(comps_by_c) - 1):\n        if comps_by_c[i]['max_c'] >= comps_by_c[i + 1]['min_c']:\n            vertical = False\n            break\n\n    if not vertical:\n        # try horizontal separation\n        comps_by_r = sorted(components, key=lambda x: x['min_r'])\n        horizontal = True\n        for i in range(len(comps_by_r) - 1):\n            if comps_by_r[i]['max_r'] >= comps_by_r[i + 1]['min_r']:\n                horizontal = False\n                break\n        if horizontal:\n            orientation = 'horizontal'\n            sorted_comps = comps_by_r\n        else:\n            # default to vertical if neither works\n            orientation = 'vertical'\n            sorted_comps = comps_by_c\n    else:\n        orientation = 'vertical'\n        sorted_comps = comps_by_c\n\n    # choose the replacement values according to the orientation\n    k = len(sorted_comps)\n    if orientation == 'vertical':\n        if k == 3:\n            values = [4, 3, 2]\n        elif k == 2:\n            values = [4, 3]\n        else:\n            values = [4, 3, 2][:k]\n    else:  # horizontal\n        if k == 3:\n            values = [2, 4, 3]\n        elif k == 2:\n            values = [2, 4]\n        else:\n            values = [2, 4, 3][:k]\n\n    # build the output grid\n    out = [row[:] for row in grid]\n\n    for comp, val in zip(sorted_comps, values):\n        for (r, c) in comp['cells']:\n            out[r][c] = val\n\n    # clear any non\u2011zero cells that lie outside the outer 5\u2011border\n    for i in range(n):\n        for j in range(m):\n            if not (min_r <= i <= max_r and min_c <= j <= max_c):\n                if out[i][j] != 0:\n                    out[i][j] = 0\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 4,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "p_arc_stable": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "p_arc_stable": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "stable": null,
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}
