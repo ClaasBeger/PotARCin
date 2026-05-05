@@ -1,0 +1,117 @@
+{
+  "mode": "batch_pending",
+  "created_at": "2026-05-04_18-21-24",
+  "task_count": 1,
+  "run_tag": "Evaluation_Run_minimax_Test2_multi_dim_run2",
+  "task_source": "test2",
+  "seed_mode": "fixed",
+  "base_seed": 77,
+  "batch_size": 50,
+  "completed_before_count": 49,
+  "last_completed_task_id_before": "test2_t50",
+  "runs": [
+    {
+      "task_id": "test2_t43",
+      "model": "minimax/minimax-m2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 119,
+      "dimension_seeds": {
+        "classification_distribution": 1228347332,
+        "editing": 772316506,
+        "inversion": 1858451847
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/MiniMaxM25/Test2/Run2/Evaluation_Run_minimax_Test2_multi_dim_run2/test2_t43_definition_eval_2026-05-04_13-59-15.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 3,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "p_arc_stable": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 0,
+              "success_rate": 0.0
+            },
+            "generator_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 0,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 0,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/MiniMaxM25/Test2/Run2/Evaluation_Run_minimax_Test2_multi_dim_run2/test2_t43_distribution_classification_eval_2026-05-04_13-59-15.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/MiniMaxM25/Test2/Run2/Evaluation_Run_minimax_Test2_multi_dim_run2/test2_t43_constrained_generation_eval_2026-05-04_18-24-43.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/MiniMaxM25/Test2/Run2/Evaluation_Run_minimax_Test2_multi_dim_run2/test2_t43_editing_eval_2026-05-04_14-11-02.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/MiniMaxM25/Test2/Run2/Evaluation_Run_minimax_Test2_multi_dim_run2/test2_t43_inversion_eval_2026-05-04_14-16-37.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        }
+      }
+    }
+  ]
+}

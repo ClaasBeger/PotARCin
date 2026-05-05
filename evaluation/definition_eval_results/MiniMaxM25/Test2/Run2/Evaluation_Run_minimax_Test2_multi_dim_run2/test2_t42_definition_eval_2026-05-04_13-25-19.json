@@ -1,0 +1,74 @@
+{
+  "task_id": "test2_t42",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n3 6 6 6 7 8 8 8\n3 6 3 3 7 8 7 7\n3 3 3 6 7 8 7 8\n6 3 6 6 8 7 8 8\n7 7 7 7 4 4 4 4\n8 8 8 7 1 1 1 4\n7 7 8 8 4 4 4 1\n8 8 7 7 1 1 4 1\n4 1 4 4 3 6 3 3\n4 1 1 1 3 6 6 6\n4 4 1 4 3 3 6 3\n4 1 4 4 3 6 3 6\nOutput:\n3 6 6 6 7 8 8 8\n3 6 3 3 7 8 7 7\n3 3 3 6 7 7 7 8\n6 3 6 6 8 7 8 8\n7 7 7 7 4 4 4 4\n8 8 8 7 1 1 1 4\n7 7 8 8 4 4 1 1\n8 8 7 7 1 1 4 4\n4 1 4 4 3 6 3 3\n4 1 1 1 3 6 6 6\n4 4 1 4 3 3 6 3\n4 1 4 4 3 6 3 3\n\nExample 2:\n\nInput:\n5 2 2 5 2 4 8 8 4 8\n5 2 5 5 2 4 8 4 4 8\n5 5 2 2 5 8 4 8 8 4\n2 2 5 5 2 8 8 4 4 4\n2 5 5 2 2 8 4 4 8 8\n8 8 8 8 8 2 2 2 2 2\n8 4 4 4 8 2 5 5 5 2\n8 8 4 8 8 2 2 5 2 5\n4 8 8 4 4 5 2 2 2 5\n8 8 4 8 8 2 2 5 2 2\nOutput:\n5 2 2 5 2 4 8 8 4 8\n5 2 5 5 2 4 8 4 4 8\n5 5 2 2 5 4 4 8 8 4\n2 2 5 5 2 8 8 4 4 8\n2 5 5 2 2 8 4 4 8 8\n8 8 8 8 8 2 2 2 2 2\n8 4 4 4 8 2 5 5 5 2\n8 8 4 8 8 2 2 5 2 2\n4 8 8 4 4 5 2 2 5 5\n8 8 4 8 8 2 2 5 2 2\n\nBelow is a test input grid.\n\nInput:\n9 9 1 1 7 7 3 7\n9 1 9 9 7 3 7 3\n9 1 9 1 7 3 7 3\n1 9 1 1 3 7 3 3\n1 9 9 9 3 7 7 7\n3 3 7 7 9 1 1 1\n7 3 7 3 1 9 1 9\n7 7 7 3 1 9 1 9\n3 7 3 7 9 1 9 1\n7 3 7 7 1 9 1 1\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "from collections import Counter\n\ndef solve(grid):\n    if not grid:\n        return grid\n    rows = len(grid)\n    cols = len(grid[0])\n    if cols % 2 != 0:\n        return grid\n    half = cols // 2\n    block_size = half                     # square blocks (e.g. 4\u00d74, 5\u00d75, \u2026)\n\n    for br in range(0, rows, block_size):\n        if br + block_size > rows:\n            break\n\n        # collect statistics for the mapping\n        left_to_right = {}\n        for i in range(block_size):\n            row = grid[br + i]\n            left = row[:half]\n            right = row[half:]\n            for j in range(half):\n                lv = left[j]\n                rv = right[j]\n                if lv not in left_to_right:\n                    left_to_right[lv] = Counter()\n                left_to_right[lv][rv] += 1\n\n        # choose the most frequent right value for each left value\n        mapping = {lv: cnt.most_common(1)[0][0] for lv, cnt in left_to_right.items()}\n\n        # rewrite the right half using the inferred mapping\n        for i in range(block_size):\n            row = grid[br + i]\n            left = row[:half]\n            for j in range(half):\n                row[half + j] = mapping[left[j]]\n\n    return grid",
+  "script": "from collections import Counter\n\ndef solve(grid):\n    if not grid:\n        return grid\n    rows = len(grid)\n    cols = len(grid[0])\n    if cols % 2 != 0:\n        return grid\n    half = cols // 2\n    block_size = half                     # square blocks (e.g. 4\u00d74, 5\u00d75, \u2026)\n\n    for br in range(0, rows, block_size):\n        if br + block_size > rows:\n            break\n\n        # collect statistics for the mapping\n        left_to_right = {}\n        for i in range(block_size):\n            row = grid[br + i]\n            left = row[:half]\n            right = row[half:]\n            for j in range(half):\n                lv = left[j]\n                rv = right[j]\n                if lv not in left_to_right:\n                    left_to_right[lv] = Counter()\n                left_to_right[lv][rv] += 1\n\n        # choose the most frequent right value for each left value\n        mapping = {lv: cnt.most_common(1)[0][0] for lv, cnt in left_to_right.items()}\n\n        # rewrite the right half using the inferred mapping\n        for i in range(block_size):\n            row = grid[br + i]\n            left = row[:half]\n            for j in range(half):\n                row[half + j] = mapping[left[j]]\n\n    return grid",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 2,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "p_arc_stable": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "p_arc_stable": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "stable": null,
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

@@ -1,0 +1,62 @@
+{
+  "task_id": "test2_t30",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0\n0 0 0 0 0\n0 0 4 0 0\n0 0 0 0 0\n0 0 0 0 0\n6 6 6 6 6\n0 0 0 0 0\n0 0 4 0 0\n0 4 0 4 0\n0 0 4 0 0\n0 0 0 0 0\n6 6 6 6 6\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n6 6 6 6 6\n0 4 0 4 0\n4 0 0 0 4\n0 0 0 0 0\n4 0 0 0 4\n0 4 0 4 0\nOutput:\n0 0 0 0 0\n0 0 0 0 0\n0 0 4 0 0\n0 0 0 0 0\n0 0 0 0 0\n6 6 6 6 6\n0 0 0 0 0\n0 0 4 0 0\n0 4 0 4 0\n0 0 4 0 0\n0 0 0 0 0\n6 6 6 6 6\n0 0 4 0 0\n0 4 0 4 0\n4 0 0 0 4\n0 4 0 4 0\n0 0 4 0 0\n6 6 6 6 6\n0 4 0 4 0\n4 0 0 0 4\n0 0 0 0 0\n4 0 0 0 4\n0 4 0 4 0\n\nExample 2:\n\nInput:\n0 0 7 0\n0 0 0 0\n0 0 0 0\n0 7 0 0\n6 6 6 6\n0 7 0 0\n0 0 0 0\n0 0 0 0\n0 0 7 0\n6 6 6 6\n7 0 0 0\n0 0 0 0\n0 0 0 0\n0 0 0 7\n6 6 6 6\n0 0 0 0\n7 0 0 0\n0 0 0 7\n0 0 0 0\n6 6 6 6\n0 0 0 0\n0 0 0 0\n0 0 0 0\n0 0 0 0\nOutput:\n0 0 7 0\n0 0 0 0\n0 0 0 0\n0 7 0 0\n6 6 6 6\n0 7 0 0\n0 0 0 0\n0 0 0 0\n0 0 7 0\n6 6 6 6\n7 0 0 0\n0 0 0 0\n0 0 0 0\n0 0 0 7\n6 6 6 6\n0 0 0 0\n7 0 0 0\n0 0 0 7\n0 0 0 0\n6 6 6 6\n0 0 0 0\n0 0 0 7\n7 0 0 0\n0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0\n3 0 0 0 0\n3 0 0 0 0\n6 6 6 6 6\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n6 6 6 6 6\n3 3 3 0 0\n3 0 3 0 0\n3 0 0 0 0\n6 6 6 6 6\n3 3 3 0 0\n3 0 3 0 0\n3 0 3 3 0\n6 6 6 6 6\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n6 6 6 6 6\n3 3 3 0 3\n3 0 3 0 3\n3 0 3 3 3\nOutput:\n0 0 0 0 0\n3 0 0 0 0\n3 0 0 0 0\n6 6 6 6 6\n3 3 0 0 0\n3 0 0 0 0\n3 0 0 0 0\n6 6 6 6 6\n3 3 3 0 0\n3 0 3 0 0\n3 0 0 0 0\n6 6 6 6 6\n3 3 3 0 0\n3 0 3 0 0\n3 0 3 3 0\n6 6 6 6 6\n3 3 3 0 0\n3 0 3 0 3\n3 0 3 3 3\n6 6 6 6 6\n3 3 3 0 3\n3 0 3 0 3\n3 0 3 3 3\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n6 6 6 6 6 6 6\n0 0 0 8 0 0 0\n0 0 8 0 8 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n6 6 6 6 6 6 6\n0 0 0 8 0 0 0\n0 0 8 0 8 0 0\n0 8 0 0 0 8 0\n0 0 0 0 0 0 0\n6 6 6 6 6 6 6\n0 0 0 8 0 0 0\n0 0 8 0 8 0 0\n0 8 0 0 0 8 0\n8 0 0 0 0 0 8\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    # find separator rows (all same non\u2011zero value)\n    sep_rows = []\n    for i, row in enumerate(grid):\n        if len(set(row)) == 1 and row[0] != 0:\n            sep_rows.append(i)\n\n    # boundaries of the blocks (including before first and after last separator)\n    block_edges = []\n    start = 0\n    for r in sep_rows:\n        block_edges.append((start, r-1))\n        start = r+1\n    block_edges.append((start, len(grid)-1))\n\n    # helper to test if a block is totally empty\n    def is_empty(block):\n        for row in block:\n            for v in row:\n                if v != 0:\n                    return False\n        return True\n\n    # locate the colour used in the block (assuming a single coloured pattern)\n    def block_colour(block):\n        for row in block:\n            for v in row:\n                if v != 0:\n                    return v\n\n    # obtain centre, Chebyshev radius D, and Manhattan positions for given colour\n    def manhattan_positions(block, colour):\n        h = len(block)\n        w = len(block[0])\n        # centre indices (integer division)\n        cr = h // 2\n        cc = w // 2\n        # compute farthest Chebyshev distance\n        D = 0\n        for i in range(h):\n            for j in range(w):\n                if block[i][j] == colour:\n                    d = max(abs(i - cr), abs(j - cc))\n                    if d > D:\n                        D = d\n        # all cells with Manhattan distance exactly D\n        positions = []\n        for i in range(h):\n            for j in range(w):\n                if abs(i - cr) + abs(j - cc) == D:\n                    positions.append((i, j))\n        return positions, D\n\n    # process each block, replace empty blocks\n    # copy the grid so we can modify it\n    out_grid = [row[:] for row in grid]\n\n    for idx, (s, e) in enumerate(block_edges):\n        block = grid[s:e+1]\n        if is_empty(block):\n            # look for the next block that contains a non\u2011zero colour\n            source_idx = idx + 1\n            while source",
+  "script": "def solve(grid):\n    # find separator rows (all same non\u2011zero value)\n    sep_rows = []\n    for i, row in enumerate(grid):\n        if len(set(row)) == 1 and row[0] != 0:\n            sep_rows.append(i)\n\n    # boundaries of the blocks (including before first and after last separator)\n    block_edges = []\n    start = 0\n    for r in sep_rows:\n        block_edges.append((start, r-1))\n        start = r+1\n    block_edges.append((start, len(grid)-1))\n\n    # helper to test if a block is totally empty\n    def is_empty(block):\n        for row in block:\n            for v in row:\n                if v != 0:\n                    return False\n        return True\n\n    # locate the colour used in the block (assuming a single coloured pattern)\n    def block_colour(block):\n        for row in block:\n            for v in row:\n                if v != 0:\n                    return v\n\n    # obtain centre, Chebyshev radius D, and Manhattan positions for given colour\n    def manhattan_positions(block, colour):\n        h = len(block)\n        w = len(block[0])\n        # centre indices (integer division)\n        cr = h // 2\n        cc = w // 2\n        # compute farthest Chebyshev distance\n        D = 0\n        for i in range(h):\n            for j in range(w):\n                if block[i][j] == colour:\n                    d = max(abs(i - cr), abs(j - cc))\n                    if d > D:\n                        D = d\n        # all cells with Manhattan distance exactly D\n        positions = []\n        for i in range(h):\n            for j in range(w):\n                if abs(i - cr) + abs(j - cc) == D:\n                    positions.append((i, j))\n        return positions, D\n\n    # process each block, replace empty blocks\n    # copy the grid so we can modify it\n    out_grid = [row[:] for row in grid]\n\n    for idx, (s, e) in enumerate(block_edges):\n        block = grid[s:e+1]\n        if is_empty(block):\n            # look for the next block that contains a non\u2011zero colour\n            source_idx = idx + 1\n            while source",
+  "script_loaded": false,
+  "script_load_error": "expected ':' (<string>, line 63)\nTraceback (most recent call last):\n  File \"/Users/claas/Documents/SFI/PotARCin/PotARCin/framework/dimensions/definition.py\", line 359, in evaluate_definition_script_on_task\n    fn = _load_script_callable(script)\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/claas/Documents/SFI/PotARCin/PotARCin/framework/dimensions/definition.py\", line 245, in _load_script_callable\n    exec(script, global_ns, local_ns)\n  File \"<string>\", line 63\n    while source\n                ^\nSyntaxError: expected ':'\n",
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "p_arc_stable": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "p_arc_stable": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

@@ -1,0 +1,74 @@
+{
+  "task_id": "3befdf3e",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5",
+  "provider": "together",
+  "base_url": "https://api.together.xyz/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 4 4 4 0 0 0 0\n0 0 0 4 6 4 0 0 0 0\n0 0 0 4 4 4 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 4 4 4 0 0 0 0\n0 0 4 6 6 6 4 0 0 0\n0 0 4 6 4 6 4 0 0 0\n0 0 4 6 6 6 4 0 0 0\n0 0 0 4 4 4 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 2 2 0 0 0\n0 0 0 2 7 7 2 0 0 0\n0 0 0 2 7 7 2 0 0 0\n0 0 0 2 2 2 2 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 2 2 0 0 0\n0 0 0 2 2 2 2 0 0 0\n0 2 2 7 7 7 7 2 2 0\n0 2 2 7 2 2 7 2 2 0\n0 2 2 7 2 2 7 2 2 0\n0 2 2 7 7 7 7 2 2 0\n0 0 0 2 2 2 2 0 0 0\n0 0 0 2 2 2 2 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 3 3 3 3 0 0 0 0\n0 0 3 1 1 3 0 0 0 0\n0 0 3 1 1 3 0 0 0 0\n0 0 3 3 3 3 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 3 3 3 3 0 0 0 0\n0 0 3 3 3 3 0 0 0 0\n3 3 1 1 1 1 3 3 0 0\n3 3 1 3 3 1 3 3 0 0\n3 3 1 3 3 1 3 3 0 0\n3 3 1 1 1 1 3 3 0 0\n0 0 3 3 3 3 0 0 0 0\n0 0 3 3 3 3 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 8 8 8 0 0 0 0 0 0 0 0\n0 8 3 8 0 0 0 0 0 0 0 0\n0 8 8 8 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 8 8 8 8 0 0\n0 0 0 0 0 0 8 3 3 8 0 0\n0 0 0 0 0 0 8 3 3 8 0 0\n0 0 0 0 0 0 8 8 8 8 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\nimport numpy as np\nfrom collections import deque, Counter\n\ndef solve(grid):\n    if not grid or not grid[0]:\n        return grid\n    \n    n = len(grid)\n    m = len(grid[0])\n    grid_arr = np.array(grid)\n    output = np.zeros((n, m), dtype=int)\n    visited = np.zeros((n, m), dtype=bool)\n    \n    for i in range(n):\n        for j in range(m):\n            if grid_arr[i, j] != 0 and not visited[i, j]:\n                # BFS to find connected component\n                queue = deque([(i, j)])\n                visited[i, j] = True\n                component = [(i, j)]\n                \n                while queue:\n                    x, y = queue.popleft()\n                    for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:\n                        nx, ny = x + dx, y + dy\n                        if 0 <= nx < n and 0 <= ny < m and not visited[nx, ny] and grid_arr[nx, ny] != 0:\n                            visited[nx, ny] = True\n                            queue.append((nx, ny))\n                            component.append((nx, ny))\n                \n                # Find bounding box\n                min_r = min(p[0] for p in component)\n                max_r = max(p[0] for p in component)\n                min_c = min(p[1] for p in component)\n                max_c = max(p[1] for p in component)\n                h = max_r - min_r + 1\n                w = max_c - min_c + 1\n                \n                # Extract pattern\n                pattern = [[grid_arr[r][c] for c in range(min_c, max_c + 1)] for r in range(min_r, max_r + 1)]\n                \n                # Determine border color (most frequent on perimeter)\n                perimeter_vals = []\n                for r in range(h):\n                    perimeter_vals.append(pattern[r][0])\n                    if w > 1:\n                        perimeter_vals.append(pattern[r][w-1])\n                for c in range(1, w-1):\n                    perimeter_vals.append(pattern[0][c])\n                    if h > 1:\n                        perimeter_vals.append(pattern[h-1][c])\n                \n                border_color = Counter(perimeter_vals).most_common(1)[0][0] if perimeter_vals else pattern[0][0]\n                \n                # Calculate new dimensions\n                if h % 2 == 1:\n                    new_h = 2 * h - 1\n                else:\n                    new_h = 2 * h\n                if w % 2 == 1:\n                    new_w = 2 * w - 1\n                else:\n                    new_w = 2 * w\n                \n                scaled = [[border_color for _ in range(new_w)] for _ in range(new_h)]\n                \n                # Map original pixels to even coordinates\n                for r in range(h):\n                    for c in range(w):\n                        nr = 2 * r\n                        nc = 2 * c\n                        if nr < new_h and nc < new_w:\n                            scaled[nr][nc] = pattern[r][c]\n                \n                # Fill horizontal gaps (even row, odd col)\n                for r in range(0, new_h, 2):\n                    for c in range(1, new_w, 2):\n                        left = scaled[r][c-1]\n                        right = scaled[r][c+1] if c+1 < new_w else left\n                        if left == right:\n                            scaled[r][c] = left\n                        else:\n                            # Choose the one that is not border color\n                            if left != border_color:\n                                scaled[r][c] = left\n                            else:\n                                scaled[r][c] = right\n                \n                # Fill vertical gaps (odd row, even col)\n                for r in range(1, new_h, 2):\n                    for c in range(0, new_w, 2):\n                        top = scaled[r-1][c]\n                        bottom = scaled[r+1][c] if r+1 < new_h else top\n                        if top == bottom:\n                            scaled[r][c] = top\n                        else:\n                            scaled[r][c] = border_color\n                \n                # Fill diagonal gaps (odd row, odd col)\n                for r in range(1, new_h, 2):\n                    for c in range(1, new_w, 2):\n                        scaled[r][c] = border_color\n                \n                # Calculate top-left position for placement\n                new_min_r = min_r - (h // 2)\n                new_min_c = min_c - (w // 2)\n                \n                # Place scaled pattern in output\n                for r in range(new_h):\n                    for c in range(new_w):\n                        nr, nc = new_min_r + r, new_min_c + c\n                        if 0 <= nr < n and 0 <= nc < m:\n                            output[nr, nc] = scaled[r][c]\n    \n    return output.tolist()\n```",
+  "script": "import numpy as np\nfrom collections import deque, Counter\n\ndef solve(grid):\n    if not grid or not grid[0]:\n        return grid\n    \n    n = len(grid)\n    m = len(grid[0])\n    grid_arr = np.array(grid)\n    output = np.zeros((n, m), dtype=int)\n    visited = np.zeros((n, m), dtype=bool)\n    \n    for i in range(n):\n        for j in range(m):\n            if grid_arr[i, j] != 0 and not visited[i, j]:\n                # BFS to find connected component\n                queue = deque([(i, j)])\n                visited[i, j] = True\n                component = [(i, j)]\n                \n                while queue:\n                    x, y = queue.popleft()\n                    for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:\n                        nx, ny = x + dx, y + dy\n                        if 0 <= nx < n and 0 <= ny < m and not visited[nx, ny] and grid_arr[nx, ny] != 0:\n                            visited[nx, ny] = True\n                            queue.append((nx, ny))\n                            component.append((nx, ny))\n                \n                # Find bounding box\n                min_r = min(p[0] for p in component)\n                max_r = max(p[0] for p in component)\n                min_c = min(p[1] for p in component)\n                max_c = max(p[1] for p in component)\n                h = max_r - min_r + 1\n                w = max_c - min_c + 1\n                \n                # Extract pattern\n                pattern = [[grid_arr[r][c] for c in range(min_c, max_c + 1)] for r in range(min_r, max_r + 1)]\n                \n                # Determine border color (most frequent on perimeter)\n                perimeter_vals = []\n                for r in range(h):\n                    perimeter_vals.append(pattern[r][0])\n                    if w > 1:\n                        perimeter_vals.append(pattern[r][w-1])\n                for c in range(1, w-1):\n                    perimeter_vals.append(pattern[0][c])\n                    if h > 1:\n                        perimeter_vals.append(pattern[h-1][c])\n                \n                border_color = Counter(perimeter_vals).most_common(1)[0][0] if perimeter_vals else pattern[0][0]\n                \n                # Calculate new dimensions\n                if h % 2 == 1:\n                    new_h = 2 * h - 1\n                else:\n                    new_h = 2 * h\n                if w % 2 == 1:\n                    new_w = 2 * w - 1\n                else:\n                    new_w = 2 * w\n                \n                scaled = [[border_color for _ in range(new_w)] for _ in range(new_h)]\n                \n                # Map original pixels to even coordinates\n                for r in range(h):\n                    for c in range(w):\n                        nr = 2 * r\n                        nc = 2 * c\n                        if nr < new_h and nc < new_w:\n                            scaled[nr][nc] = pattern[r][c]\n                \n                # Fill horizontal gaps (even row, odd col)\n                for r in range(0, new_h, 2):\n                    for c in range(1, new_w, 2):\n                        left = scaled[r][c-1]\n                        right = scaled[r][c+1] if c+1 < new_w else left\n                        if left == right:\n                            scaled[r][c] = left\n                        else:\n                            # Choose the one that is not border color\n                            if left != border_color:\n                                scaled[r][c] = left\n                            else:\n                                scaled[r][c] = right\n                \n                # Fill vertical gaps (odd row, even col)\n                for r in range(1, new_h, 2):\n                    for c in range(0, new_w, 2):\n                        top = scaled[r-1][c]\n                        bottom = scaled[r+1][c] if r+1 < new_h else top\n                        if top == bottom:\n                            scaled[r][c] = top\n                        else:\n                            scaled[r][c] = border_color\n                \n                # Fill diagonal gaps (odd row, odd col)\n                for r in range(1, new_h, 2):\n                    for c in range(1, new_w, 2):\n                        scaled[r][c] = border_color\n                \n                # Calculate top-left position for placement\n                new_min_r = min_r - (h // 2)\n                new_min_c = min_c - (w // 2)\n                \n                # Place scaled pattern in output\n                for r in range(new_h):\n                    for c in range(new_w):\n                        nr, nc = new_min_r + r, new_min_c + c\n                        if 0 <= nr < n and 0 <= nc < m:\n                            output[nr, nc] = scaled[r][c]\n    \n    return output.tolist()",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 262,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'np' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'np' is not defined"
+    },
+    "stable": {
+      "index": 0,
+      "error": "name 'np' is not defined"
+    },
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'np' is not defined"
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "name 'np' is not defined"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "name 'np' is not defined"
+    }
+  },
+  "evaluation_ok": true
+}
