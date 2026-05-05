@@ -188,7 +188,7 @@ def plot_trends(trends: dict, run_tag: str, out_dir: Path, basename: str) -> Non
         marker="X",
         markersize=3.7,
         linewidth=1.3,
-        label="Average full-task accuracy",
+        label="Avg. full-task acc.",
         zorder=3,
     )
     ln_hard, = ax.plot(
@@ -198,7 +198,7 @@ def plot_trends(trends: dict, run_tag: str, out_dir: Path, basename: str) -> Non
         marker="s",
         markersize=3.7,
         linewidth=1.3,
-        label="Hard full-task accuracy",
+        label="Hard full-task acc.",
         zorder=3,
     )
     # One line per dimension (hard per-dimension pass over all samples).
@@ -242,13 +242,13 @@ def plot_trends(trends: dict, run_tag: str, out_dir: Path, basename: str) -> Non
 
 
 def _save_legend_only(handles, labels, out_dir: Path, basename: str) -> None:
-    fig_leg, ax_leg = plt.subplots(1, 1, figsize=(6.8, 1.0))
+    fig_leg, ax_leg = plt.subplots(1, 1, figsize=(3.2, 2.4))
     ax_leg.axis("off")
     leg = ax_leg.legend(
         handles,
         labels,
         loc="center",
-        ncol=2,
+        ncol=1,
         frameon=True,
         facecolor="white",
         framealpha=0.95,
