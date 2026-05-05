@@ -607,7 +607,7 @@ def plot_figure(workspace: Path, out_dir: Path, *, basename: str) -> Path:
     mpl.rcParams.update({
         "figure.dpi": 150,
         "savefig.dpi": 300,
-        "font.family": "serif",
+        "font.family": "DejaVu Serif",
         "font.size": 9,
         "axes.labelsize": 10,
         "axes.titlesize": 11,
