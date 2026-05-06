@@ -25,6 +25,7 @@ Output:
 from __future__ import annotations
 
 import argparse
+import csv
 import importlib.util
 import json
 from pathlib import Path
@@ -132,14 +133,18 @@ def compute_trends(
                 hard_correct += 1
         hard_full.append(100.0 * hard_correct / T)
 
-        # Per-dimension hard pass: for each dimension, require all samples correct,
-        # then track the fraction of tasks that satisfy this per dimension.
+        # Per-dimension running average of perfect-pass fractions:
+        # for each seed, compute fraction of tasks with strict pass on this dimension,
+        # then average those fractions over the first k seeds.
         for d in dim_order:
-            d_correct = 0
-            for tid in task_ids_l:
-                if all(dim_pass[(tid, sd, d)] for sd in seeds_k):
-                    d_correct += 1
-            per_dim_pct[d].append(100.0 * d_correct / T)
+            seed_fracs: list[float] = []
+            for sd in seeds_k:
+                d_correct = 0
+                for tid in task_ids_l:
+                    if dim_pass[(tid, sd, d)]:
+                        d_correct += 1
+                seed_fracs.append(d_correct / T)
+            per_dim_pct[d].append(100.0 * float(np.mean(seed_fracs)))
 
     return {
         "x_samples": [float(x) for x in xs],
@@ -264,6 +269,43 @@ def _save_legend_only(handles, labels, out_dir: Path, basename: str) -> None:
     plt.close(fig_leg)
 
 
+def _save_trends_csv(trends: dict, out_dir: Path, basename: str) -> None:
+    csv_path = out_dir / f"{basename}.csv"
+    dim_order = trends["dim_order"]
+    dim_labels = trends["dim_labels"]
+    per_dim_pct = trends["per_dim_pct"]
+
+    dim_cols = []
+    for idx, d in enumerate(dim_order):
+        lbl = dim_labels[idx] if idx < len(dim_labels) else d
+        dim_cols.append((d, f"{lbl} (%)"))
+
+    header = [
+        "k_samples",
+        "Avg. full-task acc. (%)",
+        "Hard full-task acc. (%)",
+        *[name for _, name in dim_cols],
+    ]
+
+    x_vals = trends["x_samples"]
+    avg_vals = trends["avg_full_task_pct"]
+    hard_vals = trends["hard_full_task_pct"]
+    n_rows = len(x_vals)
+
+    with csv_path.open("w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(header)
+        for i in range(n_rows):
+            row = [
+                int(round(x_vals[i])),
+                f"{avg_vals[i]:.6f}",
+                f"{hard_vals[i]:.6f}",
+            ]
+            for d, _name in dim_cols:
+                row.append(f"{per_dim_pct[d][i]:.6f}")
+            w.writerow(row)
+
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument(
@@ -306,10 +348,12 @@ def main(argv: list[str] | None = None) -> int:
     helpers_mod = _load_plot_script_module()
     trends = compute_trends(payload, helpers_mod)
     plot_trends(trends, run_tag=run_tag, out_dir=out_dir, basename=args.basename)
+    _save_trends_csv(trends, out_dir=out_dir, basename=args.basename)
 
     print("Wrote:")
     print("  PNG:", out_dir / f"{args.basename}.png")
     print("  PDF:", out_dir / f"{args.basename}.pdf")
+    print("  CSV:", out_dir / f"{args.basename}.csv")
     return 0
 
 

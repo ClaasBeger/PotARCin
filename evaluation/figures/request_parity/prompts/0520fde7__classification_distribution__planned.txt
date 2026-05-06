@@ -1,0 +1,88 @@
+Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as the training examples (1 = same distribution / consistent, 0 = not).
+
+Training example 1:
+Input:
+1 0 0 5 0 1 0
+0 1 0 5 1 1 1
+1 0 0 5 0 0 0
+Output:
+0 0 0
+0 2 0
+0 0 0
+
+Training example 2:
+Input:
+1 1 0 5 0 1 0
+0 0 1 5 1 1 1
+1 1 0 5 0 1 0
+Output:
+0 2 0
+0 0 2
+0 2 0
+
+Training example 3:
+Input:
+0 0 1 5 0 0 0
+1 1 0 5 1 0 1
+0 1 1 5 1 0 1
+Output:
+0 0 0
+2 0 0
+0 0 2
+
+Test pairs (evaluate each in order, index 0 … 4):
+
+Test 0:
+Input:
+0 0 9
+0 0 0
+0 9 0
+1 1 1
+1 0 1
+1 1 1
+Output:
+0 0 0
+0 2 0
+0 0 0
+
+Test 1:
+Input:
+1 1 1 5 1 1 0
+0 0 0 5 1 1 0
+1 1 0 5 1 0 0
+Output:
+2 2 0
+0 0 0
+2 0 0
+
+Test 2:
+Input:
+1 0 1 5 1 0 1
+0 1 0 5 1 0 1
+1 0 1 5 0 1 0
+Output:
+0 0 0
+2 0 2
+0 2 0
+
+Test 3:
+Input:
+0 0 0 5 0 1 0
+0 1 0 5 1 1 0
+0 0 0 5 0 0 1
+Output:
+0 0 0
+0 0 0
+0 0 0
+
+Test 4:
+Input:
+0 0 0 5 0 1 1
+1 0 1 5 0 0 0
+1 1 1 5 0 1 0
+Output:
+0 0 0
+0 0 0
+0 2 0
+
+Your final answer must be only a single Python list of exactly five integers, each 0 or 1, in order for test 0 through test 4, for example [1, 0, 1, 1, 0]. Output nothing else: no other text, no markdown code fences, and no explanation.

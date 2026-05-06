@@ -1,0 +1,97 @@
+Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 7 7
+7 7 7
+0 7 7
+Output:
+0 0 0 0 7 7 0 7 7
+0 0 0 7 7 7 7 7 7
+0 0 0 0 7 7 0 7 7
+0 7 7 0 7 7 0 7 7
+7 7 7 7 7 7 7 7 7
+0 7 7 0 7 7 0 7 7
+0 0 0 0 7 7 0 7 7
+0 0 0 7 7 7 7 7 7
+0 0 0 0 7 7 0 7 7
+
+Example 2:
+Input:
+4 0 4
+0 0 0
+0 4 0
+Output:
+4 0 4 0 0 0 4 0 4
+0 0 0 0 0 0 0 0 0
+0 4 0 0 0 0 0 4 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 4 0 4 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 4 0 0 0 0
+
+Example 3:
+Input:
+0 0 0
+0 0 2
+2 0 2
+Output:
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 2
+0 0 0 0 0 0 2 0 2
+0 0 0 0 0 0 0 0 0
+0 0 2 0 0 0 0 0 2
+2 0 2 0 0 0 2 0 2
+
+Example 4:
+Input:
+6 6 0
+6 0 0
+0 6 6
+Output:
+6 6 0 6 6 0 0 0 0
+6 0 0 6 0 0 0 0 0
+0 6 6 0 6 6 0 0 0
+6 6 0 0 0 0 0 0 0
+6 0 0 0 0 0 0 0 0
+0 6 6 0 0 0 0 0 0
+0 0 0 6 6 0 6 6 0
+0 0 0 6 0 0 6 0 0
+0 0 0 0 6 6 0 6 6
+
+Example 5:
+Input:
+2 2 2
+0 0 0
+0 2 2
+Output:
+2 2 2 2 2 2 2 2 2
+0 0 0 0 0 0 0 0 0
+0 2 2 0 2 2 0 2 2
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 2 2 2 2 2 2
+0 0 0 0 0 0 0 0 0
+0 0 0 0 2 2 0 2 2
+
+Now infer an input grid that would produce the following output by applying the same rule.
+Desired output:
+2 2 2 2 2 2 2 2 2
+2 2 2 2 2 2 2 2 2
+2 0 2 2 0 2 2 0 2
+2 2 2 2 2 2 2 2 2
+2 2 2 2 2 2 2 2 2
+2 0 2 2 0 2 2 0 2
+2 2 2 0 0 0 2 2 2
+2 2 2 0 0 0 2 2 2
+2 0 2 0 0 0 2 0 2
+
+Your final answer must be ONLY a single Python list-of-lists grid:
+[[...], ...]
+Use integer grid cells 0-9. Output nothing else.

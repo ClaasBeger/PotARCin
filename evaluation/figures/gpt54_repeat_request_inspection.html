@@ -1,0 +1,896 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Request Inspection — Original vs Repeat Plan</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; margin: 18px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #d1d5db; padding: 8px; vertical-align: top; }
+    th { background: #f9fafb; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #f8fafc; padding: 8px; border: 1px solid #e5e7eb; }
+    .meta { margin-bottom: 12px; color: #374151; }
+    .warn { color: #b91c1c; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h2>Request Inspection: Original Run vs Repeat-10 Plan</h2>
+  <div class="meta">
+    <div><b>Generated:</b> 2026-05-05 14:11:13</div>
+    <div><b>Model:</b> gpt-5.4</div>
+    <div><b>Subset:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/Test2/ARC1_subsets/gpt54_nontrivial_success_subset_20_manual.json</code></div>
+    <div><b>Source run-tag:</b> Evaluation_Run_2026-04-14_gpt54_low</div>
+    <div><b>Repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div>
+    <div><b>Task count:</b> 20</div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 10%;">Task</th>
+        <th style="width: 10%;">Dimension</th>
+        <th style="width: 40%;">Original Request Artifact</th>
+        <th style="width: 40%;">Planned Repeat Request (no variation)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>007bbfb7</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 9d16c43cb8c500bf</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/007bbfb7_definition_eval_2026-04-14_21-44-46.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 77</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>007bbfb7</td><td>classification_distribution</td><td><div><b>seed:</b> 1085460482</div><div><b>prompt_hash:</b> 557897e9a549fbc5</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/007bbfb7_distribution_classification_eval_2026-04-14_21-45-04.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 77</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>007bbfb7</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 4a2c6c2fff97bbc7</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/007bbfb7_constrained_generation_eval_2026-04-14_21-45-16.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 7 7
+7 7 7
+0 7 7
+Output:
+0 0 0 0 7 7 0 7 7
+0 0 0 7 7 7 7 7 7
+0 0 0 0 7 7 0 7 7
+0 7 7 0 7 7 0 7 7
+7 7 7 7 7 7 7 7 7
+0 7 7 0 7 7 0 7 7
+0 0 0 0 7 7 0 7 7
+0 0 0 7 7 7 7 7 7
+0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 77</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>007bbfb7</td><td>editing</td><td><div><b>seed:</b> 1399756255</div><div><b>prompt_hash:</b> 2c93c6d460ab4c91</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/007bbfb7_editing_eval_2026-04-14_21-45-27.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 7 7
+7 7 7
+0 7 7
+Output:
+0 0 0 0 7 7 0 7 7
+0 0 0 7 7 7 7 7 7
+0 0 0 0 7 7 0 7 7
+0 7 7 0 7 7 0 7 7
+7 7 7 7 7 7 7 7 7
+0 7 7 0 7 7 0 7 7
+0 0 0 0 7 7 0 7 7
+0 0 0 7 7 7 7 7 7
+0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 77</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>007bbfb7</td><td>inversion</td><td><div><b>seed:</b> 847458566</div><div><b>prompt_hash:</b> 7eab3bb96e7ed05b</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/007bbfb7_inversion_eval_2026-04-14_21-45-38.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 7 7
+7 7 7
+0 7 7
+Output:
+0 0 0 0 7 7 0 7 7
+0 0 0 7 7 7 7 7 7
+0 0 0 0 7 7 0 7 7
+0 7 7 0 7 7 0 7 7
+7 7 7 7 7 7 7 7 7
+0 7 7 0 7 7 0 7 7
+0 0 0 0 7 7 0 7 7
+0 0 0 7 7 7 7 7 7
+0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 77</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>0520fde7</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 6abf1ec5f8fe2cde</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/0520fde7_definition_eval_2026-04-14_22-05-24.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 82</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>0520fde7</td><td>classification_distribution</td><td><div><b>seed:</b> 621570035</div><div><b>prompt_hash:</b> 01bc1d0f9996b1e6</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/0520fde7_distribution_classification_eval_2026-04-14_22-05-41.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 82</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>0520fde7</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 73d30b34687673ae</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/0520fde7_constrained_generation_eval_2026-04-14_22-05-49.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+1 0 0 5 0 1 0
+0 1 0 5 1 1 1
+1 0 0 5 0 0 0
+Output:
+0 0 0
+0 2 0
+0 0 0
+
+Example 2:
+Input:
+1 1 0 5 0 1 0
+0 0 1 5 1 1 1
+1 1 0 5 0 1 0
+Output:
+0 2 0
+0 0 2
+0 2 0
+
+Example 3:
+Input ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 82</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>0520fde7</td><td>editing</td><td><div><b>seed:</b> 2104092984</div><div><b>prompt_hash:</b> 7787ad829e429798</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/0520fde7_editing_eval_2026-04-14_22-05-56.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+1 0 0 5 0 1 0
+0 1 0 5 1 1 1
+1 0 0 5 0 0 0
+Output:
+0 0 0
+0 2 0
+0 0 0
+
+Example 2:
+Input:
+1 1 0 5 0 1 0
+0 0 1 5 1 1 1
+1 1 0 5 0 1 0
+Output:
+0 2 0
+0 0 2
+0 2 0
+
+Example 3:
+Input ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 82</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>0520fde7</td><td>inversion</td><td><div><b>seed:</b> 1254681156</div><div><b>prompt_hash:</b> c0675fbc624a32d5</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/0520fde7_inversion_eval_2026-04-14_22-06-04.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+1 0 0 5 0 1 0
+0 1 0 5 1 1 1
+1 0 0 5 0 0 0
+Output:
+0 0 0
+0 2 0
+0 0 0
+
+Example 2:
+Input:
+1 1 0 5 0 1 0
+0 0 1 5 1 1 1
+1 1 0 5 0 1 0
+Output:
+0 2 0
+0 0 2
+0 2 0
+
+Example 3:
+Input ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 82</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>06df4c85</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 1f5a59c29908a652</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/06df4c85_definition_eval_2026-04-14_22-10-41.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 85</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>06df4c85</td><td>classification_distribution</td><td><div><b>seed:</b> 857226971</div><div><b>prompt_hash:</b> 88a1c91ee7bb145a</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/06df4c85_distribution_classification_eval_2026-04-14_22-11-13.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 85</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>06df4c85</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 7257a87b5649937e</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/06df4c85_constrained_generation_eval_2026-04-14_22-15-13.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 8 0 0 8 0 0 8 0 0 8 0 0 8 0 0 8 0 0
+0 0 8 0 0 8 0 0 8 0 0 8 0 0 8 0 0 8 0 0
+8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+0 0 8 2 2 8 0 0 8 0 0 8 0 0 8 2 2 8 0 0
+0 0 8 2 2 8  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 85</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>06df4c85</td><td>editing</td><td><div><b>seed:</b> 460035328</div><div><b>prompt_hash:</b> 42594b83e43e88ba</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/06df4c85_editing_eval_2026-04-14_22-16-02.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 8 0 0 8 0 0 8 0 0 8 0 0 8 0 0 8 0 0
+0 0 8 0 0 8 0 0 8 0 0 8 0 0 8 0 0 8 0 0
+8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+0 0 8 2 2 8 0 0 8 0 0 8 0 0 8 2 2 8 0 0
+0 0 8 2 2 8  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 85</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>06df4c85</td><td>inversion</td><td><div><b>seed:</b> 1378138753</div><div><b>prompt_hash:</b> b450c81de394ae6a</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/06df4c85_inversion_eval_2026-04-14_22-16-49.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 8 0 0 8 0 0 8 0 0 8 0 0 8 0 0 8 0 0
+0 0 8 0 0 8 0 0 8 0 0 8 0 0 8 0 0 8 0 0
+8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+0 0 8 2 2 8 0 0 8 0 0 8 0 0 8 2 2 8 0 0
+0 0 8 2 2 8  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 85</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1190e5a7</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> bee35eb78ae47e62</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1190e5a7_definition_eval_2026-04-14_22-52-01.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 97</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1190e5a7</td><td>classification_distribution</td><td><div><b>seed:</b> 835531109</div><div><b>prompt_hash:</b> 24c752705376c3db</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1190e5a7_distribution_classification_eval_2026-04-14_22-52-20.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 97</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1190e5a7</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 8fb51bfb93b70a9f</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1190e5a7_constrained_generation_eval_2026-04-14_22-52-31.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+3 7 3 3 3 3 3 3 3 3 7 3 3 7 3
+3 7 3 3 3 3 3 3 3 3 7 3 3 7 3
+7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
+3 7 3 3 3 3 3 3 3 3 7 3 3 7 3
+3 7 3 3 3 3 3 3 3 3 7 3 3 7 3
+3 7 3 3 3 3 3 3 3 3 7  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 97</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1190e5a7</td><td>editing</td><td><div><b>seed:</b> 1842387509</div><div><b>prompt_hash:</b> aa065359e1346e2c</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1190e5a7_editing_eval_2026-04-14_22-52-47.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+3 7 3 3 3 3 3 3 3 3 7 3 3 7 3
+3 7 3 3 3 3 3 3 3 3 7 3 3 7 3
+7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
+3 7 3 3 3 3 3 3 3 3 7 3 3 7 3
+3 7 3 3 3 3 3 3 3 3 7 3 3 7 3
+3 7 3 3 3 3 3 3 3 3 7  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 97</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1190e5a7</td><td>inversion</td><td><div><b>seed:</b> 1597984879</div><div><b>prompt_hash:</b> 753fb3a2d54aec89</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1190e5a7_inversion_eval_2026-04-14_22-52-56.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+3 7 3 3 3 3 3 3 3 3 7 3 3 7 3
+3 7 3 3 3 3 3 3 3 3 7 3 3 7 3
+7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
+3 7 3 3 3 3 3 3 3 3 7 3 3 7 3
+3 7 3 3 3 3 3 3 3 3 7 3 3 7 3
+3 7 3 3 3 3 3 3 3 3 7  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 97</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>178fcbfb</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> c23d079ef60b3730</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/178fcbfb_definition_eval_2026-04-14_23-02-07.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 100</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>178fcbfb</td><td>classification_distribution</td><td><div><b>seed:</b> 625644691</div><div><b>prompt_hash:</b> fa1643504a738a2e</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/178fcbfb_distribution_classification_eval_2026-04-14_23-02-21.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 100</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>178fcbfb</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 602487b835e0cbe4</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/178fcbfb_constrained_generation_eval_2026-04-14_23-02-33.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 2 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 3 0
+0 0 0 0 0 0 0 0 0
+0 0 0 1 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+Output:
+0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 100</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>178fcbfb</td><td>editing</td><td><div><b>seed:</b> 1973661107</div><div><b>prompt_hash:</b> 3e3f13d550beda69</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/178fcbfb_editing_eval_2026-04-14_23-02-53.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 2 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 3 0
+0 0 0 0 0 0 0 0 0
+0 0 0 1 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+Output:
+0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 100</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>178fcbfb</td><td>inversion</td><td><div><b>seed:</b> 1953896601</div><div><b>prompt_hash:</b> 1795725822db69c2</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/178fcbfb_inversion_eval_2026-04-14_23-03-08.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 2 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 3 0
+0 0 0 0 0 0 0 0 0
+0 0 0 1 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+Output:
+0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 100</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1a07d186</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> eb2e241b7ff1b4b1</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1a07d186_definition_eval_2026-04-14_23-03-27.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 101</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1a07d186</td><td>classification_distribution</td><td><div><b>seed:</b> 836464178</div><div><b>prompt_hash:</b> d982bb662c97826b</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1a07d186_distribution_classification_eval_2026-04-14_23-03-51.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 101</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1a07d186</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 279888e2634b2db3</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1a07d186_constrained_generation_eval_2026-04-14_23-04-15.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 3 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0
+0 0 0 3 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0
+0 0 0 3 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0
+0 4 0 3 0 0 3 0 0 0 0 0 4 0 0 0 0 0 0
+0 0 0 3 0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 101</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1a07d186</td><td>editing</td><td><div><b>seed:</b> 1540496234</div><div><b>prompt_hash:</b> 8dcc151f132296cb</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1a07d186_editing_eval_2026-04-14_23-04-51.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 3 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0
+0 0 0 3 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0
+0 0 0 3 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0
+0 4 0 3 0 0 3 0 0 0 0 0 4 0 0 0 0 0 0
+0 0 0 3 0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 101</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1a07d186</td><td>inversion</td><td><div><b>seed:</b> 2006345357</div><div><b>prompt_hash:</b> 5acb82003781e679</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1a07d186_inversion_eval_2026-04-14_23-05-16.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 3 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0
+0 0 0 3 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0
+0 0 0 3 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0
+0 4 0 3 0 0 3 0 0 0 0 0 4 0 0 0 0 0 0
+0 0 0 3 0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 101</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1bfc4729</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> e6258ac60cd8c6ef</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1bfc4729_definition_eval_2026-04-14_23-12-32.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 104</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1bfc4729</td><td>classification_distribution</td><td><div><b>seed:</b> 83895861</div><div><b>prompt_hash:</b> 14aa6bcc9a3bd041</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1bfc4729_distribution_classification_eval_2026-04-14_23-12-44.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 104</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1bfc4729</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> df7c87c05eec40ee</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1bfc4729_constrained_generation_eval_2026-04-14_23-13-02.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 6 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 7 0 0
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 104</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1bfc4729</td><td>editing</td><td><div><b>seed:</b> 849857257</div><div><b>prompt_hash:</b> b9961a522d2b461b</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1bfc4729_editing_eval_2026-04-14_23-13-21.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 6 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 7 0 0
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 104</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1bfc4729</td><td>inversion</td><td><div><b>seed:</b> 977630791</div><div><b>prompt_hash:</b> 9d16c95ac8f5ec1d</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1bfc4729_inversion_eval_2026-04-14_23-13-45.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 6 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 7 0 0
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 104</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1e32b0e9</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 1d2807d481a65213</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1e32b0e9_definition_eval_2026-04-14_23-23-50.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 109</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1e32b0e9</td><td>classification_distribution</td><td><div><b>seed:</b> 1200800002</div><div><b>prompt_hash:</b> 3a698660ba4810ea</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1e32b0e9_distribution_classification_eval_2026-04-14_23-24-39.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 109</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1e32b0e9</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> c7b2910fcff33ff9</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1e32b0e9_constrained_generation_eval_2026-04-14_23-25-22.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 8 0 0 0 0 0 8 0 0 0 0 0
+0 0 2 0 0 8 0 0 0 0 0 8 0 0 0 0 0
+0 2 2 2 0 8 0 0 0 0 0 8 0 2 2 2 0
+0 0 2 0 0 8 0 0 0 0 0 8 0 0 0 0 0
+0 0 0 0 0 8 0 0 0 0 0 8 0 0 0 0 0
+8  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 109</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1e32b0e9</td><td>editing</td><td><div><b>seed:</b> 983615693</div><div><b>prompt_hash:</b> 341793d4f060efad</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1e32b0e9_editing_eval_2026-04-14_23-26-09.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 8 0 0 0 0 0 8 0 0 0 0 0
+0 0 2 0 0 8 0 0 0 0 0 8 0 0 0 0 0
+0 2 2 2 0 8 0 0 0 0 0 8 0 2 2 2 0
+0 0 2 0 0 8 0 0 0 0 0 8 0 0 0 0 0
+0 0 0 0 0 8 0 0 0 0 0 8 0 0 0 0 0
+8  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 109</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1e32b0e9</td><td>inversion</td><td><div><b>seed:</b> 1972588173</div><div><b>prompt_hash:</b> 18eda12f3aef0bf9</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1e32b0e9_inversion_eval_2026-04-14_23-26-58.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 8 0 0 0 0 0 8 0 0 0 0 0
+0 0 2 0 0 8 0 0 0 0 0 8 0 0 0 0 0
+0 2 2 2 0 8 0 0 0 0 0 8 0 2 2 2 0
+0 0 2 0 0 8 0 0 0 0 0 8 0 0 0 0 0
+0 0 0 0 0 8 0 0 0 0 0 8 0 0 0 0 0
+8  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 109</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1f876c06</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> c83e8642f2b448df</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1f876c06_definition_eval_2026-04-14_23-38-25.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 113</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1f876c06</td><td>classification_distribution</td><td><div><b>seed:</b> 131234100</div><div><b>prompt_hash:</b> 8d9ba169f2eec3c1</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1f876c06_distribution_classification_eval_2026-04-14_23-38-50.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 113</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1f876c06</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> d8c3083ee59e6ff8</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1f876c06_constrained_generation_eval_2026-04-14_23-39-03.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 2 0 0 6 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+2 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 6
+0 0 0 4 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 113</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1f876c06</td><td>editing</td><td><div><b>seed:</b> 1179609947</div><div><b>prompt_hash:</b> 9c37693c704b9b5d</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1f876c06_editing_eval_2026-04-14_23-39-21.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 2 0 0 6 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+2 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 6
+0 0 0 4 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 113</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>1f876c06</td><td>inversion</td><td><div><b>seed:</b> 76767816</div><div><b>prompt_hash:</b> b2486e5ab3a13281</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/1f876c06_inversion_eval_2026-04-14_23-39-32.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 2 0 0 6 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+2 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 6
+0 0 0 4 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 113</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>2281f1f4</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 3c283297846dc136</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/2281f1f4_definition_eval_2026-04-14_23-56-31.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 119</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>2281f1f4</td><td>classification_distribution</td><td><div><b>seed:</b> 1228347332</div><div><b>prompt_hash:</b> d2fc45ab38d56212</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/2281f1f4_distribution_classification_eval_2026-04-14_23-56-42.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 119</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>2281f1f4</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 2c545a61b01645e0</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/2281f1f4_constrained_generation_eval_2026-04-14_23-56-55.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+5 0 0 5 0 0 0 5 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 5
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 5
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 119</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>2281f1f4</td><td>editing</td><td><div><b>seed:</b> 772316506</div><div><b>prompt_hash:</b> 3a66b367fa57ef06</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/2281f1f4_editing_eval_2026-04-14_23-57-07.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+5 0 0 5 0 0 0 5 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 5
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 5
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 119</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>2281f1f4</td><td>inversion</td><td><div><b>seed:</b> 1858451847</div><div><b>prompt_hash:</b> 2d1b438cacd0b492</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/2281f1f4_inversion_eval_2026-04-14_23-57-16.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+5 0 0 5 0 0 0 5 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 5
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 5
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 119</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>29623171</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 3eb946ec3d93db5c</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/29623171_definition_eval_2026-04-15_12-14-59.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 135</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>29623171</td><td>classification_distribution</td><td><div><b>seed:</b> 1604528499</div><div><b>prompt_hash:</b> c4715ddbcad14dc3</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/29623171_distribution_classification_eval_2026-04-15_12-15-24.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 135</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>29623171</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> e96df0dab8216309</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/29623171_constrained_generation_eval_2026-04-15_12-15-41.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 5 0 0 0 5 0 0 0
+1 0 0 5 0 0 0 5 0 1 0
+0 0 0 5 0 0 1 5 0 0 0
+5 5 5 5 5 5 5 5 5 5 5
+0 0 0 5 0 0 1 5 0 0 0
+0 0 0 5 0 0 0 5 0 1 0
+0 0 0 5 0 0 0 5 0 0 0
+5 5 5 5 5 5 5 5 5  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 135</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>29623171</td><td>editing</td><td><div><b>seed:</b> 1186829979</div><div><b>prompt_hash:</b> 8e5d3ff21f6fe3e4</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/29623171_editing_eval_2026-04-15_12-16-05.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 5 0 0 0 5 0 0 0
+1 0 0 5 0 0 0 5 0 1 0
+0 0 0 5 0 0 1 5 0 0 0
+5 5 5 5 5 5 5 5 5 5 5
+0 0 0 5 0 0 1 5 0 0 0
+0 0 0 5 0 0 0 5 0 1 0
+0 0 0 5 0 0 0 5 0 0 0
+5 5 5 5 5 5 5 5 5  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 135</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>29623171</td><td>inversion</td><td><div><b>seed:</b> 2095488532</div><div><b>prompt_hash:</b> dcf0a29d9ff1f8c5</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/29623171_inversion_eval_2026-04-15_12-16-22.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 5 0 0 0 5 0 0 0
+1 0 0 5 0 0 0 5 0 1 0
+0 0 0 5 0 0 1 5 0 0 0
+5 5 5 5 5 5 5 5 5 5 5
+0 0 0 5 0 0 1 5 0 0 0
+0 0 0 5 0 0 0 5 0 1 0
+0 0 0 5 0 0 0 5 0 0 0
+5 5 5 5 5 5 5 5 5  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 135</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>3aa6fb7a</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 3dcbc91138555e9f</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/3aa6fb7a_definition_eval_2026-04-15_13-30-17.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 157</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>3aa6fb7a</td><td>classification_distribution</td><td><div><b>seed:</b> 2108409308</div><div><b>prompt_hash:</b> 59a7e5478ca03d02</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/3aa6fb7a_distribution_classification_eval_2026-04-15_13-31-13.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 157</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>3aa6fb7a</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> f9e783a7fd75662d</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/3aa6fb7a_constrained_generation_eval_2026-04-15_13-31-19.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0
+0 8 0 0 0 0 0
+0 8 8 0 0 0 0
+0 0 0 0 8 8 0
+0 0 0 0 0 8 0
+0 0 0 0 0 0 0
+0 0 0 0 0 0 0
+Output:
+0 0 0 0 0 0 0
+0 8 1 0 0 0 0
+0 8 8 0 0 0 0
+0 0 0 0 8 8 0
+0 0 0 0 1  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 157</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>3aa6fb7a</td><td>editing</td><td><div><b>seed:</b> 965510516</div><div><b>prompt_hash:</b> ea563cdb05855ee8</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/3aa6fb7a_editing_eval_2026-04-15_13-31-30.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0
+0 8 0 0 0 0 0
+0 8 8 0 0 0 0
+0 0 0 0 8 8 0
+0 0 0 0 0 8 0
+0 0 0 0 0 0 0
+0 0 0 0 0 0 0
+Output:
+0 0 0 0 0 0 0
+0 8 1 0 0 0 0
+0 8 8 0 0 0 0
+0 0 0 0 8 8 0
+0 0 0 0 1  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 157</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>3aa6fb7a</td><td>inversion</td><td><div><b>seed:</b> 689805852</div><div><b>prompt_hash:</b> 560a8e9fec8ae1fd</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/3aa6fb7a_inversion_eval_2026-04-15_13-31-36.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0
+0 8 0 0 0 0 0
+0 8 8 0 0 0 0
+0 0 0 0 8 8 0
+0 0 0 0 0 8 0
+0 0 0 0 0 0 0
+0 0 0 0 0 0 0
+Output:
+0 0 0 0 0 0 0
+0 8 1 0 0 0 0
+0 8 8 0 0 0 0
+0 0 0 0 8 8 0
+0 0 0 0 1  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 157</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>47c1f68c</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> f10fa4357562f0ab</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/47c1f68c_definition_eval_2026-04-16_12-25-23.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 185</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>47c1f68c</td><td>classification_distribution</td><td><div><b>seed:</b> 485571860</div><div><b>prompt_hash:</b> d9f49bbd1a876efc</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/47c1f68c_distribution_classification_eval_2026-04-16_12-25-46.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 185</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>47c1f68c</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 4b6e7aaa19e7f540</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/47c1f68c_constrained_generation_eval_2026-04-16_12-26-04.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 2 0 0 0 0 0
+0 1 0 0 0 2 0 0 0 0 0
+1 1 0 0 0 2 0 0 0 0 0
+0 1 1 0 0 2 0 0 0 0 0
+0 0 0 0 0 2 0 0 0 0 0
+2 2 2 2 2 2 2 2 2 2 2
+0 0 0 0 0 2 0 0 0 0 0
+0 0 0 0 0 2 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 185</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>47c1f68c</td><td>editing</td><td><div><b>seed:</b> 651544095</div><div><b>prompt_hash:</b> 0200461c514c4f75</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/47c1f68c_editing_eval_2026-04-16_12-26-34.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 2 0 0 0 0 0
+0 1 0 0 0 2 0 0 0 0 0
+1 1 0 0 0 2 0 0 0 0 0
+0 1 1 0 0 2 0 0 0 0 0
+0 0 0 0 0 2 0 0 0 0 0
+2 2 2 2 2 2 2 2 2 2 2
+0 0 0 0 0 2 0 0 0 0 0
+0 0 0 0 0 2 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 185</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>47c1f68c</td><td>inversion</td><td><div><b>seed:</b> 663637452</div><div><b>prompt_hash:</b> a00a3a0c082591f6</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/47c1f68c_inversion_eval_2026-04-16_12-26-47.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 2 0 0 0 0 0
+0 1 0 0 0 2 0 0 0 0 0
+1 1 0 0 0 2 0 0 0 0 0
+0 1 1 0 0 2 0 0 0 0 0
+0 0 0 0 0 2 0 0 0 0 0
+2 2 2 2 2 2 2 2 2 2 2
+0 0 0 0 0 2 0 0 0 0 0
+0 0 0 0 0 2 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 185</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>49d1d64f</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 91957dfe79aafb97</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/49d1d64f_definition_eval_2026-04-16_12-35-33.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 190</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>49d1d64f</td><td>classification_distribution</td><td><div><b>seed:</b> 320349863</div><div><b>prompt_hash:</b> f14f6542e81ac9e8</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/49d1d64f_distribution_classification_eval_2026-04-16_12-35-45.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 190</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>49d1d64f</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 1afc58bfa7519170</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/49d1d64f_constrained_generation_eval_2026-04-16_12-35-54.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+1 2
+3 8
+Output:
+0 1 2 0
+1 1 2 2
+3 3 8 8
+0 3 8 0
+
+Example 2:
+Input:
+1 8 4
+8 3 8
+Output:
+0 1 8 4 0
+1 1 8 4 4
+8 8 3 8 8
+0 8 3 8 0
+
+Example 3:
+Input:
+2 1 4
+8 0 2
+3 2 8
+Output:
+ ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 190</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>49d1d64f</td><td>editing</td><td><div><b>seed:</b> 723968283</div><div><b>prompt_hash:</b> 7f9a0695b3ee80fd</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/49d1d64f_editing_eval_2026-04-16_12-36-26.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+1 2
+3 8
+Output:
+0 1 2 0
+1 1 2 2
+3 3 8 8
+0 3 8 0
+
+Example 2:
+Input:
+1 8 4
+8 3 8
+Output:
+0 1 8 4 0
+1 1 8 4 4
+8 8 3 8 8
+0 8 3 8 0
+
+Example 3:
+Input:
+2 1 4
+8 0 2
+3 2 8
+Output:
+ ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 190</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>49d1d64f</td><td>inversion</td><td><div><b>seed:</b> 1440154225</div><div><b>prompt_hash:</b> 87c9c045db0555b6</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/49d1d64f_inversion_eval_2026-04-16_12-36-34.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+1 2
+3 8
+Output:
+0 1 2 0
+1 1 2 2
+3 3 8 8
+0 3 8 0
+
+Example 2:
+Input:
+1 8 4
+8 3 8
+Output:
+0 1 8 4 0
+1 1 8 4 4
+8 8 3 8 8
+0 8 3 8 0
+
+Example 3:
+Input:
+2 1 4
+8 0 2
+3 2 8
+Output:
+ ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 190</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>539a4f51</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> a69716a4d181e613</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/539a4f51_definition_eval_2026-04-16_12-59-05.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 199</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>539a4f51</td><td>classification_distribution</td><td><div><b>seed:</b> 1478524369</div><div><b>prompt_hash:</b> 1f59e3d89406cfd8</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/539a4f51_distribution_classification_eval_2026-04-16_12-59-58.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 199</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>539a4f51</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> b30f4d318cf7c1fb</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/539a4f51_constrained_generation_eval_2026-04-16_13-00-28.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+2 2 2 3 0
+2 2 2 3 0
+2 2 2 3 0
+3 3 3 3 0
+0 0 0 0 0
+Output:
+2 2 2 3 2 2 2 3 2 2
+2 2 2 3 2 2 2 3 2 2
+2 2 2 3 2 2 2 3 2 2
+3 3 3 3 2 2 2 3 2 2
+2 2 2 2 2 2 2 3 2 2
+2 2 2 2 2 2 2  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 199</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>539a4f51</td><td>editing</td><td><div><b>seed:</b> 1688861538</div><div><b>prompt_hash:</b> 6fec9194dc830515</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/539a4f51_editing_eval_2026-04-16_13-00-53.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+2 2 2 3 0
+2 2 2 3 0
+2 2 2 3 0
+3 3 3 3 0
+0 0 0 0 0
+Output:
+2 2 2 3 2 2 2 3 2 2
+2 2 2 3 2 2 2 3 2 2
+2 2 2 3 2 2 2 3 2 2
+3 3 3 3 2 2 2 3 2 2
+2 2 2 2 2 2 2 3 2 2
+2 2 2 2 2 2 2  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 199</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>539a4f51</td><td>inversion</td><td><div><b>seed:</b> 1188884789</div><div><b>prompt_hash:</b> 0d5fc6f7483d7fee</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/539a4f51_inversion_eval_2026-04-16_13-01-40.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+2 2 2 3 0
+2 2 2 3 0
+2 2 2 3 0
+3 3 3 3 0
+0 0 0 0 0
+Output:
+2 2 2 3 2 2 2 3 2 2
+2 2 2 3 2 2 2 3 2 2
+2 2 2 3 2 2 2 3 2 2
+3 3 3 3 2 2 2 3 2 2
+2 2 2 2 2 2 2 3 2 2
+2 2 2 2 2 2 2  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 199</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>6430c8c4</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 5875b464f1390cbc</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/6430c8c4_definition_eval_2026-04-16_15-59-18.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 220</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>6430c8c4</td><td>classification_distribution</td><td><div><b>seed:</b> 1000753738</div><div><b>prompt_hash:</b> 65282d9c17af9113</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/6430c8c4_distribution_classification_eval_2026-04-16_15-59-47.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 220</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>6430c8c4</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> bd441e9125a12fef</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/6430c8c4_constrained_generation_eval_2026-04-16_16-00-16.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+7 7 0 7
+0 7 7 0
+0 7 7 7
+0 7 7 0
+4 4 4 4
+0 0 0 0
+0 2 0 2
+2 2 2 0
+2 0 0 2
+Output:
+0 0 3 0
+3 0 0 0
+0 0 0 0
+0 0 0 0
+
+Example 2:
+Input:
+0 0 7 7
+0 0 7 7
+0 7 7 0
+7 7 0 0
+4 4 4 4
+2 ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 220</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>6430c8c4</td><td>editing</td><td><div><b>seed:</b> 1073135046</div><div><b>prompt_hash:</b> 6858c60f0c8359c6</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/6430c8c4_editing_eval_2026-04-16_16-00-47.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+7 7 0 7
+0 7 7 0
+0 7 7 7
+0 7 7 0
+4 4 4 4
+0 0 0 0
+0 2 0 2
+2 2 2 0
+2 0 0 2
+Output:
+0 0 3 0
+3 0 0 0
+0 0 0 0
+0 0 0 0
+
+Example 2:
+Input:
+0 0 7 7
+0 0 7 7
+0 7 7 0
+7 7 0 0
+4 4 4 4
+2 ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 220</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>6430c8c4</td><td>inversion</td><td><div><b>seed:</b> 1953118809</div><div><b>prompt_hash:</b> cbad08d4519ad9d7</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/6430c8c4_inversion_eval_2026-04-16_16-01-27.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+7 7 0 7
+0 7 7 0
+0 7 7 7
+0 7 7 0
+4 4 4 4
+0 0 0 0
+0 2 0 2
+2 2 2 0
+2 0 0 2
+Output:
+0 0 3 0
+3 0 0 0
+0 0 0 0
+0 0 0 0
+
+Example 2:
+Input:
+0 0 7 7
+0 0 7 7
+0 7 7 0
+7 7 0 0
+4 4 4 4
+2 ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 220</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>673ef223</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 034288503e86240a</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/673ef223_definition_eval_2026-04-16_16-14-08.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 224</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>673ef223</td><td>classification_distribution</td><td><div><b>seed:</b> 273947967</div><div><b>prompt_hash:</b> 91b144bf85ee19cd</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/673ef223_distribution_classification_eval_2026-04-16_16-14-31.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 224</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>673ef223</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 34105af7f00c95ec</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/673ef223_constrained_generation_eval_2026-04-16_16-14-55.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0 0
+2 0 0 0 0 0 0 0
+2 0 0 0 0 0 0 0
+2 0 0 0 8 0 0 0
+2 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 224</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>673ef223</td><td>editing</td><td><div><b>seed:</b> 816178892</div><div><b>prompt_hash:</b> ab7d478c1654c90a</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/673ef223_editing_eval_2026-04-16_16-15-24.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0 0
+2 0 0 0 0 0 0 0
+2 0 0 0 0 0 0 0
+2 0 0 0 8 0 0 0
+2 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 224</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>673ef223</td><td>inversion</td><td><div><b>seed:</b> 1996044766</div><div><b>prompt_hash:</b> 0f584c7a4aea0e2c</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/673ef223_inversion_eval_2026-04-16_16-15-47.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0 0
+2 0 0 0 0 0 0 0
+2 0 0 0 0 0 0 0
+2 0 0 0 8 0 0 0
+2 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 224</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>6773b310</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> baaa45a1baca68b8</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/6773b310_definition_eval_2026-04-16_16-16-02.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 225</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>6773b310</td><td>classification_distribution</td><td><div><b>seed:</b> 1028580026</div><div><b>prompt_hash:</b> 7f1765a353f2b7a8</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/6773b310_distribution_classification_eval_2026-04-16_16-16-25.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 225</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>6773b310</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> a0d9b50dd059395e</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/6773b310_constrained_generation_eval_2026-04-16_16-16-48.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 8 0 0 0 8 0 0 0
+6 0 0 8 0 6 0 8 0 0 6
+0 0 6 8 0 0 0 8 0 6 0
+8 8 8 8 8 8 8 8 8 8 8
+0 6 0 8 0 0 6 8 0 0 0
+0 0 0 8 0 0 0 8 0 0 0
+0 6 0 8 0 0 0 8 6 0 0
+8 8 8 8 8 8 8 8 8  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 225</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>6773b310</td><td>editing</td><td><div><b>seed:</b> 763912021</div><div><b>prompt_hash:</b> 486b4ede68370bfb</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/6773b310_editing_eval_2026-04-16_16-17-08.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 8 0 0 0 8 0 0 0
+6 0 0 8 0 6 0 8 0 0 6
+0 0 6 8 0 0 0 8 0 6 0
+8 8 8 8 8 8 8 8 8 8 8
+0 6 0 8 0 0 6 8 0 0 0
+0 0 0 8 0 0 0 8 0 0 0
+0 6 0 8 0 0 0 8 6 0 0
+8 8 8 8 8 8 8 8 8  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 225</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>6773b310</td><td>inversion</td><td><div><b>seed:</b> 579189409</div><div><b>prompt_hash:</b> e070d71ffa305bd6</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/6773b310_inversion_eval_2026-04-16_16-17-38.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 8 0 0 0 8 0 0 0
+6 0 0 8 0 6 0 8 0 0 6
+0 0 6 8 0 0 0 8 0 6 0
+8 8 8 8 8 8 8 8 8 8 8
+0 6 0 8 0 0 6 8 0 0 0
+0 0 0 8 0 0 0 8 0 0 0
+0 6 0 8 0 0 0 8 6 0 0
+8 8 8 8 8 8 8 8 8  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 225</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>681b3aeb</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 0c5a2ee8e03d1afa</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/681b3aeb_definition_eval_2026-04-17_11-06-04.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 229</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>681b3aeb</td><td>classification_distribution</td><td><div><b>seed:</b> 598373683</div><div><b>prompt_hash:</b> 60edd288321c55f1</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/681b3aeb_distribution_classification_eval_2026-04-17_11-06-04.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 229</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>681b3aeb</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 13fba6a04b7da5d2</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/681b3aeb_constrained_generation_eval_2026-04-17_11-08-08.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 3 3 0 0 0 0 0 0 0
+0 3 0 0 0 0 0 0 0 0
+0 3 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 7
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 229</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>681b3aeb</td><td>editing</td><td><div><b>seed:</b> 967211731</div><div><b>prompt_hash:</b> 01d41891eab42aef</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/681b3aeb_editing_eval_2026-04-17_11-09-11.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 3 3 0 0 0 0 0 0 0
+0 3 0 0 0 0 0 0 0 0
+0 3 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 7
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 229</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>681b3aeb</td><td>inversion</td><td><div><b>seed:</b> 1845862259</div><div><b>prompt_hash:</b> 926039bfee455dc7</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/681b3aeb_inversion_eval_2026-04-17_11-09-56.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 3 3 0 0 0 0 0 0 0
+0 3 0 0 0 0 0 0 0 0
+0 3 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 7
+0 0 0 0 0 0  ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 229</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>77fdfe62</td><td>definition</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 55236771660579eb</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/77fdfe62_definition_eval_2026-04-17_15-29-59.json</code></div><div><b>definition_mode:</b> None</div><div><b>arc_gen_dynamic_n:</b> None</div><div><b>arc_gen_dynamic_seed:</b> None</div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid. ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 259</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>77fdfe62</td><td>classification_distribution</td><td><div><b>seed:</b> 169921693</div><div><b>prompt_hash:</b> a0760ae663966cca</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/77fdfe62_distribution_classification_eval_2026-04-17_15-29-59.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as th ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 259</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>77fdfe62</td><td>constrained_generation</td><td><div><b>seed:</b> None</div><div><b>prompt_hash:</b> 053fba5cbd175c40</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/constrained_generation_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/77fdfe62_constrained_generation_eval_2026-04-17_15-30-39.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+2 1 0 0 0 0 1 3
+1 1 1 1 1 1 1 1
+0 1 0 8 0 0 1 0
+0 1 8 8 0 8 1 0
+0 1 0 0 8 0 1 0
+0 1 8 0 8 8 1 0
+1 1 1 1 1 1 1 1
+4 1 0 0 0 0 1 6
+Output:
+0 2 0 0
+2 2 0 3
+0 0 6 0
+4 0 6 6
+
+Exa ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 259</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>77fdfe62</td><td>editing</td><td><div><b>seed:</b> 387944406</div><div><b>prompt_hash:</b> 0041c06561a180ca</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/77fdfe62_editing_eval_2026-04-17_15-30-52.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+2 1 0 0 0 0 1 3
+1 1 1 1 1 1 1 1
+0 1 0 8 0 0 1 0
+0 1 8 8 0 8 1 0
+0 1 0 0 8 0 1 0
+0 1 8 0 8 8 1 0
+1 1 1 1 1 1 1 1
+4 1 0 0 0 0 1 6
+Output:
+0 2 0 0
+2 2 0 3
+0 0 6 0
+4 0 6 6
+
+Exa ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 259</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr><tr><td>77fdfe62</td><td>inversion</td><td><div><b>seed:</b> 1870283336</div><div><b>prompt_hash:</b> 865831dcce947db6</div><div><b>artifact:</b> <code>/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/GPT54/Run1/Evaluation_Run_2026-04-14_gpt54_low/77fdfe62_inversion_eval_2026-04-17_15-31-19.json</code></div><details><summary>Prompt preview</summary><pre>Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+2 1 0 0 0 0 1 3
+1 1 1 1 1 1 1 1
+0 1 0 8 0 0 1 0
+0 1 8 8 0 8 1 0
+0 1 0 0 8 0 1 0
+0 1 8 0 8 8 1 0
+1 1 1 1 1 1 1 1
+4 1 0 0 0 0 1 6
+Output:
+0 2 0 0
+2 2 0 3
+0 0 6 0
+4 0 6 6
+
+Exa ...</pre></details></td><td><div><b>repeat run-tag:</b> Evaluation_Run_gpt54_subset20_repeat10_same_request</div><div><b>repeats:</b> 10</div><div><b>planned fixed seed per repeat:</b> 259</div><div><b>expected request parity:</b> same task + same seed + same eval pipeline</div></td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

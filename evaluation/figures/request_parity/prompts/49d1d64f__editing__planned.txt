@@ -1,0 +1,52 @@
+Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+1 2
+3 8
+Output:
+0 1 2 0
+1 1 2 2
+3 3 8 8
+0 3 8 0
+
+Example 2:
+Input:
+1 8 4
+8 3 8
+Output:
+0 1 8 4 0
+1 1 8 4 4
+8 8 3 8 8
+0 8 3 8 0
+
+Example 3:
+Input:
+2 1 4
+8 0 2
+3 2 8
+Output:
+0 2 1 4 0
+2 2 1 4 4
+8 8 0 2 2
+3 3 2 8 8
+0 3 2 8 0
+
+The following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.
+
+Candidate pair:
+Input:
+2 8
+1 4
+3 4
+Output:
+0 2 8 0
+2 2 8 8
+1 1 4 4
+3 3 4 4
+0 3 4 4
+
+
+Your final answer must be ONLY a single Python dict with exactly these keys:
+{"input": [[...], ...], "output": [[...], ...]}
+Use integer grid cells 0-9. Output nothing else.

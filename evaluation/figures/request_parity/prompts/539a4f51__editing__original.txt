@@ -1,0 +1,84 @@
+Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+2 2 2 3 0
+2 2 2 3 0
+2 2 2 3 0
+3 3 3 3 0
+0 0 0 0 0
+Output:
+2 2 2 3 2 2 2 3 2 2
+2 2 2 3 2 2 2 3 2 2
+2 2 2 3 2 2 2 3 2 2
+3 3 3 3 2 2 2 3 2 2
+2 2 2 2 2 2 2 3 2 2
+2 2 2 2 2 2 2 3 2 2
+2 2 2 2 2 2 2 3 2 2
+3 3 3 3 3 3 3 3 2 2
+2 2 2 2 2 2 2 2 2 2
+2 2 2 2 2 2 2 2 2 2
+
+Example 2:
+Input:
+1 1 4 6 0
+1 1 4 6 0
+4 4 4 6 0
+6 6 6 6 0
+0 0 0 0 0
+Output:
+1 1 4 6 1 1 4 6 1 1
+1 1 4 6 1 1 4 6 1 1
+4 4 4 6 1 1 4 6 1 1
+6 6 6 6 1 1 4 6 1 1
+1 1 1 1 1 1 4 6 1 1
+1 1 1 1 1 1 4 6 1 1
+4 4 4 4 4 4 4 6 1 1
+6 6 6 6 6 6 6 6 1 1
+1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1
+
+Example 3:
+Input:
+2 3 4 1 6
+3 3 4 1 6
+4 4 4 1 6
+1 1 1 1 6
+6 6 6 6 6
+Output:
+2 3 4 1 6 2 3 4 1 6
+3 3 4 1 6 2 3 4 1 6
+4 4 4 1 6 2 3 4 1 6
+1 1 1 1 6 2 3 4 1 6
+6 6 6 6 6 2 3 4 1 6
+2 2 2 2 2 2 3 4 1 6
+3 3 3 3 3 3 3 4 1 6
+4 4 4 4 4 4 4 4 1 6
+1 1 1 1 1 1 1 1 1 6
+6 6 6 6 6 6 6 6 6 6
+
+The following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.
+
+Candidate pair:
+Input:
+7 7 3 2 2
+7 7 3 2 2
+3 3 3 2 2
+2 2 2 2 2
+2 2 2 2 2
+Output:
+7 7 3 2 2 7 3 3 2 3
+7 7 3 2 2 7 3 3 2 3
+3 3 3 2 2 7 3 3 2 3
+2 2 2 2 2 7 3 3 2 3
+2 2 2 2 2 7 3 3 2 3
+7 7 7 7 7 7 3 3 2 3
+3 3 3 3 3 3 3 3 2 3
+3 3 3 3 3 3 3 3 2 3
+2 2 2 2 2 2 2 2 2 3
+3 3 3 3 3 3 3 3 3 3
+
+
+Your final answer must be ONLY a single Python dict with exactly these keys:
+{"input": [[...], ...], "output": [[...], ...]}
+Use integer grid cells 0-9. Output nothing else.

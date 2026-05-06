@@ -1,0 +1,80 @@
+Find the common rule that maps an input grid to an output grid given the examples below.
+
+Example 1:
+Input:
+7 7 0 7
+0 7 7 0
+0 7 7 7
+0 7 7 0
+4 4 4 4
+0 0 0 0
+0 2 0 2
+2 2 2 0
+2 0 0 2
+Output:
+0 0 3 0
+3 0 0 0
+0 0 0 0
+0 0 0 0
+
+Example 2:
+Input:
+0 0 7 7
+0 0 7 7
+0 7 7 0
+7 7 0 0
+4 4 4 4
+2 0 2 0
+0 2 0 2
+0 2 2 0
+0 0 2 0
+Output:
+0 3 0 0
+3 0 0 0
+3 0 0 3
+0 0 0 3
+
+Example 3:
+Input:
+0 0 0 7
+0 7 7 7
+0 7 0 0
+0 7 7 7
+4 4 4 4
+0 0 2 0
+0 2 2 2
+2 2 0 0
+0 2 0 2
+Output:
+3 3 0 0
+3 0 0 0
+0 0 3 3
+3 0 0 0
+
+Example 4:
+Input:
+7 0 7 0
+0 0 7 7
+7 0 7 7
+7 7 0 0
+4 4 4 4
+0 0 2 2
+0 0 0 0
+2 0 0 2
+0 2 0 2
+Output:
+0 3 0 0
+3 3 0 0
+0 3 0 0
+0 0 3 0
+
+Now infer an input grid that would produce the following output by applying the same rule.
+Desired output:
+0 3 3 0
+3 0 0 3
+0 0 3 0
+0 0 3 0
+
+Your final answer must be ONLY a single Python list-of-lists grid:
+[[...], ...]
+Use integer grid cells 0-9. Output nothing else.

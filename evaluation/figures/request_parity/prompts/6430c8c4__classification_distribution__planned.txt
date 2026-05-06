@@ -1,0 +1,158 @@
+Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0–4). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as the training examples (1 = same distribution / consistent, 0 = not).
+
+Training example 1:
+Input:
+7 7 0 7
+0 7 7 0
+0 7 7 7
+0 7 7 0
+4 4 4 4
+0 0 0 0
+0 2 0 2
+2 2 2 0
+2 0 0 2
+Output:
+0 0 3 0
+3 0 0 0
+0 0 0 0
+0 0 0 0
+
+Training example 2:
+Input:
+0 0 7 7
+0 0 7 7
+0 7 7 0
+7 7 0 0
+4 4 4 4
+2 0 2 0
+0 2 0 2
+0 2 2 0
+0 0 2 0
+Output:
+0 3 0 0
+3 0 0 0
+3 0 0 3
+0 0 0 3
+
+Training example 3:
+Input:
+0 0 0 7
+0 7 7 7
+0 7 0 0
+0 7 7 7
+4 4 4 4
+0 0 2 0
+0 2 2 2
+2 2 0 0
+0 2 0 2
+Output:
+3 3 0 0
+3 0 0 0
+0 0 3 3
+3 0 0 0
+
+Training example 4:
+Input:
+7 0 7 0
+0 0 7 7
+7 0 7 7
+7 7 0 0
+4 4 4 4
+0 0 2 2
+0 0 0 0
+2 0 0 2
+0 2 0 2
+Output:
+0 3 0 0
+3 3 0 0
+0 3 0 0
+0 0 3 0
+
+Test pairs (evaluate each in order, index 0 … 4):
+
+Test 0:
+Input:
+7 7 7 7
+0 7 7 7
+7 0 0 0
+7 0 7 0
+4 4 4 4
+0 2 2 2
+0 0 0 0
+2 0 2 2
+0 2 0 0
+Output:
+0 0 0 0
+3 0 0 0
+3 3 3 3
+0 3 3 3
+
+Test 1:
+Input:
+7 0 0 0
+0 0 7 7
+7 7 7 7
+7 0 7 0
+4 4 4 4
+0 2 0 0
+2 2 2 0
+2 2 0 2
+0 0 0 0
+Output:
+3 0 0 3
+0 0 0 0
+0 0 0 0
+0 3 0 3
+
+Test 2:
+Input:
+0 7 0 0
+7 7 7 0
+0 7 7 0
+7 0 7 7
+4 4 4 4
+2 0 0 2
+2 0 0 2
+2 0 2 0
+0 0 2 0
+Output:
+0 0 3 0
+0 0 0 0
+0 0 0 0
+0 0 0 0
+
+Test 3:
+Input:
+0 0 7 0
+0 0 7 0
+5 5 0 0
+5 5 5 0
+4 4 4 4
+2 2 2 0
+0 2 2 2
+2 8 8 8
+2 8 2 8
+Output:
+0 0 0 3
+3 0 0 0
+0 0 3 3
+0 0 0 3
+
+Test 4:
+Input:
+7 0 0 7
+0 7 0 7
+0 7 0 0
+0 0 0 0
+4 4 4 4
+0 2 0 0
+0 0 2 0
+2 0 0 2
+0 2 2 0
+Output:
+3 0 3 3
+3 3 0 3
+0 3 3 0
+3 0 0 3
+
+Your final answer must be only a single Python list of exactly five integers, each 0 or 1, in order for test 0 through test 4, for example [1, 0, 1, 1, 0]. Output nothing else: no other text, no markdown code fences, and no explanation.
