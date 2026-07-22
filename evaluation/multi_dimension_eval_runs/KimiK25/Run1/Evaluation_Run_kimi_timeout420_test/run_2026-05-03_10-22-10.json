@@ -1,7 +1,7 @@
 {
   "mode": "batch_pending",
   "created_at": "2026-05-03_10-22-10",
-  "task_count": 99,
+  "task_count": 112,
   "run_tag": "Evaluation_Run_kimi_timeout420_test",
   "task_source": "arc_train",
   "seed_mode": "fixed",
@@ -9,8 +9,8 @@
   "batch_size": 200,
   "completed_before_count": 57,
   "last_completed_task_id_before": "3631a71a",
-  "interrupted": false,
-  "in_progress_task_id": null,
+  "interrupted": true,
+  "in_progress_task_id": "6ecd11f4",
   "runs": [
     {
       "task_id": "11852cab",
@@ -9277,6 +9277,808 @@
             "correct": 5,
             "total": 5,
             "exact_match": 1
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "6a1e5592",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 233,
+      "dimension_seeds": {
+        "classification_distribution": 748818161,
+        "editing": 991306808,
+        "inversion": 2079252159
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6a1e5592_definition_eval_2026-05-06_16-42-54.json",
+          "metrics": {
+            "train": {
+              "ok": 0,
+              "total": 2,
+              "success_rate": 0.0
+            },
+            "test": {
+              "ok": 0,
+              "total": 1,
+              "success_rate": 0.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 262,
+              "success_rate": 0.0
+            },
+            "generator_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 1000,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/editing_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6a1e5592_editing_eval_2026-05-06_16-56-39.json",
+          "metrics": {
+            "success": false
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi4V9NP-2byqsH-9f7bbe782a5bb4d2\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/inversion_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6a1e5592_inversion_eval_2026-05-06_18-20-49.json",
+          "metrics": {
+            "success_rate": 0.0
+          },
+          "attempts": 3
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "The read operation timed out",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6a1e5592_distribution_classification_eval_2026-05-06_19-25-51.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 3
+        }
+      }
+    },
+    {
+      "task_id": "6aa20dc0",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 234,
+      "dimension_seeds": {
+        "classification_distribution": 1468248159,
+        "editing": 1137136143,
+        "inversion": 247269718
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Remote end closed connection without response",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "editing": {
+          "ok": false,
+          "error": "The read operation timed out",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 3
+        },
+        "inversion": {
+          "ok": false,
+          "error": "The read operation timed out",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 3
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "The read operation timed out",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 3
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6aa20dc0_distribution_classification_eval_2026-05-06_23-10-00.json",
+          "metrics": {
+            "accuracy": 0.4,
+            "correct": 2,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 2
+        }
+      }
+    },
+    {
+      "task_id": "6b9890af",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 235,
+      "dimension_seeds": {
+        "classification_distribution": 1489572811,
+        "editing": 159582660,
+        "inversion": 1069084003
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/definition_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6b9890af_definition_eval_2026-05-06_23-38-41.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 261,
+              "total": 261,
+              "success_rate": 1.0
+            },
+            "generator_dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 6,
+              "total": 1000,
+              "success_rate": 0.006
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 50,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": false,
+          "error": "Together Chat Completions API error 503: {\n  \"id\": \"oi6hb96-2dTqGa-9f7e22502b302d54\",\n  \"error\": {\n    \"message\": \"Service unavailable\",\n    \"type\": \"service_unavailable\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 3
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6i2NN-2dTqGa-9f7e2462aba87812\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 2
+        },
+        "inversion": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6iJvQ-2dTqGa-9f7e25be3dc0987c\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6iLVD-2dTqGa-9f7e25df9ee1e75b\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6b9890af_distribution_classification_eval_2026-05-07_00-25-26.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "6c434453",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 236,
+      "dimension_seeds": {
+        "classification_distribution": 1591805755,
+        "editing": 2127341216,
+        "inversion": 1515935173
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6iMbc-2dTqGa-9f7e25f6eac72d49\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "editing": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6iMjk-2dTqGa-9f7e25f9dad7e75d\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6iNug-2dTqGa-9f7e26126bea8984\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6iNv5-2dTqGa-9f7e26129d5ae677\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6iewt-2dTqGa-9f7e27633fbfe677\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6c434453_distribution_classification_eval_2026-05-07_00-25-40.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "6cdd2623",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 237,
+      "dimension_seeds": {
+        "classification_distribution": 2125965917,
+        "editing": 723926540,
+        "inversion": 1020293264
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6igK3-2dTqGa-9f7e27804960eda9\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "editing": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6igQe-2dTqGa-9f7e278258c8e65d\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ihZ1-2dTqGa-9f7e279a7bd08e0e\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ihec-2dTqGa-9f7e279c0ed3eccf\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ijdG-2dTqGa-9f7e27c5fd4ca5f9\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6cdd2623_distribution_classification_eval_2026-05-07_00-26-43.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "6cf79266",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 238,
+      "dimension_seeds": {
+        "classification_distribution": 1593978213,
+        "editing": 386243820,
+        "inversion": 1868280478
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ikjJ-2dTqGa-9f7e27dd4b6b1dfd\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "editing": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ikjq-2dTqGa-9f7e27dceeed1f4c\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6imzD-2dTqGa-9f7e27f7ad50a3cc\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6imwk-2dTqGa-9f7e27f59b387b30\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ipA9-2dTqGa-9f7e28254aee5202\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6cf79266_distribution_classification_eval_2026-05-07_00-26-58.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "6d0160f0",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 239,
+      "dimension_seeds": {
+        "classification_distribution": 509888371,
+        "editing": 822638621,
+        "inversion": 643470873
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6iqLT-2dTqGa-9f7e283e1c3de649\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "editing": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6iqSF-2dTqGa-9f7e28403af08a76\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6irZj-2dTqGa-9f7e2857fe90c639\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6irsC-2dTqGa-9f7e285e2b27e671\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6it63-2dTqGa-9f7e2877d9ac51eb\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6d0160f0_distribution_classification_eval_2026-05-07_00-27-14.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "6d0aefbc",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 240,
+      "dimension_seeds": {
+        "classification_distribution": 251943746,
+        "editing": 159040303,
+        "inversion": 1356758245
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Together Chat Completions API error 503: {\n  \"id\": \"oi6oY4a-2dTqGa-9f7e3ea42918e061\",\n  \"error\": {\n    \"message\": \"Service unavailable\",\n    \"type\": \"service_unavailable\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 3
+        },
+        "editing": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6oYqq-2dTqGa-9f7e3eb49c22c4df\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 3
+        },
+        "inversion": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6oa3T-2dTqGa-9f7e3ecdc979cc0b\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6oa3H-2dTqGa-9f7e3ecd3a5ae76b\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ofSe-2dTqGa-9f7e3f3edebc987c\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6d0aefbc_distribution_classification_eval_2026-05-07_00-42-33.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "6d58a25d",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 241,
+      "dimension_seeds": {
+        "classification_distribution": 445480016,
+        "editing": 1520849449,
+        "inversion": 276544439
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ogfW-2dTqGa-9f7e3f591f68e775\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "editing": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6oghy-2dTqGa-9f7e3f5999adad49\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ohuu-2dTqGa-9f7e3f734ffc5599\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6oi24-2dTqGa-9f7e3f758951533f\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ojFk-2dTqGa-9f7e3f8f58383e6b\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6d58a25d_distribution_classification_eval_2026-05-07_00-43-00.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "6d75e8bb",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 242,
+      "dimension_seeds": {
+        "classification_distribution": 1440343224,
+        "editing": 117879707,
+        "inversion": 2130743908
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6okNB-2dTqGa-9f7e3fa6dfb78d44\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "editing": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6okVY-2dTqGa-9f7e3fa97cb75346\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ombE-2dTqGa-9f7e3fc09919e673\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6omfn-2dTqGa-9f7e3fc239d2e669\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6oohm-2dTqGa-9f7e3fec1891e061\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6d75e8bb_distribution_classification_eval_2026-05-07_00-43-12.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "6e02f1e3",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 243,
+      "dimension_seeds": {
+        "classification_distribution": 1348438122,
+        "editing": 1822796514,
+        "inversion": 225518766
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6opq1-2dTqGa-9f7e4004ab7c1e9b\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "editing": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6opwV-2dTqGa-9f7e40070935e769\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6or3i-2dTqGa-9f7e401e4c37e64b\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6orCV-2dTqGa-9f7e40218f2cf961\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6osfA-2dTqGa-9f7e40402c08088b\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6e02f1e3_distribution_classification_eval_2026-05-07_00-43-27.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "6e19193c",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 244,
+      "dimension_seeds": {
+        "classification_distribution": 1756222398,
+        "editing": 1648630343,
+        "inversion": 2003885398
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "editing": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6otoB-2dTqGa-9f7e40581f0dcc0b\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "definition": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6otpE-2dTqGa-9f7e405888b5819b\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ousE-2dTqGa-9f7e406e882bc639\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ouxZ-2dTqGa-9f7e4070890b24a5\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6ow9R-2dTqGa-9f7e4089787e9940\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6e19193c_distribution_classification_eval_2026-05-07_00-43-40.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "6e82a1ae",
+      "model": "moonshotai/Kimi-K2.5",
+      "provider": "together",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 245,
+      "dimension_seeds": {
+        "classification_distribution": 540392677,
+        "editing": 1234010931,
+        "inversion": 2022256929
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6oxCL-2dTqGa-9f7e409f9e67e677\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "editing": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6oxKL-2dTqGa-9f7e40a20a947b09\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6oyVF-2dTqGa-9f7e40baccf01e06\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6oyWp-2dTqGa-9f7e40bb4fc31f25\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": false,
+          "error": "Together Chat Completions API error 500: {\n  \"id\": \"oi6p11D-2dTqGa-9f7e40da9b413d6a\",\n  \"error\": {\n    \"message\": \"Internal server error\",\n    \"type\": \"server_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}",
+          "result_path": "/Users/claas/Documents/SFI/PotARCin/PotARCin/evaluation/classification_eval_results/KimiK25/Run1/Evaluation_Run_kimi_timeout420_test/6e82a1ae_distribution_classification_eval_2026-05-07_00-43-52.json",
+          "metrics": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 5,
+            "exact_match": 0
           },
           "attempts": 1
         }

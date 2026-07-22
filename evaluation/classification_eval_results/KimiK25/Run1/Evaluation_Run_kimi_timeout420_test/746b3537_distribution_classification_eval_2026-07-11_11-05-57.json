@@ -1,0 +1,381 @@
+{
+  "task_id": "746b3537",
+  "model": "moonshotai/Kimi-K2.5",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 1609769861,
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0\u20134). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as the training examples (1 = same distribution / consistent, 0 = not).\n\nTraining example 1:\nInput:\n1 1 1\n2 2 2\n1 1 1\nOutput:\n1\n2\n1\n\nTraining example 2:\nInput:\n3 4 6\n3 4 6\n3 4 6\nOutput:\n3 4 6\n\nTraining example 3:\nInput:\n2 3 3 8 1\n2 3 3 8 1\n2 3 3 8 1\nOutput:\n2 3 8 1\n\nTraining example 4:\nInput:\n2 2\n6 6\n8 8\n8 8\nOutput:\n2\n6\n8\n\nTraining example 5:\nInput:\n4 4 4 4\n4 4 4 4\n2 2 2 2\n2 2 2 2\n8 8 8 8\n3 3 3 3\nOutput:\n4\n2\n8\n3\n\nTest pairs (evaluate each in order, index 0 \u2026 4):\n\nTest 0:\nInput:\n1 1 8 8 8 5 5 5 4 4 4\n1 1 8 8 8 5 5 5 4 4 4\n1 1 8 8 8 5 5 5 4 4 4\n1 1 8 8 8 5 5 5 4 4 4\nOutput:\n1\n6\n2\n1\n\nTest 1:\nInput:\n1 1 2 3 3 3 8 8 4\n1 1 2 3 3 3 8 8 4\n1 1 2 3 3 3 8 8 4\n1 1 2 3 3 3 8 8 4\nOutput:\n1 1 2 3 3 3 8 8 4\n\nTest 2:\nInput:\n1\n1\n4\n4\n1\n4\nOutput:\n1\n4\n5\n4\n7\n\nTest 3:\nInput:\n9 9 9 9 9\n9 9 9 9 9\n9 9 9 9 9\n2 2 2 2 2\n2 2 2 2 2\n2 2 2 2 2\n3 3 3 3 3\n5 5 5 5 5\n5 5 5 5 5\n5 5 5 5 5\n7 7 7 7 7\n7 7 7 7 7\nOutput:\n9 7 2 5 3\n\nTest 4:\nInput:\n1 1 1\n1 1 1\n1 1 1\nOutput:\n1 1 1 1 1 1 1 1 1\n\nYour final answer must be only a single Python list of exactly five integers, each 0 or 1, in order for test 0 through test 4, for example [1, 0, 1, 1, 0]. Output nothing else: no other text, no markdown code fences, and no explanation.",
+  "raw_response": "[0, 0, 0, 0, 0]",
+  "test_pairs": [
+    {
+      "input": [
+        [
+          1,
+          1,
+          8,
+          8,
+          8,
+          5,
+          5,
+          5,
+          4,
+          4,
+          4
+        ],
+        [
+          1,
+          1,
+          8,
+          8,
+          8,
+          5,
+          5,
+          5,
+          4,
+          4,
+          4
+        ],
+        [
+          1,
+          1,
+          8,
+          8,
+          8,
+          5,
+          5,
+          5,
+          4,
+          4,
+          4
+        ],
+        [
+          1,
+          1,
+          8,
+          8,
+          8,
+          5,
+          5,
+          5,
+          4,
+          4,
+          4
+        ]
+      ],
+      "output": [
+        [
+          1
+        ],
+        [
+          6
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "input": [
+        [
+          1,
+          1,
+          2,
+          3,
+          3,
+          3,
+          8,
+          8,
+          4
+        ],
+        [
+          1,
+          1,
+          2,
+          3,
+          3,
+          3,
+          8,
+          8,
+          4
+        ],
+        [
+          1,
+          1,
+          2,
+          3,
+          3,
+          3,
+          8,
+          8,
+          4
+        ],
+        [
+          1,
+          1,
+          2,
+          3,
+          3,
+          3,
+          8,
+          8,
+          4
+        ]
+      ],
+      "output": [
+        [
+          1,
+          1,
+          2,
+          3,
+          3,
+          3,
+          8,
+          8,
+          4
+        ]
+      ]
+    },
+    {
+      "input": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          4
+        ],
+        [
+          4
+        ],
+        [
+          1
+        ],
+        [
+          4
+        ]
+      ],
+      "output": [
+        [
+          1
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          4
+        ],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "input": [
+        [
+          9,
+          9,
+          9,
+          9,
+          9
+        ],
+        [
+          9,
+          9,
+          9,
+          9,
+          9
+        ],
+        [
+          9,
+          9,
+          9,
+          9,
+          9
+        ],
+        [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          7,
+          7,
+          7,
+          7,
+          7
+        ],
+        [
+          7,
+          7,
+          7,
+          7,
+          7
+        ]
+      ],
+      "output": [
+        [
+          9,
+          7,
+          2,
+          5,
+          3
+        ]
+      ]
+    },
+    {
+      "input": [
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "output": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "ground_truth": [
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "item_meta": [
+    {
+      "category": "instance_mismatch",
+      "meta": {
+        "category": "instance_mismatch",
+        "kind": "same_task_instance_mismatch",
+        "slot": 3
+      }
+    },
+    {
+      "category": "p_arc_incorrect",
+      "meta": {
+        "category": "p_arc_incorrect",
+        "p_arc_source": "h_arc_csv",
+        "kind": "p_arc_plausible_wrong",
+        "slot": 1
+      }
+    },
+    {
+      "category": "instance_mismatch",
+      "meta": {
+        "category": "instance_mismatch",
+        "kind": "same_task_instance_mismatch",
+        "slot": 0
+      }
+    },
+    {
+      "category": "corrupted_verifier",
+      "meta": {
+        "category": "corrupted_verifier",
+        "kind": "corrupted_verifier",
+        "corruption_source": "ast_pruned_or_golf_verifier",
+        "slot": 4
+      }
+    },
+    {
+      "category": "retrieval",
+      "meta": {
+        "category": "retrieval",
+        "kind": "retrieval_nearest",
+        "rank": 0,
+        "query_task": "d631b094",
+        "slot": 2
+      }
+    }
+  ],
+  "evaluation_ok": true,
+  "predictions": [
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "metrics": {
+    "accuracy": 1.0,
+    "correct": 5,
+    "total": 5,
+    "exact_match": 1
+  },
+  "stage": "done",
+  "prior_work_context": null
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import concurrent.futures
 import datetime as dt
+import http.client
 import json
 import os
 import random
@@ -104,6 +105,7 @@ def _together_transient_error(exc: BaseException) -> bool:
             ConnectionError,
             ConnectionAbortedError,
             ConnectionResetError,
+            http.client.IncompleteRead,
         ),
     ):
         return True
@@ -119,12 +121,58 @@ def _together_transient_error(exc: BaseException) -> bool:
         "connection reset",
         "connection aborted",
         "temporarily unavailable",
+        "did not contain any text content",
+        "incompleteread",
+        "incomplete read",
     ):
         if phrase in msg:
             return True
     if "time" in msg and ("out" in msg or "timed" in msg):
         return True
     return False
+
+
+def _openrouter_empty_content_error(payload: Any) -> ValueError:
+    """Build a diagnostic ValueError when OpenRouter returns no extractable text."""
+    finish_reason = None
+    native_finish_reason = None
+    if isinstance(payload, dict):
+        choices = payload.get("choices")
+        if isinstance(choices, list) and choices:
+            c0 = choices[0]
+            if isinstance(c0, dict):
+                finish_reason = c0.get("finish_reason")
+                native_finish_reason = c0.get("native_finish_reason")
+        usage = payload.get("usage")
+    else:
+        usage = None
+    parts = ["OpenRouter Chat Completions response did not contain any text content."]
+    if finish_reason is not None:
+        parts.append(f"finish_reason={finish_reason!r}")
+    if native_finish_reason is not None:
+        parts.append(f"native_finish_reason={native_finish_reason!r}")
+    if usage is not None:
+        try:
+            parts.append(f"usage={json.dumps(usage, sort_keys=True)}")
+        except Exception:
+            parts.append(f"usage={usage!r}")
+    return ValueError(" ".join(parts))
+
+
+def _openrouter_retry_count(*, model: str) -> int:
+    try:
+        n = int(os.environ.get("POTARCIN_OPENROUTER_MAX_RETRIES", "0").strip() or 0)
+    except Exception:
+        n = 0
+    if n > 0:
+        return min(max(1, n), 8)
+    # Kimi via OpenRouter often returns empty content / truncated streams; retry more.
+    default = "3" if _is_kimi_together_model(model) else "1"
+    try:
+        n = int(os.environ.get("POTARCIN_TOGETHER_MAX_RETRIES", default).strip() or default)
+    except Exception:
+        n = int(default)
+    return min(max(1, n), 8)
 
 
 def _together_retry_count(*, model: str) -> int:
@@ -280,6 +328,9 @@ def request_text_completion(
                 to = 0
         if to > 0:
             timeout_s = to
+        elif _is_kimi_together_model(model):
+            # Same practical floor as Together/Kimi; request body unchanged.
+            timeout_s = max(timeout_s, 420)
         text = _openrouter_chat_completions_completion(
             prompt=prompt,
             model=model,
@@ -327,6 +378,37 @@ def request_text_completion(
     return text.strip(), resolved_provider, effective_base
 
 
+def _openrouter_extract_text(payload: Any) -> str:
+    if not isinstance(payload, dict):
+        return ""
+    choices = payload.get("choices")
+    if not isinstance(choices, list):
+        return ""
+    for c in choices:
+        if not isinstance(c, dict):
+            continue
+        msg = c.get("message")
+        if isinstance(msg, dict):
+            content = msg.get("content")
+            if isinstance(content, str) and content.strip():
+                return content.strip()
+            if isinstance(content, list):
+                parts: list[str] = []
+                for item in content:
+                    if isinstance(item, str) and item.strip():
+                        parts.append(item.strip())
+                    elif isinstance(item, dict):
+                        txt = item.get("text")
+                        if isinstance(txt, str) and txt.strip():
+                            parts.append(txt.strip())
+                if parts:
+                    return "\n".join(parts)
+        txt = c.get("text")
+        if isinstance(txt, str) and txt.strip():
+            return txt.strip()
+    return ""
+
+
 def _openrouter_chat_completions_completion(
     *,
     prompt: str,
@@ -336,51 +418,12 @@ def _openrouter_chat_completions_completion(
     timeout_s: int = 180,
 ) -> str:
     # Match the Together MiniMax defaults used in this project.
+    # Request body intentionally unchanged for MiniMax / prior Kimi comparability.
     max_tokens = _together_max_tokens()
     reasoning_cfg = {"enabled": True}
     temperature = 1.0
     top_p = 0.95
-    try:
-        n_attempts = int(os.environ.get("POTARCIN_OPENROUTER_MAX_RETRIES", "0").strip() or 0)
-    except Exception:
-        n_attempts = 0
-    if n_attempts <= 0:
-        # Compatibility fallback to existing retry env.
-        try:
-            n_attempts = int(os.environ.get("POTARCIN_TOGETHER_MAX_RETRIES", "1").strip() or 1)
-        except Exception:
-            n_attempts = 1
-    n_attempts = min(max(1, n_attempts), 8)
-
-    def _extract_text(payload: Any) -> str:
-        if not isinstance(payload, dict):
-            return ""
-        choices = payload.get("choices")
-        if not isinstance(choices, list):
-            return ""
-        for c in choices:
-            if not isinstance(c, dict):
-                continue
-            msg = c.get("message")
-            if isinstance(msg, dict):
-                content = msg.get("content")
-                if isinstance(content, str) and content.strip():
-                    return content.strip()
-                if isinstance(content, list):
-                    parts: list[str] = []
-                    for item in content:
-                        if isinstance(item, str) and item.strip():
-                            parts.append(item.strip())
-                        elif isinstance(item, dict):
-                            txt = item.get("text")
-                            if isinstance(txt, str) and txt.strip():
-                                parts.append(txt.strip())
-                    if parts:
-                        return "\n".join(parts)
-            txt = c.get("text")
-            if isinstance(txt, str) and txt.strip():
-                return txt.strip()
-        return ""
+    n_attempts = _openrouter_retry_count(model=model)
 
     url = base_url.rstrip("/") + "/chat/completions"
     payload: dict[str, Any] = {
@@ -415,10 +458,10 @@ def _openrouter_chat_completions_completion(
                     model=model,
                     payload=parsed,
                 )
-            text = _extract_text(parsed)
+            text = _openrouter_extract_text(parsed)
             if text:
                 return text
-            raise ValueError("OpenRouter Chat Completions response did not contain any text content.")
+            raise _openrouter_empty_content_error(parsed)
         except error.HTTPError as e:
             body_txt = e.read().decode("utf-8", errors="replace")
             err: Exception = ValueError(f"OpenRouter Chat Completions API error {e.code}: {body_txt}")

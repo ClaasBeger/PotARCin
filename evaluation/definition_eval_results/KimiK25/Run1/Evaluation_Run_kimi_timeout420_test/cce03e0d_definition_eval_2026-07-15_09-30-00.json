@@ -1,0 +1,237 @@
+{
+  "task_id": "cce03e0d",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n1 0 0\n2 1 0\n0 0 1\nOutput:\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n1 0 0 0 0 0 0 0 0\n2 1 0 0 0 0 0 0 0\n0 0 1 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 1 2\n1 1 0\n2 0 0\nOutput:\n0 0 0 0 0 0 0 1 2\n0 0 0 0 0 0 1 1 0\n0 0 0 0 0 0 2 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 1 2 0 0 0 0 0 0\n1 1 0 0 0 0 0 0 0\n2 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n2 1 2\n0 2 1\n2 1 0\nOutput:\n2 1 2 0 0 0 2 1 2\n0 2 1 0 0 0 0 2 1\n2 1 0 0 0 0 2 1 0\n0 0 0 2 1 2 0 0 0\n0 0 0 0 2 1 0 0 0\n0 0 0 2 1 0 0 0 0\n2 1 2 0 0 0 0 0 0\n0 2 1 0 0 0 0 0 0\n2 1 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n1 2 2\n2 0 1\n1 2 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    if not grid:\n        return []\n    \n    n = len(grid)\n    # Create a 3n x 3n grid initialized with zeros\n    result = [[0 for _ in range(3 * n)] for _ in range(3 * n)]\n    \n    # Iterate through the input grid\n    for i in range(n):\n        for j in range(n):\n            # If the cell contains 2, copy the entire input grid \n            # to the corresponding 3x3 block in the output\n            if grid[i][j] == 2:\n                for r in range(n):\n                    for c in range(n):\n                        result[3 * i + r][3 * j + c] = grid[r][c]\n    \n    return result\n```",
+  "script": "def solve(grid):\n    if not grid:\n        return []\n    \n    n = len(grid)\n    # Create a 3n x 3n grid initialized with zeros\n    result = [[0 for _ in range(3 * n)] for _ in range(3 * n)]\n    \n    # Iterate through the input grid\n    for i in range(n):\n        for j in range(n):\n            # If the cell contains 2, copy the entire input grid \n            # to the corresponding 3x3 block in the output\n            if grid[i][j] == 2:\n                for r in range(n):\n                    for c in range(n):\n                        result[3 * i + r][3 * j + c] = grid[r][c]\n    \n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 120,
+      "total": 1000,
+      "success_rate": 0.12
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "list assignment index out of range"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          2,
+          2,
+          1,
+          9,
+          2
+        ]
+      ],
+      "expected": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          1,
+          9,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          2,
+          2,
+          1,
+          9,
+          2,
+          2,
+          2,
+          1,
+          9,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          1,
+          9,
+          2
+        ]
+      ],
+      "got": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          2,
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    }
+  },
+  "evaluation_ok": true
+}

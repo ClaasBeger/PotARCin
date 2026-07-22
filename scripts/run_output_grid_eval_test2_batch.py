@@ -35,6 +35,9 @@ def _is_transient_error(msg: str) -> bool:
         "502",
         "503",
         "504",
+        "did not contain any text content",
+        "incompleteread",
+        "incomplete read",
     )
     return any(tok in s for tok in transient_markers)
 

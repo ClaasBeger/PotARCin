@@ -1,0 +1,248 @@
+{
+  "task_id": "90c28cc7",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 8 8 8 8 8 8 8 8 7 7 7 7 7 7 7 7 7 7 7 7\n0 8 8 8 8 8 8 8 8 7 7 7 7 7 7 7 7 7 7 7 7\n0 8 8 8 8 8 8 8 8 7 7 7 7 7 7 7 7 7 7 7 7\n0 8 8 8 8 8 8 8 8 7 7 7 7 7 7 7 7 7 7 7 7\n0 8 8 8 8 8 8 8 8 7 7 7 7 7 7 7 7 7 7 7 7\n0 8 8 8 8 8 8 8 8 7 7 7 7 7 7 7 7 7 7 7 7\n0 3 3 3 3 3 3 3 3 4 4 4 4 4 4 1 1 1 1 1 1\n0 3 3 3 3 3 3 3 3 4 4 4 4 4 4 1 1 1 1 1 1\n0 3 3 3 3 3 3 3 3 4 4 4 4 4 4 1 1 1 1 1 1\n0 3 3 3 3 3 3 3 3 4 4 4 4 4 4 1 1 1 1 1 1\n0 2 2 2 2 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5\n0 2 2 2 2 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5\n0 2 2 2 2 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5\n0 2 2 2 2 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5\n0 2 2 2 2 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n8 7 7\n3 4 1\n2 5 5\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 2 2 2 2 2 2 2 8 8 8 8 8 8 8 8 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 1 1 1 1 1 1 1 4 4 4 4 4 4 4 4 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n2 8\n1 4\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 8 8 8 8 8 8 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 8 8 8 8 8 8 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 8 8 8 8 8 8 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 8 8 8 8 8 8 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 8 8 8 8 8 8 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 3 3 3 3 3 3 3 3 3 3 3 3 0 0 0 0 0 0 0\n0 0 4 4 4 4 4 4 1 1 1 1 1 1 0 0 0 0 0 0 0\n0 0 4 4 4 4 4 4 1 1 1 1 1 1 0 0 0 0 0 0 0\n0 0 4 4 4 4 4 4 1 1 1 1 1 1 0 0 0 0 0 0 0\n0 0 4 4 4 4 4 4 1 1 1 1 1 1 0 0 0 0 0 0 0\n0 0 4 4 4 4 4 4 1 1 1 1 1 1 0 0 0 0 0 0 0\n0 0 4 4 4 4 4 4 1 1 1 1 1 1 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n8 2\n3 3\n4 1\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 1 1 1 1 1 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 1 1 1 1 1 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 1 1 1 1 1 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 1 1 1 1 1 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 1 1 1 1 1 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 1 1 1 1 1 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 8 8 8 8 8 3 3 3 3 3 3 3 3 8 8 8 8 8 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 2 2 2 2 2 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 2 2 2 2 2 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 2 2 2 2 2 0 0\n0 2 2 2 2 2 4 4 4 4 4 4 4 4 2 2 2 2 2 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    if not grid:\n        return []\n    \n    # Step 1: Extract representative rows for each horizontal band\n    bands = []\n    current_pattern = None\n    \n    for row in grid:\n        # Check if row is all zeros\n        is_zero = all(v == 0 for v in row)\n        \n        if is_zero:\n            current_pattern = None\n        else:\n            if current_pattern is None:\n                # Start of a new band\n                bands.append(row)\n                current_pattern = row\n            else:\n                # Check if pattern changed\n                if row != current_pattern:\n                    bands.append(row)\n                    current_pattern = row\n                # If same as current, it's part of the same band, skip\n    \n    if not bands:\n        return []\n    \n    # Step 2: Parse segments from each band and collect all boundaries\n    all_boundaries = set()\n    band_segments = []  # List of list of (start, end, color)\n    \n    for band_row in bands:\n        segments = []\n        n = len(band_row)\n        i = 0\n        \n        # Skip leading zeros\n        while i < n and band_row[i] == 0:\n            i += 1\n        \n        # Parse non-zero segments\n        while i < n:\n            if band_row[i] == 0:\n                i += 1\n                continue\n            \n            color = band_row[i]\n            start = i\n            while i < n and band_row[i] == color:\n                i += 1\n            end = i\n            \n            segments.append((start, end, color))\n            all_boundaries.add(start)\n            all_boundaries.add(end)\n        \n        band_segments.append(segments)\n    \n    # Step 3: Create sorted list of boundaries\n    boundaries = sorted(all_boundaries)\n    if len(boundaries) < 2:\n        return []\n    \n    # Step 4: Build output grid\n    output = []\n    for segments in band_segments:\n        row_out = []\n        # Create a lookup: for the start of each strip, find the color\n        for j in range(len(boundaries) - 1):\n            strip_start = boundaries[j]\n            # strip_end = boundaries[j+1]  # Not needed for lookup\n            \n            # Find which segment contains strip_start\n            color = 0\n            for (s, e, c) in segments:\n                if s <= strip_start < e:\n                    color = c\n                    break\n            row_out.append(color)\n        output.append(row_out)\n    \n    return output\n```",
+  "script": "def solve(grid):\n    if not grid:\n        return []\n    \n    # Step 1: Extract representative rows for each horizontal band\n    bands = []\n    current_pattern = None\n    \n    for row in grid:\n        # Check if row is all zeros\n        is_zero = all(v == 0 for v in row)\n        \n        if is_zero:\n            current_pattern = None\n        else:\n            if current_pattern is None:\n                # Start of a new band\n                bands.append(row)\n                current_pattern = row\n            else:\n                # Check if pattern changed\n                if row != current_pattern:\n                    bands.append(row)\n                    current_pattern = row\n                # If same as current, it's part of the same band, skip\n    \n    if not bands:\n        return []\n    \n    # Step 2: Parse segments from each band and collect all boundaries\n    all_boundaries = set()\n    band_segments = []  # List of list of (start, end, color)\n    \n    for band_row in bands:\n        segments = []\n        n = len(band_row)\n        i = 0\n        \n        # Skip leading zeros\n        while i < n and band_row[i] == 0:\n            i += 1\n        \n        # Parse non-zero segments\n        while i < n:\n            if band_row[i] == 0:\n                i += 1\n                continue\n            \n            color = band_row[i]\n            start = i\n            while i < n and band_row[i] == color:\n                i += 1\n            end = i\n            \n            segments.append((start, end, color))\n            all_boundaries.add(start)\n            all_boundaries.add(end)\n        \n        band_segments.append(segments)\n    \n    # Step 3: Create sorted list of boundaries\n    boundaries = sorted(all_boundaries)\n    if len(boundaries) < 2:\n        return []\n    \n    # Step 4: Build output grid\n    output = []\n    for segments in band_segments:\n        row_out = []\n        # Create a lookup: for the start of each strip, find the color\n        for j in range(len(boundaries) - 1):\n            strip_start = boundaries[j]\n            # strip_end = boundaries[j+1]  # Not needed for lookup\n            \n            # Find which segment contains strip_start\n            color = 0\n            for (s, e, c) in segments:\n                if s <= strip_start < e:\n                    color = c\n                    break\n            row_out.append(color)\n        output.append(row_out)\n    \n    return output",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 1000,
+      "total": 1000,
+      "success_rate": 1.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          6,
+          6,
+          9,
+          9,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          6,
+          6,
+          9,
+          9,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          6,
+          6,
+          9,
+          9,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6,
+          6,
+          6,
+          9,
+          9,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          9,
+          9,
+          9,
+          6,
+          6,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          9,
+          9,
+          9,
+          6,
+          6,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          9,
+          9,
+          9,
+          6,
+          6,
+          9,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          6,
+          9,
+          9,
+          6
+        ],
+        [
+          9,
+          6,
+          9,
+          6
+        ]
+      ],
+      "got": [
+        [
+          6,
+          9,
+          9,
+          6
+        ],
+        [
+          9,
+          6,
+          9,
+          6
+        ]
+      ]
+    }
+  },
+  "evaluation_ok": true
+}
