@@ -8,6 +8,8 @@ _MODEL_ALIASES: dict[str, str] = {
     "claude-opus-4-6": "ClaudeO46",
     "gemini-3.1-pro-preview": "Gemini31Pro",
     "moonshotai/Kimi-K2.5": "KimiK25",
+    # Same output tree as base Kimi so :nitro resumes/skips existing run-tag results.
+    "moonshotai/Kimi-K2.5:nitro": "KimiK25",
     "MiniMaxAI/MiniMax-M2.5": "MiniMaxM25",
     "minimax/minimax-m2.5:nitro": "MiniMaxM25",
 }
@@ -17,6 +19,11 @@ def model_alias(model: str) -> str:
     m = model.strip()
     if m in _MODEL_ALIASES:
         return _MODEL_ALIASES[m]
+    # OpenRouter speed suffixes (:nitro, etc.) should share the base model's folder.
+    if ":" in m:
+        base = m.rsplit(":", 1)[0]
+        if base in _MODEL_ALIASES:
+            return _MODEL_ALIASES[base]
     return "".join(ch for ch in m if ch.isalnum()) or "UnknownModel"
 
 
