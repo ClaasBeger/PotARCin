@@ -1,0 +1,522 @@
+{
+  "task_id": "681b3aeb",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 3 3 0 0 0 0 0 0 0\n0 3 0 0 0 0 0 0 0 0\n0 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 7\n0 0 0 0 0 0 0 0 7 7\n0 0 0 0 0 0 0 0 7 7\nOutput:\n3 3 7\n3 7 7\n3 7 7\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 4 0\n0 0 0 0 0 0 0 0 4 4\n0 0 0 6 6 6 0 0 0 0\n0 0 0 0 6 6 0 0 0 0\n0 0 0 0 0 6 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n6 6 6\n4 6 6\n4 4 6\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 3 0 0 0 0 0\n0 0 0 3 3 3 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 1 1 1 0 0 0 0 0 0\n0 1 0 1 0 0 0 0 0 0\nOutput:\n1 1 1\n1 3 1\n3 3 3\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 8 8 0\n0 0 0 0 0 0 0 8 0 0\n0 0 0 0 0 0 0 8 8 8\n0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    import numpy as np\n    g = np.array(grid)\n    \n    colors = [c for c in np.unique(g) if c != 0]\n    \n    bboxes = {}\n    for c in colors:\n        rows, cols = np.where(g == c)\n        bboxes[c] = (rows.min(), rows.max(), cols.min(), cols.max())\n    \n    # Extract each shape relative to its bounding box\n    shapes = {}\n    for c in colors:\n        r1, r2, c1, c2 = bboxes[c]\n        sub = g[r1:r2+1, c1:c2+1]\n        shapes[c] = (sub == c).astype(int)\n    \n    # Find the output size - should be the same for both when combined\n    sizes = [(r2-r1+1, c2-c1+1) for r1,r2,c1,c2 in bboxes.values()]\n    max_h = max(s[0] for s in sizes)\n    max_w = max(s[1] for s in sizes)\n    \n    result = np.zeros((max_h, max_w), dtype=int)\n    \n    for c in colors:\n        mask = shapes[c]\n        h, w = mask.shape\n        # Try all alignments\n        for dr in range(max_h - h + 1):\n            for dc in range(max_w - w + 1):\n                result[dr:dr+h, dc:dc+w] += mask * c  # just place it\n    \n    # Hmm, need smarter approach. The two shapes complement each other in the output rectangle.\n    # Let me just try all possible overlays.\n    \n    c1, c2 = colors\n    m1, m2 = shapes[c1], shapes[c2]\n    h1, w1 = m1.shape\n    h2, w2 = m2.shape\n    \n    for dr1 in range(max_h - h1 + 1):\n        for dc1 in range(max_w - w1 + 1):\n            for dr2 in range(max_h - h2 + 1):\n                for dc2 in range(max_w - w2 + 1):\n                    canvas = np.zeros((max_h, max_w), dtype=int)\n                    canvas[dr1:dr1+h1, dc1:dc1+w1] += m1 * c1\n                    canvas[dr2:dr2+h2, dc2:dc2+w2] += m2 * c2\n                    # Check no overlap and full coverage\n                    region1 = np.zeros((max_h, max_w), dtype=bool)\n                    region1[dr1:dr1+h1, dc1:dc1+w1] = m1.astype(bool)\n                    region2 = np.zeros((max_h, max_w), dtype=bool)\n                    region2[dr2:dr2+h2, dc2:dc2+w2] = m2.astype(bool)\n                    if not np.any(region1 & region2) and np.all(region1 | region2):\n                        return canvas.tolist()\n    \n    return result.tolist()\n```",
+  "script": "def solve(grid):\n    import numpy as np\n    g = np.array(grid)\n    \n    colors = [c for c in np.unique(g) if c != 0]\n    \n    bboxes = {}\n    for c in colors:\n        rows, cols = np.where(g == c)\n        bboxes[c] = (rows.min(), rows.max(), cols.min(), cols.max())\n    \n    # Extract each shape relative to its bounding box\n    shapes = {}\n    for c in colors:\n        r1, r2, c1, c2 = bboxes[c]\n        sub = g[r1:r2+1, c1:c2+1]\n        shapes[c] = (sub == c).astype(int)\n    \n    # Find the output size - should be the same for both when combined\n    sizes = [(r2-r1+1, c2-c1+1) for r1,r2,c1,c2 in bboxes.values()]\n    max_h = max(s[0] for s in sizes)\n    max_w = max(s[1] for s in sizes)\n    \n    result = np.zeros((max_h, max_w), dtype=int)\n    \n    for c in colors:\n        mask = shapes[c]\n        h, w = mask.shape\n        # Try all alignments\n        for dr in range(max_h - h + 1):\n            for dc in range(max_w - w + 1):\n                result[dr:dr+h, dc:dc+w] += mask * c  # just place it\n    \n    # Hmm, need smarter approach. The two shapes complement each other in the output rectangle.\n    # Let me just try all possible overlays.\n    \n    c1, c2 = colors\n    m1, m2 = shapes[c1], shapes[c2]\n    h1, w1 = m1.shape\n    h2, w2 = m2.shape\n    \n    for dr1 in range(max_h - h1 + 1):\n        for dc1 in range(max_w - w1 + 1):\n            for dr2 in range(max_h - h2 + 1):\n                for dc2 in range(max_w - w2 + 1):\n                    canvas = np.zeros((max_h, max_w), dtype=int)\n                    canvas[dr1:dr1+h1, dc1:dc1+w1] += m1 * c1\n                    canvas[dr2:dr2+h2, dc2:dc2+w2] += m2 * c2\n                    # Check no overlap and full coverage\n                    region1 = np.zeros((max_h, max_w), dtype=bool)\n                    region1[dr1:dr1+h1, dc1:dc1+w1] = m1.astype(bool)\n                    region2 = np.zeros((max_h, max_w), dtype=bool)\n                    region2[dr2:dr2+h2, dc2:dc2+w2] = m2.astype(bool)\n                    if not np.any(region1 & region2) and np.all(region1 | region2):\n                        return canvas.tolist()\n    \n    return result.tolist()",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 1,
+      "total": 3,
+      "success_rate": 0.3333333333333333
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 134,
+      "total": 261,
+      "success_rate": 0.5134099616858238
+    },
+    "generator_dynamic50": {
+      "ok": 29,
+      "total": 50,
+      "success_rate": 0.58
+    },
+    "re_arc_stable": {
+      "ok": 55,
+      "total": 1000,
+      "success_rate": 0.055
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          7
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          7
+        ]
+      ],
+      "expected": [
+        [
+          3,
+          3,
+          7
+        ],
+        [
+          3,
+          7,
+          7
+        ],
+        [
+          3,
+          7,
+          7
+        ]
+      ],
+      "got": [
+        [
+          3,
+          10
+        ],
+        [
+          10,
+          7
+        ],
+        [
+          10,
+          7
+        ]
+      ]
+    },
+    "test": null,
+    "stable": {
+      "index": 4,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          2
+        ],
+        [
+          2,
+          2,
+          2
+        ]
+      ],
+      "got": [
+        [
+          4,
+          4,
+          6
+        ],
+        [
+          6,
+          6,
+          2
+        ]
+      ]
+    },
+    "generator_dynamic50": {
+      "index": 2,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          5,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          5,
+          2,
+          2
+        ],
+        [
+          5,
+          5,
+          2
+        ],
+        [
+          5,
+          2,
+          2
+        ]
+      ],
+      "got": [
+        [
+          7,
+          2
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          7,
+          2
+        ]
+      ]
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "too many values to unpack (expected 2, got 3)"
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

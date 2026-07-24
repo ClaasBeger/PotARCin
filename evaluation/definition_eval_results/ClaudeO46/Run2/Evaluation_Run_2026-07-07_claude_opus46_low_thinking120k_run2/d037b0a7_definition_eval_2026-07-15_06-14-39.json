@@ -1,0 +1,18 @@
+{
+  "task_id": "d037b0a7",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 6\n0 4 0\n3 0 0\nOutput:\n0 0 6\n0 4 6\n3 4 6\n\nExample 2:\n\nInput:\n0 2 0\n7 0 8\n0 0 0\nOutput:\n0 2 0\n7 2 8\n7 2 8\n\nExample 3:\n\nInput:\n4 0 0\n0 2 0\n0 0 0\nOutput:\n4 0 0\n4 2 0\n4 2 0\n\nBelow is a test input grid.\n\nInput:\n4 0 8\n0 0 0\n0 7 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    rows, cols = len(grid), len(grid[0])\n    result = [row[:] for row in grid]\n    for c in range(cols):\n        val = 0\n        for r in range(rows):\n            if grid[r][c] != 0:\n                val = grid[r][c]\n            if val != 0 and result[r][c] == 0:\n                result[r][c] = val\n    return result",
+  "script": "def solve(grid):\n    rows, cols = len(grid), len(grid[0])\n    result = [row[:] for row in grid]\n    for c in range(cols):\n        val = 0\n        for r in range(rows):\n            if grid[r][c] != 0:\n                val = grid[r][c]\n            if val != 0 and result[r][c] == 0:\n                result[r][c] = val\n    return result",
+  "script_loaded": false,
+  "script_load_error": null,
+  "metrics": {},
+  "first_failures": {},
+  "evaluation_ok": false
+}

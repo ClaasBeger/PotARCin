@@ -1,0 +1,253 @@
+{
+  "task_id": "1b2d62fb",
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 1538622610,
+  "include_true": false,
+  "corruption_source": "p_arc_incorrect",
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n0 9 9 1 9 9 9\n0 0 9 1 9 9 0\n9 0 9 1 9 9 0\n0 0 0 1 9 0 0\n0 9 9 1 9 9 9\nOutput:\n0 0 0\n0 0 0\n0 0 0\n0 8 8\n0 0 0\n\nExample 2:\nInput:\n0 0 0 1 9 0 0\n9 0 9 1 9 9 9\n0 9 9 1 9 9 9\n0 0 0 1 9 9 9\n0 9 9 1 9 9 9\nOutput:\n0 8 8\n0 0 0\n0 0 0\n0 0 0\n0 0 0\n\nExample 3:\nInput:\n9 0 0 1 9 0 9\n9 0 0 1 0 9 0\n9 0 0 1 9 0 0\n0 9 9 1 0 9 9\n0 0 9 1 0 9 0\nOutput:\n0 8 0\n0 0 8\n0 8 8\n8 0 0\n8 0 0\n\nExample 4:\nInput:\n0 9 9 1 9 0 9\n9 0 0 1 9 0 0\n9 9 9 1 9 9 9\n0 9 0 1 0 0 0\n9 0 0 1 9 0 0\nOutput:\n0 0 0\n0 8 8\n0 0 0\n8 0 8\n0 8 8\n\nExample 5:\nInput:\n0 9 9 1 9 0 9\n9 0 9 1 9 9 9\n9 9 9 1 0 0 9\n9 0 0 1 9 0 0\n9 9 9 1 0 0 9\nOutput:\n0 0 0\n0 0 0\n0 0 0\n0 8 8\n0 0 0\n\nThe following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.\n\nCandidate pair:\nInput:\n9 9 0 1 0 9 0\n0 9 9 1 0 0 0\n9 9 0 1 0 9 0\n9 9 9 1 9 0 9\n0 9 9 1 0 9 9\nOutput:\n8 0 8\n8 0 8\n8 0 8\n0 8 0\n8 0 8\n\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "Looking at the examples, the rule is: **output 8 where both the left-side cell and the corresponding right-side cell (separated by the column of 1s) are 0; otherwise output 0.**\n\nApplying this to the candidate input:\n\n| Row | Left   | Right  | Both 0 positions | Output    |\n|-----|--------|--------|-------------------|-----------|\n| 1   | 9,9,0  | 0,9,0  | pos 2             | 0,0,8     |\n| 2   | 0,9,9  | 0,0,0  | pos 0             | 8,0,0     |\n| 3   | 9,9,0  | 0,9,0  | pos 2             | 0,0,8     |\n| 4   | 9,9,9  | 9,0,9  | none              | 0,0,0     |\n| 5   | 0,9,9  | 0,9,9  | pos 0             | 8,0,0     |\n\nThe input is fine; the output was corrupted.\n\n```json\n{\"input\": [[9,9,0,1,0,9,0],[0,9,9,1,0,0,0],[9,9,0,1,0,9,0],[9,9,9,1,9,0,9],[0,9,9,1,0,9,9]], \"output\": [[0,0,8],[8,0,0],[0,0,8],[0,0,0],[8,0,0]]}\n```",
+  "corrupted_pair": {
+    "input": [
+      [
+        9,
+        9,
+        0,
+        1,
+        0,
+        9,
+        0
+      ],
+      [
+        0,
+        9,
+        9,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        9,
+        9,
+        0,
+        1,
+        0,
+        9,
+        0
+      ],
+      [
+        9,
+        9,
+        9,
+        1,
+        9,
+        0,
+        9
+      ],
+      [
+        0,
+        9,
+        9,
+        1,
+        0,
+        9,
+        9
+      ]
+    ],
+    "output": [
+      [
+        8,
+        0,
+        8
+      ],
+      [
+        8,
+        0,
+        8
+      ],
+      [
+        8,
+        0,
+        8
+      ],
+      [
+        0,
+        8,
+        0
+      ],
+      [
+        8,
+        0,
+        8
+      ]
+    ]
+  },
+  "target_pair": {
+    "input": [
+      [
+        9,
+        9,
+        0,
+        1,
+        0,
+        9,
+        0
+      ],
+      [
+        0,
+        9,
+        9,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        9,
+        9,
+        0,
+        1,
+        0,
+        9,
+        0
+      ],
+      [
+        9,
+        9,
+        9,
+        1,
+        9,
+        0,
+        9
+      ],
+      [
+        0,
+        9,
+        9,
+        1,
+        0,
+        9,
+        9
+      ]
+    ],
+    "output": [
+      [
+        0,
+        0,
+        8
+      ],
+      [
+        8,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        8
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        8,
+        0,
+        0
+      ]
+    ]
+  },
+  "evaluation_ok": true,
+  "prediction_pair": {
+    "input": [
+      [
+        9,
+        9,
+        0,
+        1,
+        0,
+        9,
+        0
+      ],
+      [
+        0,
+        9,
+        9,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        9,
+        9,
+        0,
+        1,
+        0,
+        9,
+        0
+      ],
+      [
+        9,
+        9,
+        9,
+        1,
+        9,
+        0,
+        9
+      ],
+      [
+        0,
+        9,
+        9,
+        1,
+        0,
+        9,
+        9
+      ]
+    ],
+    "output": [
+      [
+        0,
+        0,
+        8
+      ],
+      [
+        8,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        8
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        8,
+        0,
+        0
+      ]
+    ]
+  },
+  "guardrail": {
+    "enabled": true,
+    "max_norm_edit": 0.7,
+    "normalized_distance_input": 0.0,
+    "normalized_distance_output": 0.3333333333333333,
+    "passed": true
+  },
+  "metrics": {
+    "success": true
+  }
+}

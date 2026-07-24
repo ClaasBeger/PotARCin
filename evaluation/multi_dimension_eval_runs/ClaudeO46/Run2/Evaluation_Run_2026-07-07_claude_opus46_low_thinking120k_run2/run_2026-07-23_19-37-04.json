@@ -1,0 +1,109 @@
+{
+  "mode": "single_task",
+  "created_at": "2026-07-23_19-37-04",
+  "task_count": 1,
+  "run_tag": "Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2",
+  "task_source": "arc_train",
+  "seed_mode": "fixed",
+  "base_seed": 209,
+  "runs": [
+    {
+      "task_id": "57aa92db",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 209,
+      "dimension_seeds": {
+        "classification_distribution": 100334680,
+        "editing": 727168335,
+        "inversion": 1228345191
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run2/Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2/57aa92db_definition_eval_2026-07-12_12-05-22.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 187,
+              "total": 262,
+              "success_rate": 0.7137404580152672
+            },
+            "generator_dynamic50": {
+              "ok": 32,
+              "total": 50,
+              "success_rate": 0.64
+            },
+            "re_arc_stable": {
+              "ok": 1,
+              "total": 1000,
+              "success_rate": 0.001
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 0,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run2/Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2/57aa92db_distribution_classification_eval_2026-07-23_19-37-04.json",
+          "metrics": {
+            "accuracy": 0.8,
+            "correct": 4,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run2/Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2/57aa92db_constrained_generation_eval_2026-07-12_12-09-31.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/editing_eval_results/ClaudeO46/Run2/Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2/57aa92db_editing_eval_2026-07-12_12-11-15.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/inversion_eval_results/ClaudeO46/Run2/Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2/57aa92db_inversion_eval_2026-07-12_12-15-11.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        }
+      }
+    }
+  ]
+}

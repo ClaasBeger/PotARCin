@@ -1,0 +1,90 @@
+{
+  "task_id": "f5b8619d",
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "demonstration_count": 3,
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n2 0 0\n0 0 0\n0 0 2\nOutput:\n2 0 8 2 0 8\n8 0 8 8 0 8\n8 0 2 8 0 2\n2 0 8 2 0 8\n8 0 8 8 0 8\n8 0 2 8 0 2\n\nExample 2:\nInput:\n0 5 0 0 0 0\n0 0 0 0 0 0\n0 0 0 0 0 0\n0 0 0 0 0 0\n5 0 0 0 0 5\n0 0 0 0 0 0\nOutput:\n8 5 0 0 0 8 8 5 0 0 0 8\n8 8 0 0 0 8 8 8 0 0 0 8\n8 8 0 0 0 8 8 8 0 0 0 8\n8 8 0 0 0 8 8 8 0 0 0 8\n5 8 0 0 0 5 5 8 0 0 0 5\n8 8 0 0 0 8 8 8 0 0 0 8\n8 5 0 0 0 8 8 5 0 0 0 8\n8 8 0 0 0 8 8 8 0 0 0 8\n8 8 0 0 0 8 8 8 0 0 0 8\n8 8 0 0 0 8 8 8 0 0 0 8\n5 8 0 0 0 5 5 8 0 0 0 5\n8 8 0 0 0 8 8 8 0 0 0 8\n\nExample 3:\nInput:\n0 4\n0 0\nOutput:\n0 4 0 4\n0 8 0 8\n0 4 0 4\n0 8 0 8\n\nGenerate one NEW input/output pair that follows the same transformation rule.\n- Do NOT copy any demonstration pair exactly.\n- The generated input and output must be different (non-trivial transformation).\n- Your pair must be consistent with the same underlying rule.\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "Looking at the examples, I identify the rule:\n\n1. **Tile** the input grid 2\u00d72 (doubling rows and columns).\n2. In every **column** of the tiled grid that contains at least one non-zero value, replace all `0`s with `8`.\n\nVerification: In Example 1, non-zero values appear in columns 0 and 2 \u2192 those columns' zeros become 8; column 1 stays all 0. In Example 3, only column 1 (and its tile copy column 3) have non-zero \u2192 zeros there become 8; column 0 stays 0. \u2713\n\n```json\n{\"input\": [[0, 0, 3], [0, 0, 0], [0, 0, 0]], \"output\": [[0, 0, 3, 0, 0, 3], [0, 0, 8, 0, 0, 8], [0, 0, 8, 0, 0, 8], [0, 0, 3, 0, 0, 3], [0, 0, 8, 0, 0, 8], [0, 0, 8, 0, 0, 8]]}\n```",
+  "evaluation_ok": true,
+  "prediction": {
+    "input": [
+      [
+        0,
+        0,
+        3
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    "output": [
+      [
+        0,
+        0,
+        3,
+        0,
+        0,
+        3
+      ],
+      [
+        0,
+        0,
+        8,
+        0,
+        0,
+        8
+      ],
+      [
+        0,
+        0,
+        8,
+        0,
+        0,
+        8
+      ],
+      [
+        0,
+        0,
+        3,
+        0,
+        0,
+        3
+      ],
+      [
+        0,
+        0,
+        8,
+        0,
+        0,
+        8
+      ],
+      [
+        0,
+        0,
+        8,
+        0,
+        0,
+        8
+      ]
+    ]
+  },
+  "metrics": {
+    "success_rate": 1.0,
+    "rejected_as_demo_copy": 0,
+    "rejected_no_change": 0,
+    "rejected_verifier_missing": 0,
+    "rejected_verifier_mismatch": 0,
+    "noted_arc_gen_stable_exact_match": 0
+  }
+}

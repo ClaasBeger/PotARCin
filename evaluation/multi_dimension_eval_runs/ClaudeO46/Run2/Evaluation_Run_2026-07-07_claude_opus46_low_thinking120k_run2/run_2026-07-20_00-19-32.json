@@ -1,0 +1,204 @@
+{
+  "mode": "batch_pending",
+  "created_at": "2026-07-20_00-19-32",
+  "task_count": 2,
+  "run_tag": "Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2",
+  "task_source": "arc_train",
+  "seed_mode": "fixed",
+  "base_seed": 77,
+  "batch_size": 5,
+  "completed_before_count": 398,
+  "last_completed_task_id_before": "ff805c23",
+  "runs": [
+    {
+      "task_id": "50846271",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 194,
+      "dimension_seeds": {
+        "classification_distribution": 288682417,
+        "editing": 654775828,
+        "inversion": 1513272398
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run2/Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2/50846271_definition_eval_2026-07-10_21-27-23.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 231,
+              "total": 262,
+              "success_rate": 0.8816793893129771
+            },
+            "generator_dynamic50": {
+              "ok": 26,
+              "total": 50,
+              "success_rate": 0.52
+            },
+            "re_arc_stable": {
+              "ok": 36,
+              "total": 1000,
+              "success_rate": 0.036
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 0,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run2/Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2/50846271_distribution_classification_eval_2026-07-10_21-29-37.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run2/Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2/50846271_constrained_generation_eval_2026-07-10_21-31-41.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 1,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": false,
+          "error": "Editing sampling failed after retries. Last error: 50846271: could not sample a valid editing pair after retries.",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": false,
+          "error": "No inversion instance could be generated for task 50846271.",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "task_id": "ce602527",
+      "model": "claude-opus-4-6",
+      "provider": "anthropic",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 395,
+      "dimension_seeds": {
+        "classification_distribution": 1592058403,
+        "editing": 1445912638,
+        "inversion": 90357282
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/definition_eval_results/ClaudeO46/Run2/Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2/ce602527_definition_eval_2026-07-15_02-53-18.json",
+          "metrics": {
+            "train": {
+              "ok": 4,
+              "total": 4,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 212,
+              "total": 262,
+              "success_rate": 0.8091603053435115
+            },
+            "generator_dynamic50": {
+              "ok": 43,
+              "total": 50,
+              "success_rate": 0.86
+            },
+            "re_arc_stable": {
+              "ok": 763,
+              "total": 1000,
+              "success_rate": 0.763
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 0,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/classification_eval_results/ClaudeO46/Run2/Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2/ce602527_distribution_classification_eval_2026-07-15_02-55-08.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/constrained_generation_eval_results/ClaudeO46/Run2/Evaluation_Run_2026-07-07_claude_opus46_low_thinking120k_run2/ce602527_constrained_generation_eval_2026-07-15_03-11-05.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 1,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": false,
+          "error": "Editing sampling failed after retries. Last error: ce602527: could not sample a valid editing pair after retries.",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": false,
+          "error": "No inversion instance could be generated for task ce602527.",
+          "result_path": null,
+          "metrics": null,
+          "attempts": 1
+        }
+      }
+    }
+  ]
+}

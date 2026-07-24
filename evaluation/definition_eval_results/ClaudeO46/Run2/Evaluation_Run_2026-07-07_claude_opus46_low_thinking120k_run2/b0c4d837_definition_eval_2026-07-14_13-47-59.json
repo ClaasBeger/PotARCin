@@ -1,0 +1,486 @@
+{
+  "task_id": "b0c4d837",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0\n0 5 0 0 5 0\n0 5 0 0 5 0\n0 5 0 0 5 0\n0 5 8 8 5 0\n0 5 5 5 5 0\nOutput:\n8 8 8\n0 0 0\n0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0\n0 0 5 0 0 0 5 0 0\n0 0 5 0 0 0 5 0 0\n0 0 5 0 0 0 5 0 0\n0 0 5 0 0 0 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 5 5 5 5 0 0\nOutput:\n8 8 8\n0 0 8\n0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 5 0 0 0 0 0 5 0\n0 5 0 0 0 0 0 5 0\n0 5 0 0 0 0 0 5 0\n0 5 8 8 8 8 8 5 0\n0 5 8 8 8 8 8 5 0\n0 5 8 8 8 8 8 5 0\n0 5 5 5 5 5 5 5 0\nOutput:\n8 8 8\n0 0 0\n0 0 0\n\nExample 4:\n\nInput:\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 5 0 0 0 5 0 0\n0 0 5 0 0 0 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 5 5 5 5 0 0\nOutput:\n8 8 0\n0 0 0\n0 0 0\n\nExample 5:\n\nInput:\n0 0 0 0 0 0\n0 5 0 0 5 0\n0 5 8 8 5 0\n0 5 8 8 5 0\n0 5 5 5 5 0\nOutput:\n8 0 0\n0 0 0\n0 0 0\n\nExample 6:\n\nInput:\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 5 0 0 0 5 0\n0 5 0 0 0 5 0\n0 5 8 8 8 5 0\n0 5 8 8 8 5 0\n0 5 5 5 5 5 0\nOutput:\n8 8 0\n0 0 0\n0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0\n0 0 5 0 0 0 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 8 8 8 5 0 0\n0 0 5 5 5 5 5 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    # Find the 5-bounded container and count empty (0) rows inside it\n    rows = len(grid)\n    cols = len(grid[0])\n    \n    # Find container bounds from 5s\n    five_rows = [r for r in range(rows) for c in range(cols) if grid[r][c] == 5]\n    five_cols = [c for r in range(rows) for c in range(cols) if grid[r][c] == 5]\n    r1, r2 = min(five_rows), max(five_rows)\n    c1, c2 = min(five_cols), max(five_cols)\n    \n    # Count 0-rows inside container (rows where internal cells are all 0)\n    empty_rows = 0\n    for r in range(r1, r2 + 1):\n        interior = [grid[r][c] for c in range(c1 + 1, c2)]\n        if all(v == 0 for v in interior):\n            empty_rows += 1\n    \n    # Fill 3x3 grid with that many 8s, left-to-right top-to-bottom\n    result = [[0]*3 for _ in range(3)]\n    count = 0\n    for r in range(3):\n        for c in range(3):\n            if count < empty_rows:\n                result[r][c] = 8\n                count += 1\n    return result",
+  "script": "def solve(grid):\n    # Find the 5-bounded container and count empty (0) rows inside it\n    rows = len(grid)\n    cols = len(grid[0])\n    \n    # Find container bounds from 5s\n    five_rows = [r for r in range(rows) for c in range(cols) if grid[r][c] == 5]\n    five_cols = [c for r in range(rows) for c in range(cols) if grid[r][c] == 5]\n    r1, r2 = min(five_rows), max(five_rows)\n    c1, c2 = min(five_cols), max(five_cols)\n    \n    # Count 0-rows inside container (rows where internal cells are all 0)\n    empty_rows = 0\n    for r in range(r1, r2 + 1):\n        interior = [grid[r][c] for c in range(c1 + 1, c2)]\n        if all(v == 0 for v in interior):\n            empty_rows += 1\n    \n    # Fill 3x3 grid with that many 8s, left-to-right top-to-bottom\n    result = [[0]*3 for _ in range(3)]\n    count = 0\n    for r in range(3):\n        for c in range(3):\n            if count < empty_rows:\n                result[r][c] = 8\n                count += 1\n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 5,
+      "total": 6,
+      "success_rate": 0.8333333333333334
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 194,
+      "total": 262,
+      "success_rate": 0.7404580152671756
+    },
+    "generator_dynamic50": {
+      "ok": 32,
+      "total": 50,
+      "success_rate": 0.64
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 1,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          8,
+          8,
+          8,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          8,
+          8,
+          8,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          8,
+          8,
+          8,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          5,
+          5,
+          5,
+          5,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          8
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "got": [
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "test": null,
+    "stable": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5,
+          0
+        ],
+        [
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5,
+          0
+        ],
+        [
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5,
+          0
+        ],
+        [
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5,
+          0
+        ],
+        [
+          0,
+          5,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          5,
+          0
+        ],
+        [
+          0,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          8
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "got": [
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "generator_dynamic50": {
+      "index": 8,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          8,
+          8,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          8,
+          8,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          8,
+          8,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          8,
+          8,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          8,
+          8,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          8,
+          8,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          8
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "got": [
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "min() iterable argument is empty"
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

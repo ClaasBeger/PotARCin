@@ -1,0 +1,59 @@
+{
+  "task_id": "137eaa0f",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 6 6 0 0 0\n0 0 0 5 0 0 0 5 0 0 0\n0 0 4 4 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 7 0 0 0 0\n0 0 0 0 0 5 7 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\nOutput:\n6 6 7\n0 5 7\n4 4 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 6 0 0 0 0 0 0 0 0 0\n0 0 5 0 7 5 7 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 5 0 0 0\n0 0 2 2 0 0 3 3 3 0 0\n0 0 5 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\nOutput:\n6 2 2\n7 5 7\n3 3 3\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 1 1 0 0 0 0 0 0 0 0\n1 5 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 5 2 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 5 0 0 0\n0 0 0 0 0 0 9 9 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 1 1\n1 5 2\n9 9 2\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 9 0 0\n0 0 0 0 0 0 0 9 5 0 0\n4 0 0 0 0 0 0 9 0 0 0\n0 5 4 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 8 0 0 0\n0 0 0 0 0 0 5 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 5 0 0 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    rows, cols = len(grid), len(grid[0])\n    \n    # Find all 5s and all colored (non-zero, non-5) cells\n    fives = []\n    colored = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == 5:\n                fives.append((r, c))\n            elif grid[r][c] != 0:\n                colored.append((r, c, grid[r][c]))\n    \n    output = [[0]*3 for _ in range(3)]\n    output[1][1] = 5\n    \n    for r, c, val in colored:\n        # Find nearest 5\n        best = min(fives, key=lambda f: abs(f[0]-r)+abs(f[1]-c))\n        dr, dc = r - best[0], c - best[1]\n        output[1+dr][1+dc] = val\n    \n    return output\n```",
+  "script": "def solve(grid):\n    rows, cols = len(grid), len(grid[0])\n    \n    # Find all 5s and all colored (non-zero, non-5) cells\n    fives = []\n    colored = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == 5:\n                fives.append((r, c))\n            elif grid[r][c] != 0:\n                colored.append((r, c, grid[r][c]))\n    \n    output = [[0]*3 for _ in range(3)]\n    output[1][1] = 5\n    \n    for r, c, val in colored:\n        # Find nearest 5\n        best = min(fives, key=lambda f: abs(f[0]-r)+abs(f[1]-c))\n        dr, dc = r - best[0], c - best[1]\n        output[1+dr][1+dc] = val\n    \n    return output",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 1,
+      "total": 1000,
+      "success_rate": 0.001
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "list assignment index out of range"
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

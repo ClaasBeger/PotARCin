@@ -1,0 +1,59 @@
+{
+  "task_id": "05f2a901",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 2 2 2 0 0 0 0 0\n2 2 0 2 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0\n0 0 0 8 8 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 2 2 2 0 0 0 0 0\n2 2 0 2 0 0 0 0 0\n0 0 0 8 8 0 0 0 0\n0 0 0 8 8 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 2 2 0 0 0 0 0 0 0\n0 2 2 0 0 0 0 0 0 0\n2 2 2 0 0 0 0 0 0 0\n0 2 2 0 0 0 8 8 0 0\n0 0 0 0 0 0 8 8 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 2 2 0 0 0 0\n0 0 0 0 2 2 0 0 0 0\n0 0 0 2 2 2 0 0 0 0\n0 0 0 0 2 2 8 8 0 0\n0 0 0 0 0 0 8 8 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 2 0 0 0 0\n0 2 2 2 2 2 0 0 0 0\n0 0 2 2 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0\n0 0 0 8 8 0 0 0 0 0\n0 0 0 2 2 2 0 0 0 0\n0 2 2 2 2 2 0 0 0 0\n0 0 2 2 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 2 0 0 0 0\n0 0 0 0 0 2 2 0 0 0\n0 8 8 0 0 2 2 0 0 0\n0 8 8 0 0 0 2 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    import numpy as np\n    g = np.array(grid)\n    \n    # Find 8 and 2 bounding boxes\n    r8, c8 = np.where(g == 8)\n    r2, c2 = np.where(g == 2)\n    \n    eight_cells = set(zip(r8.tolist(), c8.tolist()))\n    two_cells = [(r, c) for r, c in zip(r2.tolist(), c2.tolist())]\n    \n    # Store the 2-shape relative to its bounding box\n    min_r2, max_r2 = min(r2), max(r2)\n    min_c2, max_c2 = min(c2), max(c2)\n    min_r8, max_r8 = min(r8), max(r8)\n    min_c8, max_c8 = min(c8), max(c8)\n    \n    two_relative = [(r - min_r2, c - min_c2) for r, c in two_cells]\n    h2 = max_r2 - min_r2 + 1\n    w2 = max_c2 - min_c2 + 1\n    \n    # Try all offsets to place the 2-shape adjacent to 8-shape without overlap\n    # The 2-shape should be moved to be touching the 8-shape\n    best = None\n    best_dist = float('inf')\n    \n    orig_center_r2 = (min_r2 + max_r2) / 2\n    orig_center_c2 = (min_c2 + max_c2) / 2\n    \n    rows, cols = g.shape\n    \n    for dr in range(-rows, rows):\n        for dc in range(-cols, cols):\n            new_cells = [(min_r2 + dr + r, min_c2 + dc + c) for r, c in two_relative]\n            # Check bounds\n            if any(r < 0 or r >= rows or c < 0 or c >= cols for r, c in new_cells):\n                continue\n            # Check no overlap with 8\n            if any((r, c) in eight_cells for r, c in new_cells):\n                continue\n            # Check adjacency: at least one 2-cell must be 4-adjacent to an 8-cell\n            adjacent = False\n            for r, c in new_cells:\n                for nr, nc in [(r-1,c),(r+1,c),(r,c-1),(r,c+1)]:\n                    if (nr, nc) in eight_cells:\n                        adjacent = True\n                        break\n                if adjacent:\n                    break\n            if not adjacent:\n                continue\n            \n            dist = abs(dr) + abs(dc)\n            if dist < best_dist:\n                best_dist = dist\n                best = (dr, dc)\n    \n    result = [[0]*cols for _ in range(rows)]\n    # Place 8\n    for r, c in eight_cells:\n        result[r][c] = 8\n    # Place 2 at new position\n    dr, dc = best\n    for r, c in two_relative:\n        result[min_r2 + dr + r][min_c2 + dc + c] = 2\n    \n    return result\n```",
+  "script": "def solve(grid):\n    import numpy as np\n    g = np.array(grid)\n    \n    # Find 8 and 2 bounding boxes\n    r8, c8 = np.where(g == 8)\n    r2, c2 = np.where(g == 2)\n    \n    eight_cells = set(zip(r8.tolist(), c8.tolist()))\n    two_cells = [(r, c) for r, c in zip(r2.tolist(), c2.tolist())]\n    \n    # Store the 2-shape relative to its bounding box\n    min_r2, max_r2 = min(r2), max(r2)\n    min_c2, max_c2 = min(c2), max(c2)\n    min_r8, max_r8 = min(r8), max(r8)\n    min_c8, max_c8 = min(c8), max(c8)\n    \n    two_relative = [(r - min_r2, c - min_c2) for r, c in two_cells]\n    h2 = max_r2 - min_r2 + 1\n    w2 = max_c2 - min_c2 + 1\n    \n    # Try all offsets to place the 2-shape adjacent to 8-shape without overlap\n    # The 2-shape should be moved to be touching the 8-shape\n    best = None\n    best_dist = float('inf')\n    \n    orig_center_r2 = (min_r2 + max_r2) / 2\n    orig_center_c2 = (min_c2 + max_c2) / 2\n    \n    rows, cols = g.shape\n    \n    for dr in range(-rows, rows):\n        for dc in range(-cols, cols):\n            new_cells = [(min_r2 + dr + r, min_c2 + dc + c) for r, c in two_relative]\n            # Check bounds\n            if any(r < 0 or r >= rows or c < 0 or c >= cols for r, c in new_cells):\n                continue\n            # Check no overlap with 8\n            if any((r, c) in eight_cells for r, c in new_cells):\n                continue\n            # Check adjacency: at least one 2-cell must be 4-adjacent to an 8-cell\n            adjacent = False\n            for r, c in new_cells:\n                for nr, nc in [(r-1,c),(r+1,c),(r,c-1),(r,c+1)]:\n                    if (nr, nc) in eight_cells:\n                        adjacent = True\n                        break\n                if adjacent:\n                    break\n            if not adjacent:\n                continue\n            \n            dist = abs(dr) + abs(dc)\n            if dist < best_dist:\n                best_dist = dist\n                best = (dr, dc)\n    \n    result = [[0]*cols for _ in range(rows)]\n    # Place 8\n    for r, c in eight_cells:\n        result[r][c] = 8\n    # Place 2 at new position\n    dr, dc = best\n    for r, c in two_relative:\n        result[min_r2 + dr + r][min_c2 + dc + c] = 2\n    \n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 1,
+      "total": 1000,
+      "success_rate": 0.001
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "min() iterable argument is empty"
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

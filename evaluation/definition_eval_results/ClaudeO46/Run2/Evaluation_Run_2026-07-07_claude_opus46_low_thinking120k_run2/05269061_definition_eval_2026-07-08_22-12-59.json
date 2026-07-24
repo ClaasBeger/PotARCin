@@ -1,0 +1,253 @@
+{
+  "task_id": "05269061",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n2 8 3 0 0 0 0\n8 3 0 0 0 0 0\n3 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\nOutput:\n2 8 3 2 8 3 2\n8 3 2 8 3 2 8\n3 2 8 3 2 8 3\n2 8 3 2 8 3 2\n8 3 2 8 3 2 8\n3 2 8 3 2 8 3\n2 8 3 2 8 3 2\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0\n0 0 0 0 0 0 0\n0 0 0 0 0 0 1\n0 0 0 0 0 1 2\n0 0 0 0 1 2 4\n0 0 0 1 2 4 0\n0 0 1 2 4 0 0\nOutput:\n2 4 1 2 4 1 2\n4 1 2 4 1 2 4\n1 2 4 1 2 4 1\n2 4 1 2 4 1 2\n4 1 2 4 1 2 4\n1 2 4 1 2 4 1\n2 4 1 2 4 1 2\n\nExample 3:\n\nInput:\n0 0 0 0 8 3 0\n0 0 0 8 3 0 0\n0 0 8 3 0 0 0\n0 8 3 0 0 0 4\n8 3 0 0 0 4 0\n3 0 0 0 4 0 0\n0 0 0 4 0 0 0\nOutput:\n4 8 3 4 8 3 4\n8 3 4 8 3 4 8\n3 4 8 3 4 8 3\n4 8 3 4 8 3 4\n8 3 4 8 3 4 8\n3 4 8 3 4 8 3\n4 8 3 4 8 3 4\n\nBelow is a test input grid.\n\nInput:\n0 1 0 0 0 0 2\n1 0 0 0 0 2 0\n0 0 0 0 2 0 0\n0 0 0 2 0 0 0\n0 0 2 0 0 0 0\n0 2 0 0 0 0 4\n2 0 0 0 0 4 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    n = len(grid)\n    m = len(grid[0])\n    diag_vals = {}\n    for r in range(n):\n        for c in range(m):\n            if grid[r][c] != 0:\n                diag_vals[r + c] = grid[r][c]\n    \n    unique_vals = list(set(diag_vals.values()))\n    period = len(unique_vals)\n    min_d = min(diag_vals.keys())\n    \n    seq = [0] * period\n    for d, v in diag_vals.items():\n        seq[(d - min_d) % period] = v\n    \n    return [[seq[(r + c - min_d) % period] for c in range(m)] for r in range(n)]",
+  "script": "def solve(grid):\n    n = len(grid)\n    m = len(grid[0])\n    diag_vals = {}\n    for r in range(n):\n        for c in range(m):\n            if grid[r][c] != 0:\n                diag_vals[r + c] = grid[r][c]\n    \n    unique_vals = list(set(diag_vals.values()))\n    period = len(unique_vals)\n    min_d = min(diag_vals.keys())\n    \n    seq = [0] * period\n    for d, v in diag_vals.items():\n        seq[(d - min_d) % period] = v\n    \n    return [[seq[(r + c - min_d) % period] for c in range(m)] for r in range(n)]",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 130,
+      "total": 1000,
+      "success_rate": 0.13
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "input": [
+        [
+          7,
+          6,
+          7,
+          0,
+          0,
+          0,
+          4
+        ],
+        [
+          1,
+          7,
+          6,
+          7,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          7,
+          6,
+          7,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          7,
+          6,
+          7,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          1,
+          7,
+          6,
+          7
+        ],
+        [
+          7,
+          1,
+          1,
+          0,
+          1,
+          7,
+          6
+        ],
+        [
+          0,
+          7,
+          1,
+          1,
+          0,
+          1,
+          7
+        ]
+      ],
+      "expected": [
+        [
+          7,
+          6,
+          7,
+          7,
+          1,
+          1,
+          4
+        ],
+        [
+          1,
+          7,
+          6,
+          7,
+          7,
+          1,
+          1
+        ],
+        [
+          4,
+          1,
+          7,
+          6,
+          7,
+          7,
+          1
+        ],
+        [
+          1,
+          4,
+          1,
+          7,
+          6,
+          7,
+          7
+        ],
+        [
+          1,
+          1,
+          4,
+          1,
+          7,
+          6,
+          7
+        ],
+        [
+          7,
+          1,
+          1,
+          4,
+          1,
+          7,
+          6
+        ],
+        [
+          7,
+          7,
+          1,
+          1,
+          4,
+          1,
+          7
+        ]
+      ],
+      "got": [
+        [
+          7,
+          1,
+          7,
+          1,
+          7,
+          1,
+          7
+        ],
+        [
+          1,
+          7,
+          1,
+          7,
+          1,
+          7,
+          1
+        ],
+        [
+          7,
+          1,
+          7,
+          1,
+          7,
+          1,
+          7
+        ],
+        [
+          1,
+          7,
+          1,
+          7,
+          1,
+          7,
+          1
+        ],
+        [
+          7,
+          1,
+          7,
+          1,
+          7,
+          1,
+          7
+        ],
+        [
+          1,
+          7,
+          1,
+          7,
+          1,
+          7,
+          1
+        ],
+        [
+          7,
+          1,
+          7,
+          1,
+          7,
+          1,
+          7
+        ]
+      ]
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

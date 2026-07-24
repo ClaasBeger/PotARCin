@@ -1,0 +1,56 @@
+{
+  "task_id": "9f236235",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n3 3 3 3 2 0 0 0 0 2 0 0 0 0 2 0 0 0 0\n3 3 3 3 2 0 0 0 0 2 0 0 0 0 2 0 0 0 0\n3 3 3 3 2 0 0 0 0 2 0 0 0 0 2 0 0 0 0\n3 3 3 3 2 0 0 0 0 2 0 0 0 0 2 0 0 0 0\n2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2\n0 0 0 0 2 3 3 3 3 2 0 0 0 0 2 0 0 0 0\n0 0 0 0 2 3 3 3 3 2 0 0 0 0 2 0 0 0 0\n0 0 0 0 2 3 3 3 3 2 0 0 0 0 2 0 0 0 0\n0 0 0 0 2 3 3 3 3 2 0 0 0 0 2 0 0 0 0\n2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2\n0 0 0 0 2 0 0 0 0 2 3 3 3 3 2 0 0 0 0\n0 0 0 0 2 0 0 0 0 2 3 3 3 3 2 0 0 0 0\n0 0 0 0 2 0 0 0 0 2 3 3 3 3 2 0 0 0 0\n0 0 0 0 2 0 0 0 0 2 3 3 3 3 2 0 0 0 0\n2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2\n3 3 3 3 2 3 3 3 3 2 3 3 3 3 2 0 0 0 0\n3 3 3 3 2 3 3 3 3 2 3 3 3 3 2 0 0 0 0\n3 3 3 3 2 3 3 3 3 2 3 3 3 3 2 0 0 0 0\n3 3 3 3 2 3 3 3 3 2 3 3 3 3 2 0 0 0 0\nOutput:\n0 0 0 3\n0 0 3 0\n0 3 0 0\n0 3 3 3\n\nExample 2:\n\nInput:\n0 0 0 0 8 2 2 2 2 8 0 0 0 0 8 0 0 0 0\n0 0 0 0 8 2 2 2 2 8 0 0 0 0 8 0 0 0 0\n0 0 0 0 8 2 2 2 2 8 0 0 0 0 8 0 0 0 0\n0 0 0 0 8 2 2 2 2 8 0 0 0 0 8 0 0 0 0\n8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8\n2 2 2 2 8 1 1 1 1 8 0 0 0 0 8 0 0 0 0\n2 2 2 2 8 1 1 1 1 8 0 0 0 0 8 0 0 0 0\n2 2 2 2 8 1 1 1 1 8 0 0 0 0 8 0 0 0 0\n2 2 2 2 8 1 1 1 1 8 0 0 0 0 8 0 0 0 0\n8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8\n0 0 0 0 8 0 0 0 0 8 1 1 1 1 8 0 0 0 0\n0 0 0 0 8 0 0 0 0 8 1 1 1 1 8 0 0 0 0\n0 0 0 0 8 0 0 0 0 8 1 1 1 1 8 0 0 0 0\n0 0 0 0 8 0 0 0 0 8 1 1 1 1 8 0 0 0 0\n8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8\n0 0 0 0 8 0 0 0 0 8 0 0 0 0 8 3 3 3 3\n0 0 0 0 8 0 0 0 0 8 0 0 0 0 8 3 3 3 3\n0 0 0 0 8 0 0 0 0 8 0 0 0 0 8 3 3 3 3\n0 0 0 0 8 0 0 0 0 8 0 0 0 0 8 3 3 3 3\nOutput:\n0 0 2 0\n0 0 1 2\n0 1 0 0\n3 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 2 8 8 8 2 0 0 0\n0 0 0 2 8 8 8 2 0 0 0\n0 0 0 2 8 8 8 2 0 0 0\n2 2 2 2 2 2 2 2 2 2 2\n8 8 8 2 8 8 8 2 0 0 0\n8 8 8 2 8 8 8 2 0 0 0\n8 8 8 2 8 8 8 2 0 0 0\n2 2 2 2 2 2 2 2 2 2 2\n0 0 0 2 0 0 0 2 4 4 4\n0 0 0 2 0 0 0 2 4 4 4\n0 0 0 2 0 0 0 2 4 4 4\nOutput:\n0 8 0\n0 8 8\n4 0 0\n\nBelow is a test input grid.\n\nInput:\n1 1 1 1 1 8 3 3 3 3 3 8 1 1 1 1 1 8 1 1 1 1 1\n1 1 1 1 1 8 3 3 3 3 3 8 1 1 1 1 1 8 1 1 1 1 1\n1 1 1 1 1 8 3 3 3 3 3 8 1 1 1 1 1 8 1 1 1 1 1\n1 1 1 1 1 8 3 3 3 3 3 8 1 1 1 1 1 8 1 1 1 1 1\n1 1 1 1 1 8 3 3 3 3 3 8 1 1 1 1 1 8 1 1 1 1 1\n8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8\n0 0 0 0 0 8 3 3 3 3 3 8 0 0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 8 3 3 3 3 3 8 0 0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 8 3 3 3 3 3 8 0 0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 8 3 3 3 3 3 8 0 0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 8 3 3 3 3 3 8 0 0 0 0 0 8 0 0 0 0 0\n8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8\n2 2 2 2 2 8 3 3 3 3 3 8 0 0 0 0 0 8 2 2 2 2 2\n2 2 2 2 2 8 3 3 3 3 3 8 0 0 0 0 0 8 2 2 2 2 2\n2 2 2 2 2 8 3 3 3 3 3 8 0 0 0 0 0 8 2 2 2 2 2\n2 2 2 2 2 8 3 3 3 3 3 8 0 0 0 0 0 8 2 2 2 2 2\n2 2 2 2 2 8 3 3 3 3 3 8 0 0 0 0 0 8 2 2 2 2 2\n8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8\n0 0 0 0 0 8 3 3 3 3 3 8 0 0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 8 3 3 3 3 3 8 0 0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 8 3 3 3 3 3 8 0 0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 8 3 3 3 3 3 8 0 0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 8 3 3 3 3 3 8 0 0 0 0 0 8 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    rows, cols = len(grid), len(grid[0])\n    \n    # Find separator value and positions\n    # Separator rows are uniform single-value rows\n    sep_rows = []\n    sep_val = None\n    for r in range(rows):\n        if len(set(grid[r])) == 1:\n            sep_rows.append(r)\n            sep_val = grid[r][0]\n    \n    # Find separator columns\n    sep_cols = []\n    for c in range(cols):\n        if all(grid[r][c] == sep_val for r in range(rows)):\n            sep_cols.append(c)\n    \n    # Extract block regions\n    row_bounds = []\n    prev = -1\n    for r in sorted(set(sep_rows)):\n        if prev + 1 < r:\n            row_bounds.append((prev + 1, r))\n        prev = r\n    if prev + 1 < rows:\n        row_bounds.append((prev + 1, rows))\n    \n    col_bounds = []\n    prev = -1\n    for c in sorted(set(sep_cols)):\n        if prev + 1 < c:\n            col_bounds.append((prev + 1, c))\n        prev = c\n    if prev + 1 < cols:\n        col_bounds.append((prev + 1, cols))\n    \n    # Build block matrix\n    block_matrix = []\n    for rb in row_bounds:\n        row = []\n        for cb in col_bounds:\n            val = grid[rb[0]][cb[0]]\n            row.append(val)\n        block_matrix.append(row)\n    \n    # Mirror horizontally\n    return [row[::-1] for row in block_matrix]\n```",
+  "script": "def solve(grid):\n    rows, cols = len(grid), len(grid[0])\n    \n    # Find separator value and positions\n    # Separator rows are uniform single-value rows\n    sep_rows = []\n    sep_val = None\n    for r in range(rows):\n        if len(set(grid[r])) == 1:\n            sep_rows.append(r)\n            sep_val = grid[r][0]\n    \n    # Find separator columns\n    sep_cols = []\n    for c in range(cols):\n        if all(grid[r][c] == sep_val for r in range(rows)):\n            sep_cols.append(c)\n    \n    # Extract block regions\n    row_bounds = []\n    prev = -1\n    for r in sorted(set(sep_rows)):\n        if prev + 1 < r:\n            row_bounds.append((prev + 1, r))\n        prev = r\n    if prev + 1 < rows:\n        row_bounds.append((prev + 1, rows))\n    \n    col_bounds = []\n    prev = -1\n    for c in sorted(set(sep_cols)):\n        if prev + 1 < c:\n            col_bounds.append((prev + 1, c))\n        prev = c\n    if prev + 1 < cols:\n        col_bounds.append((prev + 1, cols))\n    \n    # Build block matrix\n    block_matrix = []\n    for rb in row_bounds:\n        row = []\n        for cb in col_bounds:\n            val = grid[rb[0]][cb[0]]\n            row.append(val)\n        block_matrix.append(row)\n    \n    # Mirror horizontally\n    return [row[::-1] for row in block_matrix]",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 1000,
+      "total": 1000,
+      "success_rate": 1.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

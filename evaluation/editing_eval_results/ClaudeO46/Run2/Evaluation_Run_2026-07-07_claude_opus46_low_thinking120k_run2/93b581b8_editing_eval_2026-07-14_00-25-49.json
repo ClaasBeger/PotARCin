@@ -1,0 +1,331 @@
+{
+  "task_id": "93b581b8",
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 2118919457,
+  "include_true": false,
+  "corruption_source": "p_arc_incorrect",
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n0 0 0 0 0 0\n0 0 0 0 0 0\n0 0 9 3 0 0\n0 0 7 8 0 0\n0 0 0 0 0 0\n0 0 0 0 0 0\nOutput:\n8 8 0 0 7 7\n8 8 0 0 7 7\n0 0 9 3 0 0\n0 0 7 8 0 0\n3 3 0 0 9 9\n3 3 0 0 9 9\n\nExample 2:\nInput:\n0 0 0 0 0 0\n0 4 6 0 0 0\n0 2 1 0 0 0\n0 0 0 0 0 0\n0 0 0 0 0 0\n0 0 0 0 0 0\nOutput:\n1 0 0 2 2 0\n0 4 6 0 0 0\n0 2 1 0 0 0\n6 0 0 4 4 0\n6 0 0 4 4 0\n0 0 0 0 0 0\n\nExample 3:\nInput:\n0 0 0 0 0 0\n0 0 0 0 0 0\n0 0 3 6 0 0\n0 0 5 2 0 0\n0 0 0 0 0 0\n0 0 0 0 0 0\nOutput:\n2 2 0 0 5 5\n2 2 0 0 5 5\n0 0 3 6 0 0\n0 0 5 2 0 0\n6 6 0 0 3 3\n6 6 0 0 3 3\n\nThe following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.\n\nCandidate pair:\nInput:\n0 0 0 0 0 0\n0 0 0 0 0 0\n0 0 0 0 0 0\n0 0 3 1 0 0\n0 0 2 5 0 0\n0 0 0 0 0 0\nOutput:\n5 5 0 2 2 0\n5 5 0 2 2 0\n0 0 3 1 0 0\n0 0 2 5 0 0\n1 1 0 0 3 3\n1 1 0 0 3 3\n\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "Looking at the examples, the 2x2 block stays in place, and each corner region (above-left, above-right, below-left, below-right of the block) is filled with the **diagonally opposite** value from the block. The block's own columns/rows remain 0 in those regions.\n\n**Candidate issue:** The block is at rows 3-4, cols 2-3, so left columns are 0-1 and right columns are 4-5. The candidate output incorrectly shifts values into cols 3 and leaves col 4 as 0.\n\n**Corrected output:**\n\n```\n5 5 0 0 2 2\n5 5 0 0 2 2\n5 5 0 0 2 2\n0 0 3 1 0 0\n0 0 2 5 0 0\n1 1 0 0 3 3\n```\n\n{\"input\": [[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,3,1,0,0],[0,0,2,5,0,0],[0,0,0,0,0,0]], \"output\": [[5,5,0,0,2,2],[5,5,0,0,2,2],[5,5,0,0,2,2],[0,0,3,1,0,0],[0,0,2,5,0,0],[1,1,0,0,3,3]]}",
+  "corrupted_pair": {
+    "input": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        3,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        5,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "output": [
+      [
+        5,
+        5,
+        0,
+        2,
+        2,
+        0
+      ],
+      [
+        5,
+        5,
+        0,
+        2,
+        2,
+        0
+      ],
+      [
+        0,
+        0,
+        3,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        5,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        0,
+        0,
+        3,
+        3
+      ],
+      [
+        1,
+        1,
+        0,
+        0,
+        3,
+        3
+      ]
+    ]
+  },
+  "target_pair": {
+    "input": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        3,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        5,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "output": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        5,
+        5,
+        0,
+        0,
+        2,
+        2
+      ],
+      [
+        5,
+        5,
+        0,
+        0,
+        2,
+        2
+      ],
+      [
+        0,
+        0,
+        3,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        5,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        0,
+        0,
+        3,
+        3
+      ]
+    ]
+  },
+  "evaluation_ok": true,
+  "prediction_pair": {
+    "input": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        3,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        5,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "output": [
+      [
+        5,
+        5,
+        0,
+        0,
+        2,
+        2
+      ],
+      [
+        5,
+        5,
+        0,
+        0,
+        2,
+        2
+      ],
+      [
+        5,
+        5,
+        0,
+        0,
+        2,
+        2
+      ],
+      [
+        0,
+        0,
+        3,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        5,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        0,
+        0,
+        3,
+        3
+      ]
+    ]
+  },
+  "guardrail": {
+    "enabled": true,
+    "max_norm_edit": 0.7,
+    "normalized_distance_input": 0.0,
+    "normalized_distance_output": 0.5,
+    "passed": true
+  },
+  "metrics": {
+    "success": false
+  }
+}

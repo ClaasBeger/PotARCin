@@ -1,0 +1,59 @@
+{
+  "task_id": "6b9890af",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 8 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 8 8 8 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 8 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n2 2 2 2 2 2 2 2\n2 0 0 8 8 0 0 2\n2 0 0 8 8 0 0 2\n2 8 8 8 8 8 8 2\n2 8 8 8 8 8 8 2\n2 0 0 8 8 0 0 2\n2 0 0 8 8 0 0 2\n2 2 2 2 2 2 2 2\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n2 2 2 2 2\n2 0 1 1 2\n2 1 0 0 2\n2 0 1 1 2\n2 2 2 2 2\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 4 4 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 4 0 4 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n2 2 2 2 2 2 2 2 2 2 2\n2 0 0 0 4 4 4 4 4 4 2\n2 0 0 0 4 4 4 4 4 4 2\n2 0 0 0 4 4 4 4 4 4 2\n2 4 4 4 0 0 0 4 4 4 2\n2 4 4 4 0 0 0 4 4 4 2\n2 4 4 4 0 0 0 4 4 4 2\n2 0 0 0 0 0 0 4 4 4 2\n2 0 0 0 0 0 0 4 4 4 2\n2 0 0 0 0 0 0 4 4 4 2\n2 2 2 2 2 2 2 2 2 2 2\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 3 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 3 0 3 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 3 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    rows, cols = len(grid), len(grid[0])\n    \n    # Find the 2-rectangle\n    twos = [(r,c) for r in range(rows) for c in range(cols) if grid[r][c] == 2]\n    r_min = min(r for r,c in twos)\n    r_max = max(r for r,c in twos)\n    c_min = min(c for r,c in twos)\n    c_max = max(c for r,c in twos)\n    \n    # Find the other pattern (non-zero, non-2)\n    pattern_cells = [(r,c,grid[r][c]) for r in range(rows) for c in range(cols) if grid[r][c] not in (0,2)]\n    pr_min = min(r for r,c,v in pattern_cells)\n    pr_max = max(r for r,c,v in pattern_cells)\n    pc_min = min(c for r,c,v in pattern_cells)\n    pc_max = max(c for r,c,v in pattern_cells)\n    \n    ph = pr_max - pr_min + 1\n    pw = pc_max - pc_min + 1\n    \n    pat = [[0]*pw for _ in range(ph)]\n    for r,c,v in pattern_cells:\n        pat[r-pr_min][c-pc_min] = v\n    \n    interior_h = r_max - r_min - 1\n    interior_w = c_max - c_min - 1\n    \n    scale_r = interior_h // ph\n    scale_c = interior_w // pw\n    \n    out_h = r_max - r_min + 1\n    out_w = c_max - c_min + 1\n    out = [[0]*out_w for _ in range(out_h)]\n    \n    # Border\n    for i in range(out_w):\n        out[0][i] = 2\n        out[out_h-1][i] = 2\n    for i in range(out_h):\n        out[i][0] = 2\n        out[i][out_w-1] = 2\n    \n    # Fill interior\n    color = pattern_cells[0][2]\n    for r in range(interior_h):\n        for c in range(interior_w):\n            pr, pc = r // scale_r, c // scale_c\n            if pr < ph and pc < pw and pat[pr][pc] != 0:\n                out[r+1][c+1] = pat[pr][pc]\n    \n    return out\n```",
+  "script": "def solve(grid):\n    rows, cols = len(grid), len(grid[0])\n    \n    # Find the 2-rectangle\n    twos = [(r,c) for r in range(rows) for c in range(cols) if grid[r][c] == 2]\n    r_min = min(r for r,c in twos)\n    r_max = max(r for r,c in twos)\n    c_min = min(c for r,c in twos)\n    c_max = max(c for r,c in twos)\n    \n    # Find the other pattern (non-zero, non-2)\n    pattern_cells = [(r,c,grid[r][c]) for r in range(rows) for c in range(cols) if grid[r][c] not in (0,2)]\n    pr_min = min(r for r,c,v in pattern_cells)\n    pr_max = max(r for r,c,v in pattern_cells)\n    pc_min = min(c for r,c,v in pattern_cells)\n    pc_max = max(c for r,c,v in pattern_cells)\n    \n    ph = pr_max - pr_min + 1\n    pw = pc_max - pc_min + 1\n    \n    pat = [[0]*pw for _ in range(ph)]\n    for r,c,v in pattern_cells:\n        pat[r-pr_min][c-pc_min] = v\n    \n    interior_h = r_max - r_min - 1\n    interior_w = c_max - c_min - 1\n    \n    scale_r = interior_h // ph\n    scale_c = interior_w // pw\n    \n    out_h = r_max - r_min + 1\n    out_w = c_max - c_min + 1\n    out = [[0]*out_w for _ in range(out_h)]\n    \n    # Border\n    for i in range(out_w):\n        out[0][i] = 2\n        out[out_h-1][i] = 2\n    for i in range(out_h):\n        out[i][0] = 2\n        out[i][out_w-1] = 2\n    \n    # Fill interior\n    color = pattern_cells[0][2]\n    for r in range(interior_h):\n        for c in range(interior_w):\n            pr, pc = r // scale_r, c // scale_c\n            if pr < ph and pc < pw and pat[pr][pc] != 0:\n                out[r+1][c+1] = pat[pr][pc]\n    \n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 261,
+      "total": 261,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 6,
+      "total": 1000,
+      "success_rate": 0.006
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "division by zero"
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}
