@@ -1,0 +1,62 @@
+{
+  "task_id": "test2_t26",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 4 9 0 4 4 9 9 4 0 0\n0 0 9 0 0 0 0 0 0 9 0 0\n0 0 0 0 8 0 0 0 0 9 0 0\n0 0 4 0 0 8 0 0 0 4 0 0\n0 0 4 0 0 0 8 0 0 4 0 0\n0 0 9 0 0 0 0 8 0 9 0 0\n0 0 9 0 0 0 0 0 0 9 0 0\n0 0 0 9 9 4 0 0 9 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 4 9 0 4 4 9 9 4 0 0\n0 0 9 0 0 0 0 0 0 9 0 0\n0 0 0 0 8 0 0 0 0 9 0 0\n0 0 4 0 0 8 0 0 0 4 0 0\n0 0 4 0 0 0 8 0 0 4 0 0\n0 0 9 0 0 0 0 8 0 9 0 0\n0 0 9 0 0 0 0 0 0 9 0 0\n0 0 4 9 9 4 4 9 9 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 3 2 0 0 0 0 0 0\n0 0 0 3 3 0 0 0 3 3 0 0 0\n0 0 3 0 0 0 0 0 0 0 3 0 0\n0 0 0 0 0 0 8 0 0 0 0 0 0\n0 3 0 0 0 0 8 0 0 0 0 3 0\n0 0 0 0 0 0 8 0 0 0 0 2 0\n0 3 0 0 0 0 8 0 0 0 0 3 0\n0 0 0 0 0 0 8 0 0 0 3 0 0\n0 0 3 0 0 0 0 0 0 0 3 0 0\n0 0 0 3 3 0 0 0 3 3 0 0 0\n0 0 0 0 0 3 2 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 3 2 3 0 0 0 0 0\n0 0 0 3 3 0 0 0 3 3 0 0 0\n0 0 3 0 0 0 0 0 0 0 3 0 0\n0 0 0 0 0 0 8 0 0 0 0 0 0\n0 3 0 0 0 0 8 0 0 0 0 3 0\n0 2 0 0 0 0 8 0 0 0 0 2 0\n0 3 0 0 0 0 8 0 0 0 0 3 0\n0 0 3 0 0 0 8 0 0 0 3 0 0\n0 0 3 0 0 0 0 0 0 0 3 0 0\n0 0 0 3 3 0 0 0 3 3 0 0 0\n0 0 0 0 0 3 2 3 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 1 1 0 0 1 1 1 1 0 1 1 0\n0 1 0 0 0 0 0 0 0 0 0 1 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 1 0 0 0 0 0 0 8 0 0 1 0\n0 1 0 0 0 0 0 8 0 0 0 1 0\n0 0 0 0 8 8 8 8 8 0 0 0 0\n0 0 0 0 0 8 0 0 0 0 0 1 0\n0 1 0 0 8 0 0 0 0 0 0 1 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 1 0 0 0 0 0 0 0 0 0 1 0\n0 1 1 0 1 0 1 1 1 0 0 1 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 1 1 0 1 1 1 1 1 0 1 1 0\n0 1 0 0 0 0 0 0 0 0 0 1 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 1 0 0 0 0 0 0 8 0 0 1 0\n0 1 0 0 0 0 0 8 0 0 0 1 0\n0 1 0 0 8 8 8 8 8 0 0 1 0\n0 1 0 0 0 8 0 0 0 0 0 1 0\n0 1 0 0 8 0 0 0 0 0 0 1 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 1 0 0 0 0 0 0 0 0 0 1 0\n0 1 1 0 1 1 1 1 1 0 1 1 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 4:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 6 0 5 0 0 0 0 4 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 8 0 0 0 0 0 0\n0 0 0 0 0 0 8 0 0 0 0 0 0\n0 0 0 0 8 8 8 8 8 0 2 0 0\n0 0 0 0 0 0 8 0 0 0 0 0 0\n0 0 9 0 0 0 8 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 1 0 0\n0 0 0 0 0 0 0 3 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 6 4 5 3 0 3 5 4 6 0 0\n0 0 1 0 0 0 0 0 0 0 1 0 0\n0 0 9 0 0 0 8 0 0 0 9 0 0\n0 0 0 0 0 0 8 0 0 0 0 0 0\n0 0 2 0 8 8 8 8 8 0 2 0 0\n0 0 0 0 0 0 8 0 0 0 0 0 0\n0 0 9 0 0 0 8 0 0 0 9 0 0\n0 0 1 0 0 0 0 0 0 0 1 0 0\n0 0 6 4 5 3 0 3 5 4 6 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0\n0 0 7 7 0 0 0 7 7 1 0\n0 7 0 0 0 0 0 0 0 0 0\n0 7 0 8 0 8 0 0 0 7 0\n0 7 0 0 8 8 0 0 0 7 0\n0 0 0 0 0 8 0 0 0 0 0\n0 7 0 0 0 8 8 0 0 7 0\n0 0 0 0 0 8 0 8 0 7 0\n0 7 0 0 0 0 0 0 0 7 0\n0 0 0 7 7 0 0 7 7 0 0\n0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    if not grid or not grid[0]:\n        return grid\n    H = len(grid)\n    W = len(grid[0])\n    out = [row[:] for row in grid]\n\n    eights = [(r, c) for r in range(H) for c in range(W) if grid[r][c] == 8]\n    if not eights:\n        return out\n\n    from collections import defaultdict\n    row_counts = defaultdict(list)\n    col_counts = defaultdict(list)\n    diag1_counts = defaultdict(list)   # r - c\n    diag2_counts = defaultdict(list)   # r + c\n\n    for r, c in eights:\n        row_counts[r].append(c)\n        col_counts[c].append(r)\n        diag1_counts[r - c].append(r)\n        diag2_counts[r + c].append(r)\n\n    all_counts = []\n\n    for r, cols in row_counts.items():\n        if len(cols) >= 2 and max(cols) - min(cols) + 1 == len(cols):\n            all_counts.append((len(cols), 'h', r))\n\n    for c, rows in col_counts.items():\n        if len(rows) >= 2 and max(rows) - min(rows) + 1 == len(rows):\n            all_counts.append((len(rows), 'v', c))\n\n    for d, rows in diag1_counts.items():\n        if len(rows) >= 2 and max(rows) - min(rows) + 1 == len(rows):\n            all_counts.append((len(rows), 'd1', d))\n\n    for s, rows in diag2_counts.items():\n        if len(rows) >= 2 and max(rows) - min(rows) + 1 == len(rows):\n            all_counts.append((len(rows), 'd2', s))\n\n    if not all_counts:\n        return out\n\n    max_size = max(item[0] for item in all_counts)\n    axes = [(typ, val) for sz, typ, val in all_counts if sz == max_size]\n\n    def reflect(r, c, typ, val):\n        if typ == 'h':\n            return (2 * val - r, c)\n        if typ == 'v':\n            return (r, 2 * val - c)\n        if typ == 'd1':\n            return (c + val, r - val)\n        if typ == 'd2':\n            return (val - c, val - r)\n        return (r, c)\n\n    for r in range(H):\n        for c in range(W):\n            color = grid[r][c]\n            if color == 0 or color == 8:\n                continue\n            stack = [(r, c)]\n            seen = set()\n            while stack:\n                cr, cc = stack.pop()\n                if (cr, cc) in seen:\n                    continue\n                seen.add((cr, cc))\n                for typ, val in axes:\n                    nr, nc = reflect(cr, cc, typ, val)\n                    if 0 <= nr < H and 0 <= nc < W and (nr, nc) not in seen:\n                        stack.append((nr, nc))\n            for cr, cc in seen:\n                if grid[cr][cc] == 8:\n                    continue\n                if out[cr][cc] == 0:\n                    out[cr][cc] = color\n\n    return out\n```",
+  "script": "def solve(grid):\n    if not grid or not grid[0]:\n        return grid\n    H = len(grid)\n    W = len(grid[0])\n    out = [row[:] for row in grid]\n\n    eights = [(r, c) for r in range(H) for c in range(W) if grid[r][c] == 8]\n    if not eights:\n        return out\n\n    from collections import defaultdict\n    row_counts = defaultdict(list)\n    col_counts = defaultdict(list)\n    diag1_counts = defaultdict(list)   # r - c\n    diag2_counts = defaultdict(list)   # r + c\n\n    for r, c in eights:\n        row_counts[r].append(c)\n        col_counts[c].append(r)\n        diag1_counts[r - c].append(r)\n        diag2_counts[r + c].append(r)\n\n    all_counts = []\n\n    for r, cols in row_counts.items():\n        if len(cols) >= 2 and max(cols) - min(cols) + 1 == len(cols):\n            all_counts.append((len(cols), 'h', r))\n\n    for c, rows in col_counts.items():\n        if len(rows) >= 2 and max(rows) - min(rows) + 1 == len(rows):\n            all_counts.append((len(rows), 'v', c))\n\n    for d, rows in diag1_counts.items():\n        if len(rows) >= 2 and max(rows) - min(rows) + 1 == len(rows):\n            all_counts.append((len(rows), 'd1', d))\n\n    for s, rows in diag2_counts.items():\n        if len(rows) >= 2 and max(rows) - min(rows) + 1 == len(rows):\n            all_counts.append((len(rows), 'd2', s))\n\n    if not all_counts:\n        return out\n\n    max_size = max(item[0] for item in all_counts)\n    axes = [(typ, val) for sz, typ, val in all_counts if sz == max_size]\n\n    def reflect(r, c, typ, val):\n        if typ == 'h':\n            return (2 * val - r, c)\n        if typ == 'v':\n            return (r, 2 * val - c)\n        if typ == 'd1':\n            return (c + val, r - val)\n        if typ == 'd2':\n            return (val - c, val - r)\n        return (r, c)\n\n    for r in range(H):\n        for c in range(W):\n            color = grid[r][c]\n            if color == 0 or color == 8:\n                continue\n            stack = [(r, c)]\n            seen = set()\n            while stack:\n                cr, cc = stack.pop()\n                if (cr, cc) in seen:\n                    continue\n                seen.add((cr, cc))\n                for typ, val in axes:\n                    nr, nc = reflect(cr, cc, typ, val)\n                    if 0 <= nr < H and 0 <= nc < W and (nr, nc) not in seen:\n                        stack.append((nr, nc))\n            for cr, cc in seen:\n                if grid[cr][cc] == 8:\n                    continue\n                if out[cr][cc] == 0:\n                    out[cr][cc] = color\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 4,
+      "total": 4,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "p_arc_stable": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "p_arc_stable": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

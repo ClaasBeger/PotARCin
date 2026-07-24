@@ -1,0 +1,536 @@
+{
+  "task_id": "681b3aeb",
+  "test_idx": 0,
+  "model": "gpt-5.4",
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 3 3 0 0 0 0 0 0 0\n0 3 0 0 0 0 0 0 0 0\n0 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 7\n0 0 0 0 0 0 0 0 7 7\n0 0 0 0 0 0 0 0 7 7\nOutput:\n3 3 7\n3 7 7\n3 7 7\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 4 0\n0 0 0 0 0 0 0 0 4 4\n0 0 0 6 6 6 0 0 0 0\n0 0 0 0 6 6 0 0 0 0\n0 0 0 0 0 6 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n6 6 6\n4 6 6\n4 4 6\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 3 0 0 0 0 0\n0 0 0 3 3 3 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 1 1 1 0 0 0 0 0 0\n0 1 0 1 0 0 0 0 0 0\nOutput:\n1 1 1\n1 3 1\n3 3 3\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 2 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 8 8 0\n0 0 0 0 0 0 0 8 0 0\n0 0 0 0 0 0 0 8 8 8\n0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    from collections import deque\n\n    H, W = len(grid), len(grid[0])\n\n    visited = [[False] * W for _ in range(H)]\n    comps = []\n\n    for r in range(H):\n        for c in range(W):\n            if grid[r][c] != 0 and not visited[r][c]:\n                color = grid[r][c]\n                q = deque([(r, c)])\n                visited[r][c] = True\n                cells = []\n\n                while q:\n                    x, y = q.popleft()\n                    cells.append((x, y))\n                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        nx, ny = x + dx, y + dy\n                        if 0 <= nx < H and 0 <= ny < W and not visited[nx][ny] and grid[nx][ny] == color:\n                            visited[nx][ny] = True\n                            q.append((nx, ny))\n\n                comps.append((color, cells))\n\n    out = [[0, 0, 0] for _ in range(3)]\n\n    for color, cells in comps:\n        min_r = min(r for r, c in cells)\n        max_r = max(r for r, c in cells)\n        min_c = min(c for r, c in cells)\n        max_c = max(c for r, c in cells)\n\n        h = max_r - min_r + 1\n        w = max_c - min_c + 1\n\n        box = [[0] * w for _ in range(h)]\n        for r, c in cells:\n            box[r - min_r][c - min_c] = color\n\n        if h < 3:\n            top_count = sum(1 for v in box[0] if v != 0)\n            bot_count = sum(1 for v in box[-1] if v != 0)\n            row0 = 0 if top_count > bot_count else 3 - h\n        else:\n            row0 = 0\n\n        if w < 3:\n            left_count = sum(1 for i in range(h) if box[i][0] != 0)\n            right_count = sum(1 for i in range(h) if box[i][-1] != 0)\n            col0 = 0 if left_count > right_count else 3 - w\n        else:\n            col0 = 0\n\n        for i in range(h):\n            for j in range(w):\n                if box[i][j] != 0:\n                    out[row0 + i][col0 + j] = box[i][j]\n\n    return out",
+  "script": "def solve(grid):\n    from collections import deque\n\n    H, W = len(grid), len(grid[0])\n\n    visited = [[False] * W for _ in range(H)]\n    comps = []\n\n    for r in range(H):\n        for c in range(W):\n            if grid[r][c] != 0 and not visited[r][c]:\n                color = grid[r][c]\n                q = deque([(r, c)])\n                visited[r][c] = True\n                cells = []\n\n                while q:\n                    x, y = q.popleft()\n                    cells.append((x, y))\n                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        nx, ny = x + dx, y + dy\n                        if 0 <= nx < H and 0 <= ny < W and not visited[nx][ny] and grid[nx][ny] == color:\n                            visited[nx][ny] = True\n                            q.append((nx, ny))\n\n                comps.append((color, cells))\n\n    out = [[0, 0, 0] for _ in range(3)]\n\n    for color, cells in comps:\n        min_r = min(r for r, c in cells)\n        max_r = max(r for r, c in cells)\n        min_c = min(c for r, c in cells)\n        max_c = max(c for r, c in cells)\n\n        h = max_r - min_r + 1\n        w = max_c - min_c + 1\n\n        box = [[0] * w for _ in range(h)]\n        for r, c in cells:\n            box[r - min_r][c - min_c] = color\n\n        if h < 3:\n            top_count = sum(1 for v in box[0] if v != 0)\n            bot_count = sum(1 for v in box[-1] if v != 0)\n            row0 = 0 if top_count > bot_count else 3 - h\n        else:\n            row0 = 0\n\n        if w < 3:\n            left_count = sum(1 for i in range(h) if box[i][0] != 0)\n            right_count = sum(1 for i in range(h) if box[i][-1] != 0)\n            col0 = 0 if left_count > right_count else 3 - w\n        else:\n            col0 = 0\n\n        for i in range(h):\n            for j in range(w):\n                if box[i][j] != 0:\n                    out[row0 + i][col0 + j] = box[i][j]\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 188,
+      "total": 261,
+      "success_rate": 0.7203065134099617
+    },
+    "generator_dynamic50": {
+      "ok": 31,
+      "total": 50,
+      "success_rate": 0.62
+    },
+    "re_arc_stable": {
+      "ok": 5,
+      "total": 1000,
+      "success_rate": 0.005
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8,
+          8,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          8,
+          8,
+          2
+        ],
+        [
+          8,
+          2,
+          2
+        ],
+        [
+          8,
+          8,
+          8
+        ]
+      ],
+      "got": [
+        [
+          8,
+          8,
+          0
+        ],
+        [
+          8,
+          0,
+          2
+        ],
+        [
+          8,
+          8,
+          8
+        ]
+      ]
+    },
+    "stable": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          6,
+          6,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          6,
+          0,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          4,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          4,
+          6
+        ],
+        [
+          4,
+          4,
+          6
+        ]
+      ],
+      "got": [
+        [
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          0,
+          4
+        ],
+        [
+          0,
+          4,
+          4
+        ]
+      ]
+    },
+    "generator_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          9,
+          9,
+          9,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          9,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          9,
+          9,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          9,
+          9,
+          9
+        ],
+        [
+          9,
+          4,
+          4
+        ],
+        [
+          9,
+          9,
+          4
+        ]
+      ],
+      "got": [
+        [
+          9,
+          4,
+          4
+        ],
+        [
+          9,
+          0,
+          4
+        ],
+        [
+          9,
+          9,
+          0
+        ]
+      ]
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "list assignment index out of range"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "list assignment index out of range"
+    }
+  },
+  "evaluation_ok": true
+}

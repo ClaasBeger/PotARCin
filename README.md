@@ -89,3 +89,33 @@ print(summary)
 
 This structure should give you a solid base to integrate concrete ARC datasets, models, and richer metrics over time.
 
+## Latest Kimi evaluation commands (OpenRouter `:nitro`)
+
+Requires `OPENROUTER_API_KEY`. `:nitro` shares the same `KimiK25/` output dirs as the base model id, so these resume existing run tags.
+
+**ARC-AGI-1 train (multi-dimension):**
+
+```bash
+python scripts/run_all_dimensions_eval.py \
+  --model moonshotai/Kimi-K2.5:nitro \
+  --provider openrouter \
+  --reasoning-effort low \
+  --seed 77 \
+  --run-tag Evaluation_Run_kimi_timeout420_test \
+  --batch-size 100
+```
+
+**Test2 / P-ARC (multi-dimension):**
+
+```bash
+python scripts/run_all_dimensions_eval.py \
+  --task-source test2 \
+  --model moonshotai/Kimi-K2.5:nitro \
+  --provider openrouter \
+  --reasoning-effort low \
+  --seed 77 \
+  --run-tag Evaluation_Run_kimi_Test2_seed77_low \
+  --batch-size 50
+```
+
+

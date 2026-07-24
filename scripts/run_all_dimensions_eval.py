@@ -611,12 +611,12 @@ def _payload_indicates_dimension_complete(payload: dict[str, Any]) -> bool:
         return True
     if ok is None:
         return True
+    # evaluation_ok is False: only skip if we already have a non-empty model response
+    # (parse/score failure). Empty string / null raw (e.g. quota) must be re-run.
     raw = payload.get("raw_response")
-    if isinstance(raw, str) and raw.strip():
-        return True
-    if raw is not None:
-        return True
-    return False
+    if isinstance(raw, str):
+        return bool(raw.strip())
+    return raw is not None
 
 
 def _report_from_saved_dimension(
