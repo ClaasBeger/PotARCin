@@ -1,0 +1,74 @@
+{
+  "task_id": "test2_t47",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n4 4 2 4 4 4 5 4 4 4 3 4 4\n4 4 2 2 4 4 5 3 4 3 4 4 4\n4 2 4 2 2 4 5 3 4 3 4 4 4\n4 4 4 4 4 4 5 4 4 3 4 3 3\n2 2 4 2 4 4 5 3 4 4 4 4 3\n4 4 4 4 2 2 5 3 3 3 4 4 3\nOutput:\n0 0 2 3 0 0\n3 0 0 2 0 0\n3 2 3 2 2 0\n0 0 3 0 3 3\n0 2 0 2 0 3\n3 3 3 0 2 0\n\nExample 2:\n\nInput:\n8 8 8 8 7 8 8\n8 8 7 8 8 8 8\n8 7 8 7 8 7 8\n7 7 8 8 8 7 8\n8 8 8 7 8 8 8\n8 7 8 8 7 8 7\n8 7 7 7 8 8 8\n5 5 5 5 5 5 5\n8 8 6 8 8 8 6\n8 6 6 6 8 8 8\n8 6 6 8 6 6 8\n6 6 8 6 8 6 8\n8 8 6 8 8 8 6\n8 6 6 6 6 8 8\n8 8 6 8 8 8 8\nOutput:\n0 0 6 0 7 0 6\n0 6 0 6 0 0 0\n0 0 6 7 6 0 0\n0 0 0 6 0 0 0\n0 0 6 7 0 0 6\n0 0 6 6 0 0 7\n0 7 0 7 0 0 0\n\nBelow is a test input grid.\n\nInput:\n1 1 1 4 4 5 1 1 1 9 1\n4 4 1 1 4 5 9 9 1 9 9\n1 1 4 1 1 5 1 1 1 1 1\n1 4 4 4 1 5 9 1 9 9 1\n4 1 4 1 1 5 1 1 1 9 1\n4 4 4 1 1 5 1 9 1 1 1\n1 1 1 4 1 5 1 9 9 9 1\n1 4 1 1 4 5 1 9 1 9 1\n1 4 4 1 1 5 1 9 1 1 1\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\nfrom collections import Counter\n\ndef solve(grid):\n    if not grid:\n        return []\n    \n    rows = len(grid)\n    cols = len(grid[0])\n    \n    # Check for vertical separator in the middle column\n    if cols % 2 == 1:\n        mid_col = cols // 2\n        sep_val = grid[0][mid_col]\n        if all(grid[r][mid_col] == sep_val for r in range(rows)):\n            # Split into left and right parts\n            left = [row[:mid_col] for row in grid]\n            right = [row[mid_col+1:] for row in grid]\n            return combine_grids(left, right)\n    \n    # Check for horizontal separator in the middle row\n    if rows % 2 == 1:\n        mid_row = rows // 2\n        sep_val = grid[mid_row][0]\n        if all(grid[mid_row][c] == sep_val for c in range(cols)):\n            # Split into top and bottom parts\n            top = grid[:mid_row]\n            bottom = grid[mid_row+1:]\n            return combine_grids(top, bottom)\n    \n    return grid\n\ndef combine_grids(g1, g2):\n    \"\"\"Combine two grids of equal size according to the transformation rule.\"\"\"\n    r = len(g1)\n    if r == 0:\n        return []\n    c = len(g1[0])\n    \n    # Find background color (most common) in each grid\n    bg1 = get_background(g1)\n    bg2 = get_background(g2)\n    \n    result = [[0 for _ in range(c)] for _ in range(r)]\n    for i in range(r):\n        for j in range(c):\n            a = g1[i][j]\n            b = g2[i][j]\n            if a == b:\n                result[i][j] = 0\n            elif a == bg1 and b != bg2:\n                result[i][j] = b\n            elif b == bg2 and a != bg1:\n                result[i][j] = a\n            else:\n                result[i][j] = 0\n    return result\n\ndef get_background(grid):\n    \"\"\"Return the most common value in the grid.\"\"\"\n    flat = []\n    for row in grid:\n        flat.extend(row)\n    return Counter(flat).most_common(1)[0][0]\n```",
+  "script": "from collections import Counter\n\ndef solve(grid):\n    if not grid:\n        return []\n    \n    rows = len(grid)\n    cols = len(grid[0])\n    \n    # Check for vertical separator in the middle column\n    if cols % 2 == 1:\n        mid_col = cols // 2\n        sep_val = grid[0][mid_col]\n        if all(grid[r][mid_col] == sep_val for r in range(rows)):\n            # Split into left and right parts\n            left = [row[:mid_col] for row in grid]\n            right = [row[mid_col+1:] for row in grid]\n            return combine_grids(left, right)\n    \n    # Check for horizontal separator in the middle row\n    if rows % 2 == 1:\n        mid_row = rows // 2\n        sep_val = grid[mid_row][0]\n        if all(grid[mid_row][c] == sep_val for c in range(cols)):\n            # Split into top and bottom parts\n            top = grid[:mid_row]\n            bottom = grid[mid_row+1:]\n            return combine_grids(top, bottom)\n    \n    return grid\n\ndef combine_grids(g1, g2):\n    \"\"\"Combine two grids of equal size according to the transformation rule.\"\"\"\n    r = len(g1)\n    if r == 0:\n        return []\n    c = len(g1[0])\n    \n    # Find background color (most common) in each grid\n    bg1 = get_background(g1)\n    bg2 = get_background(g2)\n    \n    result = [[0 for _ in range(c)] for _ in range(r)]\n    for i in range(r):\n        for j in range(c):\n            a = g1[i][j]\n            b = g2[i][j]\n            if a == b:\n                result[i][j] = 0\n            elif a == bg1 and b != bg2:\n                result[i][j] = b\n            elif b == bg2 and a != bg1:\n                result[i][j] = a\n            else:\n                result[i][j] = 0\n    return result\n\ndef get_background(grid):\n    \"\"\"Return the most common value in the grid.\"\"\"\n    flat = []\n    for row in grid:\n        flat.extend(row)\n    return Counter(flat).most_common(1)[0][0]",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 2,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "p_arc_stable": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'combine_grids' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'combine_grids' is not defined"
+    },
+    "p_arc_stable": {
+      "index": 0,
+      "error": "name 'combine_grids' is not defined"
+    },
+    "stable": null,
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'combine_grids' is not defined"
+    },
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}
