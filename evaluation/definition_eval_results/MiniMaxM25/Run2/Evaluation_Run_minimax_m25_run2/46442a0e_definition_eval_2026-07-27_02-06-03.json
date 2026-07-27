@@ -1,0 +1,175 @@
+{
+  "task_id": "46442a0e",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n8 6\n6 8\nOutput:\n8 6 6 8\n6 8 8 6\n6 8 8 6\n8 6 6 8\n\nExample 2:\n\nInput:\n7 7 8\n7 7 8\n8 8 8\nOutput:\n7 7 8 8 7 7\n7 7 8 8 7 7\n8 8 8 8 8 8\n8 8 8 8 8 8\n7 7 8 8 7 7\n7 7 8 8 7 7\n\nExample 3:\n\nInput:\n6 9 9\n6 4 4\n6 4 4\nOutput:\n6 9 9 6 6 6\n6 4 4 4 4 9\n6 4 4 4 4 9\n9 4 4 4 4 6\n9 4 4 4 4 6\n6 6 6 9 9 6\n\nBelow is a test input grid.\n\nInput:\n1 4 1\n4 9 4\n9 1 9\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    n = len(grid)\n    if n == 0:\n        return []\n    # rotate 90 degrees clockwise\n    r90 = [[grid[n - 1 - j][i] for j in range(n)] for i in range(n)]\n    # rotate 180 degrees\n    r180 = [[grid[n - 1 - i][n - 1 - j] for j in range(n)] for i in range(n)]\n    # rotate 270 degrees (90 degrees counter\u2011clockwise)\n    r270 = [[grid[j][n - 1 - i] for j in range(n)] for i in range(n)]\n\n    N = 2 * n\n    output = [[0] * N for _ in range(N)]\n    for i in range(n):\n        for j in range(n):\n            output[i][j] = grid[i][j]          # top\u2011left: original\n            output[i][j + n] = r90[i][j]       # top\u2011right: 90\u00b0 clockwise\n            output[i + n][j] = r270[i][j]      # bottom\u2011left: 270\u00b0 clockwise\n            output[i + n][j + n] = r180[i][j]  # bottom\u2011right: 180\u00b0\n    return output",
+  "script": "def solve(grid):\n    n = len(grid)\n    if n == 0:\n        return []\n    # rotate 90 degrees clockwise\n    r90 = [[grid[n - 1 - j][i] for j in range(n)] for i in range(n)]\n    # rotate 180 degrees\n    r180 = [[grid[n - 1 - i][n - 1 - j] for j in range(n)] for i in range(n)]\n    # rotate 270 degrees (90 degrees counter\u2011clockwise)\n    r270 = [[grid[j][n - 1 - i] for j in range(n)] for i in range(n)]\n\n    N = 2 * n\n    output = [[0] * N for _ in range(N)]\n    for i in range(n):\n        for j in range(n):\n            output[i][j] = grid[i][j]          # top\u2011left: original\n            output[i][j + n] = r90[i][j]       # top\u2011right: 90\u00b0 clockwise\n            output[i + n][j] = r270[i][j]      # bottom\u2011left: 270\u00b0 clockwise\n            output[i + n][j + n] = r180[i][j]  # bottom\u2011right: 180\u00b0\n    return output",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 1000,
+      "total": 1000,
+      "success_rate": 1.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          1,
+          4,
+          6
+        ],
+        [
+          7,
+          9,
+          3
+        ],
+        [
+          5,
+          0,
+          8
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          4,
+          6,
+          5,
+          7,
+          1
+        ],
+        [
+          7,
+          9,
+          3,
+          0,
+          9,
+          4
+        ],
+        [
+          5,
+          0,
+          8,
+          8,
+          3,
+          6
+        ],
+        [
+          6,
+          3,
+          8,
+          8,
+          0,
+          5
+        ],
+        [
+          4,
+          9,
+          0,
+          3,
+          9,
+          7
+        ],
+        [
+          1,
+          7,
+          5,
+          6,
+          4,
+          1
+        ]
+      ],
+      "got": [
+        [
+          1,
+          4,
+          6,
+          5,
+          7,
+          1
+        ],
+        [
+          7,
+          9,
+          3,
+          0,
+          9,
+          4
+        ],
+        [
+          5,
+          0,
+          8,
+          8,
+          3,
+          6
+        ],
+        [
+          6,
+          3,
+          8,
+          8,
+          0,
+          5
+        ],
+        [
+          4,
+          9,
+          0,
+          3,
+          9,
+          7
+        ],
+        [
+          1,
+          7,
+          5,
+          6,
+          4,
+          1
+        ]
+      ]
+    }
+  },
+  "evaluation_ok": true
+}

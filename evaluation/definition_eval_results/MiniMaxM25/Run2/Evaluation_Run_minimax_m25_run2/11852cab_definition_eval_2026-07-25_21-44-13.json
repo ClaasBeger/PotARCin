@@ -1,0 +1,74 @@
+{
+  "task_id": "11852cab",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 3 0 8 0 0 0 0 0\n0 0 0 2 0 2 0 0 0 0\n0 0 8 0 3 0 8 0 0 0\n0 0 0 2 0 2 0 0 0 0\n0 0 0 0 8 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 3 0 8 0 3 0 0 0\n0 0 0 2 0 2 0 0 0 0\n0 0 8 0 3 0 8 0 0 0\n0 0 0 2 0 2 0 0 0 0\n0 0 3 0 8 0 3 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 2 0 3 0 0 0 0 0\n0 0 0 4 0 4 0 0 0 0\n0 0 3 0 4 0 3 0 0 0\n0 0 0 4 0 4 0 0 0 0\n0 0 0 0 3 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 2 0 3 0 2 0 0 0\n0 0 0 4 0 4 0 0 0 0\n0 0 3 0 4 0 3 0 0 0\n0 0 0 4 0 4 0 0 0 0\n0 0 2 0 3 0 2 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 8 0 8 0 8 0 0\n0 0 0 0 4 0 0 0 0 0\n0 0 0 8 0 1 0 8 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 8 0 8 0 8 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 8 0 8 0 8 0 0\n0 0 0 0 4 0 4 0 0 0\n0 0 0 8 0 1 0 8 0 0\n0 0 0 0 4 0 4 0 0 0\n0 0 0 8 0 8 0 8 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 1 0 4 0 1 0 0 0 0\n0 0 2 0 2 0 0 0 0 0\n0 0 0 1 0 0 0 0 0 0\n0 0 2 0 2 0 0 0 0 0\n0 1 0 0 0 1 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "from collections import defaultdict\n\ndef solve(grid):\n    n = len(grid)\n    m = len(grid[0]) if grid else 0\n\n    # collect positions of each non\u2011zero value\n    pos = defaultdict(set)\n    for i in range(n):\n        for j in range(m):\n            v = grid[i][j]\n            if v != 0:\n                pos[v].add((i, j))\n\n    # find the axis value and its centre (row, col)\n    axis_val = None\n    centre_r = centre_c = None\n    for v, pts in pos.items():\n        rows = [r for r, _ in pts]\n        cols = [c for _, c in pts]\n        min_r, max_r = min(rows), max(rows)\n        min_c, max_c = min(cols), max(cols)\n        if min_r == max_r or min_c == max_c:\n            continue                     # need a 2\u2011D spread\n        cr = (min_r + max_r) // 2\n        cc = (min_c + max_c) // 2\n\n        # check full symmetry about (cr, cc)\n        sym = True\n        for r, c in pts:\n            if (r, 2 * cc - c) not in pts:\n                sym = False\n                break\n            if (2 * cr - r, c) not in pts:\n                sym = False\n                break\n            if (2 * cr - r, 2 * cc - c) not in pts:\n                sym = False\n                break\n        if not sym:\n            continue\n\n        # require at least one point on each axis\n        has_vert = any(c == cc for _, c in pts)\n        has_hor = any(r == cr for r, _ in pts)\n        if has_vert and has_hor:\n            axis_val = v\n            centre_r, centre_c = cr, cc\n            break\n\n    # fallback (should not be needed for valid tasks)\n    if axis_val is None:\n        axis_val = max(pos, key=lambda v: len(pos[v]))\n        rows = [r for r, _ in pos[axis_val]]\n        cols = [c for _, c in pos[axis_val]]\n        centre_r = (min(rows) + max(rows)) // 2\n        centre_c = (min(cols) + max(cols)) // 2\n\n    # close each value under reflection about the axes\n    new_pos = defaultdict(set)\n    for v, pts in pos.items():\n        for r, c in pts:\n            # original\n            new_pos[v].add((r, c))\n            # vertical mirror\n            rv, cv = r, 2 * centre_c - c\n            if 0 <= rv < n and 0 <= cv < m:\n                new_pos[v].add((rv, cv))\n            # horizontal mirror\n            rh, ch = 2 * centre_r - r, c\n            if 0 <= rh < n and 0 <= ch < m:\n                new_pos[v].add((rh, ch))\n            # both\n            rhv, chv = 2 * centre_r - r, 2 * centre_c - c\n            if 0 <= rhv < n and 0 <= chv < m:\n                new_pos[v].add((rhv, chv))\n\n    # build output grid\n    out = [[0] * m for _ in range(n)]\n    for v, pts in new_pos.items():\n        for r, c in pts:\n            out[r][c] = v\n    return out",
+  "script": "from collections import defaultdict\n\ndef solve(grid):\n    n = len(grid)\n    m = len(grid[0]) if grid else 0\n\n    # collect positions of each non\u2011zero value\n    pos = defaultdict(set)\n    for i in range(n):\n        for j in range(m):\n            v = grid[i][j]\n            if v != 0:\n                pos[v].add((i, j))\n\n    # find the axis value and its centre (row, col)\n    axis_val = None\n    centre_r = centre_c = None\n    for v, pts in pos.items():\n        rows = [r for r, _ in pts]\n        cols = [c for _, c in pts]\n        min_r, max_r = min(rows), max(rows)\n        min_c, max_c = min(cols), max(cols)\n        if min_r == max_r or min_c == max_c:\n            continue                     # need a 2\u2011D spread\n        cr = (min_r + max_r) // 2\n        cc = (min_c + max_c) // 2\n\n        # check full symmetry about (cr, cc)\n        sym = True\n        for r, c in pts:\n            if (r, 2 * cc - c) not in pts:\n                sym = False\n                break\n            if (2 * cr - r, c) not in pts:\n                sym = False\n                break\n            if (2 * cr - r, 2 * cc - c) not in pts:\n                sym = False\n                break\n        if not sym:\n            continue\n\n        # require at least one point on each axis\n        has_vert = any(c == cc for _, c in pts)\n        has_hor = any(r == cr for r, _ in pts)\n        if has_vert and has_hor:\n            axis_val = v\n            centre_r, centre_c = cr, cc\n            break\n\n    # fallback (should not be needed for valid tasks)\n    if axis_val is None:\n        axis_val = max(pos, key=lambda v: len(pos[v]))\n        rows = [r for r, _ in pos[axis_val]]\n        cols = [c for _, c in pos[axis_val]]\n        centre_r = (min(rows) + max(rows)) // 2\n        centre_c = (min(cols) + max(cols)) // 2\n\n    # close each value under reflection about the axes\n    new_pos = defaultdict(set)\n    for v, pts in pos.items():\n        for r, c in pts:\n            # original\n            new_pos[v].add((r, c))\n            # vertical mirror\n            rv, cv = r, 2 * centre_c - c\n            if 0 <= rv < n and 0 <= cv < m:\n                new_pos[v].add((rv, cv))\n            # horizontal mirror\n            rh, ch = 2 * centre_r - r, c\n            if 0 <= rh < n and 0 <= ch < m:\n                new_pos[v].add((rh, ch))\n            # both\n            rhv, chv = 2 * centre_r - r, 2 * centre_c - c\n            if 0 <= rhv < n and 0 <= chv < m:\n                new_pos[v].add((rhv, chv))\n\n    # build output grid\n    out = [[0] * m for _ in range(n)]\n    for v, pts in new_pos.items():\n        for r, c in pts:\n            out[r][c] = v\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 262,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'defaultdict' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'defaultdict' is not defined"
+    },
+    "stable": {
+      "index": 0,
+      "error": "name 'defaultdict' is not defined"
+    },
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'defaultdict' is not defined"
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "name 'defaultdict' is not defined"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "name 'defaultdict' is not defined"
+    }
+  },
+  "evaluation_ok": true
+}

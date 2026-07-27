@@ -1,0 +1,262 @@
+{
+  "task_id": "54d9e175",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 5 0 0 0 5 0 0 0\n0 1 0 5 0 2 0 5 0 1 0\n0 0 0 5 0 0 0 5 0 0 0\nOutput:\n6 6 6 5 7 7 7 5 6 6 6\n6 6 6 5 7 7 7 5 6 6 6\n6 6 6 5 7 7 7 5 6 6 6\n\nExample 2:\n\nInput:\n0 0 0 5 0 0 0 5 0 0 0\n0 2 0 5 0 3 0 5 0 1 0\n0 0 0 5 0 0 0 5 0 0 0\nOutput:\n7 7 7 5 8 8 8 5 6 6 6\n7 7 7 5 8 8 8 5 6 6 6\n7 7 7 5 8 8 8 5 6 6 6\n\nExample 3:\n\nInput:\n0 0 0 5 0 0 0 5 0 0 0\n0 3 0 5 0 1 0 5 0 4 0\n0 0 0 5 0 0 0 5 0 0 0\nOutput:\n8 8 8 5 6 6 6 5 9 9 9\n8 8 8 5 6 6 6 5 9 9 9\n8 8 8 5 6 6 6 5 9 9 9\n\nExample 4:\n\nInput:\n0 0 0 5 0 0 0 5 0 0 0\n0 4 0 5 0 1 0 5 0 2 0\n0 0 0 5 0 0 0 5 0 0 0\n5 5 5 5 5 5 5 5 5 5 5\n0 0 0 5 0 0 0 5 0 0 0\n0 2 0 5 0 3 0 5 0 4 0\n0 0 0 5 0 0 0 5 0 0 0\nOutput:\n9 9 9 5 6 6 6 5 7 7 7\n9 9 9 5 6 6 6 5 7 7 7\n9 9 9 5 6 6 6 5 7 7 7\n5 5 5 5 5 5 5 5 5 5 5\n7 7 7 5 8 8 8 5 9 9 9\n7 7 7 5 8 8 8 5 9 9 9\n7 7 7 5 8 8 8 5 9 9 9\n\nBelow is a test input grid.\n\nInput:\n0 0 0 5 0 0 0 5 0 0 0\n0 2 0 5 0 3 0 5 0 4 0\n0 0 0 5 0 0 0 5 0 0 0\n5 5 5 5 5 5 5 5 5 5 5\n0 0 0 5 0 0 0 5 0 0 0\n0 1 0 5 0 1 0 5 0 3 0\n0 0 0 5 0 0 0 5 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    \"\"\"\n    Transform the input grid according to the discovered rule.\n\n    The grid contains vertical and horizontal walls made of the value 5.\n    These walls split the grid into rectangular rooms. Each room contains\n    exactly one non\u2011zero cell (value 1\u20114). The output replaces every cell\n    in each room (including the original non\u2011zero cell) with the value\n    (original value + 5). The walls (value 5) remain unchanged.\n    \"\"\"\n    # dimensions\n    H = len(grid)\n    if H == 0:\n        return []\n    W = len(grid[0])\n\n    # identify full\u2011column walls (value 5 in every row)\n    col_is_wall = [all(grid[r][c] == 5 for r in range(H)) for c in range(W)]\n\n    # identify full\u2011row walls (value 5 in every column)\n    row_is_wall = [all(grid[r][c] == 5 for c in range(W)) for r in range(H)]\n\n    # build column intervals (ranges of non\u2011wall columns)\n    col_intervals = []\n    start = 0\n    for c in range(W):\n        if col_is_wall[c]:\n            if start <= c - 1:\n                col_intervals.append((start, c - 1))\n            start = c + 1\n    if start <= W - 1:\n        col_intervals.append((start, W - 1))\n\n    # build row intervals (ranges of non\u2011wall rows)\n    row_intervals = []\n    start = 0\n    for r in range(H):\n        if row_is_wall[r]:\n            if start <= r - 1:\n                row_intervals.append((start, r - 1))\n            start = r + 1\n    if start <= H - 1:\n        row_intervals.append((start, H - 1))\n\n    # copy input to output (walls will stay unchanged)\n    out = [row[:] for row in grid]\n\n    # process each room\n    for r_start, r_end in row_intervals:\n        for c_start, c_end in col_intervals:\n            # find the unique non\u2011zero value in the room\n            val = None\n            for r in range(r_start, r_end + 1):\n                for c in range(c_start, c_end + 1):\n                    v = grid[r][c]\n                    if v != 0:          # ignore background zeros\n                        val = v\n                        break\n                if val is not None:\n                    break\n            if val is None:\n                continue                # should not happen for valid inputs\n            new_val = val + 5\n            # fill the whole room with the new value\n            for r in range(r_start, r_end + 1):\n                for c in range(c_start, c_end + 1):\n                    out[r][c] = new_val\n\n    return out",
+  "script": "def solve(grid):\n    \"\"\"\n    Transform the input grid according to the discovered rule.\n\n    The grid contains vertical and horizontal walls made of the value 5.\n    These walls split the grid into rectangular rooms. Each room contains\n    exactly one non\u2011zero cell (value 1\u20114). The output replaces every cell\n    in each room (including the original non\u2011zero cell) with the value\n    (original value + 5). The walls (value 5) remain unchanged.\n    \"\"\"\n    # dimensions\n    H = len(grid)\n    if H == 0:\n        return []\n    W = len(grid[0])\n\n    # identify full\u2011column walls (value 5 in every row)\n    col_is_wall = [all(grid[r][c] == 5 for r in range(H)) for c in range(W)]\n\n    # identify full\u2011row walls (value 5 in every column)\n    row_is_wall = [all(grid[r][c] == 5 for c in range(W)) for r in range(H)]\n\n    # build column intervals (ranges of non\u2011wall columns)\n    col_intervals = []\n    start = 0\n    for c in range(W):\n        if col_is_wall[c]:\n            if start <= c - 1:\n                col_intervals.append((start, c - 1))\n            start = c + 1\n    if start <= W - 1:\n        col_intervals.append((start, W - 1))\n\n    # build row intervals (ranges of non\u2011wall rows)\n    row_intervals = []\n    start = 0\n    for r in range(H):\n        if row_is_wall[r]:\n            if start <= r - 1:\n                row_intervals.append((start, r - 1))\n            start = r + 1\n    if start <= H - 1:\n        row_intervals.append((start, H - 1))\n\n    # copy input to output (walls will stay unchanged)\n    out = [row[:] for row in grid]\n\n    # process each room\n    for r_start, r_end in row_intervals:\n        for c_start, c_end in col_intervals:\n            # find the unique non\u2011zero value in the room\n            val = None\n            for r in range(r_start, r_end + 1):\n                for c in range(c_start, c_end + 1):\n                    v = grid[r][c]\n                    if v != 0:          # ignore background zeros\n                        val = v\n                        break\n                if val is not None:\n                    break\n            if val is None:\n                continue                # should not happen for valid inputs\n            new_val = val + 5\n            # fill the whole room with the new value\n            for r in range(r_start, r_end + 1):\n                for c in range(c_start, c_end + 1):\n                    out[r][c] = new_val\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 4,
+      "total": 4,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 512,
+      "total": 1000,
+      "success_rate": 0.512
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "input": [
+        [
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          0,
+          3,
+          5,
+          5
+        ],
+        [
+          1,
+          5,
+          5,
+          0,
+          5,
+          3,
+          5,
+          0,
+          5,
+          5,
+          5
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          3,
+          0,
+          5,
+          5,
+          5
+        ],
+        [
+          1,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          0,
+          3,
+          5,
+          5
+        ]
+      ],
+      "expected": [
+        [
+          6,
+          6,
+          6,
+          0,
+          8,
+          8,
+          8,
+          0,
+          8,
+          8,
+          8
+        ],
+        [
+          6,
+          6,
+          6,
+          0,
+          8,
+          8,
+          8,
+          0,
+          8,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          6,
+          6,
+          6,
+          0,
+          8,
+          8,
+          8,
+          0,
+          8,
+          8,
+          8
+        ],
+        [
+          6,
+          6,
+          6,
+          0,
+          8,
+          8,
+          8,
+          0,
+          8,
+          8,
+          8
+        ]
+      ],
+      "got": [
+        [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ],
+        [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ],
+        [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ],
+        [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ],
+        [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      ]
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "'tuple' object does not support item assignment"
+    }
+  },
+  "evaluation_ok": true
+}
