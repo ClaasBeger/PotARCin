@@ -1,0 +1,422 @@
+{
+  "task_id": "test2_t3",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n2 0 5 5 7 7\n2 2 2 3 7 4\n1 2 2 7 7 4\n1 2 3 0 7 0\n2 2 4 4 7 7\n2 2 4 4 0 0\nOutput:\n4 1\n4 1\n0 2\n\nExample 2:\n\nInput:\n0 0 8 0 3 0 3 0 0\n8 8 8 0 5 0 0 4 4\n0 6 8 6 5 6 4 0 5\n1 0 8 0 5 4 4 2 0\n0 1 8 3 0 5 0 0 2\n8 8 8 3 0 0 0 9 9\n0 0 3 2 2 2 2 9 0\n0 3 0 2 2 2 2 9 0\n3 3 0 2 2 2 2 9 5\n0 0 0 2 2 2 2 9 9\nOutput:\n0 0 6\n0 1 0\n5 0 1\n\nExample 3:\n\nInput:\n3 0 3 0 3 3 3 3 0 0 1 1\n3 3 3 3 3 3 3 0 0 0 1 6\n6 6 6 2 2 2 3 3 0 0 1 0\n0 0 0 2 0 0 3 0 0 0 1 1\n3 3 3 3 3 3 3 3 1 1 1 1\n8 3 0 3 8 3 0 0 1 1 1 9\n0 8 0 8 9 9 9 9 9 9 9 9\n0 0 8 0 0 0 0 9 0 5 0 5\n0 8 0 8 0 0 0 9 0 0 5 0\nOutput:\n6 6 6 6 2 2 2\n0 0 0 0 2 0 0\n\nExample 4:\n\nInput:\n1 4 0 3 1 8 0 2 0 8\n1 3 4 0 1 0 0 0 2 0\n1 1 1 1 1 0 2 0 5 2\n0 6 0 0 0 0 2 1 5 2\n0 6 8 0 0 1 2 1 5 0\n8 6 0 1 1 1 2 0 5 8\n0 8 1 1 0 0 2 0 5 0\n0 6 8 0 0 0 0 0 5 0\n0 6 0 0 0 4 4 4 4 4\n0 6 6 6 6 4 4 0 0 4\nOutput:\n4 0 0\n4 0 3\n3 4 0\n\nBelow is a test input grid.\n\nInput:\n5 5 0 0 0 0 0 0 0 7 7\n0 5 5 5 2 2 0 0 0 7 7\n0 0 5 5 0 2 2 0 1 7 3\n0 0 5 5 2 0 2 1 0 7 0\n0 0 0 0 0 0 1 0 0 7 7\n4 4 4 0 0 1 2 5 0 0 0\n0 0 4 0 1 0 2 0 5 0 0\n3 0 4 1 0 0 2 0 0 5 0\n0 3 4 0 0 0 2 2 2 0 5\n4 4 4 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    H = len(grid)\n    W = len(grid[0])\n    \n    shapes = []\n    \n    colors = set()\n    for r in range(H):\n        for c in range(W):\n            if grid[r][c] != 0:\n                colors.add(grid[r][c])\n    \n    for C in colors:\n        # LEFT edge U-shapes\n        h_segs = {}\n        for r in range(H):\n            if grid[r][0] == C:\n                end = 0\n                while end + 1 < W and grid[r][end + 1] == C:\n                    end += 1\n                if end > 0:\n                    h_segs[r] = end\n        rows = sorted(h_segs.keys())\n        for i in range(len(rows)):\n            for j in range(i + 1, len(rows)):\n                r1, r2 = rows[i], rows[j]\n                c2 = min(h_segs[r1], h_segs[r2])\n                if c2 < 1 or r2 - r1 < 2:\n                    continue\n                if all(grid[r][c2] == C for r in range(r1, r2 + 1)):\n                    interior = [[grid[r][c] for c in range(c2)] for r in range(r1 + 1, r2)]\n                    if interior and interior[0]:\n                        shapes.append(('LEFT', interior))\n        \n        # RIGHT edge U-shapes\n        h_segs = {}\n        for r in range(H):\n            if grid[r][W-1] == C:\n                start = W - 1\n                while start - 1 >= 0 and grid[r][start - 1] == C:\n                    start -= 1\n                if start < W - 1:\n                    h_segs[r] = start\n        rows = sorted(h_segs.keys())\n        for i in range(len(rows)):\n            for j in range(i + 1, len(rows)):\n                r1, r2 = rows[i], rows[j]\n                c1 = max(h_segs[r1], h_segs[r2])\n                if c1 >= W - 1 or r2 - r1 < 2:\n                    continue\n                if all(grid[r][c1] == C for r in range(r1, r2 + 1)):\n                    interior = [[grid[r][c] for c in range(c1 + 1, W)] for r in range(r1 + 1, r2)]\n                    if interior and interior[0]:\n                        shapes.append(('RIGHT', interior))\n        \n        # TOP edge U-shapes\n        v_segs = {}\n        for c in range(W):\n            if grid[0][c] == C:\n                end = 0\n                while end + 1 < H and grid[end + 1][c] == C:\n                    end += 1\n                if end > 0:\n                    v_segs[c] = end\n        cols = sorted(v_segs.keys())\n        for i in range(len(cols)):\n            for j in range(i + 1, len(cols)):\n                c1, c2 = cols[i], cols[j]\n                r2 = min(v_segs[c1], v_segs[c2])\n                if r2 < 1 or c2 - c1 < 2:\n                    continue\n                if all(grid[r2][c] == C for c in range(c1, c2 + 1)):\n                    interior = [[grid[r][c] for c in range(c1 + 1, c2)] for r in range(r2)]\n                    if interior and interior[0]:\n                        shapes.append(('TOP', interior))\n        \n        # BOTTOM edge U-shapes\n        v_segs = {}\n        for c in range(W):\n            if grid[H-1][c] == C:\n                start = H - 1\n                while start - 1 >= 0 and grid[start - 1][c] == C:\n                    start -= 1\n                if start < H - 1:\n                    v_segs[c] = start\n        cols = sorted(v_segs.keys())\n        for i in range(len(cols)):\n            for j in range(i + 1, len(cols)):\n                c1, c2 = cols[i], cols[j]\n                r1 = max(v_segs[c1], v_segs[c2])\n                if r1 >= H - 1 or c2 - c1 < 2:\n                    continue\n                if all(grid[r1][c] == C for c in range(c1, c2 + 1)):\n                    interior = [[grid[r][c] for c in range(c1 + 1, c2)] for r in range(r1 + 1, H)]\n                    if interior and interior[0]:\n                        shapes.append(('BOTTOM', interior))\n    \n    best = None\n    best_size = 0\n    \n    for s1 in shapes:\n        for s2 in shapes:\n            if s1 is s2:\n                continue\n            e1, i1 = s1\n            e2, i2 = s2\n            \n            if e1 == 'LEFT' and e2 == 'RIGHT':\n                if len(i1) > 0 and len(i1) == len(i2):\n                    result = [i2[r] + i1[r] for r in range(len(i1))]\n                    size = len(i1) * (len(i1[0]) + len(i2[0]))\n                    if size > best_size:\n                        best = result\n                        best_size = size\n            \n            if e1 == 'TOP' and e2 == 'BOTTOM':\n                if len(i1) > 0 and len(i2) > 0 and len(i1[0]) == len(i2[0]):\n                    result = i2 + i1\n                    size = (len(i1) + len(i2)) * len(i1[0])\n                    if size > best_size:\n                        best = result\n                        best_size = size\n    \n    return best if best else grid",
+  "script": "def solve(grid):\n    H = len(grid)\n    W = len(grid[0])\n    \n    shapes = []\n    \n    colors = set()\n    for r in range(H):\n        for c in range(W):\n            if grid[r][c] != 0:\n                colors.add(grid[r][c])\n    \n    for C in colors:\n        # LEFT edge U-shapes\n        h_segs = {}\n        for r in range(H):\n            if grid[r][0] == C:\n                end = 0\n                while end + 1 < W and grid[r][end + 1] == C:\n                    end += 1\n                if end > 0:\n                    h_segs[r] = end\n        rows = sorted(h_segs.keys())\n        for i in range(len(rows)):\n            for j in range(i + 1, len(rows)):\n                r1, r2 = rows[i], rows[j]\n                c2 = min(h_segs[r1], h_segs[r2])\n                if c2 < 1 or r2 - r1 < 2:\n                    continue\n                if all(grid[r][c2] == C for r in range(r1, r2 + 1)):\n                    interior = [[grid[r][c] for c in range(c2)] for r in range(r1 + 1, r2)]\n                    if interior and interior[0]:\n                        shapes.append(('LEFT', interior))\n        \n        # RIGHT edge U-shapes\n        h_segs = {}\n        for r in range(H):\n            if grid[r][W-1] == C:\n                start = W - 1\n                while start - 1 >= 0 and grid[r][start - 1] == C:\n                    start -= 1\n                if start < W - 1:\n                    h_segs[r] = start\n        rows = sorted(h_segs.keys())\n        for i in range(len(rows)):\n            for j in range(i + 1, len(rows)):\n                r1, r2 = rows[i], rows[j]\n                c1 = max(h_segs[r1], h_segs[r2])\n                if c1 >= W - 1 or r2 - r1 < 2:\n                    continue\n                if all(grid[r][c1] == C for r in range(r1, r2 + 1)):\n                    interior = [[grid[r][c] for c in range(c1 + 1, W)] for r in range(r1 + 1, r2)]\n                    if interior and interior[0]:\n                        shapes.append(('RIGHT', interior))\n        \n        # TOP edge U-shapes\n        v_segs = {}\n        for c in range(W):\n            if grid[0][c] == C:\n                end = 0\n                while end + 1 < H and grid[end + 1][c] == C:\n                    end += 1\n                if end > 0:\n                    v_segs[c] = end\n        cols = sorted(v_segs.keys())\n        for i in range(len(cols)):\n            for j in range(i + 1, len(cols)):\n                c1, c2 = cols[i], cols[j]\n                r2 = min(v_segs[c1], v_segs[c2])\n                if r2 < 1 or c2 - c1 < 2:\n                    continue\n                if all(grid[r2][c] == C for c in range(c1, c2 + 1)):\n                    interior = [[grid[r][c] for c in range(c1 + 1, c2)] for r in range(r2)]\n                    if interior and interior[0]:\n                        shapes.append(('TOP', interior))\n        \n        # BOTTOM edge U-shapes\n        v_segs = {}\n        for c in range(W):\n            if grid[H-1][c] == C:\n                start = H - 1\n                while start - 1 >= 0 and grid[start - 1][c] == C:\n                    start -= 1\n                if start < H - 1:\n                    v_segs[c] = start\n        cols = sorted(v_segs.keys())\n        for i in range(len(cols)):\n            for j in range(i + 1, len(cols)):\n                c1, c2 = cols[i], cols[j]\n                r1 = max(v_segs[c1], v_segs[c2])\n                if r1 >= H - 1 or c2 - c1 < 2:\n                    continue\n                if all(grid[r1][c] == C for c in range(c1, c2 + 1)):\n                    interior = [[grid[r][c] for c in range(c1 + 1, c2)] for r in range(r1 + 1, H)]\n                    if interior and interior[0]:\n                        shapes.append(('BOTTOM', interior))\n    \n    best = None\n    best_size = 0\n    \n    for s1 in shapes:\n        for s2 in shapes:\n            if s1 is s2:\n                continue\n            e1, i1 = s1\n            e2, i2 = s2\n            \n            if e1 == 'LEFT' and e2 == 'RIGHT':\n                if len(i1) > 0 and len(i1) == len(i2):\n                    result = [i2[r] + i1[r] for r in range(len(i1))]\n                    size = len(i1) * (len(i1[0]) + len(i2[0]))\n                    if size > best_size:\n                        best = result\n                        best_size = size\n            \n            if e1 == 'TOP' and e2 == 'BOTTOM':\n                if len(i1) > 0 and len(i2) > 0 and len(i1[0]) == len(i2[0]):\n                    result = i2 + i1\n                    size = (len(i1) + len(i2)) * len(i1[0])\n                    if size > best_size:\n                        best = result\n                        best_size = size\n    \n    return best if best else grid",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 4,
+      "total": 4,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "p_arc_stable": {
+      "ok": 49,
+      "total": 50,
+      "success_rate": 0.98
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "p_arc_stable": {
+      "index": 33,
+      "input": [
+        [
+          0,
+          1,
+          3,
+          1,
+          9,
+          5,
+          8,
+          9,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          4,
+          1,
+          3,
+          5,
+          3,
+          3,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          1,
+          0,
+          7,
+          7,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          6,
+          2,
+          1,
+          3,
+          3,
+          7,
+          7,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          6,
+          3,
+          3,
+          3,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          6,
+          6,
+          3,
+          0,
+          3,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          0
+        ],
+        [
+          0,
+          3,
+          1,
+          5,
+          6,
+          1,
+          5,
+          3,
+          3,
+          0
+        ],
+        [
+          0,
+          3,
+          2,
+          2,
+          6,
+          3,
+          3,
+          6,
+          3,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          5,
+          6,
+          1,
+          5,
+          3
+        ],
+        [
+          2,
+          2,
+          6,
+          3,
+          3,
+          6
+        ],
+        [
+          3,
+          1,
+          9,
+          5,
+          8,
+          9
+        ],
+        [
+          0,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          4,
+          1,
+          3,
+          5,
+          3,
+          3
+        ]
+      ],
+      "got": [
+        [
+          0,
+          1,
+          3,
+          1,
+          9,
+          5,
+          8,
+          9,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          4,
+          1,
+          3,
+          5,
+          3,
+          3,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          1,
+          0,
+          7,
+          7,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          6,
+          2,
+          1,
+          3,
+          3,
+          7,
+          7,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          6,
+          3,
+          3,
+          3,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          6,
+          6,
+          3,
+          0,
+          3,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          0
+        ],
+        [
+          0,
+          3,
+          1,
+          5,
+          6,
+          1,
+          5,
+          3,
+          3,
+          0
+        ],
+        [
+          0,
+          3,
+          2,
+          2,
+          6,
+          3,
+          3,
+          6,
+          3,
+          0
+        ]
+      ]
+    },
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

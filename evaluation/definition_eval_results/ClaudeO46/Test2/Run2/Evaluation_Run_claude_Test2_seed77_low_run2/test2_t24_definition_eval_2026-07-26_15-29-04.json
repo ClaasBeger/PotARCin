@@ -1,0 +1,62 @@
+{
+  "task_id": "test2_t24",
+  "test_idx": 0,
+  "model": "claude-opus-4-6",
+  "provider": "anthropic",
+  "base_url": "https://api.anthropic.com/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 9 9\n0 0 3 3 3 3 0 0 9 4\n0 0 3 0 0 3 3 0 0 4\n0 0 3 0 2 0 0 0 0 4\n0 0 3 0 0 7 7 0 0 0\n0 0 0 0 7 7 0 0 5 0\n0 0 7 7 7 0 0 5 5 0\n0 0 7 0 0 5 5 5 0 0\n8 0 0 0 0 0 0 0 0 0\n8 0 0 9 9 0 0 0 9 9\nOutput:\n0 0 0 0 0 0 0 0 9 9\n0 0 2 2 2 2 0 0 9 4\n0 0 2 0 0 2 2 0 0 4\n0 0 2 0 0 0 0 0 0 4\n0 0 2 0 0 2 2 0 0 0\n0 0 0 0 2 2 0 0 2 0\n0 0 2 2 2 0 0 2 2 0\n0 0 2 0 0 2 2 2 0 0\n8 0 0 0 0 0 0 0 0 0\n8 0 0 9 9 0 0 0 9 9\n\nExample 2:\n\nInput:\n8 0 0 0 0 0 0 0 0 0 6 0\n8 0 5 5 5 5 5 5 8 0 6 0\n8 0 5 0 0 0 0 0 8 0 6 0\n0 5 0 0 0 7 0 0 8 6 6 8\n0 5 0 7 7 7 0 8 8 0 0 0\n7 7 7 7 9 9 9 0 0 0 0 0\n8 8 8 8 9 0 9 9 0 0 1 0\n0 0 0 8 0 0 0 9 0 0 1 0\n0 0 0 0 0 2 0 0 0 0 1 0\n0 6 6 0 0 0 0 0 0 0 1 0\n0 0 6 6 0 5 5 5 5 0 1 0\n0 0 0 6 0 0 0 5 0 0 0 0\nOutput:\n8 0 0 0 0 0 0 0 0 0 6 0\n8 0 5 5 5 5 5 5 8 0 6 0\n8 0 5 0 0 0 0 0 8 0 6 0\n0 5 0 0 0 7 0 0 8 6 6 8\n0 5 0 7 7 7 0 8 8 0 0 0\n7 7 7 7 9 9 9 0 0 0 0 0\n8 8 8 8 9 0 9 9 0 0 2 0\n0 0 0 8 0 0 0 9 0 0 2 0\n0 0 0 0 0 0 0 0 0 0 2 0\n0 2 2 0 0 0 0 0 0 0 2 0\n0 0 2 2 0 2 2 2 2 0 2 0\n0 0 0 2 0 0 0 2 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 3 3 3 3 3 0 2 0\n0 4 0 0 3 0 0 0 0 0 0 0\n0 4 0 0 3 0 6 0 0 0 0 0\n0 4 0 0 0 0 6 0 0 7 7 7\n0 4 4 0 0 0 6 0 0 7 0 0\n0 0 0 0 8 0 6 0 0 7 0 0\n0 0 0 0 8 0 0 0 0 7 0 0\n4 0 8 8 8 0 0 0 0 0 0 0\n4 0 0 0 0 0 1 1 0 0 7 0\n4 4 4 0 0 0 1 1 1 0 7 0\n0 0 0 0 0 0 1 0 0 0 7 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 2 2 2 2 2 0 0 0\n0 4 0 0 2 0 0 0 0 0 0 0\n0 4 0 0 2 0 2 0 0 0 0 0\n0 4 0 0 0 0 2 0 0 7 7 7\n0 4 4 0 0 0 2 0 0 7 0 0\n0 0 0 0 2 0 2 0 0 7 0 0\n0 0 0 0 2 0 0 0 0 7 0 0\n2 0 2 2 2 0 0 0 0 0 0 0\n2 0 0 0 0 0 1 1 0 0 7 0\n2 2 2 0 0 0 1 1 1 0 7 0\n0 0 0 0 0 0 1 0 0 0 7 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 4 0 0 0 0 0 0\n8 8 8 4 0 0 0 0 8 0\n8 0 0 4 0 0 0 0 8 0\n8 1 0 0 0 0 0 8 8 0\n0 1 1 0 0 2 0 8 0 0\n0 0 1 4 0 0 0 0 0 0\n3 3 3 0 4 0 0 0 6 6\n0 0 0 0 0 4 0 6 6 0\n0 0 6 6 6 0 4 6 0 0\n0 0 6 0 0 0 0 6 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "Looking at the examples, I need to find which shapes get replaced by color 2.\n\n**Key Insight:** The single `2` cell acts as a seed. Shapes (connected components of same non-zero color) get replaced if they're connected to the `2` cell through a chain where consecutive elements are separated by at most one `0` cell orthogonally. Shapes not in this chain stay unchanged. The original `2` cell becomes `0`.\n\nThe connection works via \"0-cell bridges\": a `0` cell adjacent to two different shape/2 nodes links them, as does direct orthogonal adjacency between different shapes.\n\n```python\ndef solve(grid):\n    rows, cols = len(grid), len(grid[0])\n    pos2 = None\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == 2:\n                pos2 = (r, c)\n\n    comp_id = [[None]*cols for _ in range(rows)]\n    components = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] not in (0, 2) and comp_id[r][c] is None:\n                color = grid[r][c]\n                comp = []\n                stack = [(r, c)]\n                cid = len(components)\n                comp_id[r][c] = cid\n                while stack:\n                    cr, cc = stack.pop()\n                    comp.append((cr, cc))\n                    for dr, dc in ((-1,0),(1,0),(0,-1),(0,1)):\n                        nr, nc = cr+dr, cc+dc\n                        if 0 <= nr < rows and 0 <= nc < cols and comp_id[nr][nc] is None and grid[nr][nc] == color:\n                            comp_id[nr][nc] = cid\n                            stack.append((nr, nc))\n                components.append(comp)\n\n    n = len(components)\n    adj = [set() for _ in range(n + 1)]\n\n    def get_node(r, c):\n        if (r, c) == pos2: return n\n        if comp_id[r][c] is not None: return comp_id[r][c]\n        return None\n\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == 0:\n                neighbors = set()\n                for dr, dc in ((-1,0),(1,0),(0,-1),(0,1)):\n                    nr, nc = r+dr, c+dc\n                    if 0 <= nr < rows and 0 <= nc < cols:\n                        nd = get_node(nr, nc)\n                        if nd is not None:\n                            neighbors.add(nd)\n                neighbors = list(neighbors)\n                for i in range(len(neighbors)):\n                    for j in range(i+1, len(neighbors)):\n                        adj[neighbors[i]].add(neighbors[j])\n                        adj[neighbors[j]].add(neighbors[i])\n            else:\n                node1 = get_node(r, c)\n                if node1 is not None:\n                    for dr, dc in ((-1,0),(1,0),(0,-1),(0,1)):\n                        nr, nc = r+dr, c+dc\n                        if 0 <= nr < rows and 0 <= nc < cols:\n                            node2 = get_node(nr, nc)\n                            if node2 is not None and node2 != node1:\n                                adj[node1].add(node2)\n                                adj[node2].add(node1)\n\n    visited = [False] * (n + 1)\n    visited[n] = True\n    queue = [n]\n    replace_set = set()\n    while queue:\n        node = queue.pop(0)\n        if node != n:\n            replace_set.add(node)\n        for nb in adj[node]:\n            if not visited[nb]:\n                visited[nb] = True\n                queue.append(nb)\n\n    result = [row[:] for row in grid]\n    result[pos2[0]][pos2[1]] = 0\n    for cid in replace_set:\n        for (r, c) in components[cid]:\n            result[r][c] = 2\n    return result\n```",
+  "script": "def solve(grid):\n    rows, cols = len(grid), len(grid[0])\n    pos2 = None\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == 2:\n                pos2 = (r, c)\n\n    comp_id = [[None]*cols for _ in range(rows)]\n    components = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] not in (0, 2) and comp_id[r][c] is None:\n                color = grid[r][c]\n                comp = []\n                stack = [(r, c)]\n                cid = len(components)\n                comp_id[r][c] = cid\n                while stack:\n                    cr, cc = stack.pop()\n                    comp.append((cr, cc))\n                    for dr, dc in ((-1,0),(1,0),(0,-1),(0,1)):\n                        nr, nc = cr+dr, cc+dc\n                        if 0 <= nr < rows and 0 <= nc < cols and comp_id[nr][nc] is None and grid[nr][nc] == color:\n                            comp_id[nr][nc] = cid\n                            stack.append((nr, nc))\n                components.append(comp)\n\n    n = len(components)\n    adj = [set() for _ in range(n + 1)]\n\n    def get_node(r, c):\n        if (r, c) == pos2: return n\n        if comp_id[r][c] is not None: return comp_id[r][c]\n        return None\n\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == 0:\n                neighbors = set()\n                for dr, dc in ((-1,0),(1,0),(0,-1),(0,1)):\n                    nr, nc = r+dr, c+dc\n                    if 0 <= nr < rows and 0 <= nc < cols:\n                        nd = get_node(nr, nc)\n                        if nd is not None:\n                            neighbors.add(nd)\n                neighbors = list(neighbors)\n                for i in range(len(neighbors)):\n                    for j in range(i+1, len(neighbors)):\n                        adj[neighbors[i]].add(neighbors[j])\n                        adj[neighbors[j]].add(neighbors[i])\n            else:\n                node1 = get_node(r, c)\n                if node1 is not None:\n                    for dr, dc in ((-1,0),(1,0),(0,-1),(0,1)):\n                        nr, nc = r+dr, c+dc\n                        if 0 <= nr < rows and 0 <= nc < cols:\n                            node2 = get_node(nr, nc)\n                            if node2 is not None and node2 != node1:\n                                adj[node1].add(node2)\n                                adj[node2].add(node1)\n\n    visited = [False] * (n + 1)\n    visited[n] = True\n    queue = [n]\n    replace_set = set()\n    while queue:\n        node = queue.pop(0)\n        if node != n:\n            replace_set.add(node)\n        for nb in adj[node]:\n            if not visited[nb]:\n                visited[nb] = True\n                queue.append(nb)\n\n    result = [row[:] for row in grid]\n    result[pos2[0]][pos2[1]] = 0\n    for cid in replace_set:\n        for (r, c) in components[cid]:\n            result[r][c] = 2\n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "p_arc_stable": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "p_arc_stable": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}
