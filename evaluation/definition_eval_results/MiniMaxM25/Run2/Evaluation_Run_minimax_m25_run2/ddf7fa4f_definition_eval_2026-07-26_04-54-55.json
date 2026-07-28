@@ -1,0 +1,56 @@
+{
+  "task_id": "ddf7fa4f",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 2 0 0 6 0 0 0 8\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 5 5 5 5 0 0\n0 0 0 0 5 5 5 5 0 0\n0 5 5 0 5 5 5 5 0 0\n0 5 5 0 5 5 5 5 0 0\n0 5 5 0 0 0 0 0 0 0\n0 5 5 0 0 0 0 5 5 5\n0 5 5 0 0 0 0 5 5 5\n0 0 0 0 0 0 0 5 5 5\nOutput:\n0 0 2 0 0 6 0 0 0 8\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 6 6 6 6 0 0\n0 0 0 0 6 6 6 6 0 0\n0 2 2 0 6 6 6 6 0 0\n0 2 2 0 6 6 6 6 0 0\n0 2 2 0 0 0 0 0 0 0\n0 2 2 0 0 0 0 8 8 8\n0 2 2 0 0 0 0 8 8 8\n0 0 0 0 0 0 0 8 8 8\n\nExample 2:\n\nInput:\n0 1 0 0 0 4 0 0 7 0\n0 0 0 0 0 0 0 0 0 0\n5 5 5 5 0 0 0 5 5 5\n5 5 5 5 0 0 0 5 5 5\n5 5 5 5 0 0 0 5 5 5\n5 5 5 5 0 0 0 5 5 5\n0 0 0 0 0 0 0 0 0 0\n0 0 0 5 5 5 5 0 0 0\n0 0 0 5 5 5 5 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 1 0 0 0 4 0 0 7 0\n0 0 0 0 0 0 0 0 0 0\n1 1 1 1 0 0 0 7 7 7\n1 1 1 1 0 0 0 7 7 7\n1 1 1 1 0 0 0 7 7 7\n1 1 1 1 0 0 0 7 7 7\n0 0 0 0 0 0 0 0 0 0\n0 0 0 4 4 4 4 0 0 0\n0 0 0 4 4 4 4 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 1 0 0 0 6 0 0 7 0\n0 0 0 0 0 0 0 0 0 0\n0 5 5 0 0 0 0 0 0 0\n0 5 5 0 0 0 0 5 5 5\n0 5 5 0 0 0 0 5 5 5\n0 0 0 5 5 5 0 0 0 0\n0 0 0 5 5 5 0 0 0 0\n0 0 0 5 5 5 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 1 0 0 0 6 0 0 7 0\n0 0 0 0 0 0 0 0 0 0\n0 1 1 0 0 0 0 0 0 0\n0 1 1 0 0 0 0 7 7 7\n0 1 1 0 0 0 0 7 7 7\n0 0 0 6 6 6 0 0 0 0\n0 0 0 6 6 6 0 0 0 0\n0 0 0 6 6 6 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n3 0 0 0 6 0 0 0 9 0\n0 0 0 0 0 0 0 0 0 0\n0 0 5 5 5 5 5 0 5 5\n0 0 5 5 5 5 5 0 5 5\n0 0 5 5 5 5 5 0 5 5\n0 0 5 5 5 5 5 0 5 5\n0 0 0 0 0 0 0 0 5 5\n5 5 5 5 0 0 0 0 5 5\n5 5 5 5 0 0 0 0 5 5\n0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "import collections\nfrom collections import deque\n\ndef solve(grid):\n    if not grid:\n        return grid\n\n    n = len(grid)\n    m = len(grid[0])\n\n    # --- identify source colors from the top row (excluding the shape color) ---\n    top_row_sources = [(col, grid[0][col]) for col in range(m) if grid[0][col] != 0]\n\n    # --- find the shape colour (the most frequent non\u2011zero colour) ---\n    flat = [cell for row in grid for cell in row]\n    freq = collections.Counter(flat)\n    if 0 in freq:\n        del freq[0]\n    shape_color = max(freq, key=freq.get)\n\n    # keep only sources that are not the shape colour\n    sources = [(col, val) for col, val in top_row_sources if val != shape_color]\n    sources.sort(key=lambda x: x[0])            # order left\u2011to\u2011right\n    source_cols = [col for col, _ in sources]\n    source_colors = [val for _, val in sources]\n\n    # --- locate all connected components of the shape colour ---\n    visited = [[False] * m for _ in range(n)]\n    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n    components = []   # each element: {'cells':[(r,c)], 'avg_col':float, 'avg_row':float}\n\n    for r in range(n):\n        for c in range(m):\n            if grid[r][c] == shape_color and not visited[r][c]]:\n                # BFS for this component\n                cells = []\n                q = deque()\n                q.append((r, c))\n                visited[r][c] = True\n                while q:\n                    cr, cc = q.popleft()\n                    cells.append((cr, cc))\n                    for dr, dc in dirs:\n                        nr, nc = cr + dr, cc + dc\n                        if 0 <= nr < n and 0 <= nc < m and not visited[nr][nc] and grid[nr][nc] == shape_color:\n                            visited[nr][nc] = True\n                            q.append((nr, nc))\n                # compute centre\n                total_col = sum(c for _, c in cells)\n                total_row = sum(r for r, _ in cells)\n                avg_col = total_col / len(cells)\n                avg_row = total_row / len(cells)\n                components.append({'cells': cells, 'avg_col': avg_col, 'avg_row': avg_row})\n\n    # sort components left\u2011to\u2011right (break ties by vertical order)\n    components.sort(key=lambda x: (x['avg_col'], x['avg_row']))\n\n    # --- replace each component with the corresponding source colour ---\n    out = [row[:] for row in grid]   # deep copy\n\n    if len(components) == len(source_colors):\n        for comp, col in zip(components, source_colors):\n            for r, c in comp['cells']:\n                out[r][c] = col\n    else:\n        # fallback: assign each component to the nearest source column\n        for comp in components:\n            comp_col = comp['avg_col']\n            best_idx = min(range(len(source_cols)), key=lambda i: abs(source_cols[i] - comp_col))\n            chosen_color = source_colors[best_idx]\n            for r, c in comp['cells']:\n                out[r][c] = chosen_color\n\n    return out",
+  "script": "import collections\nfrom collections import deque\n\ndef solve(grid):\n    if not grid:\n        return grid\n\n    n = len(grid)\n    m = len(grid[0])\n\n    # --- identify source colors from the top row (excluding the shape color) ---\n    top_row_sources = [(col, grid[0][col]) for col in range(m) if grid[0][col] != 0]\n\n    # --- find the shape colour (the most frequent non\u2011zero colour) ---\n    flat = [cell for row in grid for cell in row]\n    freq = collections.Counter(flat)\n    if 0 in freq:\n        del freq[0]\n    shape_color = max(freq, key=freq.get)\n\n    # keep only sources that are not the shape colour\n    sources = [(col, val) for col, val in top_row_sources if val != shape_color]\n    sources.sort(key=lambda x: x[0])            # order left\u2011to\u2011right\n    source_cols = [col for col, _ in sources]\n    source_colors = [val for _, val in sources]\n\n    # --- locate all connected components of the shape colour ---\n    visited = [[False] * m for _ in range(n)]\n    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n    components = []   # each element: {'cells':[(r,c)], 'avg_col':float, 'avg_row':float}\n\n    for r in range(n):\n        for c in range(m):\n            if grid[r][c] == shape_color and not visited[r][c]]:\n                # BFS for this component\n                cells = []\n                q = deque()\n                q.append((r, c))\n                visited[r][c] = True\n                while q:\n                    cr, cc = q.popleft()\n                    cells.append((cr, cc))\n                    for dr, dc in dirs:\n                        nr, nc = cr + dr, cc + dc\n                        if 0 <= nr < n and 0 <= nc < m and not visited[nr][nc] and grid[nr][nc] == shape_color:\n                            visited[nr][nc] = True\n                            q.append((nr, nc))\n                # compute centre\n                total_col = sum(c for _, c in cells)\n                total_row = sum(r for r, _ in cells)\n                avg_col = total_col / len(cells)\n                avg_row = total_row / len(cells)\n                components.append({'cells': cells, 'avg_col': avg_col, 'avg_row': avg_row})\n\n    # sort components left\u2011to\u2011right (break ties by vertical order)\n    components.sort(key=lambda x: (x['avg_col'], x['avg_row']))\n\n    # --- replace each component with the corresponding source colour ---\n    out = [row[:] for row in grid]   # deep copy\n\n    if len(components) == len(source_colors):\n        for comp, col in zip(components, source_colors):\n            for r, c in comp['cells']:\n                out[r][c] = col\n    else:\n        # fallback: assign each component to the nearest source column\n        for comp in components:\n            comp_col = comp['avg_col']\n            best_idx = min(range(len(source_cols)), key=lambda i: abs(source_cols[i] - comp_col))\n            chosen_color = source_colors[best_idx]\n            for r, c in comp['cells']:\n                out[r][c] = chosen_color\n\n    return out",
+  "script_loaded": false,
+  "script_load_error": "unmatched ']' (<string>, line 34)\nTraceback (most recent call last):\n  File \"/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/framework/dimensions/definition.py\", line 359, in evaluate_definition_script_on_task\n    fn = _load_script_callable(script)\n  File \"/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/framework/dimensions/definition.py\", line 245, in _load_script_callable\n    exec(script, global_ns, local_ns)\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 34\n    if grid[r][c] == shape_color and not visited[r][c]]:\n                                                      ^\nSyntaxError: unmatched ']'\n",
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 262,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

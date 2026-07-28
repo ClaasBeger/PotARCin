@@ -1,0 +1,103 @@
+{
+  "task_id": "d631b094",
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 1059357628,
+  "include_true": false,
+  "corruption_source": "color_flip",
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n0 0 0\n1 0 0\n0 1 0\nOutput:\n1 1\n\nExample 2:\nInput:\n0 2 0\n2 0 0\n0 2 0\nOutput:\n2 2 2\n\nExample 3:\nInput:\n0 7 0\n0 0 0\n0 0 0\nOutput:\n7\n\nExample 4:\nInput:\n0 8 0\n8 8 0\n8 0 0\nOutput:\n8 8 8 8\n\nThe following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.\n\nCandidate pair:\nInput:\n0 0 5\n0 5 8\n6 8 8\nOutput:\n5 5 5\n\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "{\"input\": [[0, 0, 5], [0, 5, 0], [5, 0, 0]], \"output\": [[5, 5, 5]]}",
+  "corrupted_pair": {
+    "input": [
+      [
+        0,
+        0,
+        5
+      ],
+      [
+        0,
+        5,
+        8
+      ],
+      [
+        6,
+        8,
+        8
+      ]
+    ],
+    "output": [
+      [
+        5,
+        5,
+        5
+      ]
+    ]
+  },
+  "target_pair": {
+    "input": [
+      [
+        0,
+        0,
+        5
+      ],
+      [
+        0,
+        5,
+        0
+      ],
+      [
+        5,
+        0,
+        0
+      ]
+    ],
+    "output": [
+      [
+        5,
+        5,
+        5
+      ]
+    ]
+  },
+  "evaluation_ok": true,
+  "prediction_pair": {
+    "input": [
+      [
+        0,
+        0,
+        5
+      ],
+      [
+        0,
+        5,
+        0
+      ],
+      [
+        5,
+        0,
+        0
+      ]
+    ],
+    "output": [
+      [
+        5,
+        5,
+        5
+      ]
+    ]
+  },
+  "guardrail": {
+    "enabled": true,
+    "max_norm_edit": 0.7,
+    "normalized_distance_input": 0.4444444444444444,
+    "normalized_distance_output": 0.0,
+    "passed": true
+  },
+  "metrics": {
+    "success": true
+  }
+}

@@ -1,0 +1,617 @@
+{
+  "task_id": "f9012d9b",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n2 1 2 1 2\n1 1 1 1 1\n2 1 2 1 2\n0 0 1 1 1\n0 0 2 1 2\nOutput:\n1 1\n2 1\n\nExample 2:\n\nInput:\n8 6 0 6\n6 8 6 8\n8 6 8 6\n6 8 6 8\nOutput:\n8\n\nExample 3:\n\nInput:\n2 2 5 2 2 5 2\n2 2 5 2 2 5 2\n5 5 5 5 5 5 5\n2 2 5 2 2 5 2\n2 2 5 2 2 5 2\n5 5 5 5 5 0 0\n2 2 5 2 2 0 0\nOutput:\n5 5\n5 2\n\nBelow is a test input grid.\n\nInput:\n8 1 8 8 0 0 0\n1 8 8 1 0 0 0\n8 8 1 8 0 0 0\n8 1 8 8 1 8 8\n1 8 8 1 8 8 1\n8 8 1 8 8 1 8\n8 1 8 8 1 8 8\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    from collections import Counter\n\n    n = len(grid)\n    m = len(grid[0]) if n else 0\n\n    # count frequencies\n    freq = Counter()\n    for row in grid:\n        for v in row:\n            freq[v] += 1\n\n    # odd color is the least frequent one\n    odd_color = min(freq, key=freq.get)\n\n    # positions of odd color\n    odd_positions = [(r, c) for r in range(n) for c in range(m) if grid[r][c] == odd_color]\n    if not odd_positions:\n        return []   # no odd region, nothing to output\n\n    min_r = min(r for r, _ in odd_positions)\n    max_r = max(r for r, _ in odd_positions)\n    min_c = min(c for _, c in odd_positions)\n    max_c = max(c for _, c in odd_positions)\n    h = max_r - min_r + 1\n    w = max_c - min_c + 1\n\n    # ----- detect uniform columns (ignoring odd_color) -----\n    uniform_cols = []\n    for c in range(m):\n        colors = {grid[r][c] for r in range(n) if grid[r][c] != odd_color}\n        if len(colors) == 1 and colors:\n            uniform_cols.append(c)\n\n    # ----- detect uniform rows (ignoring odd_color) -----\n    uniform_rows = []\n    for r in range(n):\n        colors = {grid[r][c] for c in range(m) if grid[r][c] != odd_color}\n        if len(colors) == 1 and colors:\n            uniform_rows.append(r)\n\n    # ----------- cross / line case -------------\n    if uniform_cols:\n        # decide which uniform column to use\n        # filter those that do not intersect the odd region\n        col_candidates = [c for c in uniform_cols if c < min_c or c > max_c]\n\n        # if all uniform columns intersect the odd region (overlap), pick any that is not overlapped\n        if not col_candidates:\n            col_candidates = uniform_cols\n\n        # choose column based on side of odd region\n        if max_c < min(col_candidates):          # odd region left of column(s)\n            chosen_col = min(col_candidates)      # the leftmost column right of odd region\n            side = 'left'\n        elif min_c > max(col_candidates):        # odd region right of column(s)\n            chosen_col = max(col_candidates)      # the rightmost column left of odd region\n            side = 'right'\n        else:\n            # odd region overlaps or surrounds the uniform columns\n            # pick a column on the opposite side\n            # we can pick the column that is farthest from the odd region\n            left_c = [c for c in col_candidates if c < min_c]\n            right_c = [c for c in col_candidates if c > max_c]\n            if left_c:\n                chosen_col = max(left_c)\n                side = 'right'   # zeros are on the right of this column\n            else:\n                chosen_col = min(right_c)\n                side = 'left'\n\n        # compute output column range\n        if side == 'left':\n            start_c = chosen_col - (w - 1)\n            end_c = chosen_col\n        else:  # side == 'right'\n            start_c = chosen_col\n            end_c = chosen_col + (w - 1)\n\n        # extract sub\u2011grid\n        out = [[grid[min_r + i][start_c + j] for j in range(w)] for i in range(h)]\n        return out\n\n    elif uniform_rows:\n        # similar logic for rows\n        row_candidates = [r for r in uniform_rows if r < min_r or r > max_r]\n        if not row_candidates:\n            row_candidates = uniform_rows\n\n        if max_r < min(row_candidates):\n            chosen_row = min(row_candidates)\n            side = 'above'\n        elif min_r > max(row_candidates):\n            chosen_row = max(row_candidates)\n            side = 'below'\n        else:\n            above = [r for r in row_candidates if r < min_r]\n            below = [r for r in row_candidates if r > max_r]\n            if above:\n                chosen_row = max(above)\n                side = 'below'\n            else:\n                chosen_row = min(below)\n                side = 'above'\n\n        if side == 'above':\n            start_r = chosen_row - (h - 1)\n            end_r = chosen_row\n        else:\n            start_r = chosen_row\n            end_r = chosen_row + (h - 1)\n\n        out = [[grid[start_r + i][min_c + j] for j in range(w)] for i in range(h)]\n        return out\n\n    # ----------- periodic pattern case -------------\n    # find smallest K such that (r+c) % K determines the colour\n    max_dim = max(n, m)\n    K = None\n    mapping = None\n    for k in range(1, max_dim + 1):\n        mp = {}\n        ok = True\n        for r in range(n):\n            for c in range(m):\n                v = grid[r][c]\n                if v == odd_color:\n                    continue\n                res = (r + c) % k\n                if res not in mp:\n                    mp[res] = v\n                elif mp[res] != v:\n                    ok = False\n                    break\n            if not ok:\n                break\n        if ok and len(mp) > 1:   # need at least two different colours\n            K = k\n            mapping = mp\n            break\n\n    if K is None:\n        # fallback \u2013 should not happen for valid inputs\n        out = [[odd_color] * w for _ in range(h)]\n        return out\n\n    # produce the corrected block\n    out = []\n    for i in range(h):\n        row_vals = []\n        r = min_r + i\n        for j in range(w):\n            c = min_c + j\n            row_vals.append(mapping[(r + c) % K])\n        out.append(row_vals)\n\n    return out",
+  "script": "def solve(grid):\n    from collections import Counter\n\n    n = len(grid)\n    m = len(grid[0]) if n else 0\n\n    # count frequencies\n    freq = Counter()\n    for row in grid:\n        for v in row:\n            freq[v] += 1\n\n    # odd color is the least frequent one\n    odd_color = min(freq, key=freq.get)\n\n    # positions of odd color\n    odd_positions = [(r, c) for r in range(n) for c in range(m) if grid[r][c] == odd_color]\n    if not odd_positions:\n        return []   # no odd region, nothing to output\n\n    min_r = min(r for r, _ in odd_positions)\n    max_r = max(r for r, _ in odd_positions)\n    min_c = min(c for _, c in odd_positions)\n    max_c = max(c for _, c in odd_positions)\n    h = max_r - min_r + 1\n    w = max_c - min_c + 1\n\n    # ----- detect uniform columns (ignoring odd_color) -----\n    uniform_cols = []\n    for c in range(m):\n        colors = {grid[r][c] for r in range(n) if grid[r][c] != odd_color}\n        if len(colors) == 1 and colors:\n            uniform_cols.append(c)\n\n    # ----- detect uniform rows (ignoring odd_color) -----\n    uniform_rows = []\n    for r in range(n):\n        colors = {grid[r][c] for c in range(m) if grid[r][c] != odd_color}\n        if len(colors) == 1 and colors:\n            uniform_rows.append(r)\n\n    # ----------- cross / line case -------------\n    if uniform_cols:\n        # decide which uniform column to use\n        # filter those that do not intersect the odd region\n        col_candidates = [c for c in uniform_cols if c < min_c or c > max_c]\n\n        # if all uniform columns intersect the odd region (overlap), pick any that is not overlapped\n        if not col_candidates:\n            col_candidates = uniform_cols\n\n        # choose column based on side of odd region\n        if max_c < min(col_candidates):          # odd region left of column(s)\n            chosen_col = min(col_candidates)      # the leftmost column right of odd region\n            side = 'left'\n        elif min_c > max(col_candidates):        # odd region right of column(s)\n            chosen_col = max(col_candidates)      # the rightmost column left of odd region\n            side = 'right'\n        else:\n            # odd region overlaps or surrounds the uniform columns\n            # pick a column on the opposite side\n            # we can pick the column that is farthest from the odd region\n            left_c = [c for c in col_candidates if c < min_c]\n            right_c = [c for c in col_candidates if c > max_c]\n            if left_c:\n                chosen_col = max(left_c)\n                side = 'right'   # zeros are on the right of this column\n            else:\n                chosen_col = min(right_c)\n                side = 'left'\n\n        # compute output column range\n        if side == 'left':\n            start_c = chosen_col - (w - 1)\n            end_c = chosen_col\n        else:  # side == 'right'\n            start_c = chosen_col\n            end_c = chosen_col + (w - 1)\n\n        # extract sub\u2011grid\n        out = [[grid[min_r + i][start_c + j] for j in range(w)] for i in range(h)]\n        return out\n\n    elif uniform_rows:\n        # similar logic for rows\n        row_candidates = [r for r in uniform_rows if r < min_r or r > max_r]\n        if not row_candidates:\n            row_candidates = uniform_rows\n\n        if max_r < min(row_candidates):\n            chosen_row = min(row_candidates)\n            side = 'above'\n        elif min_r > max(row_candidates):\n            chosen_row = max(row_candidates)\n            side = 'below'\n        else:\n            above = [r for r in row_candidates if r < min_r]\n            below = [r for r in row_candidates if r > max_r]\n            if above:\n                chosen_row = max(above)\n                side = 'below'\n            else:\n                chosen_row = min(below)\n                side = 'above'\n\n        if side == 'above':\n            start_r = chosen_row - (h - 1)\n            end_r = chosen_row\n        else:\n            start_r = chosen_row\n            end_r = chosen_row + (h - 1)\n\n        out = [[grid[start_r + i][min_c + j] for j in range(w)] for i in range(h)]\n        return out\n\n    # ----------- periodic pattern case -------------\n    # find smallest K such that (r+c) % K determines the colour\n    max_dim = max(n, m)\n    K = None\n    mapping = None\n    for k in range(1, max_dim + 1):\n        mp = {}\n        ok = True\n        for r in range(n):\n            for c in range(m):\n                v = grid[r][c]\n                if v == odd_color:\n                    continue\n                res = (r + c) % k\n                if res not in mp:\n                    mp[res] = v\n                elif mp[res] != v:\n                    ok = False\n                    break\n            if not ok:\n                break\n        if ok and len(mp) > 1:   # need at least two different colours\n            K = k\n            mapping = mp\n            break\n\n    if K is None:\n        # fallback \u2013 should not happen for valid inputs\n        out = [[odd_color] * w for _ in range(h)]\n        return out\n\n    # produce the corrected block\n    out = []\n    for i in range(h):\n        row_vals = []\n        r = min_r + i\n        for j in range(w):\n            c = min_c + j\n            row_vals.append(mapping[(r + c) % K])\n        out.append(row_vals)\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 80,
+      "total": 262,
+      "success_rate": 0.3053435114503817
+    },
+    "generator_dynamic50": {
+      "ok": 13,
+      "total": 50,
+      "success_rate": 0.26
+    },
+    "re_arc_stable": {
+      "ok": 11,
+      "total": 1000,
+      "success_rate": 0.011
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": {
+      "index": 1,
+      "input": [
+        [
+          6,
+          2,
+          6,
+          2
+        ],
+        [
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          6,
+          2,
+          0,
+          2
+        ],
+        [
+          2,
+          2,
+          2,
+          2
+        ]
+      ],
+      "expected": [
+        [
+          6
+        ]
+      ],
+      "got": [
+        [
+          2
+        ]
+      ]
+    },
+    "generator_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          4,
+          6,
+          4,
+          6,
+          4
+        ],
+        [
+          4,
+          6,
+          4,
+          6,
+          4
+        ],
+        [
+          0,
+          0,
+          4,
+          6,
+          4
+        ],
+        [
+          0,
+          0,
+          4,
+          6,
+          4
+        ],
+        [
+          4,
+          6,
+          4,
+          6,
+          4
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          6
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "got": [
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          4
+        ]
+      ]
+    },
+    "re_arc_stable": {
+      "index": 1,
+      "input": [
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4
+        ]
+      ],
+      "got": [
+        [
+          4,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

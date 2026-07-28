@@ -1,0 +1,56 @@
+{
+  "task_id": "d631b094",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0\n1 0 0\n0 1 0\nOutput:\n1 1\n\nExample 2:\n\nInput:\n0 2 0\n2 0 0\n0 2 0\nOutput:\n2 2 2\n\nExample 3:\n\nInput:\n0 7 0\n0 0 0\n0 0 0\nOutput:\n7\n\nExample 4:\n\nInput:\n0 8 0\n8 8 0\n8 0 0\nOutput:\n8 8 8 8\n\nBelow is a test input grid.\n\nInput:\n4 4 0\n4 0 4\n0 0 4\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    \"\"\"\n    Transform the input grid into a single\u2011row grid that contains the\n    unique non\u2011zero value repeated as many times as there are non\u2011zero\n    cells in the input.\n\n    Parameters\n    ----------\n    grid : list[list[int]]\n        A rectangular grid of integers.\n\n    Returns\n    -------\n    list[list[int]]\n        A one\u2011row grid (list containing a single list) where every entry\n        is the non\u2011zero value and the number of entries equals the count\n        of non\u2011zero cells in the input.  If there are no non\u2011zero cells,\n        an empty list is returned.\n    \"\"\"\n    # Collect all non\u2011zero values from the grid\n    non_zero = [cell for row in grid for cell in row if cell != 0]\n\n    # If there are no non\u2011zero cells, return an empty list\n    if not non_zero:\n        return []\n\n    # The puzzle guarantees exactly one distinct non\u2011zero value\n    value = non_zero[0]\n\n    # The output row length equals the number of non\u2011zero cells\n    count = len(non_zero)\n\n    return [[value] * count]",
+  "script": "def solve(grid):\n    \"\"\"\n    Transform the input grid into a single\u2011row grid that contains the\n    unique non\u2011zero value repeated as many times as there are non\u2011zero\n    cells in the input.\n\n    Parameters\n    ----------\n    grid : list[list[int]]\n        A rectangular grid of integers.\n\n    Returns\n    -------\n    list[list[int]]\n        A one\u2011row grid (list containing a single list) where every entry\n        is the non\u2011zero value and the number of entries equals the count\n        of non\u2011zero cells in the input.  If there are no non\u2011zero cells,\n        an empty list is returned.\n    \"\"\"\n    # Collect all non\u2011zero values from the grid\n    non_zero = [cell for row in grid for cell in row if cell != 0]\n\n    # If there are no non\u2011zero cells, return an empty list\n    if not non_zero:\n        return []\n\n    # The puzzle guarantees exactly one distinct non\u2011zero value\n    value = non_zero[0]\n\n    # The output row length equals the number of non\u2011zero cells\n    count = len(non_zero)\n\n    return [[value] * count]",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 4,
+      "total": 4,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 261,
+      "total": 261,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 1000,
+      "total": 1000,
+      "success_rate": 1.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

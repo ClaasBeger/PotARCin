@@ -1,0 +1,71 @@
+{
+  "task_id": "d511f180",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n2 7 8 8 8\n5 5 6 5 4\n8 5 5 5 2\n8 8 4 3 6\n6 5 1 9 3\nOutput:\n2 7 5 5 5\n8 8 6 8 4\n5 8 8 8 2\n5 5 4 3 6\n6 8 1 9 3\n\nExample 2:\n\nInput:\n3 5 1\n4 5 8\n2 4 9\nOutput:\n3 8 1\n4 8 5\n2 4 9\n\nExample 3:\n\nInput:\n6 5 3\n5 7 5\n8 8 2\nOutput:\n6 8 3\n8 7 8\n5 5 2\n\nBelow is a test input grid.\n\nInput:\n8 8 4 5\n3 8 7 5\n3 7 1 9\n6 4 8 8\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "from collections import Counter\n\ndef solve(grid):\n    # Count occurrences of each number\n    flat = [cell for row in grid for cell in row]\n    freq = Counter(flat)\n\n    # Determine the most frequent value A (if tie, pick the largest number)\n    max_count = max(freq.values())\n    candidates_A = [v for v, c in freq.items() if c == max_count]\n    A = max(candidates_A)\n    count_A = freq[A]\n\n    # Find all rows and columns that contain at least one A\n    rows_with_A = set()\n    cols_with_A = set()\n    for i, row in enumerate(grid):\n        for j, val in enumerate(row):\n            if val == A:\n                rows_with_A.add(i)\n                cols_with_A.add(j)\n\n    # Collect all different numbers (except A) that appear in those rows or columns\n    candidates = set()\n    for i, row in enumerate(grid):\n        for j, val in enumerate(row):\n            if i in rows_with_A or j in cols_with_A:\n                if val != A:\n                    candidates.add(val)\n\n    # Keep only candidates whose total frequency is strictly smaller than that of A\n    valid = [v for v in candidates if freq[v] < count_A]\n    if not valid:                         # nothing to swap with\n        return [row[:] for row in grid]\n\n    # Choose B: among the valid candidates pick the one with highest frequency;\n    # if still tied, pick the largest numeric value\n    max_freq_B = max(freq[v] for v in valid)\n    best = [v for v in valid if freq[v] == max_freq_B]\n    B = max(best)\n\n    # Swap all occurrences of A and B\n    out_grid = []\n    for row in grid:\n        new_row = []\n        for val in row:\n            if val == A:\n                new_row.append(B)\n            elif val == B:\n                new_row.append(A)\n            else:\n                new_row.append(val)\n        out_grid.append(new_row)\n    return out_grid",
+  "script": "from collections import Counter\n\ndef solve(grid):\n    # Count occurrences of each number\n    flat = [cell for row in grid for cell in row]\n    freq = Counter(flat)\n\n    # Determine the most frequent value A (if tie, pick the largest number)\n    max_count = max(freq.values())\n    candidates_A = [v for v, c in freq.items() if c == max_count]\n    A = max(candidates_A)\n    count_A = freq[A]\n\n    # Find all rows and columns that contain at least one A\n    rows_with_A = set()\n    cols_with_A = set()\n    for i, row in enumerate(grid):\n        for j, val in enumerate(row):\n            if val == A:\n                rows_with_A.add(i)\n                cols_with_A.add(j)\n\n    # Collect all different numbers (except A) that appear in those rows or columns\n    candidates = set()\n    for i, row in enumerate(grid):\n        for j, val in enumerate(row):\n            if i in rows_with_A or j in cols_with_A:\n                if val != A:\n                    candidates.add(val)\n\n    # Keep only candidates whose total frequency is strictly smaller than that of A\n    valid = [v for v in candidates if freq[v] < count_A]\n    if not valid:                         # nothing to swap with\n        return [row[:] for row in grid]\n\n    # Choose B: among the valid candidates pick the one with highest frequency;\n    # if still tied, pick the largest numeric value\n    max_freq_B = max(freq[v] for v in valid)\n    best = [v for v in valid if freq[v] == max_freq_B]\n    B = max(best)\n\n    # Swap all occurrences of A and B\n    out_grid = []\n    for row in grid:\n        new_row = []\n        for val in row:\n            if val == A:\n                new_row.append(B)\n            elif val == B:\n                new_row.append(A)\n            else:\n                new_row.append(val)\n        out_grid.append(new_row)\n    return out_grid",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 262,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "stable": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

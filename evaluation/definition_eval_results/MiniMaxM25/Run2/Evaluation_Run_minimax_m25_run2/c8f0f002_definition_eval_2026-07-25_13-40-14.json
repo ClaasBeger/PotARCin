@@ -1,0 +1,56 @@
+{
+  "task_id": "c8f0f002",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n1 8 8 7 7 8\n1 1 7 7 1 8\n7 1 1 7 7 8\nOutput:\n1 8 8 5 5 8\n1 1 5 5 1 8\n5 1 1 5 5 8\n\nExample 2:\n\nInput:\n7 7 7 1\n1 8 1 7\n7 1 1 7\nOutput:\n5 5 5 1\n1 8 1 5\n5 1 1 5\n\nExample 3:\n\nInput:\n1 8 1 7 1\n7 8 8 1 1\n7 1 8 8 7\nOutput:\n1 8 1 5 1\n5 8 8 1 1\n5 1 8 8 5\n\nBelow is a test input grid.\n\nInput:\n1 7 7 1 7\n8 1 7 7 7\n8 7 1 7 8\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    \"\"\"\n    Transform the input grid by replacing every occurrence of the number 7 with 5.\n    All other numbers remain unchanged.\n\n    Parameters\n    ----------\n    grid : list[list[int]]\n        The input grid (list of rows, each row is a list of integers).\n\n    Returns\n    -------\n    list[list[int]]\n        The transformed grid.\n    \"\"\"\n    # Create a new grid with the transformation applied\n    transformed = [\n        [5 if cell == 7 else cell for cell in row]\n        for row in grid\n    ]\n    return transformed",
+  "script": "def solve(grid):\n    \"\"\"\n    Transform the input grid by replacing every occurrence of the number 7 with 5.\n    All other numbers remain unchanged.\n\n    Parameters\n    ----------\n    grid : list[list[int]]\n        The input grid (list of rows, each row is a list of integers).\n\n    Returns\n    -------\n    list[list[int]]\n        The transformed grid.\n    \"\"\"\n    # Create a new grid with the transformation applied\n    transformed = [\n        [5 if cell == 7 else cell for cell in row]\n        for row in grid\n    ]\n    return transformed",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 261,
+      "total": 261,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 1000,
+      "total": 1000,
+      "success_rate": 1.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

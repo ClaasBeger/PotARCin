@@ -1,0 +1,244 @@
+{
+  "task_id": "e9afcf9a",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n3 3 3 3 3 3\n9 9 9 9 9 9\nOutput:\n3 9 3 9 3 9\n9 3 9 3 9 3\n\nExample 2:\n\nInput:\n4 4 4 4 4 4\n8 8 8 8 8 8\nOutput:\n4 8 4 8 4 8\n8 4 8 4 8 4\n\nBelow is a test input grid.\n\nInput:\n6 6 6 6 6 6\n2 2 2 2 2 2\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    \"\"\"\n    Transform a 2\u00d7N grid with uniform rows into a checkerboard pattern.\n    The top\u2011left cell keeps its original value, then values alternate\n    between the two row values across each column.\n    \"\"\"\n    if not grid or len(grid) < 2:\n        return grid\n\n    # The two distinct values are taken from the first column of the first two rows.\n    val_top = grid[0][0]\n    val_bottom = grid[1][0]\n\n    n_cols = len(grid[0])\n\n    # Build the checkerboard rows\n    top_row = [val_top if j % 2 == 0 else val_bottom for j in range(n_cols)]\n    bottom_row = [val_bottom if j % 2 == 0 else val_top for j in range(n_cols)]\n\n    return [top_row, bottom_row]",
+  "script": "def solve(grid):\n    \"\"\"\n    Transform a 2\u00d7N grid with uniform rows into a checkerboard pattern.\n    The top\u2011left cell keeps its original value, then values alternate\n    between the two row values across each column.\n    \"\"\"\n    if not grid or len(grid) < 2:\n        return grid\n\n    # The two distinct values are taken from the first column of the first two rows.\n    val_top = grid[0][0]\n    val_bottom = grid[1][0]\n\n    n_cols = len(grid[0])\n\n    # Build the checkerboard rows\n    top_row = [val_top if j % 2 == 0 else val_bottom for j in range(n_cols)]\n    bottom_row = [val_bottom if j % 2 == 0 else val_top for j in range(n_cols)]\n\n    return [top_row, bottom_row]",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 2,
+      "total": 2,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 72,
+      "total": 72,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 7,
+      "total": 1000,
+      "success_rate": 0.007
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "input": [
+        [
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9
+        ],
+        [
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9
+        ]
+      ],
+      "expected": [
+        [
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9
+        ],
+        [
+          9,
+          4,
+          9,
+          4,
+          9,
+          4,
+          9,
+          4,
+          9,
+          4,
+          9,
+          4,
+          9
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          9,
+          4,
+          9,
+          4,
+          9,
+          4,
+          9,
+          4,
+          9,
+          4,
+          9,
+          4
+        ],
+        [
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9
+        ]
+      ],
+      "got": [
+        [
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9
+        ],
+        [
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9
+        ]
+      ]
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}
