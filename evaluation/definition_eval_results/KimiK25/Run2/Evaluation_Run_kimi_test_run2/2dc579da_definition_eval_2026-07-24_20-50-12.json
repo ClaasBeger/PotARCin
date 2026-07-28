@@ -1,0 +1,71 @@
+{
+  "task_id": "2dc579da",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n8 8 3 8 8\n8 8 3 8 8\n3 3 3 3 3\n8 8 3 8 8\n4 8 3 8 8\nOutput:\n8 8\n4 8\n\nExample 2:\n\nInput:\n4 4 4 2 4 4 4\n4 4 4 2 4 1 4\n4 4 4 2 4 4 4\n2 2 2 2 2 2 2\n4 4 4 2 4 4 4\n4 4 4 2 4 4 4\n4 4 4 2 4 4 4\nOutput:\n4 4 4\n4 1 4\n4 4 4\n\nExample 3:\n\nInput:\n3 3 3 3 3 1 3 3 3 3 3\n3 3 3 3 3 1 3 3 3 3 3\n3 8 3 3 3 1 3 3 3 3 3\n3 3 3 3 3 1 3 3 3 3 3\n3 3 3 3 3 1 3 3 3 3 3\n1 1 1 1 1 1 1 1 1 1 1\n3 3 3 3 3 1 3 3 3 3 3\n3 3 3 3 3 1 3 3 3 3 3\n3 3 3 3 3 1 3 3 3 3 3\n3 3 3 3 3 1 3 3 3 3 3\n3 3 3 3 3 1 3 3 3 3 3\nOutput:\n3 3 3 3 3\n3 3 3 3 3\n3 8 3 3 3\n3 3 3 3 3\n3 3 3 3 3\n\nBelow is a test input grid.\n\nInput:\n1 1 1 1 1 1 0 1 1 1 1 1 1\n1 1 1 1 1 1 0 1 1 1 1 1 1\n1 1 1 1 1 1 0 1 1 1 1 1 1\n1 1 1 1 1 1 0 1 2 1 1 1 1\n1 1 1 1 1 1 0 1 1 1 1 1 1\n1 1 1 1 1 1 0 1 1 1 1 1 1\n0 0 0 0 0 0 0 0 0 0 0 0 0\n1 1 1 1 1 1 0 1 1 1 1 1 1\n1 1 1 1 1 1 0 1 1 1 1 1 1\n1 1 1 1 1 1 0 1 1 1 1 1 1\n1 1 1 1 1 1 0 1 1 1 1 1 1\n1 1 1 1 1 1 0 1 1 1 1 1 1\n1 1 1 1 1 1 0 1 1 1 1 1 1\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\nfrom collections import Counter\n\ndef solve(grid):\n    if not grid:\n        return []\n    \n    rows = len(grid)\n    cols = len(grid[0])\n    \n    # Find horizontal line (uniform row)\n    h = -1\n    line_val = None\n    for i, row in enumerate(grid):\n        if len(set(row)) == 1:\n            h = i\n            line_val = row[0]\n            break\n    \n    # Find vertical line (column consisting entirely of line_val)\n    v = -1\n    for j in range(cols):\n        if all(grid[i][j] == line_val for i in range(rows)):\n            v = j\n            break\n    \n    # Determine background color (most common value excluding line_val)\n    non_line_values = [grid[i][j] for i in range(rows) for j in range(cols) if grid[i][j] != line_val]\n    if not non_line_values:\n        return []\n    \n    counter = Counter(non_line_values)\n    background = counter.most_common(1)[0][0]\n    \n    # Find the marker position (element that is neither line_val nor background)\n    marker_i, marker_j = -1, -1\n    found = False\n    for i in range(rows):\n        for j in range(cols):\n            if grid[i][j] != line_val and grid[i][j] != background:\n                marker_i, marker_j = i, j\n                found = True\n                break\n        if found:\n            break\n    \n    if not found:\n        return []\n    \n    # Determine quadrant bounds based on marker position relative to cross\n    if marker_i < h:\n        row_start, row_end = 0, h\n    else:\n        row_start, row_end = h + 1, rows\n    \n    if marker_j < v:\n        col_start, col_end = 0, v\n    else:\n        col_start, col_end = v + 1, cols\n    \n    # Extract the quadrant\n    result = [row[col_start:col_end] for row in grid[row_start:row_end]]\n    return result\n```",
+  "script": "from collections import Counter\n\ndef solve(grid):\n    if not grid:\n        return []\n    \n    rows = len(grid)\n    cols = len(grid[0])\n    \n    # Find horizontal line (uniform row)\n    h = -1\n    line_val = None\n    for i, row in enumerate(grid):\n        if len(set(row)) == 1:\n            h = i\n            line_val = row[0]\n            break\n    \n    # Find vertical line (column consisting entirely of line_val)\n    v = -1\n    for j in range(cols):\n        if all(grid[i][j] == line_val for i in range(rows)):\n            v = j\n            break\n    \n    # Determine background color (most common value excluding line_val)\n    non_line_values = [grid[i][j] for i in range(rows) for j in range(cols) if grid[i][j] != line_val]\n    if not non_line_values:\n        return []\n    \n    counter = Counter(non_line_values)\n    background = counter.most_common(1)[0][0]\n    \n    # Find the marker position (element that is neither line_val nor background)\n    marker_i, marker_j = -1, -1\n    found = False\n    for i in range(rows):\n        for j in range(cols):\n            if grid[i][j] != line_val and grid[i][j] != background:\n                marker_i, marker_j = i, j\n                found = True\n                break\n        if found:\n            break\n    \n    if not found:\n        return []\n    \n    # Determine quadrant bounds based on marker position relative to cross\n    if marker_i < h:\n        row_start, row_end = 0, h\n    else:\n        row_start, row_end = h + 1, rows\n    \n    if marker_j < v:\n        col_start, col_end = 0, v\n    else:\n        col_start, col_end = v + 1, cols\n    \n    # Extract the quadrant\n    result = [row[col_start:col_end] for row in grid[row_start:row_end]]\n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 262,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "stable": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "name 'Counter' is not defined"
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

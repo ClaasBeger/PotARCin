@@ -1,0 +1,71 @@
+{
+  "task_id": "447fd412",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 2 1 1 2 0 0 0 0 0 0 0\n0 0 0 1 0 0 0 0 0 0 0 0\n0 0 1 1 1 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 0 0 0 0 2 2 0\n0 0 0 2 2 0 0 0 0 2 2 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 2 1 1 2 0 0 0 0 0 0 0\n0 0 0 1 0 0 0 0 0 0 0 0\n0 0 1 1 1 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 2 2 1 1 1 1 2 2 0\n0 0 0 2 2 1 1 1 1 2 2 0\n0 0 0 0 0 0 0 1 1 0 0 0\n0 0 0 0 0 0 0 1 1 0 0 0\n0 0 0 0 0 1 1 1 1 1 1 0\n0 0 0 0 0 1 1 1 1 1 1 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0\n0 0 0 0 0 1 1 1 0 0 0 0\n0 0 0 0 0 0 1 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 2 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 2 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0\n0 0 0 0 0 1 1 1 0 0 0 0\n0 0 0 0 0 0 1 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0\n0 1 1 1 0 0 0 0 0 2 0 0\n0 0 1 0 0 0 0 0 1 1 1 0\n0 0 2 0 0 0 0 0 0 1 0 0\n0 0 0 0 0 0 0 0 0 2 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 1 1 1 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 2 2 2 0 0\n0 0 0 0 0 0 0 2 2 2 0 0\n0 0 0 0 0 0 0 2 2 2 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 1 1 1 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n1 1 1 1 1 1 1 2 2 2 0 0\n1 1 1 1 1 1 1 2 2 2 0 0\n1 1 1 1 1 1 1 2 2 2 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 1 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0\n0 0 1 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 2 2 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 2 2 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 2 2 0\n0 0 0 0 0 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\nfrom collections import deque\n\ndef solve(grid):\n    if not grid:\n        return grid\n    H = len(grid)\n    W = len(grid[0])\n    visited = [[False] * W for _ in range(H)]\n    \n    components = []\n    for i in range(H):\n        for j in range(W):\n            if grid[i][j] != 0 and not visited[i][j]:\n                # BFS to find component\n                q = deque()\n                q.append((i, j))\n                visited[i][j] = True\n                cells = []\n                min_r, min_c = i, j\n                max_r, max_c = i, j\n                has_one = False\n                while q:\n                    r, c = q.popleft()\n                    val = grid[r][c]\n                    cells.append((r, c, val))\n                    if val == 1:\n                        has_one = True\n                    if r < min_r: min_r = r\n                    if c < min_c: min_c = c\n                    if r > max_r: max_r = r\n                    if c > max_c: max_c = c\n                    # 4-direction connectivity\n                    for dr, dc in ((1,0), (-1,0), (0,1), (0,-1)):\n                        nr, nc = r + dr, c + dc\n                        if 0 <= nr < H and 0 <= nc < W and not visited[nr][nc] and grid[nr][nc] != 0:\n                            visited[nr][nc] = True\n                            q.append((nr, nc))\n                components.append({\n                    'cells': cells,\n                    'min_r': min_r, 'min_c': min_c,\n                    'max_r': max_r, 'max_c': max_c,\n                    'has_one': has_one\n                })\n    \n    # Identify template (contains a 1) and markers (pure 2s)\n    template = None\n    markers = []\n    for comp in components:\n        if comp['has_one']:\n            template = comp\n        else:\n            markers.append(comp)\n    \n    if template is None or not markers:\n        # Nothing to transform\n        return [row[:] for row in grid]\n    \n    # Template anchors: positions of 2s within template\n    template_anchors = [(r, c) for (r, c, val) in template['cells'] if val == 2]\n    if not template_anchors:\n        return [row[:] for row in grid]\n    template_anchors.sort()\n    ref_r, ref_c = template_anchors[0]\n    offsets = [(r - ref_r, c - ref_c) for (r, c) in template_anchors]\n    \n    # Group markers by their size S (height)\n    markers_by_S = {}\n    for comp in markers:\n        S = comp['max_r'] - comp['min_r'] + 1\n        # assume square, but height is enough as key\n        markers_by_S.setdefault(S, []).append((comp['min_r'], comp['min_c']))\n    \n    instances = []  # list of (top_left_r, top_left_c, S)\n    \n    for S, positions in markers_by_S.items():\n        pos_set = set(positions)\n        for p0 in positions:\n            valid = True\n            for dr, dc in offsets:\n                if (p0[0] + S * dr, p0[1] + S * dc) not in pos_set:\n                    valid = False\n                    break\n            if valid:\n                instances.append((p0[0], p0[1], S))\n    \n    # Create output grid as copy of input\n    output = [row[:] for row in grid]\n    \n    # Apply each instance\n    for r0, c0, S in instances:\n        for r, c, val in template['cells']:\n            dr = r - ref_r\n            dc = c - ref_c\n            tr = r0 + S * dr\n            tc = c0 + S * dc\n            # Fill SxS block\n            for i in range(S):\n                for j in range(S):\n                    nr = tr + i\n                    nc = tc + j\n                    if 0 <= nr < H and 0 <= nc < W:\n                        output[nr][nc] = val\n    return output\n```",
+  "script": "from collections import deque\n\ndef solve(grid):\n    if not grid:\n        return grid\n    H = len(grid)\n    W = len(grid[0])\n    visited = [[False] * W for _ in range(H)]\n    \n    components = []\n    for i in range(H):\n        for j in range(W):\n            if grid[i][j] != 0 and not visited[i][j]:\n                # BFS to find component\n                q = deque()\n                q.append((i, j))\n                visited[i][j] = True\n                cells = []\n                min_r, min_c = i, j\n                max_r, max_c = i, j\n                has_one = False\n                while q:\n                    r, c = q.popleft()\n                    val = grid[r][c]\n                    cells.append((r, c, val))\n                    if val == 1:\n                        has_one = True\n                    if r < min_r: min_r = r\n                    if c < min_c: min_c = c\n                    if r > max_r: max_r = r\n                    if c > max_c: max_c = c\n                    # 4-direction connectivity\n                    for dr, dc in ((1,0), (-1,0), (0,1), (0,-1)):\n                        nr, nc = r + dr, c + dc\n                        if 0 <= nr < H and 0 <= nc < W and not visited[nr][nc] and grid[nr][nc] != 0:\n                            visited[nr][nc] = True\n                            q.append((nr, nc))\n                components.append({\n                    'cells': cells,\n                    'min_r': min_r, 'min_c': min_c,\n                    'max_r': max_r, 'max_c': max_c,\n                    'has_one': has_one\n                })\n    \n    # Identify template (contains a 1) and markers (pure 2s)\n    template = None\n    markers = []\n    for comp in components:\n        if comp['has_one']:\n            template = comp\n        else:\n            markers.append(comp)\n    \n    if template is None or not markers:\n        # Nothing to transform\n        return [row[:] for row in grid]\n    \n    # Template anchors: positions of 2s within template\n    template_anchors = [(r, c) for (r, c, val) in template['cells'] if val == 2]\n    if not template_anchors:\n        return [row[:] for row in grid]\n    template_anchors.sort()\n    ref_r, ref_c = template_anchors[0]\n    offsets = [(r - ref_r, c - ref_c) for (r, c) in template_anchors]\n    \n    # Group markers by their size S (height)\n    markers_by_S = {}\n    for comp in markers:\n        S = comp['max_r'] - comp['min_r'] + 1\n        # assume square, but height is enough as key\n        markers_by_S.setdefault(S, []).append((comp['min_r'], comp['min_c']))\n    \n    instances = []  # list of (top_left_r, top_left_c, S)\n    \n    for S, positions in markers_by_S.items():\n        pos_set = set(positions)\n        for p0 in positions:\n            valid = True\n            for dr, dc in offsets:\n                if (p0[0] + S * dr, p0[1] + S * dc) not in pos_set:\n                    valid = False\n                    break\n            if valid:\n                instances.append((p0[0], p0[1], S))\n    \n    # Create output grid as copy of input\n    output = [row[:] for row in grid]\n    \n    # Apply each instance\n    for r0, c0, S in instances:\n        for r, c, val in template['cells']:\n            dr = r - ref_r\n            dc = c - ref_c\n            tr = r0 + S * dr\n            tc = c0 + S * dc\n            # Fill SxS block\n            for i in range(S):\n                for j in range(S):\n                    nr = tr + i\n                    nc = tc + j\n                    if 0 <= nr < H and 0 <= nc < W:\n                        output[nr][nc] = val\n    return output",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 262,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "stable": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

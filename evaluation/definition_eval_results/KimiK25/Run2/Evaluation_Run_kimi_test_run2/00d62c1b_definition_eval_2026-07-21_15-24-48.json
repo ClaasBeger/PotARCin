@@ -1,0 +1,71 @@
+{
+  "task_id": "00d62c1b",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0\n0 0 3 0 0 0\n0 3 0 3 0 0\n0 0 3 0 3 0\n0 0 0 3 0 0\n0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0\n0 0 3 0 0 0\n0 3 4 3 0 0\n0 0 3 4 3 0\n0 0 0 3 0 0\n0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 3 0 3 0 0 0 0 0\n0 0 0 3 0 3 0 0 0 0\n0 0 3 0 0 0 3 0 0 0\n0 0 0 0 0 3 0 3 0 0\n0 0 0 3 0 3 3 0 0 0\n0 0 3 3 3 0 0 0 0 0\n0 0 0 3 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 3 0 3 0 0 0 0 0\n0 0 0 3 0 3 0 0 0 0\n0 0 3 0 0 0 3 0 0 0\n0 0 0 0 0 3 4 3 0 0\n0 0 0 3 0 3 3 0 0 0\n0 0 3 3 3 0 0 0 0 0\n0 0 0 3 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 3 0 0 0 0\n0 0 0 0 3 0 0 0 0 0\n0 3 3 0 3 3 0 3 0 0\n3 0 0 3 0 0 3 0 3 0\n0 0 0 3 0 0 3 3 0 0\n0 0 0 3 0 0 3 0 0 0\n0 0 0 3 0 0 3 0 0 0\n0 0 0 0 3 3 0 3 0 0\n0 0 0 0 0 0 0 0 3 0\n0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 3 0 0 0 0\n0 0 0 0 3 0 0 0 0 0\n0 3 3 0 3 3 0 3 0 0\n3 0 0 3 4 4 3 4 3 0\n0 0 0 3 4 4 3 3 0 0\n0 0 0 3 4 4 3 0 0 0\n0 0 0 3 4 4 3 0 0 0\n0 0 0 0 3 3 0 3 0 0\n0 0 0 0 0 0 0 0 3 0\n0 0 0 0 0 0 0 0 0 0\n\nExample 4:\n\nInput:\n0 0 0 0 0 0 0 0 0 0\n0 0 3 3 3 3 0 0 0 0\n0 0 3 0 0 3 0 0 0 0\n0 0 3 0 0 3 0 3 0 0\n0 0 3 3 3 3 3 3 3 0\n0 0 0 3 0 0 0 0 3 0\n0 0 0 3 0 0 0 3 3 0\n0 0 0 3 3 0 0 3 0 3\n0 0 0 3 0 3 0 0 3 0\n0 0 0 0 3 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0\n0 0 3 3 3 3 0 0 0 0\n0 0 3 4 4 3 0 0 0 0\n0 0 3 4 4 3 0 3 0 0\n0 0 3 3 3 3 3 3 3 0\n0 0 0 3 0 0 0 0 3 0\n0 0 0 3 0 0 0 3 3 0\n0 0 0 3 3 0 0 3 4 3\n0 0 0 3 4 3 0 0 3 0\n0 0 0 0 3 0 0 0 0 0\n\nExample 5:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 3 3 3 3 0 3 3 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 3 0 3 0 0 0 0 0 0 0 3 0\n0 0 0 0 0 0 0 0 3 3 3 3 3 3 3 3 0 0 0 0\n0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 3 0 0 0 0\n0 0 0 0 3 0 0 0 3 0 0 0 0 0 0 3 0 0 0 0\n0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 3 0 0 0 0\n0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 3 0 0 0 0\n0 0 3 0 0 0 0 0 3 3 3 3 3 3 3 3 0 0 0 0\n0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 3 3 3 0 0 0 0 3 0 3 0 0\n0 0 0 0 0 0 3 3 0 0 3 0 0 3 0 0 0 0 0 0\n0 0 0 0 0 0 0 3 0 0 3 3 0 0 3 0 0 3 0 0\n0 0 0 0 0 0 0 3 3 3 3 0 3 0 0 3 3 3 0 0\n0 0 0 0 0 0 0 0 0 0 3 0 0 0 0 3 0 3 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 3 3 3 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 3 3 3 3 4 3 3 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 3 4 3 0 0 0 0 0 0 0 3 0\n0 0 0 0 0 0 0 0 3 3 3 3 3 3 3 3 0 0 0 0\n0 0 0 0 0 0 0 0 3 4 4 4 4 4 4 3 0 0 0 0\n0 0 0 0 3 0 0 0 3 4 4 4 4 4 4 3 0 0 0 0\n0 0 0 0 0 0 0 0 3 4 4 4 4 4 4 3 0 0 0 0\n0 0 0 0 0 0 0 0 3 4 4 4 4 4 4 3 0 0 0 0\n0 0 3 0 0 0 0 0 3 3 3 3 3 3 3 3 0 0 0 0\n0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 3 3 3 0 0 0 0 3 0 3 0 0\n0 0 0 0 0 0 3 3 4 4 3 0 0 3 0 0 0 0 0 0\n0 0 0 0 0 0 0 3 4 4 3 3 0 0 3 0 0 3 0 0\n0 0 0 0 0 0 0 3 3 3 3 0 3 0 0 3 3 3 0 0\n0 0 0 0 0 0 0 0 0 0 3 0 0 0 0 3 4 3 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 3 3 3 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 3 0 3 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 3 0 3 3 3 3 3 0 3 3 0 0 0 0 0 0 0 0\n0 0 0 0 3 0 0 0 0 3 0 0 3 0 0 0 0 0 0 0\n0 0 0 0 3 3 3 3 3 0 3 3 3 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 3 3 3 3 3 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 0 3 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 0 3 0 0\n0 0 0 0 0 0 0 0 0 3 3 3 3 3 0 0 0 3 0 0\n0 0 0 0 0 0 0 0 0 3 0 0 0 3 0 0 0 3 0 0\n0 0 0 0 0 0 0 0 3 3 3 3 3 3 0 0 0 3 0 0\n0 0 0 0 0 0 3 3 0 3 0 0 0 3 3 3 3 3 0 0\n0 0 3 0 0 0 0 0 3 3 0 0 0 0 0 0 0 0 0 0\n0 3 0 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 3 0 3 0 3 3 3 3 3 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 3 0 0 0 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 3 0 0 0 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 3 3 3 3 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\nfrom collections import deque\n\ndef solve(grid):\n    if not grid or not grid[0]:\n        return grid\n    \n    rows = len(grid)\n    cols = len(grid[0])\n    \n    # Visited matrix to track which 0s are reachable from border\n    visited = [[False for _ in range(cols)] for _ in range(rows)]\n    queue = deque()\n    \n    # Add all border 0s to queue\n    # Top and bottom rows\n    for j in range(cols):\n        if grid[0][j] == 0 and not visited[0][j]:\n            visited[0][j] = True\n            queue.append((0, j))\n        if grid[rows-1][j] == 0 and not visited[rows-1][j]:\n            visited[rows-1][j] = True\n            queue.append((rows-1, j))\n    \n    # Left and right columns (excluding corners already added)\n    for i in range(1, rows-1):\n        if grid[i][0] == 0 and not visited[i][0]:\n            visited[i][0] = True\n            queue.append((i, 0))\n        if grid[i][cols-1] == 0 and not visited[i][cols-1]:\n            visited[i][cols-1] = True\n            queue.append((i, cols-1))\n    \n    # BFS to find all 0s connected to border\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n    \n    while queue:\n        r, c = queue.popleft()\n        for dr, dc in directions:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < rows and 0 <= nc < cols:\n                if not visited[nr][nc] and grid[nr][nc] == 0:\n                    visited[nr][nc] = True\n                    queue.append((nr, nc))\n    \n    # Construct result: unvisited 0s become 4, 3s stay 3, visited 0s stay 0\n    result = []\n    for i in range(rows):\n        row = []\n        for j in range(cols):\n            if grid[i][j] == 3:\n                row.append(3)\n            elif grid[i][j] == 0:\n                if visited[i][j]:\n                    row.append(0)\n                else:\n                    row.append(4)\n            else:\n                row.append(grid[i][j])\n        result.append(row)\n    \n    return result\n```",
+  "script": "from collections import deque\n\ndef solve(grid):\n    if not grid or not grid[0]:\n        return grid\n    \n    rows = len(grid)\n    cols = len(grid[0])\n    \n    # Visited matrix to track which 0s are reachable from border\n    visited = [[False for _ in range(cols)] for _ in range(rows)]\n    queue = deque()\n    \n    # Add all border 0s to queue\n    # Top and bottom rows\n    for j in range(cols):\n        if grid[0][j] == 0 and not visited[0][j]:\n            visited[0][j] = True\n            queue.append((0, j))\n        if grid[rows-1][j] == 0 and not visited[rows-1][j]:\n            visited[rows-1][j] = True\n            queue.append((rows-1, j))\n    \n    # Left and right columns (excluding corners already added)\n    for i in range(1, rows-1):\n        if grid[i][0] == 0 and not visited[i][0]:\n            visited[i][0] = True\n            queue.append((i, 0))\n        if grid[i][cols-1] == 0 and not visited[i][cols-1]:\n            visited[i][cols-1] = True\n            queue.append((i, cols-1))\n    \n    # BFS to find all 0s connected to border\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n    \n    while queue:\n        r, c = queue.popleft()\n        for dr, dc in directions:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < rows and 0 <= nc < cols:\n                if not visited[nr][nc] and grid[nr][nc] == 0:\n                    visited[nr][nc] = True\n                    queue.append((nr, nc))\n    \n    # Construct result: unvisited 0s become 4, 3s stay 3, visited 0s stay 0\n    result = []\n    for i in range(rows):\n        row = []\n        for j in range(cols):\n            if grid[i][j] == 3:\n                row.append(3)\n            elif grid[i][j] == 0:\n                if visited[i][j]:\n                    row.append(0)\n                else:\n                    row.append(4)\n            else:\n                row.append(grid[i][j])\n        result.append(row)\n    \n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 5,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 262,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "stable": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}
