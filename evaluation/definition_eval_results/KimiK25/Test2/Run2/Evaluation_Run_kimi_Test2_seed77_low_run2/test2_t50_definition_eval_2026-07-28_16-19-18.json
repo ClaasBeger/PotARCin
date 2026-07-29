@@ -1,0 +1,74 @@
+{
+  "task_id": "test2_t50",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 5 0 0 5 7 0 5 7 0 5 0 0\n0 0 7 0 0 0 0 0 0 0 0 7 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 5 7 0 5 0 0 3 7 0 5 0 0\n0 0 0 0 0 7 0 0 0 0 0 7 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 5 0 0 5 7 0 5 7 0 5 0 0\n0 0 7 0 0 0 0 0 0 0 0 7 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 5 0 7 5 0 0 5 0 7 5 0 0\n0 0 7 0 0 0 0 0 7 0 0 0 0 0\n0 0 0 0 0 7 0 0 0 0 0 0 0 0\n0 0 5 7 0 5 0 7 5 0 7 5 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 5 0 0 5 7 0 5 7 0 5 0 0\n0 0 7 0 0 0 0 0 0 0 0 7 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 5 7 0 5 0 0 5 7 0 5 0 0\n0 0 0 0 0 7 0 0 0 0 0 7 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 5 0 0 5 7 0 5 7 0 5 0 0\n0 0 7 0 0 0 0 0 0 0 0 7 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 3 3 3 3 0 0 5 0 7 5 0 0\n0 0 3 0 0 3 0 0 7 0 0 0 0 0\n0 0 3 0 0 3 0 0 0 0 0 0 0 0\n0 0 3 3 3 3 0 7 5 0 7 5 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 5 0 0 7 5 0 0 0 5 0 0 0 8 0\n0 7 0 0 0 0 0 0 0 7 0 0 0 7 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 7 0 0 0 0 0 0 0 0 0\n0 5 0 0 0 5 0 0 7 5 0 0 7 5 0\n0 7 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 7 0 0 0 0 0\n0 5 7 0 0 5 7 0 0 5 0 0 7 5 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 8 8 8 8 8 0 0 0 5 0 0 0 5 0\n0 8 0 0 0 8 0 0 0 7 0 0 0 7 0\n0 8 0 0 0 8 0 0 0 0 0 0 0 0 0\n0 8 0 0 0 8 0 0 0 0 0 0 0 0 0\n0 8 0 0 0 8 8 8 8 8 0 0 7 5 0\n0 8 0 0 0 0 0 0 0 8 0 0 0 0 0\n0 8 0 0 0 0 0 0 0 8 0 0 0 0 0\n0 8 0 0 0 0 0 0 0 8 0 0 0 0 0\n0 8 8 8 8 8 8 8 8 8 0 0 7 5 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 5 0 0 5 7 0 5 0 7 5 0 0\n0 0 7 0 0 0 0 0 7 0 0 0 0 0\n0 0 0 0 0 7 0 0 0 0 0 7 0 0\n0 0 5 0 0 5 0 0 5 0 0 5 0 0\n0 0 7 0 0 0 0 0 7 0 0 0 0 0\n0 0 0 0 0 7 0 0 0 0 0 7 0 0\n0 0 5 7 0 2 0 0 5 7 0 5 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 5 0 0 5 7 0 2 2 2 2 0 0\n0 0 7 0 0 0 0 0 2 0 0 2 0 0\n0 0 0 0 0 7 0 0 2 0 0 2 0 0\n0 0 5 0 0 5 0 0 2 0 0 2 0 0\n0 0 7 0 0 0 0 0 2 0 0 2 0 0\n0 0 0 0 0 7 0 0 2 0 0 2 0 0\n0 0 5 7 0 5 0 0 2 2 2 2 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 5 0 7 5 0 7 5 0 0 5 7 0 5 0\n0 7 0 0 0 0 0 0 0 0 0 0 0 7 0\n0 0 0 0 0 0 0 0 0 0 7 0 0 0 0\n0 1 7 0 5 0 0 5 7 0 5 0 0 5 0\n0 0 0 0 7 0 0 0 0 0 0 0 0 7 0\n0 7 0 0 0 0 0 7 0 0 0 0 0 0 0\n0 5 0 0 5 0 0 5 0 0 5 7 0 5 0\n0 0 0 0 7 0 0 0 0 0 0 0 0 7 0\n0 7 0 0 0 0 0 7 0 0 0 0 0 0 0\n0 5 0 0 5 7 0 5 0 7 5 0 7 5 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\nimport math\nfrom functools import reduce\n\ndef solve(grid):\n    H = len(grid)\n    W = len(grid[0]) if H > 0 else 0\n    \n    # Find positions of value 5\n    fives = [(r, c) for r in range(H) for c in range(W) if grid[r][c] == 5]\n    \n    # Compute lattice step S\n    S = 1\n    if len(fives) > 1:\n        rows = [r for r, c in fives]\n        diffs = [rows[i+1] - rows[i] for i in range(len(rows)-1)]\n        S = reduce(math.gcd, diffs)\n    # Determine lattice origin (top-left of the pattern)\n    r0 = min(r for r, c in fives) if fives else 0\n    c0 = min(c for r, c in fives) if fives else 0\n    \n    # Find the special color (not 0, 5, or 7)\n    special_val = None\n    sr, sc = -1, -1\n    for r in range(H):\n        for c in range(W):\n            v = grid[r][c]\n            if v not in (0, 5, 7):\n                special_val = v\n                sr, sc = r, c\n                break\n        if special_val is not None:\n            break\n    \n    # Replace special pixel with 5 (correct value)\n    if special_val is not None:\n        grid[sr][sc] = 5\n    \n    # Determine expected orientation phase using block (0,0)\n    # phase_vertical = True means (i+j) even -> vertical\n    phase_vertical = True\n    found = False\n    for i in range(3):\n        for j in range(3):\n            r = r0 + i * S\n            c = c0 + j * S\n            if r >= H or c >= W:\n                continue\n            if grid[r][c] == 5:\n                if r + 1 < H and grid[r+1][c] == 7:\n                    # vertical\n                    phase_vertical = ((i + j) % 2 == 0)\n                    found = True\n                    break\n                elif c + 1 < W and grid[r][c+1] == 7:\n                    # horizontal\n                    phase_vertical = ((i + j) % 2 != 0)\n                    found = True\n                    break\n        if found:\n            break\n    \n    # Enumerate blocks and find bad ones\n    max_i = (H - r0) // S\n    max_j = (W - c0) // S\n    bad_blocks = []\n    for i in range(max_i):\n        for j in range(max_j):\n            r = r0 + i * S\n            c = c0 + j * S\n            if r >= H or c >= W:\n                continue\n            expect_v = ((i + j) % 2 == 0) == phase_vertical\n            has5 = (grid[r][c] == 5)\n            has7v = (r + 1 < H and grid[r+1][c] == 7)\n            has7h = (c + 1 < W and grid[r][c+1] == 7)\n            good = False\n            if has5:\n                if expect_v and has7v:\n                    good = True\n                elif not expect_v and has7h:\n                    good = True\n            if not good:\n                bad_blocks.append((i, j))\n    \n    if not bad_blocks or special_val is None:\n        return grid\n    \n    # Special block coordinates\n    si = (sr - r0) // S\n    sj = (sc - c0) // S\n    \n    # Select bad blocks on the side opposite to the special block horizontally\n    if sj < max_j / 2:\n        # Special on left, take blocks on the right (j > sj)\n        selected = [(i, j) for (i, j) in bad_blocks if j > sj]\n    else:\n        # Special on right, take blocks on the left (j < sj)\n        selected = [(i, j) for (i, j) in bad_blocks if j < sj]\n    \n    if not selected:\n        selected = bad_blocks\n    \n    min_i = min(i for i, j in selected)\n    max_i = max(i for i, j in selected)\n    min_j = min(j for i, j in selected)\n    max_j = max(j for i, j in selected)\n    \n    # Convert block indices to cell coordinates\n    r1 = r0 + min_i * S\n    r2 = r0 + (max_i + 1) * S - 1\n    c1 = c0 + min_j * S\n    c2 = c0 + (max_j + 1) * S - 1\n    \n    # Clip to grid bounds\n    r1 = max(0, r1)\n    r2 = min(H - 1, r2)\n    c1 = max(0, c1)\n    c2 = min(W - 1, c2)\n    \n    # Draw rectangle outline with special color\n    for r in range(r1, r2 + 1):\n        grid[r][c1] = special_val\n        grid[r][c2] = special_val\n    for c in range(c1, c2 + 1):\n        grid[r1][c] = special_val\n        grid[r2][c] = special_val\n    \n    return grid\n```",
+  "script": "import math\nfrom functools import reduce\n\ndef solve(grid):\n    H = len(grid)\n    W = len(grid[0]) if H > 0 else 0\n    \n    # Find positions of value 5\n    fives = [(r, c) for r in range(H) for c in range(W) if grid[r][c] == 5]\n    \n    # Compute lattice step S\n    S = 1\n    if len(fives) > 1:\n        rows = [r for r, c in fives]\n        diffs = [rows[i+1] - rows[i] for i in range(len(rows)-1)]\n        S = reduce(math.gcd, diffs)\n    # Determine lattice origin (top-left of the pattern)\n    r0 = min(r for r, c in fives) if fives else 0\n    c0 = min(c for r, c in fives) if fives else 0\n    \n    # Find the special color (not 0, 5, or 7)\n    special_val = None\n    sr, sc = -1, -1\n    for r in range(H):\n        for c in range(W):\n            v = grid[r][c]\n            if v not in (0, 5, 7):\n                special_val = v\n                sr, sc = r, c\n                break\n        if special_val is not None:\n            break\n    \n    # Replace special pixel with 5 (correct value)\n    if special_val is not None:\n        grid[sr][sc] = 5\n    \n    # Determine expected orientation phase using block (0,0)\n    # phase_vertical = True means (i+j) even -> vertical\n    phase_vertical = True\n    found = False\n    for i in range(3):\n        for j in range(3):\n            r = r0 + i * S\n            c = c0 + j * S\n            if r >= H or c >= W:\n                continue\n            if grid[r][c] == 5:\n                if r + 1 < H and grid[r+1][c] == 7:\n                    # vertical\n                    phase_vertical = ((i + j) % 2 == 0)\n                    found = True\n                    break\n                elif c + 1 < W and grid[r][c+1] == 7:\n                    # horizontal\n                    phase_vertical = ((i + j) % 2 != 0)\n                    found = True\n                    break\n        if found:\n            break\n    \n    # Enumerate blocks and find bad ones\n    max_i = (H - r0) // S\n    max_j = (W - c0) // S\n    bad_blocks = []\n    for i in range(max_i):\n        for j in range(max_j):\n            r = r0 + i * S\n            c = c0 + j * S\n            if r >= H or c >= W:\n                continue\n            expect_v = ((i + j) % 2 == 0) == phase_vertical\n            has5 = (grid[r][c] == 5)\n            has7v = (r + 1 < H and grid[r+1][c] == 7)\n            has7h = (c + 1 < W and grid[r][c+1] == 7)\n            good = False\n            if has5:\n                if expect_v and has7v:\n                    good = True\n                elif not expect_v and has7h:\n                    good = True\n            if not good:\n                bad_blocks.append((i, j))\n    \n    if not bad_blocks or special_val is None:\n        return grid\n    \n    # Special block coordinates\n    si = (sr - r0) // S\n    sj = (sc - c0) // S\n    \n    # Select bad blocks on the side opposite to the special block horizontally\n    if sj < max_j / 2:\n        # Special on left, take blocks on the right (j > sj)\n        selected = [(i, j) for (i, j) in bad_blocks if j > sj]\n    else:\n        # Special on right, take blocks on the left (j < sj)\n        selected = [(i, j) for (i, j) in bad_blocks if j < sj]\n    \n    if not selected:\n        selected = bad_blocks\n    \n    min_i = min(i for i, j in selected)\n    max_i = max(i for i, j in selected)\n    min_j = min(j for i, j in selected)\n    max_j = max(j for i, j in selected)\n    \n    # Convert block indices to cell coordinates\n    r1 = r0 + min_i * S\n    r2 = r0 + (max_i + 1) * S - 1\n    c1 = c0 + min_j * S\n    c2 = c0 + (max_j + 1) * S - 1\n    \n    # Clip to grid bounds\n    r1 = max(0, r1)\n    r2 = min(H - 1, r2)\n    c1 = max(0, c1)\n    c2 = min(W - 1, c2)\n    \n    # Draw rectangle outline with special color\n    for r in range(r1, r2 + 1):\n        grid[r][c1] = special_val\n        grid[r][c2] = special_val\n    for c in range(c1, c2 + 1):\n        grid[r1][c] = special_val\n        grid[r2][c] = special_val\n    \n    return grid",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "p_arc_stable": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'reduce' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'reduce' is not defined"
+    },
+    "p_arc_stable": {
+      "index": 0,
+      "error": "name 'reduce' is not defined"
+    },
+    "stable": null,
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'reduce' is not defined"
+    },
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

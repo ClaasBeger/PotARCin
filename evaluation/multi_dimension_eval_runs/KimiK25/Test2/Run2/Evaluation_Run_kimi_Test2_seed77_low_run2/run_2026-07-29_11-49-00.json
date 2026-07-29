@@ -1,0 +1,117 @@
+{
+  "mode": "batch_pending",
+  "created_at": "2026-07-29_11-49-00",
+  "task_count": 1,
+  "run_tag": "Evaluation_Run_kimi_Test2_seed77_low_run2",
+  "task_source": "test2",
+  "seed_mode": "fixed",
+  "base_seed": 117,
+  "batch_size": 10,
+  "completed_before_count": 9,
+  "last_completed_task_id_before": "test2_t50",
+  "runs": [
+    {
+      "task_id": "test2_t49",
+      "model": "moonshotai/Kimi-K2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 125,
+      "dimension_seeds": {
+        "classification_distribution": 1042809558,
+        "editing": 955768880,
+        "inversion": 1292530670
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/definition_eval_results/KimiK25/Test2/Run2/Evaluation_Run_kimi_Test2_seed77_low_run2/test2_t49_definition_eval_2026-07-28_14-49-36.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "p_arc_stable": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 0,
+              "total": 0,
+              "success_rate": 0.0
+            },
+            "generator_dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 0,
+              "total": 0,
+              "success_rate": 0.0
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 0,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/classification_eval_results/KimiK25/Test2/Run2/Evaluation_Run_kimi_Test2_seed77_low_run2/test2_t49_distribution_classification_eval_2026-07-29_02-55-53.json",
+          "metrics": {
+            "accuracy": 0.6,
+            "correct": 3,
+            "total": 5,
+            "exact_match": 0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/constrained_generation_eval_results/KimiK25/Test2/Run2/Evaluation_Run_kimi_Test2_seed77_low_run2/test2_t49_constrained_generation_eval_2026-07-28_15-54-10.json",
+          "metrics": {
+            "success_rate": 0.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 1,
+            "noted_arc_gen_stable_exact_match": 0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/editing_eval_results/KimiK25/Test2/Run2/Evaluation_Run_kimi_Test2_seed77_low_run2/test2_t49_editing_eval_2026-07-29_11-59-59.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/inversion_eval_results/KimiK25/Test2/Run2/Evaluation_Run_kimi_Test2_seed77_low_run2/test2_t49_inversion_eval_2026-07-28_16-07-07.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 0,
+          "skipped_rerun": true
+        }
+      }
+    }
+  ]
+}

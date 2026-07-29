@@ -1,0 +1,514 @@
+{
+  "task_id": "test2_t46",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 5 8 0\n0 4 5 0 0\n5 5 5 5 5\n0 0 5 7 0\n3 0 5 0 0\nOutput:\n7 3 5 8 4\n8 4 5 3 7\n5 5 5 5 5\n4 8 5 7 3\n3 7 5 4 8\n\nExample 2:\n\nInput:\n0 0 5 0 0\n0 1 5 6 0\n5 5 5 5 5\n0 0 5 0 0\n8 0 5 0 9\nOutput:\n6 8 5 9 1\n9 1 5 6 8\n5 5 5 5 5\n1 9 5 8 6\n8 6 5 1 9\n\nExample 3:\n\nInput:\n7 0 5 0 0\n0 0 5 3 0\n5 5 5 5 5\n0 2 5 0 0\n0 0 5 0 1\nOutput:\n7 3 5 1 2\n2 1 5 3 7\n5 5 5 5 5\n1 2 5 7 3\n3 7 5 2 1\n\nBelow is a test input grid.\n\nInput:\n0 0 5 0 8\n0 6 5 0 0\n5 5 5 5 5\n3 0 5 0 0\n0 0 5 4 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    # Create output grid initialized with 5s (the middle values)\n    n = len(grid)\n    m = len(grid[0]) if n > 0 else 0\n    output = [[5 for _ in range(m)] for _ in range(n)]\n    \n    # The grid is 5x5 with middle row (2) and middle column (2) being 5s\n    # Four 2x2 corner blocks:\n    # TL: rows 0-1, cols 0-1\n    # TR: rows 0-1, cols 3-4\n    # BL: rows 3-4, cols 0-1\n    # BR: rows 3-4, cols 3-4\n    \n    # Mapping from local position (r,c) within a 2x2 block to the four destination positions\n    # Format: (block, local_r, local_c)\n    dest_map = {\n        (0, 0): [('TL', 0, 0), ('TR', 1, 1), ('BL', 1, 1), ('BR', 0, 0)],\n        (0, 1): [('TL', 1, 0), ('TR', 0, 1), ('BL', 0, 1), ('BR', 1, 0)],\n        (1, 0): [('TL', 0, 1), ('TR', 1, 0), ('BL', 1, 0), ('BR', 0, 1)],\n        (1, 1): [('TL', 1, 1), ('TR', 0, 0), ('BL', 0, 0), ('BR', 1, 1)]\n    }\n    \n    # Block definitions: (start_row, start_col)\n    blocks = {\n        'TL': (0, 0),\n        'TR': (0, 3),\n        'BL': (3, 0),\n        'BR': (3, 3)\n    }\n    \n    # Find non-zero values in each input block and their local positions\n    inputs = []\n    for block_name, (sr, sc) in blocks.items():\n        for r in range(2):\n            for c in range(2):\n                val = grid[sr + r][sc + c]\n                if val != 0:\n                    inputs.append((val, block_name, r, c))\n    \n    # Place values in output according to the mapping\n    for val, src_block, r, c in inputs:\n        if (r, c) in dest_map:\n            for dest_block, dr, dc in dest_map[(r, c)]:\n                sr, sc = blocks[dest_block]\n                output[sr + dr][sc + dc] = val\n    \n    return output\n```",
+  "script": "def solve(grid):\n    # Create output grid initialized with 5s (the middle values)\n    n = len(grid)\n    m = len(grid[0]) if n > 0 else 0\n    output = [[5 for _ in range(m)] for _ in range(n)]\n    \n    # The grid is 5x5 with middle row (2) and middle column (2) being 5s\n    # Four 2x2 corner blocks:\n    # TL: rows 0-1, cols 0-1\n    # TR: rows 0-1, cols 3-4\n    # BL: rows 3-4, cols 0-1\n    # BR: rows 3-4, cols 3-4\n    \n    # Mapping from local position (r,c) within a 2x2 block to the four destination positions\n    # Format: (block, local_r, local_c)\n    dest_map = {\n        (0, 0): [('TL', 0, 0), ('TR', 1, 1), ('BL', 1, 1), ('BR', 0, 0)],\n        (0, 1): [('TL', 1, 0), ('TR', 0, 1), ('BL', 0, 1), ('BR', 1, 0)],\n        (1, 0): [('TL', 0, 1), ('TR', 1, 0), ('BL', 1, 0), ('BR', 0, 1)],\n        (1, 1): [('TL', 1, 1), ('TR', 0, 0), ('BL', 0, 0), ('BR', 1, 1)]\n    }\n    \n    # Block definitions: (start_row, start_col)\n    blocks = {\n        'TL': (0, 0),\n        'TR': (0, 3),\n        'BL': (3, 0),\n        'BR': (3, 3)\n    }\n    \n    # Find non-zero values in each input block and their local positions\n    inputs = []\n    for block_name, (sr, sc) in blocks.items():\n        for r in range(2):\n            for c in range(2):\n                val = grid[sr + r][sc + c]\n                if val != 0:\n                    inputs.append((val, block_name, r, c))\n    \n    # Place values in output according to the mapping\n    for val, src_block, r, c in inputs:\n        if (r, c) in dest_map:\n            for dest_block, dr, dc in dest_map[(r, c)]:\n                sr, sc = blocks[dest_block]\n                output[sr + dr][sc + dc] = val\n    \n    return output",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 1,
+      "total": 3,
+      "success_rate": 0.3333333333333333
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "p_arc_stable": {
+      "ok": 3,
+      "total": 50,
+      "success_rate": 0.06
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 1,
+      "total": 50,
+      "success_rate": 0.02
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          5,
+          8,
+          0
+        ],
+        [
+          0,
+          4,
+          5,
+          0,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          0,
+          0,
+          5,
+          7,
+          0
+        ],
+        [
+          3,
+          0,
+          5,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          7,
+          3,
+          5,
+          8,
+          4
+        ],
+        [
+          8,
+          4,
+          5,
+          3,
+          7
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          4,
+          8,
+          5,
+          7,
+          3
+        ],
+        [
+          3,
+          7,
+          5,
+          4,
+          8
+        ]
+      ],
+      "got": [
+        [
+          7,
+          3,
+          5,
+          4,
+          5
+        ],
+        [
+          5,
+          4,
+          5,
+          3,
+          7
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          4,
+          5,
+          5,
+          7,
+          3
+        ],
+        [
+          3,
+          7,
+          5,
+          5,
+          4
+        ]
+      ]
+    },
+    "test": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          0,
+          5,
+          0,
+          8
+        ],
+        [
+          0,
+          6,
+          5,
+          0,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          3,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          4,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          3,
+          5,
+          6,
+          8
+        ],
+        [
+          8,
+          6,
+          5,
+          3,
+          4
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          3,
+          4,
+          5,
+          8,
+          6
+        ],
+        [
+          6,
+          8,
+          5,
+          4,
+          3
+        ]
+      ],
+      "got": [
+        [
+          3,
+          4,
+          5,
+          6,
+          8
+        ],
+        [
+          8,
+          6,
+          5,
+          4,
+          3
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          6,
+          8,
+          5,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          5,
+          8,
+          6
+        ]
+      ]
+    },
+    "p_arc_stable": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          1,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          4,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          0,
+          9,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          8,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          1,
+          5,
+          9,
+          8
+        ],
+        [
+          9,
+          8,
+          5,
+          4,
+          1
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          8,
+          9,
+          5,
+          1,
+          4
+        ],
+        [
+          1,
+          4,
+          5,
+          8,
+          9
+        ]
+      ],
+      "got": [
+        [
+          5,
+          8,
+          5,
+          5,
+          9
+        ],
+        [
+          9,
+          5,
+          5,
+          8,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          9,
+          5,
+          5,
+          8
+        ],
+        [
+          8,
+          5,
+          5,
+          9,
+          5
+        ]
+      ]
+    },
+    "stable": null,
+    "generator_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          0,
+          8,
+          5,
+          7,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          6,
+          0,
+          5,
+          0,
+          2
+        ]
+      ],
+      "expected": [
+        [
+          2,
+          8,
+          5,
+          7,
+          6
+        ],
+        [
+          7,
+          6,
+          5,
+          2,
+          8
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          8,
+          2,
+          5,
+          6,
+          7
+        ],
+        [
+          6,
+          7,
+          5,
+          8,
+          2
+        ]
+      ],
+      "got": [
+        [
+          7,
+          6,
+          5,
+          2,
+          8
+        ],
+        [
+          8,
+          2,
+          5,
+          6,
+          7
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          2,
+          8,
+          5,
+          7,
+          6
+        ],
+        [
+          6,
+          7,
+          5,
+          8,
+          2
+        ]
+      ]
+    },
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}
