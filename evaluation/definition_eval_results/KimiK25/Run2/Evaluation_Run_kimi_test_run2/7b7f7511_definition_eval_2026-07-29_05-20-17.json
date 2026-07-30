@@ -1,0 +1,167 @@
+{
+  "task_id": "7b7f7511",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n1 1 3 2 1 1 3 2\n1 1 3 3 1 1 3 3\n3 3 1 1 3 3 1 1\n2 3 1 1 2 3 1 1\nOutput:\n1 1 3 2\n1 1 3 3\n3 3 1 1\n2 3 1 1\n\nExample 2:\n\nInput:\n4 4 4 4 4 4\n6 4 8 6 4 8\n6 6 8 6 6 8\nOutput:\n4 4 4\n6 4 8\n6 6 8\n\nExample 3:\n\nInput:\n2 3\n3 2\n4 4\n2 3\n3 2\n4 4\nOutput:\n2 3\n3 2\n4 4\n\nBelow is a test input grid.\n\nInput:\n5 4 5\n4 5 4\n6 6 4\n2 6 2\n5 4 5\n4 5 4\n6 6 4\n2 6 2\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    if not grid:\n        return []\n    R = len(grid)\n    C = len(grid[0])\n    # Find minimal vertical period (height of repeating block)\n    h = R\n    for period in range(1, R + 1):\n        if R % period != 0:\n            continue\n        valid = True\n        for i in range(period, R):\n            if grid[i] != grid[i - period]:\n                valid = False\n                break\n        if valid:\n            h = period\n            break\n    # Find minimal horizontal period (width of repeating block)\n    w = C\n    for period in range(1, C + 1):\n        if C % period != 0:\n            continue\n        valid = True\n        for j in range(period, C):\n            for i in range(R):\n                if grid[i][j] != grid[i][j - period]:\n                    valid = False\n                    break\n            if not valid:\n                break\n        if valid:\n            w = period\n            break\n    # Extract the fundamental tile\n    return [row[:w] for row in grid[:h]]",
+  "script": "def solve(grid):\n    if not grid:\n        return []\n    R = len(grid)\n    C = len(grid[0])\n    # Find minimal vertical period (height of repeating block)\n    h = R\n    for period in range(1, R + 1):\n        if R % period != 0:\n            continue\n        valid = True\n        for i in range(period, R):\n            if grid[i] != grid[i - period]:\n                valid = False\n                break\n        if valid:\n            h = period\n            break\n    # Find minimal horizontal period (width of repeating block)\n    w = C\n    for period in range(1, C + 1):\n        if C % period != 0:\n            continue\n        valid = True\n        for j in range(period, C):\n            for i in range(R):\n                if grid[i][j] != grid[i][j - period]:\n                    valid = False\n                    break\n            if not valid:\n                break\n        if valid:\n            w = period\n            break\n    # Extract the fundamental tile\n    return [row[:w] for row in grid[:h]]",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 256,
+      "total": 262,
+      "success_rate": 0.9770992366412213
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 997,
+      "total": 1000,
+      "success_rate": 0.997
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": {
+      "index": 13,
+      "input": [
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "expected": [
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "got": [
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    "generator_dynamic50": null,
+    "re_arc_stable": {
+      "index": 661,
+      "input": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "got": [
+        [
+          1
+        ]
+      ]
+    },
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

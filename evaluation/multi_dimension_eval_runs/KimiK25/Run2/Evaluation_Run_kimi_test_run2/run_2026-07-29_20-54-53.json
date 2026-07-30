@@ -1,0 +1,105 @@
+{
+  "mode": "single_task",
+  "created_at": "2026-07-29_20-54-53",
+  "task_count": 1,
+  "run_tag": "Evaluation_Run_kimi_test_run2",
+  "task_source": "arc_train",
+  "seed_mode": "fixed",
+  "base_seed": 276,
+  "runs": [
+    {
+      "task_id": "8403a5d5",
+      "model": "moonshotai/Kimi-K2.5:nitro",
+      "provider": "openrouter",
+      "reasoning_effort": "low",
+      "tools_enabled": false,
+      "seed": 276,
+      "dimension_seeds": {
+        "classification_distribution": 1601746919,
+        "editing": 299933020,
+        "inversion": 851486272
+      },
+      "stitch_prior_work_context": false,
+      "stitched_context_max_chars": 12000,
+      "dimensions": {
+        "definition": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/definition_eval_results/KimiK25/Run2/Evaluation_Run_kimi_test_run2/8403a5d5_definition_eval_2026-07-29_20-57-04.json",
+          "metrics": {
+            "train": {
+              "ok": 3,
+              "total": 3,
+              "success_rate": 1.0
+            },
+            "test": {
+              "ok": 1,
+              "total": 1,
+              "success_rate": 1.0
+            },
+            "stable": {
+              "ok": 80,
+              "total": 80,
+              "success_rate": 1.0
+            },
+            "generator_dynamic50": {
+              "ok": 50,
+              "total": 50,
+              "success_rate": 1.0
+            },
+            "re_arc_stable": {
+              "ok": 114,
+              "total": 1000,
+              "success_rate": 0.114
+            },
+            "re_arc_dynamic50": {
+              "ok": 0,
+              "total": 0,
+              "success_rate": 0.0
+            }
+          },
+          "attempts": 1
+        },
+        "classification_distribution": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/classification_eval_results/KimiK25/Run2/Evaluation_Run_kimi_test_run2/8403a5d5_distribution_classification_eval_2026-07-29_20-58-38.json",
+          "metrics": {
+            "accuracy": 1.0,
+            "correct": 5,
+            "total": 5,
+            "exact_match": 1
+          },
+          "attempts": 1
+        },
+        "constrained_generation": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/constrained_generation_eval_results/KimiK25/Run2/Evaluation_Run_kimi_test_run2/8403a5d5_constrained_generation_eval_2026-07-29_21-11-42.json",
+          "metrics": {
+            "success_rate": 1.0,
+            "rejected_as_demo_copy": 0,
+            "rejected_no_change": 0,
+            "rejected_verifier_missing": 0,
+            "rejected_verifier_mismatch": 0,
+            "noted_arc_gen_stable_exact_match": 1
+          },
+          "attempts": 1
+        },
+        "editing": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/editing_eval_results/KimiK25/Run2/Evaluation_Run_kimi_test_run2/8403a5d5_editing_eval_2026-07-29_21-13-25.json",
+          "metrics": {
+            "success": true
+          },
+          "attempts": 1
+        },
+        "inversion": {
+          "ok": true,
+          "result_path": "/Users/navyasahay/Desktop/SFI/Potemkin/PotARCin/evaluation/inversion_eval_results/KimiK25/Run2/Evaluation_Run_kimi_test_run2/8403a5d5_inversion_eval_2026-07-29_21-15-56.json",
+          "metrics": {
+            "success_rate": 1.0
+          },
+          "attempts": 1
+        }
+      }
+    }
+  ]
+}
