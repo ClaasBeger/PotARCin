@@ -1,0 +1,91 @@
+{
+  "task_id": "ff805c23",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "max_train_demos": null,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below.\n\nExample 1\nInput:\n0 3 3 3 3 0 0 2 2 2 0 0 0 0 2 2 2 0 1 1 1 1 1 0\n3 3 3 3 3 0 2 2 0 2 2 0 0 2 2 0 2 2 1 1 1 1 1 3\n3 3 3 0 0 3 2 0 0 2 0 0 0 0 2 0 0 2 1 1 1 1 1 3\n3 3 0 3 3 3 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 3\n3 3 0 3 3 3 0 2 0 2 2 2 2 2 2 0 2 0 1 1 1 1 1 3\n0 0 3 3 3 3 0 0 0 2 2 2 2 2 2 0 0 0 3 3 3 3 0 0\n0 2 2 2 0 0 2 0 0 2 2 2 2 2 2 0 0 2 0 0 2 2 2 0\n2 2 0 2 2 0 0 2 2 0 2 2 2 2 0 2 2 0 0 2 2 0 2 2\n2 0 0 2 0 0 0 2 2 0 0 2 2 0 0 2 2 0 0 0 2 0 0 2\n2 2 2 2 2 2 2 0 0 2 2 2 2 2 2 0 0 2 2 2 2 2 2 2\n0 2 0 2 2 2 2 2 0 2 0 2 2 0 2 0 2 2 2 2 2 0 2 0\n0 0 0 2 2 2 2 2 2 2 2 0 0 2 2 2 2 2 2 2 2 0 0 0\n0 0 0 2 2 2 2 2 2 2 2 0 0 2 2 2 2 2 2 2 2 0 0 0\n0 2 0 2 2 2 2 2 0 2 0 2 2 0 2 0 2 2 2 2 2 0 2 0\n2 2 2 2 2 2 2 0 0 2 2 2 2 2 2 0 0 2 2 2 2 2 2 2\n2 0 0 2 0 0 0 2 2 0 0 2 2 0 0 2 2 0 0 0 2 0 0 2\n2 2 0 2 2 0 0 2 2 0 2 2 2 2 0 2 2 0 0 2 2 0 2 2\n0 2 2 2 0 0 2 0 0 2 2 2 2 2 2 0 0 2 0 0 2 2 2 0\n0 0 3 3 3 3 0 0 0 2 2 2 2 2 2 0 0 0 3 3 3 3 0 0\n3 3 0 3 3 3 0 2 0 2 2 2 2 2 2 0 2 0 3 3 3 0 3 3\n3 3 0 3 3 3 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3 0 3 3\n3 3 3 0 0 3 2 0 0 2 0 0 0 0 2 0 0 2 3 0 0 3 3 3\n3 3 3 3 3 0 2 2 0 2 2 0 0 2 2 0 2 2 0 3 3 3 3 3\n0 3 3 3 3 0 0 2 2 2 0 0 0 0 2 2 2 0 0 3 3 3 3 0\nOutput:\n0 3 3 3 3\n0 3 3 3 3\n3 0 0 3 3\n3 3 3 0 3\n3 3 3 0 3\n\nExample 2\nInput:\n0 3 3 3 0 3 0 8 8 0 8 8 8 8 0 8 8 0 3 0 3 3 3 0\n3 0 3 0 3 0 8 0 8 0 0 0 0 0 0 8 0 8 0 3 0 3 0 3\n3 3 3 3 3 3 8 8 8 0 8 8 8 8 0 8 8 8 3 3 3 3 3 3\n3 0 3 0 3 3 0 0 0 8 0 8 8 0 8 0 0 0 3 3 0 3 0 3\n0 3 3 3 0 0 8 0 8 0 0 8 8 0 0 8 0 8 0 0 3 3 3 0\n3 0 3 3 0 3 8 0 8 8 8 0 0 8 8 8 0 8 3 0 3 3 0 3\n0 8 8 0 8 8 6 6 6 6 6 6 6 6 6 6 6 6 8 8 0 8 8 0\n8 0 8 0 0 0 6 6 0 6 6 6 6 6 6 0 6 6 0 0 0 8 0 8\n8 8 8 0 8 8 6 0 0 6 0 6 6 0 6 0 0 6 8 8 0 8 8 8\n0 0 0 8 0 8 6 6 6 6 6 6 6 6 6 6 6 6 8 0 8 0 0 0\n8 0 8 0 0 8 6 6 0 6 6 6 6 6 6 0 6 6 8 0 0 8 0 8\n8 0 8 8 8 0 1 1 1 1 1 0 0 6 6 6 6 6 0 8 8 8 0 8\n8 0 8 8 8 0 1 1 1 1 1 0 0 6 6 6 6 6 0 8 8 8 0 8\n8 0 8 0 0 8 1 1 1 1 1 6 6 6 6 0 6 6 8 0 0 8 0 8\n0 0 0 8 0 8 1 1 1 1 1 6 6 6 6 6 6 6 8 0 8 0 0 0\n8 8 8 0 8 8 1 1 1 1 1 6 6 0 6 0 0 6 8 8 0 8 8 8\n8 0 8 0 0 0 6 6 0 6 6 6 6 6 6 0 6 6 0 0 0 8 0 8\n0 8 8 0 8 8 6 6 6 6 6 6 6 6 6 6 6 6 8 8 0 8 8 0\n3 0 3 3 0 3 8 0 8 8 8 0 0 8 8 8 0 8 3 0 3 3 0 3\n0 3 3 3 0 0 8 0 8 0 0 8 8 0 0 8 0 8 0 0 3 3 3 0\n3 0 3 0 3 3 0 0 0 8 0 8 8 0 8 0 0 0 3 3 0 3 0 3\n3 3 3 3 3 3 8 8 8 0 8 8 8 8 0 8 8 8 3 3 3 3 3 3\n3 0 3 0 3 0 8 0 8 0 0 0 0 0 0 8 0 8 0 3 0 3 0 3\n0 3 3 3 0 3 0 8 8 0 8 8 8 8 0 8 8 0 3 0 3 3 3 0\nOutput:\n6 6 6 6 6\n6 6 6 6 6\n6 6 0 6 6\n6 6 6 6 6\n6 0 0 6 0\n\nExample 3\nInput:\n0 3 3 3 3 0 5 5 5 0 0 5 5 0 0 5 5 5 0 3 3 3 3 0\n3 3 3 3 3 3 5 5 0 0 0 0 0 0 0 0 5 5 3 3 3 3 3 3\n3 3 3 0 0 0 5 0 0 5 5 0 0 5 5 0 0 5 0 0 0 3 3 3\n3 3 0 0 3 3 0 0 5 0 5 5 5 5 0 5 0 0 3 3 0 0 3 3\n3 3 0 3 3 0 0 0 5 5 0 0 0 0 5 5 0 0 0 3 3 0 3 3\n0 3 0 3 0 3 5 0 0 5 0 0 0 0 5 0 0 5 3 0 3 0 3 0\n5 5 5 0 0 5 0 5 0 0 5 5 5 5 0 0 5 0 5 0 0 5 5 5\n5 5 0 0 0 0 5 5 5 0 0 5 5 0 0 5 5 5 0 0 0 0 5 5\n5 0 0 5 5 0 0 5 5 5 0 5 5 0 5 5 5 0 0 5 5 0 0 5\n0 0 5 0 5 5 0 0 5 5 5 5 5 5 5 5 0 0 5 5 0 5 0 0\n0 0 5 5 0 0 5 0 0 5 0 5 5 0 5 0 0 5 0 0 5 5 0 0\n5 0 0 5 0 0 5 5 5 5 5 0 0 5 5 5 5 5 0 0 5 0 0 5\n5 0 0 5 0 0 5 5 5 5 5 0 0 5 5 5 5 5 0 0 5 0 0 5\n0 0 5 5 0 0 5 0 0 5 0 5 5 0 5 0 0 5 0 0 5 5 0 0\n0 0 5 0 5 5 0 0 5 5 5 5 5 5 5 5 0 0 5 5 0 5 0 0\n5 0 0 5 5 0 0 5 5 5 1 1 1 1 1 5 5 0 0 5 5 0 0 5\n5 5 0 0 0 0 5 5 5 0 1 1 1 1 1 5 5 5 0 0 0 0 5 5\n5 5 5 0 0 5 0 5 0 0 1 1 1 1 1 0 5 0 5 0 0 5 5 5\n0 3 0 3 0 3 5 0 0 5 1 1 1 1 1 0 0 5 3 0 3 0 3 0\n3 3 0 3 3 0 0 0 5 5 1 1 1 1 1 5 0 0 0 3 3 0 3 3\n3 3 0 0 3 3 0 0 5 0 5 5 5 5 0 5 0 0 3 3 0 0 3 3\n3 3 3 0 0 0 5 0 0 5 5 0 0 5 5 0 0 5 0 0 0 3 3 3\n3 3 3 3 3 3 5 5 0 0 0 0 0 0 0 0 5 5 3 3 3 3 3 3\n0 3 3 3 3 0 5 5 5 0 0 5 5 0 0 5 5 5 0 3 3 3 3 0\nOutput:\n0 5 5 0 5\n0 5 5 0 0\n5 5 5 5 0\n0 0 0 0 5\n0 0 0 0 5\n\nBelow is a test input grid. Predict the corresponding output grid by applying the rule you found.\nTest Input:\n4 4 4 0 4 0 0 3 3 3 0 0 0 0 3 3 3 0 0 4 0 4 4 4\n4 4 4 4 0 4 3 3 3 3 0 3 3 0 3 3 3 3 4 0 4 4 4 4\n4 4 0 4 0 0 3 3 0 0 3 3 3 3 0 0 3 3 0 0 4 0 4 4\n0 4 4 0 4 4 3 3 0 0 3 3 3 3 0 0 3 3 4 4 0 4 4 0\n4 0 0 4 4 4 0 0 3 3 0 3 3 0 3 3 0 0 4 4 4 0 0 4\n0 4 0 4 4 0 0 3 3 3 3 3 3 3 3 3 3 0 0 4 4 0 4 0\n0 3 3 3 0 0 8 8 8 1 1 1 1 1 8 8 8 8 0 0 3 3 3 0\n3 3 3 3 0 3 8 8 8 1 1 1 1 1 0 8 8 8 3 0 3 3 3 3\n3 3 0 0 3 3 8 8 8 1 1 1 1 1 0 8 8 8 3 3 0 0 3 3\n3 3 0 0 3 3 8 0 0 1 1 1 1 1 8 0 0 8 3 3 0 0 3 3\n0 0 3 3 0 3 8 0 8 1 1 1 1 1 8 8 0 8 3 0 3 3 0 0\n0 3 3 3 3 3 8 8 0 8 8 8 8 8 8 0 8 8 3 3 3 3 3 0\n0 3 3 3 3 3 8 8 0 8 8 8 8 8 8 0 8 8 3 3 3 3 3 0\n0 0 3 3 0 3 8 0 8 8 0 8 8 0 8 8 0 8 3 0 3 3 0 0\n3 3 0 0 3 3 8 0 0 8 8 8 8 8 8 0 0 8 3 3 0 0 3 3\n3 3 0 0 3 3 8 8 8 0 8 0 0 8 0 8 8 8 3 3 0 0 3 3\n3 3 3 3 0 3 8 8 8 0 0 8 8 0 0 8 8 8 3 0 3 3 3 3\n0 3 3 3 0 0 8 8 8 8 8 8 8 8 8 8 8 8 0 0 3 3 3 0\n0 4 0 4 4 0 0 3 3 3 3 3 3 3 3 3 3 0 0 4 4 0 4 0\n4 0 0 4 4 4 0 0 3 3 0 3 3 0 3 3 0 0 4 4 4 0 0 4\n0 4 4 0 4 4 3 3 0 0 3 3 3 3 0 0 3 3 4 4 0 4 4 0\n4 4 0 4 0 0 3 3 0 0 3 3 3 3 0 0 3 3 0 0 4 0 4 4\n4 4 4 4 0 4 3 3 3 3 0 3 3 0 3 3 3 3 4 0 4 4 4 4\n4 4 4 0 4 0 0 3 3 3 0 0 0 0 3 3 3 0 0 4 0 4 4 4\n\nYour final answer must be ONLY a single Python list-of-lists grid for that output:\n[[...], ...]\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "Looking at the examples, I need to identify the pattern that maps input to output.\n\nIn each example, I notice there's a 5x5 block of a distinct color (1s in examples 1,2,3) surrounded by other colored patterns. The output appears to be a 5x5 grid.\n\nLet me analyze more carefully:\n\nExample 1: There's a 5x6 region of 1s in the top-right area (rows 0-4, cols 18-22). The output is 5x5 with 3s and 0s.\n\nExample 2: There's a 5x6 region of 1s in the middle-bottom area (rows 11-15, cols 6-10). The output is 5x5 with 6s and 0s.\n\nExample 3: There's a 5x6 region of 1s in the bottom-middle area (rows 15-19, cols 10-14). The output is 5x5 with 5s and 0s.\n\nThe pattern seems to be: find the 5x5 region marked by 1s, and extract the corresponding region from the \"background\" color that forms the main pattern around it.\n\nLooking more carefully - the 1s mark a region, and we need to look at what's \"behind\" or what pattern the 1s are overlaying. The output extracts the 5x5 region where the 1s are located, showing what color would be there if the 1s weren't overlaying it.\n\nFor the test input, I can see a 5x5 block of 1s at rows 6-10, cols 9-13. Let me extract what's around that area - looking at the 8s pattern that the 1s are overlaying.\n\nLooking at rows 6-10, cols 9-13 in the input, checking what values are there when we ignore the 1s or look at the surrounding pattern:\n\nRow 6, cols 9-13: 1 1 1 1 1 \u2192 background is 8s\nRow 7, cols 9-13: 1 1 1 1 1 \u2192 background is 8s  \nRow 8, cols 9-13: 1 1 1 1 1 \u2192 background is 8s\nRow 9, cols 9-13: 1 1 1 1 1 \u2192 background is 0s/8s\nRow 10, cols 9-13: 1 1 1 1 1 \u2192 background is 8s\n\nLooking at the 8s pattern in that region:\n- Row 6: positions around 1s show 8 8 8 8 8\n- Row 7: 0 8 8 8 (but 1s cover)\n- Row 8: 0 8 8 8 (but 1s cover)\n- Row 9: 8 0 0 8 (but 1s cover)\n- Row 10: 8 8 0 8 (but 1s cover)\n\nExtracting the 5x5 area with 1s and replacing 1s with the underlying 8-pattern:\n\nRow 6: 8 8 8 8 8\nRow 7: 0 8 8 8 8 \u2192 actually looking more carefully at cols 9-13: 1 1 1 1 1, background 8 8 8 0 8\nWait, let me re-read: row 7 is `8 8 8 1 1 1 1 1 0 8 8 8` so cols 9-13 are 1,1,1,1,1 and surrounding 8s are at 8,8,8 and 0,8,8,8\n\nActually looking at pattern - the 1s mark where we should extract from. Looking at symmetric position or the color that forms the \"frame\".\n\nLooking more carefully at example 2: the 1s are surrounded by 6s. The output has 6s and 0s matching the 6-pattern where 1s were.\n\nFor test: The 1s are at rows 6-10, cols 9-13. Looking at 8s in those positions:\n- Row 6, cols 9-13: underlying would be 8,8,8,8,8\n- Row 7, cols 9-13: 8,8,8,0,8  \n- Row 8, cols 9-13: 8,8,8,0,8\n- Row 9, cols 9-13: 0,0,8,8,8 \u2192 wait let me check: `8 0 0 1 1 1 1 1 8 0 0 8` so cols 9-13 are 1,1,1,1,1 with left=0,0 and right=8,0,0\n- Row 10, cols 9-13: 8,0,8,8,0\n\nHmm that's not right. Let me re-check: row 10 is `0 0 3 3 0 3 8 0 8 1 1 1 1 1 8 8 0 8`\n\nSo col 9=1, col 10=1, col 11=1, col 12=1, col 13=1. Left of them is 8 (col 8), right starts with 8 (col 14).\n\nActually for the pattern: looking at where 8s would be if 1s weren't there. The 8s form a symmetric pattern.\n\nRow 6: 8 8 8 _ _ _ _ _ 8 8 8 8 \u2192 8,8,8,8,8\nRow 7: 8 8 8 _ _ _ _ _ 0 8 8 8 \u2192 8,8,8,8,8? No wait 0 is at position after 1s.\n\nLet me check cols 6-8 and 14-16 for row 7: `8 8 8` and `0 8 8 8`. So the 1s replace 8,8,8,0,8? \n\nActually looking at symmetry: the grid seems symmetric. The 8-pattern should be:\nRow 6: 8 8 8 8 8\nRow 7: 8 8 8 0 8  \nRow 8: 8 8 8 0 8\nRow 9: 8 0 0 8 8\nRow 10: 8 0 8 8 0? No wait...\n\nLet me re-read row 9: `3 3 0 0 3 3 8 0 0 1 1 1 1 1 8 0 0 8` - so left of 1s is 0,0 and right is 8,0,0,8\n\nHmm this is getting messy. Let me try another approach - the output size matches the 1s block, and we need to find what \"color\" is being highlighted.\n\nLooking at examples again: in ex 1, output has 3s (which surround the 1s). In ex 2, output has 6s (which surround the 1s). In ex 3, output has 5s (which surround the 1s).\n\nFor test, 8s surround the 1s. So output should have 8s and 0s.\n\nLooking at the 8-pattern in the 5x5 region where 1s are:\n- Check what's in positions corresponding to 1s, using the 8-background\n\nRow 6: 8,8,8,8,8 (cols 9-13, surrounded by 8s)\nRow 7: comparing left `8 8 8` and right `0 8 8 8` \u2192 8,8,8,0,8\nRow 8: left `8 8 8`, right `0 8 8 8` \u2192 8,8,8,0,8  \nRow 9: left `0 0`, right `8 0 0 8` \u2192 0,0,8,8,8? Or 8,0,0,8,8?\nRow 10: left `8 0 8`, right `8 8 0 8` \u2192 8,0,8,8,0? \n\nWait let me recheck row 10: `0 0 3 3 0 3 8 0 8 1 1 1 1 1 8 8 0 8`\n- col 8 = 8, col 9-13 = 1,1,1,1,1, col 14 = 8, col 15 = 8, col 16 = 0\n\nSo pattern around 1s: 8, 0, 8 ... 8, 8, 0\n\nBy symmetry with row 6: 8,8,8,8,8 - checking: row 6 is `0 3 3 3 0 0 8 8 8 1 1 1 1 1 8 8 8 8`\n- col 8 = 8, col 9-13 = 1s, col 14 = 8, col 15 = 8, col 16 = 8\n\nSo row 6: 8,8,8,8,8\nRow 7: `3 3 3 3 0 3 8 8 8 1 1 1 1 1 0 8 8 8` \u2192 8,8,8,0,8\nRow 8: `3 3 0 0 3 3 8 8 8 1 1 1 1 1 0 8 8 8` \u2192 8,8,8,0,8\nRow 9: `3 3 0 0 3 3 8 0 0 1 1 1 1 1 8 0 0 8` \u2192 0,0,8,8,8? No wait: 0,0 then 1s then 8,0,0,8\n\nHmm the 1s start at col 9. So left is col 8=0, col 7=0. That's only 2 positions. Right is col 14=8, col 15=0, col 16=0, col 17=8.\n\nFor 5-wide 1s, we need to infer pattern. Looking at symmetry: row 6 and row 10 should mirror, rows 7,8,9 mirror with something.\n\nActually row 6: 8,8,8,8,8 and row 10 by symmetry should be 8,0,8,8,0? No wait let me check row 10 again.\n\nRow 10: `0 0 3 3 0 3 8 0 8 1 1 1 1 1 8 8 0 8`\n- col 6=8, col 7=0, col 8=8, then 1s at 9-13, then col 14=8, col 15=8, col 16=0, col 17=8\n\nHmm not symmetric with row 6. Let me check if rows 6-10 should extract from 8s area.\n\nLooking at the structure: there's an 8-filled region in middle. The 1s carve out a 5x5 from it.\n\nFrom visual inspection of the 8-pattern:\n```\n8 8 8 8 8\n8 8 8 0 8\n8 8 8 0 8\n0 0 8 8 8\n8 0 8 8 0\n```\n\nWait that's 5 rows but let me verify. Actually looking more carefully, the pattern might be:\n\nRow 6 (from 8s around): 8,8,8,8,8\nRow 7: 8,8,8,0,8\nRow 8: 8,8,8,0,8\nRow 9: 0,0,8,8,8? or 8,0,0,8,8?\nRow 10: 8,0,8,8,0? or 0,8,8,0,8?\n\nGiven the examples' outputs and checking symmetry, let me try:\n\n```\n8 8 8 8 8\n8 8 8 0 8\n8 8 8 0 8\n8 0 0 8 8\n8 0 8 8 0\n```\n\nHmm but row 9 col 8 is 0 not 8 in actual input. Let me re-recheck: `8 0 0 1...` so col 8 = 0.\n\nActually looking at pattern where 1s replaced 8s: the 0s in 8-region are where output has 0s.\n\nFinal answer based on 8-pattern:\n```\n8 8 8 8 8\n8 8 8 0 8\n8 8 8 0 8\n0 0 8 8 8\n8 0 8 8 0\n```\n\nWait - need to recheck row 10. Input: `8 0 8` before 1s, so positions 7,8 = 0,8? No: col 6=8, col 7=0, col 8=8.\n\nSo row 10: 8,0,8,8,0? No, extracting 5 values where 1s are: using left context 8,0,8 and right 8,8,0,8. The 1s are 5 wide. If pattern is symmetric: 8,0,8,8,0? \n\nActually let me just use: 8,0,8,8,0 for row 10? Or check if it's 0,8,8,0,8?\n\nGiven col 6=8, col 7=0, col 8=8, and 1s at 9-13, and col 14=8, col 15=8, col 16=0, col 17=8.\n\nBy symmetry with row 6 having three 8s left and three 8s right of center... Actually row 6: 8,8,8,1,1,1,1,1,8,8,8,8 - that's 3 left, 4 right.\n\nFor row 10: 8,0,8,1,1,1,1,1,8,8,0,8 - that's 8,0,8 left and 8,8,0,8 right.\n\nNot symmetric. But for the 5-output, we take where 1s were: if we imagine 8-pattern continued: 8,0,8,8,0 or using the 0,8 pattern.\n\nGiven complexity, let me try: 8,0,8,8,0 for row 10.\n\nActually re-looking: the answer should match examples. In ex3, row 3 of output is `0 0 0 0 5` - checking input row 17 where 1s are: `5 5 5 0 1 1 1 1 1 5 5 5` - so left of 1s is 0, and pattern gives 0,0,0,0,5.\n\nHmm that's 0,0,0,0,5 not matching left-of-1s being single 0. So there's interpolation.\n\nFor test row 9: left is 0,0 and right is 8,0,0,8. Maybe output is 0,0,8,8,8 or 8,0,0,8,8?\n\nGiven row 7,8 have 8,8,8,0,8 and row 9 with 0,0 left... trying 0,0,8,8,8.\n\nFinal attempt:\n```\n8 8 8 8 8\n8 8 8 0 8\n8 8 8 0 8\n0 0 8 8 8\n8 0 8 8 0\n```\n\n[[8, 8, 8, 8, 8], [8, 8, 8, 0, 8], [8, 8, 8, 0, 8], [0, 0, 8, 8, 8], [8, 0, 8, 8, 0]]",
+  "ground_truth": [
+    [
+      8,
+      8,
+      8,
+      8,
+      8
+    ],
+    [
+      0,
+      0,
+      8,
+      8,
+      0
+    ],
+    [
+      0,
+      8,
+      0,
+      0,
+      8
+    ],
+    [
+      8,
+      8,
+      8,
+      8,
+      8
+    ],
+    [
+      8,
+      0,
+      8,
+      8,
+      0
+    ]
+  ],
+  "evaluation_ok": true,
+  "prediction": [
+    [
+      8,
+      8,
+      8,
+      8,
+      8
+    ],
+    [
+      8,
+      8,
+      8,
+      0,
+      8
+    ],
+    [
+      8,
+      8,
+      8,
+      0,
+      8
+    ],
+    [
+      0,
+      0,
+      8,
+      8,
+      8
+    ],
+    [
+      8,
+      0,
+      8,
+      8,
+      0
+    ]
+  ],
+  "exact_match": false,
+  "metrics": {
+    "exact_match": 0.0
+  }
+}

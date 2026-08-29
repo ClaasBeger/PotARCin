@@ -1,0 +1,289 @@
+{
+  "task_id": "a87f7484",
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 542473949,
+  "include_true": false,
+  "corruption_source": "corrupted_verifier",
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n6 0 6\n0 6 6\n6 0 6\n4 0 4\n0 4 4\n4 0 4\n8 8 8\n8 0 8\n8 8 8\nOutput:\n8 8 8\n8 0 8\n8 8 8\n\nExample 2:\nInput:\n2 0 0 3 0 0 7 0 7 1 0 0\n2 0 0 3 0 0 0 7 0 1 0 0\n0 2 2 0 3 3 7 0 7 0 1 1\nOutput:\n7 0 7\n0 7 0\n7 0 7\n\nExample 3:\nInput:\n3 0 0 4 0 4 2 0 0 8 0 0 1 0 0\n0 3 3 4 4 4 0 2 2 0 8 8 0 1 1\n0 3 0 4 0 4 0 2 0 0 8 0 0 1 0\nOutput:\n4 0 4\n4 4 4\n4 0 4\n\nExample 4:\nInput:\n0 7 7\n7 7 0\n7 0 7\n3 0 0\n0 3 3\n3 0 0\n2 0 0\n0 2 2\n2 0 0\n8 0 0\n0 8 8\n8 0 0\nOutput:\n0 7 7\n7 7 0\n7 0 7\n\nThe following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.\n\nCandidate pair:\nInput:\n7 0 0\n7 0 7\n0 7 0\n6 0 0\n6 0 6\n0 6 0\n5 0 0\n5 0 5\n0 5 0\n0 0 4\n0 4 0\n4 0 0\n3 0 0\n3 0 3\n0 3 0\nOutput:\n6 0 6\n0 6 0\n5 0 0\n\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "Looking at the examples, I need to find the pattern that maps input to output.\n\nIn each example, the input consists of multiple 3x3 grids concatenated horizontally, and the output is a single 3x3 grid.\n\nLet me analyze Example 1:\n- Input has 4 grids: grids with 6s, 4s, and 8s (the last one)\n- The 8-grid is: `8 8 8 / 8 0 8 / 8 8 8` - a full frame\n- Output is the 8-grid\n\nExample 2:\n- Input has 4 grids: 2s, 3s, 7s, 1s\n- The 7-grid is: `7 0 7 / 0 7 0 / 7 0 7` - X pattern\n- Output is the 7-grid\n\nExample 3:\n- Input has 5 grids: 3s, 4s, 2s, 8s, 1s\n- The 4-grid is: `4 0 4 / 4 4 4 / 4 0 4` - full middle row\n- Output is the 4-grid\n\nExample 4:\n- Input has 4 grids: 7s, 3s, 2s, 8s\n- The 7-grid is: `0 7 7 / 7 7 0 / 7 0 7`\n- Output is the 7-grid\n\nThe pattern seems to be: select the grid with the most filled cells (non-zero values).\n\nLet me verify by counting non-zero cells:\n- Example 1: 6-grid has 6, 4-grid has 6, 8-grid has 8. 8-grid wins. \u2713\n- Example 2: 2-grid has 4, 3-grid has 4, 7-grid has 6, 1-grid has 4. 7-grid wins. \u2713\n- Example 3: 3-grid has 5, 4-grid has 8, 2-grid has 4, 8-grid has 6, 1-grid has 4. 4-grid wins. \u2713\n- Example 4: 7-grid has 7, 3-grid has 4, 2-grid has 4, 8-grid has 4. 7-grid wins. \u2713\n\nNow for the corrupted candidate:\nInput grids (5 grids of 3x3):\n- 7-grid: `7 0 0 / 7 0 7 / 0 7 0` \u2192 5 non-zero\n- 6-grid: `6 0 0 / 6 0 6 / 0 6 0` \u2192 5 non-zero\n- 5-grid: `5 0 0 / 5 0 5 / 0 5 0` \u2192 5 non-zero\n- 4-grid: `0 0 4 / 0 4 0 / 4 0 0` \u2192 3 non-zero\n- 3-grid: `3 0 0 / 3 0 3 / 0 3 0` \u2192 5 non-zero\n\nThere's a tie at 5. Looking more carefully at the patterns...\n\nActually, re-checking: maybe it's about unique patterns. The output shows `6 0 6 / 0 6 0 / 5 0 0` which mixes grids - this is corrupted.\n\nGiven the tie at 5, let me re-count: 7,6,5,3,5 all have 5 except 4 has 3. Actually 7,6,5,3 each have 5.\n\nWait: `7 0 0` = 1, `7 0 7` = 2, `0 7 0` = 1, total 4? Let me recount: positions (0,0),(1,0),(1,2),(2,1) = 4 non-zero.\n\n7-grid: 4 non-zero\n6-grid: 4 non-zero  \n5-grid: 4 non-zero\n4-grid: 3 non-zero\n3-grid: 4 non-zero\n\nHmm, still tied. But looking at original examples more carefully - maybe it's the first grid with the maximum? Or there's another property.\n\nGiven the corrupted output shows 6 and 5 mixed, and the pattern seems to be selecting a single complete grid, I'll pick the 6-grid (second grid, first to reach max if we go left to right, or perhaps the intended answer based on typical pattern).\n\nActually re-checking: 7-grid has 4, 6-grid has 4, 5-grid has 4, 4-grid has 3, 3-grid has 4.\n\nThe given corrupted output starts with 6 pattern... Let me provide the 6-grid as output.\n\n{\"input\": [[7, 0, 0, 6, 0, 0, 5, 0, 0, 0, 0, 4, 3, 0, 0], [7, 0, 7, 6, 0, 6, 5, 0, 5, 0, 4, 0, 3, 0, 3], [0, 7, 0, 0, 6, 0, 0, 5, 0, 4, 0, 0, 0, 3, 0]], \"output\": [[6, 0, 0], [6, 0, 6], [0, 6, 0]]}",
+  "corrupted_pair": {
+    "input": [
+      [
+        7,
+        0,
+        0
+      ],
+      [
+        7,
+        0,
+        7
+      ],
+      [
+        0,
+        7,
+        0
+      ],
+      [
+        6,
+        0,
+        0
+      ],
+      [
+        6,
+        0,
+        6
+      ],
+      [
+        0,
+        6,
+        0
+      ],
+      [
+        5,
+        0,
+        0
+      ],
+      [
+        5,
+        0,
+        5
+      ],
+      [
+        0,
+        5,
+        0
+      ],
+      [
+        0,
+        0,
+        4
+      ],
+      [
+        0,
+        4,
+        0
+      ],
+      [
+        4,
+        0,
+        0
+      ],
+      [
+        3,
+        0,
+        0
+      ],
+      [
+        3,
+        0,
+        3
+      ],
+      [
+        0,
+        3,
+        0
+      ]
+    ],
+    "output": [
+      [
+        6,
+        0,
+        6
+      ],
+      [
+        0,
+        6,
+        0
+      ],
+      [
+        5,
+        0,
+        0
+      ]
+    ]
+  },
+  "target_pair": {
+    "input": [
+      [
+        7,
+        0,
+        0
+      ],
+      [
+        7,
+        0,
+        7
+      ],
+      [
+        0,
+        7,
+        0
+      ],
+      [
+        6,
+        0,
+        0
+      ],
+      [
+        6,
+        0,
+        6
+      ],
+      [
+        0,
+        6,
+        0
+      ],
+      [
+        5,
+        0,
+        0
+      ],
+      [
+        5,
+        0,
+        5
+      ],
+      [
+        0,
+        5,
+        0
+      ],
+      [
+        0,
+        0,
+        4
+      ],
+      [
+        0,
+        4,
+        0
+      ],
+      [
+        4,
+        0,
+        0
+      ],
+      [
+        3,
+        0,
+        0
+      ],
+      [
+        3,
+        0,
+        3
+      ],
+      [
+        0,
+        3,
+        0
+      ]
+    ],
+    "output": [
+      [
+        0,
+        0,
+        4
+      ],
+      [
+        0,
+        4,
+        0
+      ],
+      [
+        4,
+        0,
+        0
+      ]
+    ]
+  },
+  "evaluation_ok": true,
+  "prediction_pair": {
+    "input": [
+      [
+        7,
+        0,
+        0,
+        6,
+        0,
+        0,
+        5,
+        0,
+        0,
+        0,
+        0,
+        4,
+        3,
+        0,
+        0
+      ],
+      [
+        7,
+        0,
+        7,
+        6,
+        0,
+        6,
+        5,
+        0,
+        5,
+        0,
+        4,
+        0,
+        3,
+        0,
+        3
+      ],
+      [
+        0,
+        7,
+        0,
+        0,
+        6,
+        0,
+        0,
+        5,
+        0,
+        4,
+        0,
+        0,
+        0,
+        3,
+        0
+      ]
+    ],
+    "output": [
+      [
+        6,
+        0,
+        0
+      ],
+      [
+        6,
+        0,
+        6
+      ],
+      [
+        0,
+        6,
+        0
+      ]
+    ]
+  },
+  "guardrail": {
+    "enabled": true,
+    "max_norm_edit": 0.7,
+    "normalized_distance_input": 0.32,
+    "normalized_distance_output": 0.6666666666666666,
+    "passed": true
+  },
+  "metrics": {
+    "success": false
+  }
+}

@@ -1,0 +1,298 @@
+{
+  "task_id": "dae9d2b5",
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": null,
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 1387351880,
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below. You will see five additional input/output pairs (test items 0\u20134). For each test item, decide whether that pair could have been produced by the same underlying rule and data distribution as the training examples (1 = same distribution / consistent, 0 = not).\n\nTraining example 1:\nInput:\n4 4 0 3 3 0\n4 0 0 3 0 0\n0 0 0 0 0 3\nOutput:\n6 6 0\n6 0 0\n0 0 6\n\nTraining example 2:\nInput:\n4 0 4 3 3 0\n4 0 0 3 0 0\n0 0 4 3 0 0\nOutput:\n6 6 6\n6 0 0\n6 0 6\n\nTraining example 3:\nInput:\n0 0 4 0 3 0\n0 4 4 3 0 3\n4 4 0 0 0 3\nOutput:\n0 6 6\n6 6 6\n6 6 6\n\nTraining example 4:\nInput:\n4 4 0 3 0 0\n0 0 0 0 0 3\n4 0 0 0 0 0\nOutput:\n6 6 0\n0 0 6\n6 0 0\n\nTraining example 5:\nInput:\n0 0 0 0 3 0\n4 0 0 0 0 0\n0 0 4 3 3 0\nOutput:\n0 6 0\n6 0 0\n6 6 6\n\nTest pairs (evaluate each in order, index 0 \u2026 4):\n\nTest 0:\nInput:\n4 4 0 3 3 3\n4 0 0 3 0 3\n4 4 0 3 3 3\nOutput:\n6 6 6\n6 0 6\n6 0 6\n\nTest 1:\nInput:\n0 4 0 0 3 0\n0 4 4 0 0 3\n4 4 0 0 0 0\nOutput:\n0 6 0\n0 6 6\n6 6 0\n\nTest 2:\nInput:\n4 4 0 0 0 3\n0 0 4 3 0 0\n0 0 0 0 0 0\nOutput:\n6 6 6\n6 0 6\n0 0 0\n\nTest 3:\nInput:\n0 0 4 3 0 0\n0 4 4 3 0 0\n0 0 0 3 3 0\nOutput:\n6 6 6\n6 6 6\n6 6 0\n\nTest 4:\nInput:\n0 0 0 0 3 3\n4 0 4 3 3 0\n4 4 0 3 3 0\nOutput:\n0 6 6\n6 6 6\n6 6 0\n\nYour final answer must be only a single Python list of exactly five integers, each 0 or 1, in order for test 0 through test 4, for example [1, 0, 1, 1, 0]. Output nothing else: no other text, no markdown code fences, and no explanation.",
+  "raw_response": null,
+  "test_pairs": [
+    {
+      "input": [
+        [
+          4,
+          4,
+          0,
+          3,
+          3,
+          3
+        ],
+        [
+          4,
+          0,
+          0,
+          3,
+          0,
+          3
+        ],
+        [
+          4,
+          4,
+          0,
+          3,
+          3,
+          3
+        ]
+      ],
+      "output": [
+        [
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          0,
+          6
+        ],
+        [
+          6,
+          0,
+          6
+        ]
+      ]
+    },
+    {
+      "input": [
+        [
+          0,
+          4,
+          0,
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          4,
+          4,
+          0,
+          0,
+          3
+        ],
+        [
+          4,
+          4,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "output": [
+        [
+          0,
+          6,
+          0
+        ],
+        [
+          0,
+          6,
+          6
+        ],
+        [
+          6,
+          6,
+          0
+        ]
+      ]
+    },
+    {
+      "input": [
+        [
+          4,
+          4,
+          0,
+          0,
+          0,
+          3
+        ],
+        [
+          0,
+          0,
+          4,
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "output": [
+        [
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          0,
+          6
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "input": [
+        [
+          0,
+          0,
+          4,
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          4,
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          3,
+          3,
+          0
+        ]
+      ],
+      "output": [
+        [
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          6,
+          0
+        ]
+      ]
+    },
+    {
+      "input": [
+        [
+          0,
+          0,
+          0,
+          0,
+          3,
+          3
+        ],
+        [
+          4,
+          0,
+          4,
+          3,
+          3,
+          0
+        ],
+        [
+          4,
+          4,
+          0,
+          3,
+          3,
+          0
+        ]
+      ],
+      "output": [
+        [
+          0,
+          6,
+          6
+        ],
+        [
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          6,
+          0
+        ]
+      ]
+    }
+  ],
+  "ground_truth": [
+    false,
+    true,
+    true,
+    false,
+    true
+  ],
+  "item_meta": [
+    {
+      "category": "instance_mismatch",
+      "meta": {
+        "category": "instance_mismatch",
+        "kind": "same_task_instance_mismatch",
+        "slot": 1
+      }
+    },
+    {
+      "category": "dynamic_correct",
+      "meta": {
+        "category": "dynamic_correct",
+        "kind": "arc_gen_dynamic_correct",
+        "slot": 4
+      }
+    },
+    {
+      "category": "dynamic_correct",
+      "meta": {
+        "category": "dynamic_correct",
+        "kind": "arc_gen_dynamic_correct",
+        "slot": 2
+      }
+    },
+    {
+      "category": "instance_mismatch",
+      "meta": {
+        "category": "instance_mismatch",
+        "kind": "same_task_instance_mismatch",
+        "slot": 3
+      }
+    },
+    {
+      "category": "dynamic_correct",
+      "meta": {
+        "category": "dynamic_correct",
+        "kind": "arc_gen_dynamic_correct",
+        "slot": 0
+      }
+    }
+  ],
+  "evaluation_ok": false,
+  "predictions": null,
+  "metrics": {
+    "accuracy": 0.0,
+    "correct": 0,
+    "total": 5,
+    "exact_match": 0
+  },
+  "stage": "api_call_failed",
+  "prior_work_context": null,
+  "error": "OpenRouter Chat Completions API error 402: {\"error\":{\"message\":\"Insufficient credits. Add more using https://openrouter.ai/settings/credits\",\"code\":402,\"metadata\":{\"limit_source\":\"openrouter_credits\",\"remedy_hint\":\"Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.\"}}}"
+}

@@ -1,0 +1,62 @@
+{
+  "task_id": "80af3007",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 5 5 5 0 0 0 5 5 5 0 0 0 0 0 0 0 0\n0 5 5 5 0 0 0 5 5 5 0 0 0 0 0 0 0 0\n0 5 5 5 0 0 0 5 5 5 0 0 0 0 0 0 0 0\n0 0 0 0 5 5 5 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 5 5 5 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 5 5 5 0 0 0 0 0 0 0 0 0 0 0\n0 5 5 5 0 0 0 5 5 5 0 0 0 0 0 0 0 0\n0 5 5 5 0 0 0 5 5 5 0 0 0 0 0 0 0 0\n0 5 5 5 0 0 0 5 5 5 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n5 0 5 0 0 0 5 0 5\n0 5 0 0 0 0 0 5 0\n5 0 5 0 0 0 5 0 5\n0 0 0 5 0 5 0 0 0\n0 0 0 0 5 0 0 0 0\n0 0 0 5 0 5 0 0 0\n5 0 5 0 0 0 5 0 5\n0 5 0 0 0 0 0 5 0\n5 0 5 0 0 0 5 0 5\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 5 5 5 5 5 5 0 0 0 0 0\n0 0 0 0 0 0 0 5 5 5 5 5 5 0 0 0 0 0\n0 0 0 0 0 0 0 5 5 5 5 5 5 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 5 5 5 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 5 5 5 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 5 5 5 0 0\n0 0 0 0 0 0 0 5 5 5 5 5 5 0 0 0 0 0\n0 0 0 0 0 0 0 5 5 5 5 5 5 0 0 0 0 0\n0 0 0 0 0 0 0 5 5 5 5 5 5 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n5 5 0 5 5 0 0 0 0\n0 0 5 0 0 5 0 0 0\n5 5 0 5 5 0 0 0 0\n0 0 0 0 0 0 5 5 0\n0 0 0 0 0 0 0 0 5\n0 0 0 0 0 0 5 5 0\n5 5 0 5 5 0 0 0 0\n0 0 5 0 0 5 0 0 0\n5 5 0 5 5 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 5 5 5 5 5 5 5 5 5 0 0 0 0 0 0\n0 0 0 5 5 5 5 5 5 5 5 5 0 0 0 0 0 0\n0 0 0 5 5 5 5 5 5 5 5 5 0 0 0 0 0 0\n0 0 0 0 0 0 5 5 5 5 5 5 0 0 0 0 0 0\n0 0 0 0 0 0 5 5 5 5 5 5 0 0 0 0 0 0\n0 0 0 0 0 0 5 5 5 5 5 5 0 0 0 0 0 0\n0 0 0 5 5 5 0 0 0 5 5 5 0 0 0 0 0 0\n0 0 0 5 5 5 0 0 0 5 5 5 0 0 0 0 0 0\n0 0 0 5 5 5 0 0 0 5 5 5 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n5 5 5 5 5 5 5 5 5\n0 5 5 0 5 5 0 5 5\n5 0 5 5 0 5 5 0 5\n0 0 0 5 5 5 5 5 5\n0 0 0 0 5 5 0 5 5\n0 0 0 5 0 5 5 0 5\n5 5 5 0 0 0 5 5 5\n0 5 5 0 0 0 0 5 5\n5 0 5 0 0 0 5 0 5\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 5 5 5 5 5 5 5 5 5 0 0 0\n0 0 0 0 0 0 0 5 5 5 5 5 5 5 5 5 0 0 0\n0 0 0 0 0 0 0 5 5 5 5 5 5 5 5 5 0 0 0\n0 0 0 0 0 0 0 0 0 0 5 5 5 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 5 5 5 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 5 5 5 0 0 0 0 0 0\n0 0 0 0 0 0 0 5 5 5 0 0 0 5 5 5 0 0 0\n0 0 0 0 0 0 0 5 5 5 0 0 0 5 5 5 0 0 0\n0 0 0 0 0 0 0 5 5 5 0 0 0 5 5 5 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    rows = len(grid)\n    if rows == 0:\n        return []\n    cols = len(grid[0])\n\n    # Find bounding box of non\u2011zero cells\n    min_r, max_r = rows, -1\n    min_c, max_c = cols, -1\n    color = None\n    for i in range(rows):\n        for j in range(cols):\n            v = grid[i][j]\n            if v != 0:\n                if color is None:\n                    color = v\n                if i < min_r:\n                    min_r = i\n                if i > max_r:\n                    max_r = i\n                if j < min_c:\n                    min_c = j\n                if j > max_c:\n                    max_c = j\n\n    if color is None:          # no coloured cell \u2192 empty result\n        return [[]]\n\n    height = max_r - min_r + 1\n    width  = max_c - min_c + 1\n    block_size = height // 3   # 3\u00d73 blocks inside the 9\u00d79 region\n    nblocks = 3                # height // block_size\n\n    # Determine which 3\u00d73 blocks contain any coloured cell\n    presence = [[0] * nblocks for _ in range(nblocks)]\n    for br in range(nblocks):\n        for bc in range(nblocks):\n            r0 = min_r + br * block_size\n            c0 = min_c + bc * block_size\n            any_present = False\n            for i in range(r0, r0 + block_size):\n                for j in range(c0, c0 + block_size):\n                    if grid[i][j] != 0:\n                        any_present = True\n                        break\n                if any_present:\n                    break\n            presence[br][bc] = 1 if any_present else 0\n\n    # Build the 9\u00d79 output grid\n    out_size = height\n    out = [[0] * out_size for _ in range(out_size)]\n    for br in range(nblocks):\n        for bc in range(nblocks):\n            if presence[br][bc]:\n                # Fill this block with the whole presence pattern\n                for i in range(block_size):\n                    for j in range(block_size):\n                        if presence[i][j]:\n                            out[br * block_size + i][bc * block_size + j] = color\n    return out",
+  "script": "def solve(grid):\n    rows = len(grid)\n    if rows == 0:\n        return []\n    cols = len(grid[0])\n\n    # Find bounding box of non\u2011zero cells\n    min_r, max_r = rows, -1\n    min_c, max_c = cols, -1\n    color = None\n    for i in range(rows):\n        for j in range(cols):\n            v = grid[i][j]\n            if v != 0:\n                if color is None:\n                    color = v\n                if i < min_r:\n                    min_r = i\n                if i > max_r:\n                    max_r = i\n                if j < min_c:\n                    min_c = j\n                if j > max_c:\n                    max_c = j\n\n    if color is None:          # no coloured cell \u2192 empty result\n        return [[]]\n\n    height = max_r - min_r + 1\n    width  = max_c - min_c + 1\n    block_size = height // 3   # 3\u00d73 blocks inside the 9\u00d79 region\n    nblocks = 3                # height // block_size\n\n    # Determine which 3\u00d73 blocks contain any coloured cell\n    presence = [[0] * nblocks for _ in range(nblocks)]\n    for br in range(nblocks):\n        for bc in range(nblocks):\n            r0 = min_r + br * block_size\n            c0 = min_c + bc * block_size\n            any_present = False\n            for i in range(r0, r0 + block_size):\n                for j in range(c0, c0 + block_size):\n                    if grid[i][j] != 0:\n                        any_present = True\n                        break\n                if any_present:\n                    break\n            presence[br][bc] = 1 if any_present else 0\n\n    # Build the 9\u00d79 output grid\n    out_size = height\n    out = [[0] * out_size for _ in range(out_size)]\n    for br in range(nblocks):\n        for bc in range(nblocks):\n            if presence[br][bc]:\n                # Fill this block with the whole presence pattern\n                for i in range(block_size):\n                    for j in range(block_size):\n                        if presence[i][j]:\n                            out[br * block_size + i][bc * block_size + j] = color\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 261,
+      "total": 261,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 10,
+      "total": 1000,
+      "success_rate": 0.01
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "list index out of range"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "list index out of range"
+    }
+  },
+  "evaluation_ok": true
+}

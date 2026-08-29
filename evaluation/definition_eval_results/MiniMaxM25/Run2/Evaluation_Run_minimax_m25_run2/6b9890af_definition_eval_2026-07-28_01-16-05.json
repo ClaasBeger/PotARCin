@@ -1,0 +1,62 @@
+{
+  "task_id": "6b9890af",
+  "test_idx": 0,
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 8 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 8 8 8 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 8 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n2 2 2 2 2 2 2 2\n2 0 0 8 8 0 0 2\n2 0 0 8 8 0 0 2\n2 8 8 8 8 8 8 2\n2 8 8 8 8 8 8 2\n2 0 0 8 8 0 0 2\n2 0 0 8 8 0 0 2\n2 2 2 2 2 2 2 2\n\nExample 2:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n2 2 2 2 2\n2 0 1 1 2\n2 1 0 0 2\n2 0 1 1 2\n2 2 2 2 2\n\nExample 3:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 4 4 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 4 0 4 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n2 2 2 2 2 2 2 2 2 2 2\n2 0 0 0 4 4 4 4 4 4 2\n2 0 0 0 4 4 4 4 4 4 2\n2 0 0 0 4 4 4 4 4 4 2\n2 4 4 4 0 0 0 4 4 4 2\n2 4 4 4 0 0 0 4 4 4 2\n2 4 4 4 0 0 0 4 4 4 2\n2 0 0 0 0 0 0 4 4 4 2\n2 0 0 0 0 0 0 4 4 4 2\n2 0 0 0 0 0 0 4 4 4 2\n2 2 2 2 2 2 2 2 2 2 2\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 3 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 3 0 3 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 3 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0\n0 0 2 2 2 2 2 2 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "def solve(grid):\n    from collections import Counter\n\n    # Determine dimensions\n    rows = len(grid)\n    cols = len(grid[0]) if rows else 0\n\n    # Count non\u2011zero colors\n    freq = Counter()\n    for r in range(rows):\n        for c in range(cols):\n            v = grid[r][c]\n            if v != 0:\n                freq[v] += 1\n\n    if not freq:\n        return []\n\n    # Border color is the most frequent non\u2011zero color\n    border_color = max(freq, key=freq.get)\n\n    # Shape color is any other non\u2011zero color\n    shape_color = None\n    for col, cnt in freq.items():\n        if col != border_color:\n            shape_color = col\n            break\n\n    # Find bounding box of the border\n    min_r_border = rows\n    max_r_border = -1\n    min_c_border = cols\n    max_c_border = -1\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == border_color:\n                if r < min_r_border:\n                    min_r_border = r\n                if r > max_r_border:\n                    max_r_border = r\n                if c < min_c_border:\n                    min_c_border = c\n                if c > max_c_border:\n                    max_c_border = c\n\n    # Find bounding box of the shape\n    min_r_shape = rows\n    max_r_shape = -1\n    min_c_shape = cols\n    max_c_shape = -1\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == shape_color:\n                if r < min_r_shape:\n                    min_r_shape = r\n                if r > max_r_shape:\n                    max_r_shape = r\n                if c < min_c_shape:\n                    min_c_shape = c\n                if c > max_c_shape:\n                    max_c_shape = c\n\n    # Sizes\n    border_h = max_r_border - min_r_border + 1\n    border_w = max_c_border - min_c_border + 1\n    interior_h = border_h - 2\n    interior_w = border_w - 2\n\n    shape_h = max_r_shape - min_r_shape + 1\n    shape_w = max_c_shape - min_c_shape + 1\n\n    # Scaling factor (integer)\n    scale = interior_h // shape_h   # same as interior_w // shape_w\n\n    # Extract shape pattern (including zeros inside its bounding box)\n    shape_grid = [[0] * shape_w for _ in range(shape_h)]\n    for i in range(shape_h):\n        for j in range(shape_w):\n            shape_grid[i][j] = grid[min_r_shape + i][min_c_shape + j]\n\n    # Create output grid (border size)\n    out_h = border_h\n    out_w = border_w\n    out = [[0] * out_w for _ in range(out_h)]\n\n    # Draw border\n    for i in range(out_h):\n        for j in range(out_w):\n            if i == 0 or i == out_h - 1 or j == 0 or j == out_w - 1:\n                out[i][j] = border_color\n\n    # Fill interior with scaled shape\n    for r in range(interior_h):\n        for c in range(interior_w):\n            sr = r // scale\n            sc = c // scale\n            val = shape_grid[sr][sc]\n            if val != 0:\n                out[r + 1][c + 1] = val\n\n    return out",
+  "script": "def solve(grid):\n    from collections import Counter\n\n    # Determine dimensions\n    rows = len(grid)\n    cols = len(grid[0]) if rows else 0\n\n    # Count non\u2011zero colors\n    freq = Counter()\n    for r in range(rows):\n        for c in range(cols):\n            v = grid[r][c]\n            if v != 0:\n                freq[v] += 1\n\n    if not freq:\n        return []\n\n    # Border color is the most frequent non\u2011zero color\n    border_color = max(freq, key=freq.get)\n\n    # Shape color is any other non\u2011zero color\n    shape_color = None\n    for col, cnt in freq.items():\n        if col != border_color:\n            shape_color = col\n            break\n\n    # Find bounding box of the border\n    min_r_border = rows\n    max_r_border = -1\n    min_c_border = cols\n    max_c_border = -1\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == border_color:\n                if r < min_r_border:\n                    min_r_border = r\n                if r > max_r_border:\n                    max_r_border = r\n                if c < min_c_border:\n                    min_c_border = c\n                if c > max_c_border:\n                    max_c_border = c\n\n    # Find bounding box of the shape\n    min_r_shape = rows\n    max_r_shape = -1\n    min_c_shape = cols\n    max_c_shape = -1\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == shape_color:\n                if r < min_r_shape:\n                    min_r_shape = r\n                if r > max_r_shape:\n                    max_r_shape = r\n                if c < min_c_shape:\n                    min_c_shape = c\n                if c > max_c_shape:\n                    max_c_shape = c\n\n    # Sizes\n    border_h = max_r_border - min_r_border + 1\n    border_w = max_c_border - min_c_border + 1\n    interior_h = border_h - 2\n    interior_w = border_w - 2\n\n    shape_h = max_r_shape - min_r_shape + 1\n    shape_w = max_c_shape - min_c_shape + 1\n\n    # Scaling factor (integer)\n    scale = interior_h // shape_h   # same as interior_w // shape_w\n\n    # Extract shape pattern (including zeros inside its bounding box)\n    shape_grid = [[0] * shape_w for _ in range(shape_h)]\n    for i in range(shape_h):\n        for j in range(shape_w):\n            shape_grid[i][j] = grid[min_r_shape + i][min_c_shape + j]\n\n    # Create output grid (border size)\n    out_h = border_h\n    out_w = border_w\n    out = [[0] * out_w for _ in range(out_h)]\n\n    # Draw border\n    for i in range(out_h):\n        for j in range(out_w):\n            if i == 0 or i == out_h - 1 or j == 0 or j == out_w - 1:\n                out[i][j] = border_color\n\n    # Fill interior with scaled shape\n    for r in range(interior_h):\n        for c in range(interior_w):\n            sr = r // scale\n            sc = c // scale\n            val = shape_grid[sr][sc]\n            if val != 0:\n                out[r + 1][c + 1] = val\n\n    return out",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 3,
+      "total": 3,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 261,
+      "total": 261,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 18,
+      "total": 1000,
+      "success_rate": 0.018
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "list index out of range"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "list index out of range"
+    }
+  },
+  "evaluation_ok": true
+}

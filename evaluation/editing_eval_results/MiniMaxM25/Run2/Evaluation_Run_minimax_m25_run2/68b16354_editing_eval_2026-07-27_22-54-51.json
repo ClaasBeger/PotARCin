@@ -1,0 +1,253 @@
+{
+  "task_id": "68b16354",
+  "model": "minimax/minimax-m2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 538637881,
+  "include_true": false,
+  "corruption_source": "color_flip",
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n8 1 2 1 4\n4 4 2 4 8\n3 7 2 4 8\n2 7 7 8 7\n8 7 7 4 8\nOutput:\n8 7 7 4 8\n2 7 7 8 7\n3 7 2 4 8\n4 4 2 4 8\n8 1 2 1 4\n\nExample 2:\nInput:\n7 3 3 1 2\n1 8 2 4 1\n2 7 8 7 2\n7 7 4 1 8\n8 1 7 7 1\nOutput:\n8 1 7 7 1\n7 7 4 1 8\n2 7 8 7 2\n1 8 2 4 1\n7 3 3 1 2\n\nExample 3:\nInput:\n2 7 4 3 4 8 3\n2 3 7 1 2 3 3\n8 7 4 3 2 2 4\n1 1 2 1 4 4 7\n2 4 3 1 1 4 1\n4 8 7 4 4 8 2\n7 3 8 4 3 2 8\nOutput:\n7 3 8 4 3 2 8\n4 8 7 4 4 8 2\n2 4 3 1 1 4 1\n1 1 2 1 4 4 7\n8 7 4 3 2 2 4\n2 3 7 1 2 3 3\n2 7 4 3 4 8 3\n\nThe following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.\n\nCandidate pair:\nInput:\n7 3 4 7 1\n2 4 1 2 2\n4 8 8 7 7\n1 2 8 4 8\n1 8 4 3 7\nOutput:\n1 8 4 3 7\n3 2 8 4 8\n4 8 8 7 7\n2 4 1 2 2\n7 3 6 7 1\n\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "{\"input\": [[7, 3, 4, 7, 1], [2, 4, 1, 2, 2], [4, 8, 8, 7, 7], [1, 2, 8, 4, 8], [1, 8, 4, 3, 7]], \"output\": [[1, 8, 4, 3, 7], [1, 2, 8, 4, 8], [4, 8, 8, 7, 7], [2, 4, 1, 2, 2], [7, 3, 4, 7, 1]]}",
+  "corrupted_pair": {
+    "input": [
+      [
+        7,
+        3,
+        4,
+        7,
+        1
+      ],
+      [
+        2,
+        4,
+        1,
+        2,
+        2
+      ],
+      [
+        4,
+        8,
+        8,
+        7,
+        7
+      ],
+      [
+        1,
+        2,
+        8,
+        4,
+        8
+      ],
+      [
+        1,
+        8,
+        4,
+        3,
+        7
+      ]
+    ],
+    "output": [
+      [
+        1,
+        8,
+        4,
+        3,
+        7
+      ],
+      [
+        3,
+        2,
+        8,
+        4,
+        8
+      ],
+      [
+        4,
+        8,
+        8,
+        7,
+        7
+      ],
+      [
+        2,
+        4,
+        1,
+        2,
+        2
+      ],
+      [
+        7,
+        3,
+        6,
+        7,
+        1
+      ]
+    ]
+  },
+  "target_pair": {
+    "input": [
+      [
+        7,
+        3,
+        4,
+        7,
+        1
+      ],
+      [
+        2,
+        4,
+        1,
+        2,
+        2
+      ],
+      [
+        4,
+        8,
+        8,
+        7,
+        7
+      ],
+      [
+        3,
+        2,
+        8,
+        4,
+        8
+      ],
+      [
+        1,
+        8,
+        4,
+        3,
+        7
+      ]
+    ],
+    "output": [
+      [
+        1,
+        8,
+        4,
+        3,
+        7
+      ],
+      [
+        3,
+        2,
+        8,
+        4,
+        8
+      ],
+      [
+        4,
+        8,
+        8,
+        7,
+        7
+      ],
+      [
+        2,
+        4,
+        1,
+        2,
+        2
+      ],
+      [
+        7,
+        3,
+        4,
+        7,
+        1
+      ]
+    ]
+  },
+  "evaluation_ok": true,
+  "prediction_pair": {
+    "input": [
+      [
+        7,
+        3,
+        4,
+        7,
+        1
+      ],
+      [
+        2,
+        4,
+        1,
+        2,
+        2
+      ],
+      [
+        4,
+        8,
+        8,
+        7,
+        7
+      ],
+      [
+        1,
+        2,
+        8,
+        4,
+        8
+      ],
+      [
+        1,
+        8,
+        4,
+        3,
+        7
+      ]
+    ],
+    "output": [
+      [
+        1,
+        8,
+        4,
+        3,
+        7
+      ],
+      [
+        1,
+        2,
+        8,
+        4,
+        8
+      ],
+      [
+        4,
+        8,
+        8,
+        7,
+        7
+      ],
+      [
+        2,
+        4,
+        1,
+        2,
+        2
+      ],
+      [
+        7,
+        3,
+        4,
+        7,
+        1
+      ]
+    ]
+  },
+  "guardrail": {
+    "enabled": true,
+    "max_norm_edit": 0.7,
+    "normalized_distance_input": 0.0,
+    "normalized_distance_output": 0.08,
+    "passed": true
+  },
+  "metrics": {
+    "success": true
+  }
+}

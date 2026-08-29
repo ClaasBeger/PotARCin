@@ -1,0 +1,246 @@
+{
+  "task_id": "a68b268e",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 7 7 7 1 0 4 0 4\n7 7 7 0 1 4 4 0 0\n0 0 0 0 1 0 0 0 4\n7 0 0 0 1 0 0 0 0\n1 1 1 1 1 1 1 1 1\n0 0 0 0 1 6 6 6 0\n0 0 8 8 1 0 0 0 0\n8 0 8 0 1 6 0 0 6\n0 0 0 8 1 0 0 0 0\nOutput:\n6 7 7 7\n7 7 7 8\n8 0 8 4\n7 0 0 8\n\nExample 2:\n\nInput:\n7 7 7 0 1 0 4 0 0\n7 0 7 0 1 4 0 4 4\n0 7 0 7 1 4 0 4 4\n0 0 0 7 1 0 0 0 0\n1 1 1 1 1 1 1 1 1\n0 0 8 0 1 6 0 0 6\n0 0 0 0 1 6 0 0 0\n0 0 0 0 1 6 6 0 6\n8 8 8 0 1 6 0 6 6\nOutput:\n7 7 7 6\n7 0 7 4\n4 7 4 7\n8 8 8 7\n\nExample 3:\n\nInput:\n0 0 7 7 1 0 4 4 0\n0 0 0 7 1 0 0 4 4\n7 7 7 7 1 0 0 0 4\n0 7 0 0 1 0 4 4 0\n1 1 1 1 1 1 1 1 1\n0 0 8 8 1 0 6 6 6\n0 0 0 0 1 0 0 6 0\n0 0 0 8 1 6 0 6 0\n8 0 0 0 1 6 6 0 0\nOutput:\n0 4 7 7\n0 0 4 7\n7 7 7 7\n8 7 4 0\n\nExample 4:\n\nInput:\n7 7 0 0 1 4 4 0 4\n7 0 7 0 1 4 0 0 0\n7 0 0 7 1 4 4 4 0\n7 0 7 7 1 4 0 4 4\n1 1 1 1 1 1 1 1 1\n0 0 8 0 1 0 0 0 0\n0 0 8 0 1 6 6 0 0\n0 0 8 0 1 0 6 6 6\n0 8 0 8 1 0 6 6 0\nOutput:\n7 7 8 4\n7 6 7 0\n7 4 4 7\n7 8 7 7\n\nExample 5:\n\nInput:\n7 7 0 0 1 0 0 0 4\n7 0 0 0 1 4 4 4 4\n7 0 7 0 1 4 0 0 0\n0 7 7 0 1 4 4 4 0\n1 1 1 1 1 1 1 1 1\n8 0 8 0 1 6 6 6 6\n0 0 8 8 1 0 0 6 0\n0 0 0 0 1 0 6 0 6\n8 8 8 8 1 0 0 0 6\nOutput:\n7 7 8 4\n7 4 4 4\n7 6 7 6\n4 7 7 8\n\nExample 6:\n\nInput:\n7 0 0 7 1 4 4 4 0\n0 7 7 7 1 4 4 0 4\n7 7 7 0 1 4 4 0 4\n7 7 7 0 1 0 4 0 0\n1 1 1 1 1 1 1 1 1\n8 8 0 8 1 6 6 6 6\n0 8 8 8 1 0 0 0 6\n0 8 0 8 1 0 0 6 0\n8 8 0 8 1 0 6 0 0\nOutput:\n7 4 4 7\n4 7 7 7\n7 7 7 4\n7 7 7 8\n\nBelow is a test input grid.\n\nInput:\n7 7 7 0 1 0 0 4 0\n0 7 7 0 1 4 4 0 4\n7 7 7 7 1 0 4 0 4\n7 0 0 0 1 4 0 4 0\n1 1 1 1 1 1 1 1 1\n0 0 0 8 1 0 6 0 6\n8 0 0 8 1 6 0 0 6\n8 0 8 0 1 6 6 6 6\n0 8 0 8 1 0 6 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\ndef solve(grid):\n    # Find the dividing line of 1s\n    n_rows = len(grid)\n    n_cols = len(grid[0])\n    \n    # Find the row and column of the dividing line of 1s\n    div_row = -1\n    div_col = -1\n    \n    for i in range(n_rows):\n        for j in range(n_cols):\n            if grid[i][j] == 1:\n                # Check if this is part of the dividing line\n                # Count 1s in row and column\n                row_ones = sum(1 for c in range(n_cols) if grid[i][c] == 1)\n                col_ones = sum(1 for r in range(n_rows) if grid[r][j] == 1)\n                if row_ones > 1 and col_ones > 1:\n                    div_row = i\n                    div_col = j\n                    break\n        if div_row != -1:\n            break\n    \n    # Extract the four quadrants\n    top_left = [[grid[i][j] for j in range(div_col)] for i in range(div_row)]\n    top_right = [[grid[i][j] for j in range(div_col+1, n_cols)] for i in range(div_row)]\n    bottom_left = [[grid[i][j] for j in range(div_col)] for i in range(div_row+1, n_rows)]\n    bottom_right = [[grid[i][j] for j in range(div_col+1, n_cols)] for i in range(div_row+1, n_rows)]\n    \n    # Get dimensions\n    h = len(top_left)\n    w = len(top_left[0])\n    \n    # Create output grid by combining quadrants\n    # For each position, take non-zero values from all quadrants\n    # Priority: top_left (7s) > top_right (4s) > bottom_left (8s) > bottom_right (6s)\n    # But we need to check the pattern from examples\n    \n    result = [[0] * w for _ in range(h)]\n    \n    for i in range(h):\n        for j in range(w):\n            # Get values from all four quadrants\n            tl = top_left[i][j]\n            tr = top_right[i][j]\n            bl = bottom_left[i][j]\n            br = bottom_right[i][j]\n            \n            # Based on examples, it seems like:\n            # - 7 (top-left) is preserved if present\n            # - 4 (top-right) fills in where 7 is 0\n            # - 8 (bottom-left) fills in where both are 0\n            # - 6 (bottom-right) fills in where all three are 0\n            \n            if tl != 0:\n                result[i][j] = tl\n            elif tr != 0:\n                result[i][j] = tr\n            elif bl != 0:\n                result[i][j] = bl\n            elif br != 0:\n                result[i][j] = br\n            else:\n                result[i][j] = 0\n    \n    return result\n```",
+  "script": "def solve(grid):\n    # Find the dividing line of 1s\n    n_rows = len(grid)\n    n_cols = len(grid[0])\n    \n    # Find the row and column of the dividing line of 1s\n    div_row = -1\n    div_col = -1\n    \n    for i in range(n_rows):\n        for j in range(n_cols):\n            if grid[i][j] == 1:\n                # Check if this is part of the dividing line\n                # Count 1s in row and column\n                row_ones = sum(1 for c in range(n_cols) if grid[i][c] == 1)\n                col_ones = sum(1 for r in range(n_rows) if grid[r][j] == 1)\n                if row_ones > 1 and col_ones > 1:\n                    div_row = i\n                    div_col = j\n                    break\n        if div_row != -1:\n            break\n    \n    # Extract the four quadrants\n    top_left = [[grid[i][j] for j in range(div_col)] for i in range(div_row)]\n    top_right = [[grid[i][j] for j in range(div_col+1, n_cols)] for i in range(div_row)]\n    bottom_left = [[grid[i][j] for j in range(div_col)] for i in range(div_row+1, n_rows)]\n    bottom_right = [[grid[i][j] for j in range(div_col+1, n_cols)] for i in range(div_row+1, n_rows)]\n    \n    # Get dimensions\n    h = len(top_left)\n    w = len(top_left[0])\n    \n    # Create output grid by combining quadrants\n    # For each position, take non-zero values from all quadrants\n    # Priority: top_left (7s) > top_right (4s) > bottom_left (8s) > bottom_right (6s)\n    # But we need to check the pattern from examples\n    \n    result = [[0] * w for _ in range(h)]\n    \n    for i in range(h):\n        for j in range(w):\n            # Get values from all four quadrants\n            tl = top_left[i][j]\n            tr = top_right[i][j]\n            bl = bottom_left[i][j]\n            br = bottom_right[i][j]\n            \n            # Based on examples, it seems like:\n            # - 7 (top-left) is preserved if present\n            # - 4 (top-right) fills in where 7 is 0\n            # - 8 (bottom-left) fills in where both are 0\n            # - 6 (bottom-right) fills in where all three are 0\n            \n            if tl != 0:\n                result[i][j] = tl\n            elif tr != 0:\n                result[i][j] = tr\n            elif bl != 0:\n                result[i][j] = bl\n            elif br != 0:\n                result[i][j] = br\n            else:\n                result[i][j] = 0\n    \n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 6,
+      "total": 6,
+      "success_rate": 1.0
+    },
+    "test": {
+      "ok": 1,
+      "total": 1,
+      "success_rate": 1.0
+    },
+    "stable": {
+      "ok": 262,
+      "total": 262,
+      "success_rate": 1.0
+    },
+    "generator_dynamic50": {
+      "ok": 50,
+      "total": 50,
+      "success_rate": 1.0
+    },
+    "re_arc_stable": {
+      "ok": 15,
+      "total": 1000,
+      "success_rate": 0.015
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": null,
+    "test": null,
+    "stable": null,
+    "generator_dynamic50": null,
+    "re_arc_stable": {
+      "index": 0,
+      "error": "list index out of range"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          9,
+          9,
+          0,
+          9,
+          9
+        ],
+        [
+          9,
+          9,
+          0,
+          9,
+          8
+        ],
+        [
+          9,
+          9,
+          0,
+          8,
+          9
+        ],
+        [
+          9,
+          9,
+          0,
+          8,
+          8
+        ],
+        [
+          9,
+          9,
+          0,
+          9,
+          8
+        ],
+        [
+          2,
+          2,
+          0,
+          9,
+          9
+        ],
+        [
+          9,
+          9,
+          0,
+          9,
+          9
+        ],
+        [
+          9,
+          9,
+          0,
+          9,
+          8
+        ],
+        [
+          9,
+          9,
+          0,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          9,
+          9
+        ],
+        [
+          9,
+          9,
+          0,
+          9,
+          9
+        ],
+        [
+          1,
+          1,
+          0,
+          9,
+          5
+        ],
+        [
+          9,
+          1,
+          0,
+          9,
+          9
+        ],
+        [
+          9,
+          1,
+          0,
+          9,
+          9
+        ],
+        [
+          1,
+          1,
+          0,
+          9,
+          9
+        ],
+        [
+          9,
+          1,
+          0,
+          9,
+          9
+        ],
+        [
+          1,
+          9,
+          0,
+          5,
+          5
+        ],
+        [
+          1,
+          9,
+          0,
+          9,
+          9
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          1
+        ],
+        [
+          9,
+          8
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          8,
+          8
+        ],
+        [
+          9,
+          8
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          9,
+          1
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          8,
+          8
+        ]
+      ],
+      "got": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    }
+  },
+  "evaluation_ok": true
+}

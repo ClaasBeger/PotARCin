@@ -1,0 +1,74 @@
+{
+  "task_id": "e73095fd",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 5 0 0 0 5 5\n5 5 0 0 0 5 5 5 5 0 0 0 0 5 0 0 0 5 0\n0 5 5 5 5 5 0 0 5 5 5 5 5 5 5 5 5 5 0\n5 5 0 0 0 5 0 0 5 0 0 0 0 5 0 0 0 5 0\n0 0 0 0 0 5 0 0 5 0 0 0 0 5 0 0 0 5 5\n0 0 0 0 0 5 0 0 5 0 0 5 5 5 5 0 0 0 0\n0 0 0 0 0 5 0 0 5 0 0 5 0 0 5 0 0 0 0\n0 0 0 0 0 5 5 5 5 0 0 5 0 0 5 5 5 5 5\n0 0 0 0 0 0 5 0 0 0 0 5 5 5 5 0 0 0 0\n0 0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0 0 0\n0 0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0 0 0\n0 0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 0 0 0 0 0 5 0 0 0 5 5\n5 5 0 0 0 5 5 5 5 0 0 0 0 5 0 0 0 5 4\n4 5 5 5 5 5 4 4 5 5 5 5 5 5 5 5 5 5 4\n5 5 0 0 0 5 4 4 5 0 0 0 0 5 0 0 0 5 4\n0 0 0 0 0 5 4 4 5 0 0 0 0 5 0 0 0 5 5\n0 0 0 0 0 5 4 4 5 0 0 5 5 5 5 0 0 0 0\n0 0 0 0 0 5 4 4 5 0 0 5 4 4 5 0 0 0 0\n0 0 0 0 0 5 5 5 5 0 0 5 4 4 5 5 5 5 5\n0 0 0 0 0 0 5 0 0 0 0 5 5 5 5 0 0 0 0\n0 0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0 0 0\n0 0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0 0 0\n0 0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 0 0 0 0 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 5 5 5 5 5 0 0 0 5 0 0 5 5\n0 0 0 5 0 0 0 5 0 0 0 5 0 0 5 0\n0 0 0 5 0 0 0 5 5 5 5 5 5 5 5 0\n0 0 0 5 0 0 0 5 0 0 0 0 0 0 5 0\n0 0 0 5 5 5 5 5 0 0 0 0 0 0 5 5\n0 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n5 5 5 5 5 5 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 5 5 5 5 5 0 0 0 5 0 0 5 5\n0 0 0 5 4 4 4 5 0 0 0 5 0 0 5 4\n0 0 0 5 4 4 4 5 5 5 5 5 5 5 5 4\n0 0 0 5 4 4 4 5 0 0 0 0 0 0 5 4\n0 0 0 5 5 5 5 5 0 0 0 0 0 0 5 5\n0 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n5 5 5 5 5 5 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 5 5 5 5 5 0\n5 5 5 5 5 5 5 5 5 5 5 5 0 0 0 5 0\n0 0 0 0 0 5 0 0 0 0 0 5 0 0 0 5 5\n0 0 0 5 5 5 5 0 0 0 0 5 0 0 0 5 0\n5 5 5 5 0 0 5 0 0 0 0 5 5 5 5 5 0\n0 0 0 5 0 0 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 5 0 0 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 5 5 5 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 5 5 5 5 0 0 0\n5 5 5 5 5 5 5 5 5 5 5 0 0 5 0 0 0\n0 0 0 0 0 5 0 0 0 0 5 0 0 5 0 0 0\n0 0 0 0 0 5 0 0 0 0 5 5 5 5 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0 0\nOutput:\n0 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 5 5 5 5 5 0\n5 5 5 5 5 5 5 5 5 5 5 5 4 4 4 5 0\n0 0 0 0 0 5 0 0 0 0 0 5 4 4 4 5 5\n0 0 0 5 5 5 5 0 0 0 0 5 4 4 4 5 0\n5 5 5 5 4 4 5 0 0 0 0 5 5 5 5 5 0\n0 0 0 5 4 4 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 5 4 4 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 5 5 5 5 0 0 0 0 0 5 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0 0\n0 0 0 0 0 5 0 0 0 0 5 5 5 5 0 0 0\n5 5 5 5 5 5 5 5 5 5 5 4 4 5 0 0 0\n0 0 0 0 0 5 0 0 0 0 5 4 4 5 0 0 0\n0 0 0 0 0 5 0 0 0 0 5 5 5 5 0 0 0\n0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0 0\n\nBelow is a test input grid.\n\nInput:\n0 0 0 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n5 5 5 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n0 0 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5\n5 5 5 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0\n0 0 0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0\n0 0 0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 0\n0 0 0 0 0 0 0 5 0 0 0 0 0 5 5 5 5 0\n0 0 0 0 0 5 5 5 5 5 0 0 0 5 0 0 5 0\n5 5 5 5 5 5 0 0 0 5 5 5 5 5 0 0 5 5\n0 5 0 0 0 5 0 0 0 5 0 0 0 5 0 0 5 0\n0 5 0 0 0 5 5 5 5 5 0 0 0 5 5 5 5 0\n0 5 0 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n5 5 5 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n5 0 5 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n5 5 5 0 0 0 0 5 0 0 0 0 0 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "```python\nfrom collections import deque\n\ndef solve(grid):\n    if not grid or not grid[0]:\n        return grid\n    \n    h = len(grid)\n    w = len(grid[0])\n    \n    # Create a copy to avoid modifying the input during traversal\n    result = [row[:] for row in grid]\n    visited = [[False for _ in range(w)] for _ in range(h)]\n    \n    # BFS from all boundary 0s\n    queue = deque()\n    \n    # Add all boundary cells that are 0\n    for i in range(h):\n        for j in [0, w-1]:\n            if grid[i][j] == 0 and not visited[i][j]:\n                visited[i][j] = True\n                queue.append((i, j))\n    for j in range(w):\n        for i in [0, h-1]:\n            if grid[i][j] == 0 and not visited[i][j]:\n                visited[i][j] = True\n                queue.append((i, j))\n    \n    # Directions: up, down, left, right\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n    \n    while queue:\n        i, j = queue.popleft()\n        for di, dj in directions:\n            ni, nj = i + di, j + dj\n            if 0 <= ni < h and 0 <= nj < w:\n                if not visited[ni][nj] and grid[ni][nj] == 0:\n                    visited[ni][nj] = True\n                    queue.append((ni, nj))\n    \n    # Fill unvisited 0s with 4\n    for i in range(h):\n        for j in range(w):\n            if grid[i][j] == 0 and not visited[i][j]:\n                result[i][j] = 4\n                \n    return result\n```",
+  "script": "from collections import deque\n\ndef solve(grid):\n    if not grid or not grid[0]:\n        return grid\n    \n    h = len(grid)\n    w = len(grid[0])\n    \n    # Create a copy to avoid modifying the input during traversal\n    result = [row[:] for row in grid]\n    visited = [[False for _ in range(w)] for _ in range(h)]\n    \n    # BFS from all boundary 0s\n    queue = deque()\n    \n    # Add all boundary cells that are 0\n    for i in range(h):\n        for j in [0, w-1]:\n            if grid[i][j] == 0 and not visited[i][j]:\n                visited[i][j] = True\n                queue.append((i, j))\n    for j in range(w):\n        for i in [0, h-1]:\n            if grid[i][j] == 0 and not visited[i][j]:\n                visited[i][j] = True\n                queue.append((i, j))\n    \n    # Directions: up, down, left, right\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n    \n    while queue:\n        i, j = queue.popleft()\n        for di, dj in directions:\n            ni, nj = i + di, j + dj\n            if 0 <= ni < h and 0 <= nj < w:\n                if not visited[ni][nj] and grid[ni][nj] == 0:\n                    visited[ni][nj] = True\n                    queue.append((ni, nj))\n    \n    # Fill unvisited 0s with 4\n    for i in range(h):\n        for j in range(w):\n            if grid[i][j] == 0 and not visited[i][j]:\n                result[i][j] = 4\n                \n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 262,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 1000,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "stable": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    }
+  },
+  "evaluation_ok": true
+}

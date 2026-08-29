@@ -1,0 +1,251 @@
+{
+  "task_id": "a740d043",
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 4178219,
+  "include_true": false,
+  "corruption_source": "p_arc_incorrect",
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n1 1 1 1 1 1 1\n1 2 2 1 1 1 1\n1 2 2 3 1 1 1\n1 1 1 2 1 1 1\n1 1 1 1 1 1 1\nOutput:\n2 2 0\n2 2 3\n0 0 2\n\nExample 2:\nInput:\n1 1 1 1 1 1 1\n1 1 3 1 2 1 1\n1 1 3 1 2 1 1\n1 1 1 1 1 1 1\n1 1 1 1 1 1 1\n1 1 1 1 1 1 1\n1 1 1 1 1 1 1\nOutput:\n3 0 2\n3 0 2\n\nExample 3:\nInput:\n1 1 1 1 1 1\n1 1 1 1 1 1\n1 5 5 1 1 1\n1 5 5 1 1 1\n1 6 6 1 1 1\n1 1 1 1 1 1\n1 1 1 1 1 1\nOutput:\n5 5\n5 5\n6 6\n\nThe following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.\n\nCandidate pair:\nInput:\n1 1 1 1 1 1\n1 1 1 1 1 1\n1 1 1 2 1 1\n1 1 2 3 1 1\n1 1 1 1 1 1\n1 1 1 1 1 1\nOutput:\n1 1 1 1 1 1\n1 1 1 1 1 1\n1 1 1 1 1 1\n1 1 1 1 1 1\n1 1 1 1 1 2\n1 1 1 1 2 3\n\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "Looking at the examples, I need to find the rule that maps input to output.\n\nIn Example 1:\n- Input has a 2x2 block of 2s at positions (1,1)-(2,2), a 3 at (2,3), and a 2 at (3,3)\n- Output is 3x3, extracting the non-1 region, with 0s filling empty spaces\n\nIn Example 2:\n- Input has vertical lines: 3s at columns 2, rows 1-2, and 2s at column 4, rows 1-2\n- Output is 2x3, showing the 3s, gap (0), and 2s\n\nIn Example 3:\n- Input has 2x2 block of 5s and 2x2 block of 6s\n- Output directly shows them stacked: 5s then 6s\n\nThe pattern seems to be: extract all non-1 values, preserving their relative positions, and crop to the bounding box of non-1 values. Empty cells within this bounding box become 0.\n\nFor the candidate:\nInput:\n```\n1 1 1 1 1 1\n1 1 1 1 1 1\n1 1 1 2 1 1\n1 1 2 3 1 1\n1 1 1 1 1 1\n1 1 1 1 1 1\n```\n\nNon-1 values: 2 at (2,3), 2 at (3,2), 3 at (3,3)\nBounding box: rows 2-3, columns 2-3 (2x2 area)\n\nExtracting this 2x2 region:\n- (2,2): 1 \u2192 0 (or empty, becomes 0)\n- (2,3): 2\n- (3,2): 2\n- (3,3): 3\n\nSo the output should be:\n```\n0 2\n2 3\n```\n\nLet me verify with examples:\n- Example 1: bounding box of non-1s is rows 1-3, cols 1-3 \u2192 3x3 output \u2713\n- Example 2: bounding box rows 1-2, cols 2-4 \u2192 2x3 output \u2713\n- Example 3: bounding box rows 2-4, cols 1-2 \u2192 3x2 output \u2713\n\nSo for candidate, output should be 2x2: `[[0, 2], [2, 3]]`\n\n```json\n{\"input\": [[1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1], [1, 1, 1, 2, 1, 1], [1, 1, 2, 3, 1, 1], [1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1]], \"output\": [[0, 2], [2, 3]]}\n```",
+  "corrupted_pair": {
+    "input": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        2,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        2,
+        3,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "output": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        2
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "target_pair": {
+    "input": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        2,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        2,
+        3,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "output": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ]
+  },
+  "evaluation_ok": true,
+  "prediction_pair": {
+    "input": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        2,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        2,
+        3,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "output": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ]
+  },
+  "guardrail": {
+    "enabled": true,
+    "max_norm_edit": 0.7,
+    "normalized_distance_input": 0.0,
+    "normalized_distance_output": 1.0,
+    "passed": true
+  },
+  "metrics": {
+    "success": true
+  }
+}

@@ -1,0 +1,331 @@
+{
+  "task_id": "bdad9b1f",
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "seed": 1568450800,
+  "include_true": false,
+  "corruption_source": "corrupted_verifier",
+  "prompt": "Find the common rule that maps an input grid to an output grid given the examples below.\n\nExample 1:\nInput:\n0 0 0 0 8 0\n0 0 0 0 8 0\n2 2 0 0 0 0\n0 0 0 0 0 0\n0 0 0 0 0 0\n0 0 0 0 0 0\nOutput:\n0 0 0 0 8 0\n0 0 0 0 8 0\n2 2 2 2 4 2\n0 0 0 0 8 0\n0 0 0 0 8 0\n0 0 0 0 8 0\n\nExample 2:\nInput:\n0 8 0 0 0 0\n0 8 0 0 0 0\n0 0 0 0 0 0\n0 0 0 0 2 2\n0 0 0 0 0 0\n0 0 0 0 0 0\nOutput:\n0 8 0 0 0 0\n0 8 0 0 0 0\n0 8 0 0 0 0\n2 4 2 2 2 2\n0 8 0 0 0 0\n0 8 0 0 0 0\n\nThe following candidate input/output pair has been corrupted in some way. Your task is to return the corrected input/output pair that is consistent with the rule inferred from the training examples.\n\nCandidate pair:\nInput:\n0 0 0 0 8 0\n0 0 0 0 8 0\n0 0 0 0 0 0\n2 2 0 0 0 0\n0 0 0 0 0 0\n0 0 0 0 0 0\nOutput:\n0 0 0 0 8 0\n0 0 0 0 8 0\n0 0 0 0 8 0\n2 2 0 0 4 0\n0 0 0 0 8 0\n0 0 0 0 8 0\n\n\nYour final answer must be ONLY a single Python dict with exactly these keys:\n{\"input\": [[...], ...], \"output\": [[...], ...]}\nUse integer grid cells 0-9. Output nothing else.",
+  "prior_work_context": null,
+  "raw_response": "Looking at the examples, I need to find the rule that transforms input to output.\n\nIn Example 1:\n- There's a vertical line of 8s at column 4 (rows 0-1)\n- There's a horizontal line of 2s at row 2 (columns 0-1)\n- In output: The 8s extend to cover all rows, the 2s extend horizontally to cross the 8s, and at their intersection is a 4\n\nIn Example 2:\n- There's a vertical line of 8s at column 1 (rows 0-1)\n- There's a horizontal line of 2s at row 3 (columns 4-5)\n- In output: The 8s extend to cover all rows, the 2s extend horizontally to cross the 8s, and at their intersection is a 4\n\nThe rule: \n1. Extend the vertical line of 8s to span all rows\n2. Extend the horizontal line of 2s to span all columns (making a full row of 2s)\n3. Where they intersect, place a 4\n\nFor the candidate pair:\n- Input has 8s at column 4, rows 0-1\n- Input has 2s at row 3, columns 0-1\n\nCorrect output should be:\n- 8s extend through all rows at column 4\n- 2s extend through all columns at row 3 (becoming 2 2 2 2 2 2)\n- At intersection (row 3, col 4), place 4\n\nSo the correct output is:\n```\n0 0 0 0 8 0\n0 0 0 0 8 0\n0 0 0 0 8 0\n2 2 2 2 4 2\n0 0 0 0 8 0\n0 0 0 0 8 0\n```\n\n{\"input\": [[0, 0, 0, 0, 8, 0], [0, 0, 0, 0, 8, 0], [0, 0, 0, 0, 0, 0], [2, 2, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]], \"output\": [[0, 0, 0, 0, 8, 0], [0, 0, 0, 0, 8, 0], [0, 0, 0, 0, 8, 0], [2, 2, 2, 2, 4, 2], [0, 0, 0, 0, 8, 0], [0, 0, 0, 0, 8, 0]]}",
+  "corrupted_pair": {
+    "input": [
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "output": [
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        2,
+        2,
+        0,
+        0,
+        4,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ]
+    ]
+  },
+  "target_pair": {
+    "input": [
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "output": [
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        2,
+        2,
+        2,
+        2,
+        4,
+        2
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ]
+    ]
+  },
+  "evaluation_ok": true,
+  "prediction_pair": {
+    "input": [
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "output": [
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        2,
+        2,
+        2,
+        2,
+        4,
+        2
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ]
+    ]
+  },
+  "guardrail": {
+    "enabled": true,
+    "max_norm_edit": 0.7,
+    "normalized_distance_input": 0.0,
+    "normalized_distance_output": 0.08333333333333333,
+    "passed": true
+  },
+  "metrics": {
+    "success": true
+  }
+}

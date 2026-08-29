@@ -1,0 +1,74 @@
+{
+  "task_id": "test2_t31",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0\n0 4 4 0 0 0 0 3 0 0 0 0 0 0 0\n0 4 4 0 0 0 0 3 0 0 0 0 0 0 0\n0 0 0 8 8 0 0 3 0 0 0 4 4 0 0\n0 0 0 8 8 0 0 3 0 0 0 4 4 0 0\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0\n0 0 7 7 0 0 0 3 0 0 0 0 0 0 0\n0 0 7 7 0 0 0 3 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 3 0 4 4 0 0 0 0\n0 0 0 0 0 0 0 3 0 4 4 0 0 0 0\n0 0 0 8 8 0 0 3 0 0 0 4 4 0 0\n0 0 0 8 8 0 0 3 0 0 0 4 4 0 0\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 3 0 0 7 7 0 0 0\n0 0 0 0 0 0 0 3 0 0 7 7 0 0 0\n0 0 0 0 0 0 0 3 0 0 0 0 0 0 0\n\nExample 2:\n\nInput:\n0 6 6 0 0 0 0 0 3 0 0 0 0 0 0 0 0\n0 6 6 0 0 2 2 0 3 0 0 0 0 1 1 0 0\n0 0 0 0 0 2 2 0 3 0 0 0 0 1 1 0 0\n0 0 0 0 0 0 0 0 3 0 4 4 0 0 0 0 0\n0 0 0 0 0 0 0 0 3 0 4 4 0 0 1 1 0\n0 0 0 0 0 0 0 0 3 0 0 0 0 0 1 1 0\n0 4 4 0 8 8 0 0 3 0 0 0 0 0 0 0 0\n0 4 4 0 8 8 0 0 3 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 0 0 0 0 3 0 6 6 0 0 0 0 0\n0 0 0 0 0 2 2 0 3 0 6 6 0 1 1 0 0\n0 0 0 0 0 2 2 0 3 0 0 0 0 1 1 0 0\n0 4 4 0 0 0 0 0 3 0 0 0 0 0 0 0 0\n0 4 4 0 0 1 1 0 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 1 1 0 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 3 0 4 4 0 8 8 0 0\n0 0 0 0 0 0 0 0 3 0 4 4 0 8 8 0 0\n\nExample 3:\n\nInput:\n0 0 0 0 0 3 0 0 0 0 0\n0 0 6 6 0 3 0 0 8 8 0\n0 0 6 6 0 3 0 0 8 8 0\n0 0 0 0 0 3 0 0 0 0 0\n0 0 0 4 4 3 0 2 2 0 0\n0 0 0 4 4 3 0 2 2 0 0\nOutput:\n0 0 0 0 0 3 0 0 0 0 0\n0 0 6 6 0 3 0 0 8 8 0\n0 0 6 6 0 3 0 0 8 8 0\n0 0 0 0 0 3 0 0 0 0 0\n0 2 2 0 0 3 0 0 0 4 4\n0 2 2 0 0 3 0 0 0 4 4\n\nBelow is a test input grid.\n\nInput:\n0 0 2 2 0 0 0 3 0 0 0 0 0 7 7\n0 0 2 2 0 0 0 3 0 0 0 0 0 7 7\n0 8 8 0 0 0 0 3 0 0 0 0 0 0 0\n0 8 8 4 4 0 0 3 0 0 0 0 0 0 0\n0 0 0 4 4 0 0 3 0 0 0 9 9 0 0\n0 0 0 0 0 0 0 3 0 0 0 9 9 0 0\n0 0 0 0 0 0 0 3 9 9 0 0 0 0 0\n0 0 0 0 0 0 0 3 9 9 0 0 0 0 0\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "from collections import deque\n\ndef solve(grid):\n    if not grid:\n        return []\n    H = len(grid)\n    W = len(grid[0])\n    # Locate the vertical divider column (filled with 3s)\n    d = None\n    for c in range(W):\n        if all(grid[r][c] == 3 for r in range(H)):\n            d = c\n            break\n    if d is None:\n        # Fallback: find any column containing a 3\n        for r in range(H):\n            for c in range(W):\n                if grid[r][c] == 3:\n                    d = c\n                    break\n            if d is not None:\n                break\n    if d is None:\n        return [row[:] for row in grid]\n    \n    shift = d + 1  # Horizontal offset to the opposite side\n    src = [row[:] for row in grid]\n    res = [row[:] for row in grid]\n    visited = [[False] * W for _ in range(H)]\n    \n    for r in range(H):\n        for c in range(W):\n            if not visited[r][c] and src[r][c] != 0 and src[r][c] != 3:\n                color = src[r][c]\n                # Gather the whole connected component of the same color\n                comp = []\n                dq = deque()\n                dq.append((r, c))\n                visited[r][c] = True\n                while dq:\n                    cr, cc = dq.popleft()\n                    comp.append((cr, cc))\n                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        nr, nc = cr + dr, cc + dc\n                        if 0 <= nr < H and 0 <= nc < W:\n                            if not visited[nr][nc] and src[nr][nc] == color:\n                                visited[nr][nc] = True\n                                dq.append((nr, nc))\n                if not comp:\n                    continue\n                # Determine which side of the divider the component lies on\n                side_col = comp[0][1]\n                if side_col < d:\n                    # Left side: attempt to shift right\n                    targets = [(rr, cc + shift) for (rr, cc) in comp]\n                    valid = True\n                    for tr, tc in targets:\n                        if tc >= W or src[tr][tc] != 0:\n                            valid = False\n                            break\n                    if valid:\n                        for rr, cc in comp:\n                            res[rr][cc] = 0\n                        for (rr, cc), (tr, tc) in zip(comp, targets):\n                            res[tr][tc] = color\n                elif side_col > d:\n                    # Right side: attempt to shift left\n                    targets = [(rr, cc - shift) for (rr, cc) in comp]\n                    valid = True\n                    for tr, tc in targets:\n                        if tc < 0 or src[tr][tc] != 0:\n                            valid = False\n                            break\n                    if valid:\n                        for rr, cc in comp:\n                            res[rr][cc] = 0\n                        for (rr, cc), (tr, tc) in zip(comp, targets):\n                            res[tr][tc] = color\n                # Cells on the divider (side_col == d) are ignored\n    return res",
+  "script": "from collections import deque\n\ndef solve(grid):\n    if not grid:\n        return []\n    H = len(grid)\n    W = len(grid[0])\n    # Locate the vertical divider column (filled with 3s)\n    d = None\n    for c in range(W):\n        if all(grid[r][c] == 3 for r in range(H)):\n            d = c\n            break\n    if d is None:\n        # Fallback: find any column containing a 3\n        for r in range(H):\n            for c in range(W):\n                if grid[r][c] == 3:\n                    d = c\n                    break\n            if d is not None:\n                break\n    if d is None:\n        return [row[:] for row in grid]\n    \n    shift = d + 1  # Horizontal offset to the opposite side\n    src = [row[:] for row in grid]\n    res = [row[:] for row in grid]\n    visited = [[False] * W for _ in range(H)]\n    \n    for r in range(H):\n        for c in range(W):\n            if not visited[r][c] and src[r][c] != 0 and src[r][c] != 3:\n                color = src[r][c]\n                # Gather the whole connected component of the same color\n                comp = []\n                dq = deque()\n                dq.append((r, c))\n                visited[r][c] = True\n                while dq:\n                    cr, cc = dq.popleft()\n                    comp.append((cr, cc))\n                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        nr, nc = cr + dr, cc + dc\n                        if 0 <= nr < H and 0 <= nc < W:\n                            if not visited[nr][nc] and src[nr][nc] == color:\n                                visited[nr][nc] = True\n                                dq.append((nr, nc))\n                if not comp:\n                    continue\n                # Determine which side of the divider the component lies on\n                side_col = comp[0][1]\n                if side_col < d:\n                    # Left side: attempt to shift right\n                    targets = [(rr, cc + shift) for (rr, cc) in comp]\n                    valid = True\n                    for tr, tc in targets:\n                        if tc >= W or src[tr][tc] != 0:\n                            valid = False\n                            break\n                    if valid:\n                        for rr, cc in comp:\n                            res[rr][cc] = 0\n                        for (rr, cc), (tr, tc) in zip(comp, targets):\n                            res[tr][tc] = color\n                elif side_col > d:\n                    # Right side: attempt to shift left\n                    targets = [(rr, cc - shift) for (rr, cc) in comp]\n                    valid = True\n                    for tr, tc in targets:\n                        if tc < 0 or src[tr][tc] != 0:\n                            valid = False\n                            break\n                    if valid:\n                        for rr, cc in comp:\n                            res[rr][cc] = 0\n                        for (rr, cc), (tr, tc) in zip(comp, targets):\n                            res[tr][tc] = color\n                # Cells on the divider (side_col == d) are ignored\n    return res",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 0,
+      "total": 3,
+      "success_rate": 0.0
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "p_arc_stable": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "generator_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    },
+    "re_arc_stable": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 0,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "test": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "p_arc_stable": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "stable": null,
+    "generator_dynamic50": {
+      "index": 0,
+      "error": "name 'deque' is not defined"
+    },
+    "re_arc_stable": null,
+    "re_arc_dynamic50": null
+  },
+  "evaluation_ok": true
+}

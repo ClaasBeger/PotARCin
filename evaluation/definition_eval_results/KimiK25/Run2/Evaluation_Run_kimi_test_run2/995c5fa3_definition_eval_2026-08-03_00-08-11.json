@@ -1,0 +1,470 @@
+{
+  "task_id": "995c5fa3",
+  "test_idx": 0,
+  "model": "moonshotai/Kimi-K2.5:nitro",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "api_endpoint": "responses",
+  "reasoning_effort": "low",
+  "tools_enabled": false,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below. Generate a python script that takes a grid as input and transforms it according to the this rule. Anticipate that this program will be applied to several grids, not only the shown test grid.\n\nYour script must define exactly one callable entrypoint:\ndef solve(grid):\nwhere `grid` is passed as a list of lists of integers (list[list[int]]) and the function returns the transformed grid in the same format.\n\nExample 1:\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 5 0 0 5 0 0 5 5 0\n5 5 5 5 0 5 0 0 5 0 0 5 5 0\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\nOutput:\n2 2 2\n8 8 8\n3 3 3\n\nExample 2:\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n0 5 5 0 0 5 5 5 5 0 5 5 5 5\n0 5 5 0 0 5 0 0 5 0 5 5 5 5\n5 5 5 5 0 5 0 0 5 0 5 5 5 5\nOutput:\n3 3 3\n4 4 4\n2 2 2\n\nExample 3:\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 0 0 5 0 5 5 5 5 0 5 5 5 5\n5 0 0 5 0 5 5 5 5 0 5 0 0 5\n5 5 5 5 0 5 5 5 5 0 5 0 0 5\nOutput:\n8 8 8\n2 2 2\n4 4 4\n\nExample 4:\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 5 0 0 5 0 5 5 5 5\n5 5 5 5 0 5 0 0 5 0 5 5 5 5\nOutput:\n2 2 2\n4 4 4\n2 2 2\n\nBelow is a test input grid.\n\nInput:\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 0 5 5 0 0 5 0 0 5\n5 0 0 5 0 0 5 5 0 0 5 0 0 5\n5 0 0 5 0 5 5 5 5 0 5 5 5 5\n\nYour final answer should just be the python script itself, no other text or markdown.",
+  "raw_response": "Looking at the examples, I need to find the pattern that maps input grids to output grids.\n\nFirst, let me analyze the structure. The input grids are 4 rows \u00d7 14 columns, with 0s acting as separators. The grid seems to be divided into 3 sections by columns 4 and 9 (which are all 0s).\n\nSo we have 3 sections, each 4\u00d74 (columns 0-3, 5-8, 10-13).\n\nEach section can contain a 2\u00d72 pattern of 0s somewhere. Let me check where the 2\u00d72 block of 0s appears in each section:\n\nExample 1:\n- Section 1 (cols 0-3): no 2\u00d72 block of 0s \u2192 all 5s\n- Section 2 (cols 5-8): 2\u00d72 block at rows 1-2, cols 6-7 (center) \u2192 output 8\n- Section 3 (cols 10-13): 2\u00d72 block at rows 1-2, cols 11-12 (center) \u2192 output 8? Wait, let me check output: 2,8,3\n\nLet me reanalyze. The output is 3 rows \u00d7 3 columns. Each row corresponds to something about the position of the 2\u00d72 block in each section.\n\nLooking more carefully at positions within each 4\u00d74 section:\n- Top-left corner (rows 0-1, cols 0-1)\n- Top-right corner (rows 0-1, cols 2-3)\n- Bottom-left corner (rows 2-3, cols 0-1)\n- Bottom-right corner (rows 2-3, cols 2-3)\n- Center (rows 1-2, cols 1-2)\n\nActually, looking at the 2\u00d72 block positions and mapping to output values:\n\nExample 1: Section1=no block, Section2=center, Section3=center \u2192 output rows: 2,8,3\nExample 2: Section1=bottom-left, Section2=no block, Section3=no block \u2192 output rows: 3,4,2\nExample 3: Section1=center, Section2=no block, Section3=center \u2192 output rows: 8,2,4\nExample 4: Section1=no block, Section2=center, Section3=no block \u2192 output rows: 2,4,2\n\nWait, let me check Example 4 more carefully. Section2 has 2\u00d72 at rows 2-3, cols 6-7. That's bottom-center, not center.\n\nLet me map positions to numbers:\n- No 2\u00d72 block: 2\n- Top-left: 3\n- Top-right: ?\n- Bottom-left: 3? \n- Bottom-right: ?\n- Center (rows 1-2, cols 1-2): 8\n- Bottom-center (rows 2-3, cols 1-2): 4\n\nChecking Example 2: Section1 has 2\u00d72 at rows 1-2, cols 0-1 \u2192 that's left-center \u2192 3? But first output row is 3. \u2713\n\nLet me recheck Example 1 Section3: rows 1-2, cols 11-12 \u2192 center \u2192 8? But output is 3.\n\nHmm, let me re-read. Cols 10-13: row1 has 0,5,5,0 and row2 has 0,5,5,0. That's 2\u00d72 at rows 1-2, cols 0-1 of section (left-center), not center!\n\nRe-analyzing with correct positions:\n- Section1: no 2\u00d72 \u2192 2\n- Section2: rows 1-2, cols 6-7 \u2192 left-center? No wait, cols 5-8: row1 is 5,0,0,5 \u2192 center! \u2192 8\n- Section3: rows 1-2, cols 10-11 \u2192 left-center \u2192 3? But output shows 3\n\nOutput for Ex1: 2,8,3 - matches!\n\nSo the mapping seems to be based on where the 2\u00d72 block of 0s appears:\n- No block: 2\n- Center (cols 1-2, rows 1-2): 8\n- Left-center (cols 0-1, rows 1-2): 3\n- Bottom-center (cols 1-2, rows 2-3): 4\n- Top-center? \n- etc.\n\nChecking Example 4, Section2: rows 2-3, cols 6-7 \u2192 bottom-center \u2192 4 \u2713\n\nNow for the output structure - it's 3\u00d73. Each column corresponds to a section, and rows seem to indicate position type.\n\nActually, looking more carefully: the output seems to be 3 rows where each row represents a different position category, and the value indicates which sections have blocks in that category.\n\nLet me think differently: The output grid 3\u00d73 might represent a summary where we classify each section's 2\u00d72 position into 3 categories (rows) and 3 sections (columns), with values indicating... \n\nActually, re-looking: values are 2,3,4,8. These could encode the position. And output is always 3\u00d73 with same values per row.\n\nThe pattern seems: for each section, determine where the 2\u00d72 block is, map to a number (2=no block, 3=left-center, 4=bottom-center, 8=center, etc.), then the output has that number repeated 3 times in the corresponding column... but rows?\n\nWait - output rows might correspond to: top, middle, bottom positions? And the value indicates which section has a block there?\n\nLet me try: Row 0 = top positions, Row 1 = middle, Row 2 = bottom\n- If section has block in top area \u2192 that section's column gets its position-value in row 0\n- If no block in that area \u2192 ?\n\nActually simpler: the output rows correspond to the row position of the 2\u00d72 block's center or top-left:\n- Row 0 of output = sections with block starting at row 0 (top positions)\n- Row 1 of output = sections with block starting at row 1 (middle)\n- Row 2 of output = sections with block starting at row 2 (bottom)\n\nAnd the value is the column position: 2=no block, 3=left, 4=middle, 8=right? No wait...\n\nLet me check: center block (rows 1-2, cols 1-2) \u2192 value 8. Bottom-center (rows 2-3, cols 1-2) \u2192 value 4. Left-center (rows 1-2, cols 0-1) \u2192 value 3.\n\nThe value = 10 - row_start - col_start? No... value = 2^(something)?\n\nActually: 2=2^1, 3=?, 4=2^2, 8=2^3. Not powers.\n\nLet me try: value relates to position encoding. (row_start, col_start):\n- (1,1) center \u2192 8\n- (1,0) left-center \u2192 3\n- (2,1) bottom-center \u2192 4\n- no block \u2192 2\n\nMaybe: value = 2 + row_start*2 + col_start? (1,1): 2+2+1=5 no. \n\nTry: value based on sum of coordinates or product?\n(1,1)=8, (1,0)=3, (2,1)=4\n\nActually looking at pattern: 8,3,4,2 - these might be arbitrary codes for positions.\n\nLet me just implement by finding the 2\u00d72 block in each section and mapping to the right output structure.\n\nFrom analysis: \n- Output is 3\u00d73 \n- Each column is one section\n- Row in output corresponds to starting row of 2\u00d72 block (0,1,2), or row 2 if no block\n- Value depends on column position\n\nActually checking: Ex1 has sections with no block, center(1,1), left-center(1,0). Output rows: 2,8,3. \n- Row 0: all 2s? No wait, output is:\n2 2 2\n8 8 8  \n3 3 3\n\nSo same value across each row! That means it's not per section. \n\nLet me re-read output: \"2 2 2 / 8 8 8 / 3 3 3\" - yes, rows are uniform!\n\nSo the pattern is: categorize sections by their 2\u00d72 block position, and output rows indicate counts or presence?\n\nActually: 3 sections, categorize into 3 types. Row 0 = type A, Row 1 = type B, Row 2 = type C. The value in each row is... the type identifier?\n\nEx1: sections are type 2, type 8, type 3. So row for type 2 has 2s, etc. But we need 3 rows...\n\nWait - we have 3 types present, so 3 rows. But what determines row order?\n\nLooking at Ex4: sections are type 2, type 4, type 2. Only 2 types, but 3 rows: 2,4,2.\n\nRow order by type value? 2,4,2 - but that's 3 rows with 2 appearing twice.\n\nHmm, let me check: type 2 (no block) appears twice, so two rows of 2? No, rows are 2,4,2.\n\nActually reading Ex4 output: \"2 2 2 / 4 4 4 / 2 2 2\" - yes!\n\nSo: row 0 = type 2, row 1 = type 4, row 2 = type 2. \n\nThe rows correspond to sections 1,2,3! And the value is the type of that section.\n\nEx1: sec1=2, sec2=8, sec3=3 \u2192 rows: 2,8,3? But output shows 2,8,3 as rows? Let me check: \"2 2 2 / 8 8 8 / 3 3 3\". \n\nHmm that's 2,8,3 not matching 2,8,3... wait it does match if each row is constant!\n\nEx2: sec1=3, sec2=4, sec3=2? No wait let me recheck. Ex2 sec1: rows 1-2, cols 0-1 \u2192 left-center \u2192 3. sec2: no block \u2192 2? But output is 3,4,2.\n\nWait I had sec2 wrong. Ex2 sec2: \"5 5 5 5\" all rows - no block! \u2192 2. But output row 2 is 4, not 2.\n\nLet me recheck Ex2 input: \"0 5 5 0 0 5 5 5 5 0 5 5 5 5\" - row 1 has 0,5,5,0 which is not a 2\u00d72 block.\n\nHmm, \"5 0 0 5\" in row 2? No wait row 2 is \"0 5 5 0 0 5 0 0 5 0 5 5 5 5\". \n\nCols 5-8: 5,0,0,5 - yes! 2\u00d72 block at rows 2-3? No row 2 only. Check row 3: \"5 5 5 5 0 5 0 0 5 0 5 5 5 5\" - cols 5-8: 5,0,0,5. Yes! 2\u00d72 at rows 2-3, cols 6-7 \u2192 bottom-center \u2192 4!\n\nSo Ex2: sec1=left-center(3), sec2=bottom-center(4), sec3=no block(2). Output rows: 3,4,2. \u2713\n\nSo output row i corresponds to section i, with value = position code, repeated 3 times.\n\nNow I need to map all positions to codes. From examples:\n- no block: 2\n- (1,0) left-center: 3\n- (2,1) bottom-center: 4\n- (1,1) center: 8\n\nWhat about other positions? I need to infer.\n\nPositions in 4\u00d74 grid for 2\u00d72 block (top-left corner):\n- (0,0) top-left\n- (0,1) top-center\n- (0,2) top-right\n- (1,0) left-center = 3\n- (1,1) center = 8\n- (1,2) right-center\n- (2,0) bottom-left\n- (2,1) bottom-center = 4\n- (2,2) bottom-right\n\nFrom the pattern: 2,3,4,8... maybe 2 is special (no block). Others: 3=1+2, 4=2+2, 8=2^3? Or row*2 + col + something?\n\n3 at (1,0): 1*3 + 0 = 3? 8 at (1,1): 1*3+5=8? No.\n\nTry: value = 2^(col+1) + row? (1,0): 2+1=3\u2713, (1,1): 4+1=5? No, need 8.\n\nTry value = 2^(row+1) + 2^(col+1) - 2? (1,0): 4+2-2=4? No.\n\n(1,0)=3, (1,1)=8, (2,1)=4. Maybe based on visual appearance? \n\nActually, looking at this differently - these might be colors in ARC tasks. Let me just implement for the observed cases and see if there's a pattern.\n\nTest input:\n```\n5 5 5 5 0 5 5 5 5 0 5 5 5 5\n5 5 5 5 0 0 5 5 0 0 5 0 0 5\n5 0 0 5 0 0 5 5 0 0 5 0 0 5\n5 0 0 5 0 5 5 5 5 0 5 5 5 5\n```\n\nSection 1 (cols 0-3): rows 2-3, cols 1-2 have 0,0 / 0,0? Row2: 0,0,5 \u2192 cols 1-2 are 0,0. Row3: 0,0,5 \u2192 cols 1-2 are 0,0. Yes! 2\u00d72 at (2,1) \u2192 bottom-center \u2192 4.\n\nSection 2 (cols 5-8): row1: 5,5,0,0? No wait: \"0 5 5 0\" - that's cols 4-7? Let me recount.\n\nActually cols: 0-3, 4=sep, 5-8, 9=sep, 10-13.\n\nRow 1: 5,5,5,5, 0, 0,5,5,0, 0, 5,0,0,5\nSo section 2 (5-8): 0,5,5,0 - not a block start.\n\nRow 2: 5,0,0,5, 0, 0,5,5,0, 0, 5,0,0,5\nSection 2: 0,5,5,0 - not a block.\n\nHmm wait, checking: \"0 5 5 0\" - not uniform. But checking for 2\u00d72 of 0s...\n\nRow 2 section 2: 0,5,5,0 - no. Row 1: 0,5,5,0 - no. \n\nActually re-reading: row 1 is \"5 5 5 5 0 0 5 5 0 0 5 0 0 5\". So col5=0, col6=5, col7=5, col8=0. Not a 2\u00d72.\n\nBut row1 col8=0, row2 col8=0... checking rows 1-2, cols 7-8: 5,0 / 5,0 - not 0s.\n\nHmm let me check section 2 more carefully. Actually I need to find where 0,0 appears consecutively in rows.\n\nRow 2: 5,0,0,5,0,0,5,5,0,0,5,0,0,5 - has 0,0 at positions 1-2, 5-6, 8-9, 11-12.\n\nIn section 2 (indices 5-8): 0,5,5,0 - no 0,0 consecutive.\n\nWait I misread. Let me reparse: 5,0,0,5, 0, 0,5,5,0, 0, 5,0,0,5\nIndices: 0=5, 1=0, 2=0, 3=5, 4=0, 5=0, 6=5, 7=5, 8=0, 9=0, 10=5, 11=0, 12=0, 13=5\n\nSection 2 is indices 5-8: 0,5,5,0 - no 0,0 block.\n\nHmm but wait, checking rows 1-2 together in section 2:\nRow 1 section 2: 0,5,5,0 (indices 5,6,7,8 = 0,5,5,0)\nRow 2 section 2: 0,5,5,0 (0,5,5,0)\n\nNo 2\u00d72 block of 0s!\n\nSection 3 (10-13): row1: 5,0,0,5, row2: 5,0,0,5. That's 0,0 at cols 11-12 in both rows! 2\u00d72 block at rows 1-2, cols 1-2 of section \u2192 center \u2192 8.\n\nSo: sec1=bottom-center(4), sec2=no block(2), sec3=center(8).\n\nOutput should be:\n4 4 4\n2 2 2\n8 8 8\n\nWait - need to check order. Previous examples show rows correspond to sections 1,2,3. So:\nRow 0 (sec1): 4 4 4\nRow 1 (sec2): 2 2 2  \nRow 2 (sec3): 8 8 8\n\n```python\ndef solve(grid):\n    # Split grid into 3 sections (4x4 each, separated by column of 0s at positions 4 and 9)\n    sections = []\n    for sec_idx in range(3):\n        start_col = sec_idx * 5  # 0, 5, 10\n        section = []\n        for row in grid:\n            section.append(row[start_col:start_col+4])\n        sections.append(section)\n    \n    # Find 2x2 block of 0s in each section and map to code\n    def get_code(section):\n        # Look for 2x2 block of 0s\n        for r in range(3):  # rows 0-2 (2x2 block can start here)\n            for c in range(3):  # cols 0-2\n                if (section[r][c] == 0 and section[r][c+1] == 0 and\n                    section[r+1][c] == 0 and section[r+1][c+1] == 0):\n                    # Found block at (r,c)\n                    # Map position to code\n                    if r == 1 and c == 1:\n                        return 8  # center\n                    elif r == 1 and c == 0:\n                        return 3  # left-center\n                    elif r == 2 and c == 1:\n                        return 4  # bottom-center\n                    elif r == 0 and c == 0:\n                        return 6  # top-left (inferred, not seen)\n                    elif r == 0 and c == 1:\n                        return 7  # top-center (inferred)\n                    elif r == 0 and c == 2:\n                        return 9  # top-right (inferred)\n                    elif r == 1 and c == 2:\n                        return 5  # right-center (inferred)\n                    elif r == 2 and c == 0:\n                        return 1  # bottom-left (inferred)\n                    elif r == 2 and c == 2:\n                        return 10  # bottom-right (inferred)\n        return 2  # no block found\n    \n    codes = [get_code(sec) for sec in sections]\n    \n    # Create 3x3 output with each row being one section's code repeated\n    result = []\n    for code in codes:\n        result.append([code, code, code])\n    \n    return result\n```",
+  "script": "def solve(grid):\n    # Split grid into 3 sections (4x4 each, separated by column of 0s at positions 4 and 9)\n    sections = []\n    for sec_idx in range(3):\n        start_col = sec_idx * 5  # 0, 5, 10\n        section = []\n        for row in grid:\n            section.append(row[start_col:start_col+4])\n        sections.append(section)\n    \n    # Find 2x2 block of 0s in each section and map to code\n    def get_code(section):\n        # Look for 2x2 block of 0s\n        for r in range(3):  # rows 0-2 (2x2 block can start here)\n            for c in range(3):  # cols 0-2\n                if (section[r][c] == 0 and section[r][c+1] == 0 and\n                    section[r+1][c] == 0 and section[r+1][c+1] == 0):\n                    # Found block at (r,c)\n                    # Map position to code\n                    if r == 1 and c == 1:\n                        return 8  # center\n                    elif r == 1 and c == 0:\n                        return 3  # left-center\n                    elif r == 2 and c == 1:\n                        return 4  # bottom-center\n                    elif r == 0 and c == 0:\n                        return 6  # top-left (inferred, not seen)\n                    elif r == 0 and c == 1:\n                        return 7  # top-center (inferred)\n                    elif r == 0 and c == 2:\n                        return 9  # top-right (inferred)\n                    elif r == 1 and c == 2:\n                        return 5  # right-center (inferred)\n                    elif r == 2 and c == 0:\n                        return 1  # bottom-left (inferred)\n                    elif r == 2 and c == 2:\n                        return 10  # bottom-right (inferred)\n        return 2  # no block found\n    \n    codes = [get_code(sec) for sec in sections]\n    \n    # Create 3x3 output with each row being one section's code repeated\n    result = []\n    for code in codes:\n        result.append([code, code, code])\n    \n    return result",
+  "script_loaded": true,
+  "script_load_error": null,
+  "metrics": {
+    "train": {
+      "ok": 2,
+      "total": 4,
+      "success_rate": 0.5
+    },
+    "test": {
+      "ok": 0,
+      "total": 1,
+      "success_rate": 0.0
+    },
+    "stable": {
+      "ok": 27,
+      "total": 64,
+      "success_rate": 0.421875
+    },
+    "generator_dynamic50": {
+      "ok": 31,
+      "total": 50,
+      "success_rate": 0.62
+    },
+    "re_arc_stable": {
+      "ok": 14,
+      "total": 1000,
+      "success_rate": 0.014
+    },
+    "re_arc_dynamic50": {
+      "ok": 0,
+      "total": 50,
+      "success_rate": 0.0
+    }
+  },
+  "first_failures": {
+    "train": {
+      "index": 0,
+      "input": [
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ]
+      ],
+      "expected": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ],
+      "got": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          2,
+          2,
+          2
+        ]
+      ]
+    },
+    "test": {
+      "index": 0,
+      "input": [
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5
+        ],
+        [
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5
+        ],
+        [
+          5,
+          0,
+          0,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          4,
+          4
+        ],
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          8,
+          8,
+          8
+        ]
+      ],
+      "got": [
+        [
+          4,
+          4,
+          4
+        ],
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          8,
+          8,
+          8
+        ]
+      ]
+    },
+    "stable": {
+      "index": 0,
+      "input": [
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          0,
+          0,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ]
+      ],
+      "expected": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ],
+      "got": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          2,
+          2,
+          2
+        ]
+      ]
+    },
+    "generator_dynamic50": {
+      "index": 0,
+      "input": [
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ],
+        [
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          5,
+          5,
+          5,
+          5
+        ]
+      ],
+      "expected": [
+        [
+          4,
+          4,
+          4
+        ],
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ],
+      "got": [
+        [
+          4,
+          4,
+          4
+        ],
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          2
+        ]
+      ]
+    },
+    "re_arc_stable": {
+      "index": 0,
+      "error": "list index out of range"
+    },
+    "re_arc_dynamic50": {
+      "index": 0,
+      "error": "tuple index out of range"
+    }
+  },
+  "evaluation_ok": true
+}
