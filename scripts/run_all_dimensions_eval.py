@@ -866,6 +866,15 @@ def main() -> None:
         ),
     )
     p.add_argument(
+        "--seed-from-source-index",
+        action="store_true",
+        help=(
+            "With --seed, index tasks in full arc_train/test2 dataset order for "
+            "seed = base + index (ignores subset file order). Use for reversed "
+            "subsets so seeds still match a full-run --seed 77 convention."
+        ),
+    )
+    p.add_argument(
         "--task-source",
         default="arc_train",
         choices=["arc_train", "test2"],
@@ -1049,10 +1058,20 @@ def main() -> None:
         print("No pending tasks left for this run tag; nothing to do.")
         return
 
-    task_index: dict[str, int] = {tid: i for i, tid in enumerate(all_task_ids)}
+    if args.seed_from_source_index:
+        seed_order_ids = _all_test2_task_ids() if args.task_source == "test2" else _all_task_ids()
+        task_index: dict[str, int] = {tid: i for i, tid in enumerate(seed_order_ids)}
+        missing = [tid for tid in task_ids if tid not in task_index]
+        if missing:
+            raise SystemExit(
+                f"--seed-from-source-index: task ids not in {args.task_source} listing: {missing[:5]}"
+            )
+    else:
+        task_index = {tid: i for i, tid in enumerate(all_task_ids)}
     runs: list[dict[str, Any]] = []
     if base_seed is not None:
-        print(f"Using base seed: {base_seed} (mode={seed_mode})")
+        idx_src = f"{args.task_source} listing" if args.seed_from_source_index else "subset/file order"
+        print(f"Using base seed: {base_seed} (mode={seed_mode}, index={idx_src})")
     else:
         print("Using non-reproducible random seeds (mode=none)")
     def _run_one(index: int, tid: str) -> tuple[int, str, int | None, dict[str, Any]]:
