@@ -1,0 +1,180 @@
+{
+  "task_id": "85fa5666",
+  "split": "arc_agi1_evaluation",
+  "test_idx": 0,
+  "model": "meta-llama/llama-4-maverick",
+  "provider": "openrouter",
+  "base_url": "https://openrouter.ai/api/v1",
+  "reasoning_effort": null,
+  "prompt": "Find the common rule that maps an input grid to an output grid, given the examples below.\n\nExample 1\nInput:\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 3 0 0 6 0 0 0\n0 0 0 2 2 0 0 0 0\n0 0 0 2 2 0 0 0 0\n0 0 8 0 0 7 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\nOutput:\n8 0 0 0 0 0 0 3 0\n0 8 0 0 0 0 3 0 0\n0 0 8 0 0 3 0 0 0\n0 0 0 2 2 0 0 0 0\n0 0 0 2 2 0 0 0 0\n0 0 7 0 0 6 0 0 0\n0 7 0 0 0 0 6 0 0\n7 0 0 0 0 0 0 6 0\n0 0 0 0 0 0 0 0 6\n\nExample 2\nInput:\n0 0 0 0 0 0 8 0 0 6 0 0\n0 0 0 0 0 0 0 2 2 0 0 0\n0 0 0 0 0 0 0 2 2 0 0 0\n0 0 0 0 0 0 3 0 0 7 0 0\n0 0 0 0 0 0 0 0 6 0 0 7\n0 0 0 0 0 0 0 0 0 2 2 0\n0 0 0 0 0 0 0 0 0 2 2 0\n0 8 0 0 3 0 0 0 3 0 0 8\n0 0 2 2 0 0 0 0 0 0 0 0\n0 0 2 2 0 0 0 0 0 0 0 0\n0 7 0 0 6 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n0 0 0 0 3 0 3 0 0 8 0 8\n0 0 0 0 0 3 0 2 2 0 8 0\n0 0 0 0 0 0 3 2 2 8 0 0\n0 0 0 0 0 0 7 3 8 6 0 0\n0 0 0 0 0 7 0 8 3 0 6 6\n0 0 0 0 7 0 8 0 0 2 2 6\n7 0 0 7 0 8 0 0 0 2 2 0\n0 7 7 0 8 0 0 0 8 0 0 7\n0 0 2 2 0 0 0 8 0 0 0 0\n0 0 2 2 0 0 8 0 0 0 0 0\n0 6 0 0 3 8 0 0 0 0 0 0\n6 0 0 0 8 3 0 0 0 0 0 0\n\nExample 3\nInput:\n0 0 0 0 0 0 6 0 0 7 0 0\n0 0 0 0 0 0 0 2 2 0 0 0\n8 0 0 7 0 0 0 2 2 0 0 0\n0 2 2 0 0 0 8 0 0 3 0 0\n0 2 2 0 0 0 0 0 0 0 0 0\n6 0 0 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 6 0 0 7 0 0\n0 0 0 0 0 0 0 2 2 0 0 0\n0 0 0 0 0 0 0 2 2 0 0 0\n0 0 0 0 0 0 3 0 0 8 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0\nOutput:\n3 0 0 0 0 8 8 0 0 6 0 0\n0 3 0 0 8 0 0 2 2 0 0 0\n6 0 3 8 0 0 0 2 2 0 0 0\n0 2 2 3 0 0 3 0 0 7 0 0\n0 2 2 0 3 3 0 0 0 0 7 6\n3 0 0 7 3 3 0 0 0 0 6 7\n0 0 0 3 7 0 3 0 0 6 0 0\n0 0 3 0 0 7 0 2 2 0 0 0\n0 3 0 0 0 0 7 2 2 0 0 0\n3 0 0 0 0 0 8 7 0 7 0 0\n0 0 0 0 0 8 0 0 7 0 7 0\n0 0 0 0 8 0 0 0 0 7 0 7\n\nExample 4\nInput:\n3 0 0 7 0 0 0 0\n0 2 2 0 0 0 0 0\n0 2 2 0 0 0 0 0\n6 0 0 8 0 0 0 0\n0 0 0 6 0 0 7 0\n0 0 0 0 2 2 0 0\n0 0 0 0 2 2 0 0\n0 0 0 8 0 0 3 0\nOutput:\n6 0 0 3 0 0 0 0\n0 2 2 0 0 0 0 0\n0 2 2 0 0 0 0 0\n8 0 8 7 0 0 0 6\n0 0 0 8 7 0 6 0\n0 0 0 0 2 2 0 0\n0 0 0 0 2 2 0 0\n0 0 0 3 0 0 7 0\n\nBelow is a test input grid. Predict the corresponding output grid by applying the rule you found.\nTest Input:\n0 0 3 0 0 8 0 0\n0 0 0 2 2 0 0 0\n0 0 0 2 2 0 0 0\n0 0 7 0 0 6 0 0\n7 0 0 6 0 0 0 0\n0 2 2 0 0 0 0 0\n0 2 2 0 0 0 0 0\n8 0 0 3 0 0 0 0\n\nYour final answer must be ONLY a single Python list-of-lists grid for that output:\n[[...], ...]\nUse integer grid cells 0-9. Output nothing else.",
+  "raw_response": "```python\ndef main():\n    test_input = [\n        [0, 0, 3, 0, 0, 8, 0, 0],\n        [0, 0, 0, 2, 2, 0, 0, 0],\n        [0, 0, 0, 2, 2, 0, 0, 0],\n        [0, 0, 7, 0, 0, 6, 0, 0],\n        [7, 0, 0, 6, 0, 0, 0, 0],\n        [0, 2, 2, 0, 0, 0, 0, 0],\n        [0, 2, 2, 0, 0, 0, 0, 0],\n        [8, 0, 0, 3, 0, 0, 0, 0]\n    ]\n    output = solve(test_input)\n    print_grid(output)\n\ndef print_grid(grid):\n    for row in grid:\n        print(row)\n\ndef solve(grid):\n    size = len(grid)\n    output = [[0 for _ in range(size)] for _ in range(size)]\n    for i in range(size):\n        for j in range(size):\n            output[i][j] = grid[size - j - 1][i]\n    return output\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "ground_truth": [
+    [
+      0,
+      0,
+      7,
+      0,
+      0,
+      3,
+      0,
+      7
+    ],
+    [
+      0,
+      0,
+      0,
+      2,
+      2,
+      0,
+      7,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      2,
+      2,
+      7,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      6,
+      0,
+      7,
+      8,
+      0,
+      0
+    ],
+    [
+      8,
+      6,
+      0,
+      7,
+      0,
+      0,
+      8,
+      0
+    ],
+    [
+      6,
+      2,
+      2,
+      0,
+      0,
+      0,
+      0,
+      8
+    ],
+    [
+      0,
+      2,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      3,
+      0,
+      0,
+      6,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "evaluation_ok": true,
+  "exact_match": false,
+  "prediction": [
+    [
+      0,
+      0,
+      3,
+      0,
+      0,
+      8,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      2,
+      2,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      2,
+      2,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      7,
+      0,
+      0,
+      6,
+      0,
+      0
+    ],
+    [
+      7,
+      0,
+      0,
+      6,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      2,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      2,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      0,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "metrics": {
+    "exact_match": 0.0
+  }
+}
