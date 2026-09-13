@@ -34,8 +34,11 @@ def generate(rows=None, cols=None, row=None, col=None, color=None, size=8,
     while True:
       rows, cols = common.conway_sprite()
       if common.diagonally_connected(list(zip(rows, cols))): break
-    row = common.randint(0, size - minisize - 1)
-    col = common.randint(0, size - minisize - 1)
+    # A minisize-tall sprite fits as long as its top-left is at most
+    # size - minisize; the extra -1 excluded the last legal row and column,
+    # and the official examples use row=5 (and col=4) in an 8x8 grid.
+    row = common.randint(0, size - minisize)
+    col = common.randint(0, size - minisize)
     color = common.random_color()
 
   grid, output = common.grid(size, size), common.grid(2 * minisize, minisize)

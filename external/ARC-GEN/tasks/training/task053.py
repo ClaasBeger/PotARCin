@@ -27,7 +27,9 @@ def generate(rows=None, cols=None, color=None, size=3):
     size: the width and height of the (square) grid
   """
   if rows is None:
-    num = common.randint(2, 3)
+    # One cell is allowed: the task's own test example is a single pixel, which a
+    # minimum of two can never produce.
+    num = common.randint(1, 3)
     pixels = common.all_pixels(size, size - 1)
     pixels = common.sample(pixels, num)
     rows, cols = zip(*pixels)

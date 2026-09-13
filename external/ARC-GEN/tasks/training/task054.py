@@ -93,16 +93,48 @@ def generate(starcolors=None, vert=None, horiz=None, srow=None, scol=None,
         starcolors[2] = -1 if common.randint(0, 1) else starcolors[0]
       # Next, placement of the star and boxes.
       srow, scol = common.randint(3, 5), common.randint(23, 25)
-      wides = [common.randint(17, 18) for _ in range(num_boxes)]
-      talls = [9, common.randint(13, 15)]
-      if common.randint(0, 1): talls = talls[::-1]
-      brows = [common.randint(1, 2)]
-      brows.append(brows[0] + talls[0] + common.randint(1, 2))
-      bcols = [common.randint(1, 3), common.randint(4, 8)]
+      # The official flags are 9-18 wide and 7-17 tall, and a picture holds two
+      # or three of them.  The old code stacked exactly two, the second directly
+      # below the first, and so could reach neither the three flags of official
+      # train[2] nor the 12- and 17-row pair of the official test: in both of
+      # those the flags stand side by side, which no stack of two can do and
+      # which the old 24-row budget for the stacked heights ruled out anyway.
+      # Each flag is now placed on its own, and only the flag that clashes is
+      # drawn again.  A flag keeps one clear cell from every other flag, so that
+      # they stay separate shapes, and one clear cell from the grid edge; it
+      # also keeps off the star in the corner, which the transformation reads as
+      # the template and which therefore has to stand on its own.
+      num_boxes = common.randint(2, 3)
+      brows, bcols, wides, talls = [], [], [], []
+      for _ in range(num_boxes):
+        for _ in range(50):
+          wide, tall = common.randint(9, 18), common.randint(7, 17)
+          # The background has to stay the most common color of the picture.
+          # The transformation wipes the corner star by filling it in with
+          # whatever color is most common, so flags that between them cover half
+          # the grid leave the star sitting there in flag color instead.  The
+          # old stacked pair could not reach half the grid, so nothing enforced
+          # this before.
+          area = wide * tall + sum(w * t for w, t in zip(wides, talls))
+          if 2 * area > size * size - 20: continue
+          brow = common.randint(1, size - 2 - tall)
+          bcol = common.randint(1, size - 2 - wide)
+          if common.overlaps([srow - 3, brow], [scol - 3, bcol], [7, wide],
+                             [7, tall]): continue
+          if common.overlaps(brows + [brow], bcols + [bcol], wides + [wide],
+                             talls + [tall], 1): continue
+          brows.append(brow)
+          bcols.append(bcol)
+          wides.append(wide)
+          talls.append(tall)
+          break
+      if len(brows) < num_boxes: continue
       # Finally, place some stars within the boxes.
       srows, scols, sidxs = [], [], []
       for idx in range(num_boxes):
-        num_stars = common.randint(1, 2)
+        # Two stars on one flag are held six rows and six columns apart, which
+        # asks for a flag at least nine cells tall.
+        num_stars = common.randint(1, 2) if talls[idx] > 8 else 1
         while True:
           xrows = common.sample(range(1, talls[idx] - 1), num_stars)
           if num_stars == 1 or max(xrows) - min(xrows) > 5: break

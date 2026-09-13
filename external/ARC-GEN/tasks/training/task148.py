@@ -51,7 +51,9 @@ def generate(width=None, height=None, length=None, first=None, second=None,
     for r in range(height):
       if grid[r][0] == common.red() and grid[r][width - 1] == common.red():
         return False
-    return num_yellow > 1
+    # The first official example draws exactly one pixel, so a single portal
+    # pair is legal; requiring more than one excluded it from sampling.
+    return num_yellow > 0
 
   if width is None:
     while True:

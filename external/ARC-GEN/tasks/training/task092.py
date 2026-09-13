@@ -62,7 +62,10 @@ def generate(width=None, height=None, rows=None, lefts=None, rights=None,
         rights.append(max(left, right))
       for _ in cols:
         low, high = common.randint(0, height - 1), common.randint(0, height - 1)
-        if abs(high - low) < 2 or high or low in rows or high in rows:
+        # The stray bare `high` made every tall stick with a nonzero high
+        # endpoint fail, so only degenerate sticks (low = high = 0) survived;
+        # the official examples all use lows >= 1.  Mirror the flat-stick test.
+        if abs(high - low) < 2 or low in rows or high in rows:
           success = False
         lows.append(min(low, high))
         highs.append(max(low, high))

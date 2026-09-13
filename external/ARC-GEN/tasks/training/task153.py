@@ -29,12 +29,7 @@ def generate(rows=None, cols=None, idxs=None, colors=None, size=10, minisize=3):
     minisize: the width and height of the output grid
   """
   if rows is None:
-    # TODO: Allow rows / cols that eclipse the grid if the half is small enough.
     # TODO: Ensure that the negative of the creature is also contiguous?
-    while True:
-      rows = [common.randint(0, size - 3) for _ in range(2)]
-      cols = [common.randint(0, size - 3) for _ in range(2)]
-      if abs(rows[0] - rows[1]) > 2 and abs(cols[0] - cols[1]) > 2: break
     while True:
       pixels = common.continuous_creature(common.randint(3, 6))
       idxs = []
@@ -58,6 +53,19 @@ def generate(rows=None, cols=None, idxs=None, colors=None, size=10, minisize=3):
           unsplittable = True
       if not unsplittable: continue
       break
+    # A half may hang off the edge of the grid as long as all of its own pixels
+    # stay inside: the official examples use offsets like -1 and 8, which the
+    # old 0..size-3 range (which assumed a full 3x3 footprint) excluded.
+    extents = []
+    for idx in range(2):
+      half = [(i // minisize, i % minisize)
+              for i, color in enumerate(idxs) if color == idx]
+      extents.append((min(r for r, _ in half), max(r for r, _ in half),
+                      min(c for _, c in half), max(c for _, c in half)))
+    while True:
+      rows = [common.randint(-e[0], size - 1 - e[1]) for e in extents]
+      cols = [common.randint(-e[2], size - 1 - e[3]) for e in extents]
+      if abs(rows[0] - rows[1]) > 2 and abs(cols[0] - cols[1]) > 2: break
     colors = common.random_colors(2)
 
   grid, output = common.grid(size, size), common.grid(minisize, minisize)

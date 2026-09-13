@@ -27,7 +27,10 @@ def generate(width=None, height=None, rows=None, cols=None):
     cols: a list of horizontal coordinates where pixels should be placed
   """
   if width is None:
-    width, height = common.randint(10, 20), common.randint(10, 20)
+    # Official example 2 is only 8 rows tall; the old height lower bound of 10
+    # excluded it.  Eight rows still leave range(1, height - 2) big enough to
+    # sample 2 rows.
+    width, height = common.randint(8, 20), common.randint(8, 20)
     rows = common.sample(range(1, height - 2), 2)
     cols = common.sample(range(1, width - 2), 2)
 

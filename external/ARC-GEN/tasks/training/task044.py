@@ -17,6 +17,69 @@
 import common
 
 
+def _readings(grid):
+  """Counts how many ways the loose shapes can be dropped into the holes.
+
+  A slab is a blob of the commonest colour; the empty cells inside its outline
+  are its hole.  Every other colour is a loose shape, matched to a hole by its
+  outline alone.  The speckles are a colour too, and once in a long while the
+  speckles that happen to land next to each other spell out exactly the outline
+  of a hole that a real shape also fits -- then the picture has two answers and
+  nothing in it says which is meant.
+  """
+  height = len(grid)
+  width = len(grid[0])
+  tally = {}
+  for row in grid:
+    for cell in row:
+      if cell: tally[cell] = tally.get(cell, 0) + 1
+  if not tally: return 0
+  slab = max(tally, key=lambda cell: tally[cell])
+
+  def outline(cells):
+    top, left = min(r for r, _ in cells), min(c for _, c in cells)
+    return frozenset((r - top, c - left) for r, c in cells)
+
+  seen = [[False] * width for _ in range(height)]
+  holes = []
+  for row in range(height):
+    for col in range(width):
+      if seen[row][col] or grid[row][col] != slab: continue
+      stack, cells = [(row, col)], []
+      seen[row][col] = True
+      while stack:
+        r, c = stack.pop()
+        cells.append((r, c))
+        for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+          if not (0 <= r + dr < height and 0 <= c + dc < width): continue
+          if seen[r + dr][c + dc] or grid[r + dr][c + dc] != slab: continue
+          seen[r + dr][c + dc] = True
+          stack.append((r + dr, c + dc))
+      gaps = [(r, c)
+              for r in range(min(r for r, _ in cells), max(r for r, _ in cells) + 1)
+              for c in range(min(c for _, c in cells), max(c for _, c in cells) + 1)
+              if not grid[r][c]]
+      if gaps: holes.append(outline(gaps))
+
+  loose = {}
+  for row in range(height):
+    for col in range(width):
+      cell = grid[row][col]
+      if cell and cell != slab: loose.setdefault(cell, []).append((row, col))
+  shapes = {color: outline(cells) for color, cells in loose.items()}
+
+  def drop(idx, taken):
+    if idx == len(holes): return 1
+    found = 0
+    for color, shape in shapes.items():
+      if color in taken or shape != holes[idx]: continue
+      found += drop(idx + 1, taken | {color})
+      if found > 1: return found
+    return found
+
+  return drop(0, frozenset())
+
+
 def generate(brows=None, bcols=None, wides=None, talls=None, rows=None,
              cols=None, idxs=None, srows=None, scols=None, colors=None,
              drows=None, dcols=None, dcolor=None, size=10, num_boxes=2):
@@ -53,42 +116,61 @@ def generate(brows=None, bcols=None, wides=None, talls=None, rows=None,
       output[drow][dcol] = grid[drow][dcol] = dcolor
 
   if brows is None:
-    while True:  # Pick a few box heights that fill the space
-      talls = [common.randint(3, 5) for _ in range(num_boxes)]
-      if sum(talls) in [8, 9]: break
-    brows = [0 if sum(talls) == 9 else 1, size - talls[1]]
-    while True:  # Pick box widths & sprite locations that don't overlap.
-      wides = [common.randint(5, 7) for _ in range(num_boxes)]
-      bcols = [common.randint(0, size - wide) for wide in wides]
-      swides = [wide - 2 for wide in wides]
-      stalls = [tall - 2 for tall in talls]
-      srows = [common.randint(0, size - stall) for stall in stalls]
-      scols = [common.randint(0, size - swide) for swide in swides]
-      if not common.overlaps(brows + srows, bcols + scols, wides + swides,
-                             talls + stalls): break
-    while True:  # Pick a unique number of pixels for each sprite.
-      areas = [(w - 2) * (t - 2) for w, t in zip(wides, talls)]
-      counts = [common.randint(2, area) for area in areas]
-      if len(set(counts)) == num_boxes: break
-    # Pick the sprite contents.
-    rows, cols, idxs = [], [], []
-    for idx in range(num_boxes):
-      wide, tall = wides[idx] - 2, talls[idx] - 2
-      pixels = common.continuous_creature(counts[idx], wide, tall)
-      rows.extend([p[0] for p in pixels])
-      cols.extend([p[1] for p in pixels])
-      idxs.extend([idx] * len(pixels))
-    drows, dcols = [], []
-    dcolor = common.random_color(exclude=[common.gray()])
-    colors = common.random_colors(2, exclude=[common.gray(), dcolor])
-    # Finally, draw the grid, so we can figure our where to place the dust.
-    grid, output = common.grids(size, size)
-    draw(grid, output)
-    for r in range(size):
-      for c in range(size):
-        if grid[r][c] or output[r][c] or common.randint(0, 9): continue
-        drows.append(r)
-        dcols.append(c)
+    while True:
+      while True:  # Pick a few box heights that fill the space
+        talls = [common.randint(3, 5) for _ in range(num_boxes)]
+        if sum(talls) in [8, 9]: break
+      brows = [0 if sum(talls) == 9 else 1, size - talls[1]]
+      while True:  # Pick box widths & sprite locations that don't overlap.
+        wides = [common.randint(5, 7) for _ in range(num_boxes)]
+        bcols = [common.randint(0, size - wide) for wide in wides]
+        swides = [wide - 2 for wide in wides]
+        stalls = [tall - 2 for tall in talls]
+        while True:  # Pick a unique number of pixels for each sprite.
+          areas = [swide * stall for swide, stall in zip(swides, stalls)]
+          counts = [common.randint(2, area) for area in areas]
+          if len(set(counts)) == num_boxes: break
+        # Pick the sprite contents before their places: a creature always starts
+        # at its own top left corner, so the only way to leave that corner empty
+        # -- as official train example 2 does -- is to slide the creature down and
+        # across inside the box afterwards.
+        creatures = []
+        for idx in range(num_boxes):
+          pixels = common.continuous_creature(counts[idx], swides[idx], stalls[idx])
+          down = common.randint(0, stalls[idx] - 1 - max(p[0] for p in pixels))
+          across = common.randint(0, swides[idx] - 1 - max(p[1] for p in pixels))
+          creatures.append([(p[0] + down, p[1] + across) for p in pixels])
+        # A sprite may start above or left of the grid by however much of it is
+        # empty there, which keeps every one of its cells on the grid.
+        srows = [common.randint(-min(p[0] for p in creature), size - stall)
+                 for creature, stall in zip(creatures, stalls)]
+        scols = [common.randint(-min(p[1] for p in creature), size - swide)
+                 for creature, swide in zip(creatures, swides)]
+        if not common.overlaps(brows + srows, bcols + scols, wides + swides,
+                               talls + stalls): break
+      rows, cols, idxs = [], [], []
+      for idx in range(num_boxes):
+        rows.extend([p[0] for p in creatures[idx]])
+        cols.extend([p[1] for p in creatures[idx]])
+        idxs.extend([idx] * len(creatures[idx]))
+      drows, dcols = [], []
+      dcolor = common.random_color(exclude=[common.gray()])
+      colors = common.random_colors(2, exclude=[common.gray(), dcolor])
+      # Finally, draw the grid, so we can figure our where to place the dust.
+      grid, output = common.grids(size, size)
+      draw(grid, output)
+      for r in range(size):
+        for c in range(size):
+          if grid[r][c] or output[r][c] or common.randint(0, 9): continue
+          drows.append(r)
+          dcols.append(c)
+
+      # Speckles can spell out a hole that a real shape also fits; that
+      # picture has two answers, so draw another.  All four official
+      # examples read exactly one way and are kept.
+      grid, output = common.grids(size, size)
+      draw(grid, output)
+      if _readings(grid) == 1: break
 
   grid, output = common.grids(size, size)
   draw(grid, output)

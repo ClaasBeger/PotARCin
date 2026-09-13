@@ -33,7 +33,11 @@ def generate(sprites=None, rows=None, cols=None, xpose=None, size=9,
     sprites, rows, cols = [], [], []
     for sprite in range(2):
       while True:
-        sprite_rows, sprite_cols = common.conway_sprite()
+        # Official examples have sprites of up to 8 lit pixels (12 and 13 in
+        # total); the fixed 5 removal attempts made anything above ~6 per
+        # sprite effectively unreachable, so vary how many pixels are removed.
+        sprite_rows, sprite_cols = common.conway_sprite(
+            tries=common.randint(1, 5))
         if common.diagonally_connected(list(zip(sprite_rows, sprite_cols))):
           break
       sprites.extend([sprite] * len(sprite_rows))

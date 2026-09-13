@@ -73,11 +73,27 @@ def generate(width=None, height=None, rows=None, cols=None, idxs=None,
       if not overlaps: break
     # Choose box contents.
     rows, cols, idxs, colors = [], [], [], []
+    # The official examples use 1-4 dots per box in no particular order (e.g.
+    # 3, 4, 4), which the hardcoded "idx + 1" dots per box could never match.
+    # They keep the boxes tellable apart by never giving two of them the same
+    # (dot count, dot color) pair, so require that here as well.
+    signatures = []
     for idx in range(num_boxes):
       wide, tall = wides[idx], talls[idx]
-      pixels = common.sample(common.all_pixels(wide, tall), idx + 1)
+      while True:
+        count = common.randint(1, min(4, wide * tall - 1))
+        color = common.random_color(exclude=backs + [forecolor])
+        pixels = common.sample(common.all_pixels(wide, tall), count)
+        r0 = min(r for r, _ in pixels)
+        c0 = min(c for _, c in pixels)
+        # On the plain side a box shows only its dots, so it is identified by
+        # their color and arrangement; reject a draw only when two boxes would
+        # look the same there yet need different boxes drawn around them.
+        sig = (color, tuple(sorted((r - r0, c - c0) for r, c in pixels)))
+        box = (r0, c0, wide, tall)
+        if all(s != sig or b == box for s, b in signatures): break
+      signatures.append((sig, box))
       row_list, col_list = zip(*pixels)
-      color = common.random_color(exclude=backs + [forecolor])
       rows.extend(row_list)
       cols.extend(col_list)
       idxs.extend([idx for _ in pixels])

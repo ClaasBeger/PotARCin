@@ -44,8 +44,10 @@ def generate(size=None, rows=None, cols=None, wides=None, talls=None,
       talls = [max(tall0, 2 * wide0 + 1), tall1]
     # Choose positions -- we assume box 0 is to the left of box 1.
     spacing = common.randint(1, size - sum(wides) - 1)
-    rows = [common.randint(1, size - tall) for tall in talls]
-    cols = [common.randint(1, size - sum(wides) - spacing)]
+    # Boxes may sit flush against the top/left edge: official examples use
+    # rows=[0, 10] and cols=[0, 6], which the old lower bound of 1 excluded.
+    rows = [common.randint(0, size - tall) for tall in talls]
+    cols = [common.randint(0, size - sum(wides) - spacing)]
     cols.append(cols[0] + wides[0] + spacing)
     # Choose locations of the dots.
     dotrow = common.randint(wides[0], talls[0] - wides[0])

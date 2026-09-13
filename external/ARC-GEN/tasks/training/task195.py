@@ -33,7 +33,9 @@ def generate(width=None, height=None, rows=None, cols=None, rowoffset=None,
   if width is None:
     offset = common.randint(-1, 1)
     width, height = 18 + offset, 16 + offset
-    rows, cols = common.conway_sprite()
+    # Official train example 2 has a 7-pixel sprite; with the fixed 5 removal
+    # attempts the sprite almost always lost 3-5 pixels, so vary the attempts.
+    rows, cols = common.conway_sprite(tries=common.randint(2, 5))
     rowoffset = common.randint(1, height - size * size - 1)
     coloffset = common.randint(1, width - size * size - 1)
 

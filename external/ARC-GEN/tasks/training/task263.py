@@ -34,8 +34,11 @@ def generate(basicrows=None, basiccols=None, weirdrows=None, weirdcols=None,
   if basicrows is None:
     colors = common.random_colors(common.randint(3, 5))
     while True:
-      basicrows, basiccols = common.conway_sprite()
-      weirdrows, weirdcols = common.conway_sprite()
+      # Vary how many cells are removed. The default always attempts five, so the
+      # sprites come out with four to six cells and the eight-cell shape in the
+      # task's own first example is unreachable.
+      basicrows, basiccols = common.conway_sprite(3, 3, common.randint(1, 5))
+      weirdrows, weirdcols = common.conway_sprite(3, 3, common.randint(1, 5))
       # Convert to sets to make sure they are unique.
       basicpixels = set(list(zip(basicrows, basiccols)))
       weirdpixels = set(list(zip(weirdrows, weirdcols)))

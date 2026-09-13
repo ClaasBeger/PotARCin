@@ -30,7 +30,10 @@ def generate(size=None, rows=None, cols=None):
     size = 5 * factor
     rows, cols, lengths = [], [], []
     for _ in range(3 * factor):
-      row, col = common.randint(1, size - 4), common.randint(1, size - 4)
+      # A 2x2 block at (row, col) paints markers at row-1..row+2 / col-1..col+2,
+      # so the last legal coordinate is size - 3, not size - 4.  The official
+      # test example uses col=12 with size=15, which size - 4 excluded.
+      row, col = common.randint(1, size - 3), common.randint(1, size - 3)
       if common.overlaps(rows + [row], cols + [col], lengths + [4],
                          lengths + [4]): continue
       rows.append(row)

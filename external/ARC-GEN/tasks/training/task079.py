@@ -48,17 +48,27 @@ def generate(rows=None, cols=None, idxs=None, megarows=None, megacols=None,
       cols.extend([s[1] for s in sprite])
       idxs.extend([idx] * len(sprite))
     # Next, choose how many copies of each sprite type to place.
-    num_sprites_per_type = common.sample(range(1, 4), len(colors))
+    # Counts stay distinct (so the most common sprite is unambiguous), but one
+    # official example places 4 copies of its winner, which range(1, 4) barred.
+    num_sprites_per_type = common.sample(range(1, 5), len(colors))
     num_sprites_per_type.sort(reverse=True)
     # Finally, pick some non-overlapping locations for all the sprites.
+    # Each sprite is retried on its own: drawing a whole layout at once and
+    # rejecting all of it almost never succeeds once there are eight sprites.
     while True:
       megarows, megacols, megaidxs = [], [], []
       for idx, num in enumerate(num_sprites_per_type):
-        megarows.extend([common.randint(0, size - 3) for _ in range(num)])
-        megacols.extend([common.randint(0, size - 3) for _ in range(num)])
         megaidxs.extend([idx] * num)
-      lengths = [3] * len(idxs)
-      if not common.overlaps(megarows, megacols, lengths, lengths, 1): break
+      for _ in megaidxs:
+        for _ in range(100):
+          row, col = common.randint(0, size - 3), common.randint(0, size - 3)
+          lengths = [3] * (len(megarows) + 1)
+          if common.overlaps(megarows + [row], megacols + [col],
+                             lengths, lengths, 1): continue
+          megarows.append(row)
+          megacols.append(col)
+          break
+      if len(megarows) == len(megaidxs): break
 
   grid, output = common.grid(size, size), common.grid(3, 3)
   for megarow, megacol, megaidx in zip(megarows, megacols, megaidxs):

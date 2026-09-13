@@ -96,7 +96,8 @@ def _callable_for_slot(task: ArcTask, slot: VerifierSlot) -> Verifier | None:
     return None
 
 
-_PRIORITY: tuple[VerifierSlot, ...] = ("re_arc", "google", "keymoon", "neurips", "custom")
+# custom first: hand-written verifiers correct bugs in the slot they replace.
+_PRIORITY: tuple[VerifierSlot, ...] = ("custom", "re_arc", "google", "keymoon", "neurips")
 
 
 def _legacy_select_verifier(

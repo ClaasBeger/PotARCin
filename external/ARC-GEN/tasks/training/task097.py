@@ -30,9 +30,12 @@ def generate(width=None, height=None, rows=None, cols=None, color=None):
   if width is None:
     width, height = common.randint(5, 20), common.randint(5, 20)
     rows, cols = [], []
+    # The official examples are 13%-24% dense; the old fixed 1-in-10 threshold
+    # could never reach the pixel counts they use (e.g. 56 pixels in 14x17).
+    density = common.randint(10, 25)
     for r in range(height):
       for c in range(width):
-        if common.randint(0, 9) != 0: continue
+        if common.randint(1, 100) > density: continue
         rows.append(r)
         cols.append(c)
     color = common.random_color()

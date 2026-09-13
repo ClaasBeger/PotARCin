@@ -31,15 +31,24 @@ def generate(width=None, height=None, rows=None, cols=None, wides=None,
     colors: a list of colors of the rectangles
   """
   if rows is None:
-    width = common.randint(12, 14)
-    height = width + common.randint(-2, 2)
-    num_boxes = common.randint(2, 4)
     while True:
+      # The grid size, the box count and the box sizes all have to be part of
+      # the retry: e.g. four 8x8 boxes never fit inside an 11x9 grid, so a
+      # combination drawn once up front can make the packing unsatisfiable.
+      width = common.randint(11, 15)
+      height = width + common.randint(-2, 2)
+      num_boxes = common.randint(2, 4)
       wides = [common.randint(3, 8) for _ in range(num_boxes)]
       talls = [common.randint(3, 8) for _ in range(num_boxes)]
-      rows = [common.randint(0, height - t) for t in talls]
-      cols = [common.randint(0, width - w) for w in wides]
-      if not common.overlaps(rows, cols, wides, talls, 1): break
+      # Given feasible sizes the packing is usually satisfiable but rarely hit
+      # on the first try, so retry the positions before rerolling the sizes.
+      for _ in range(200):
+        rows = [common.randint(0, height - t) for t in talls]
+        cols = [common.randint(0, width - w) for w in wides]
+        if not common.overlaps(rows, cols, wides, talls, 1): break
+      else:
+        continue
+      break
     while True:
       colors = [common.randint(1, 3) for _ in range(num_boxes)]
       if len(set(colors)) > 1: break

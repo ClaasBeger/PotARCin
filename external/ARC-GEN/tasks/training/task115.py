@@ -32,7 +32,9 @@ def generate(width=None, height=None, colors=None, lengths=None, xpose=None):
     # "Thicks" refer to columns of solid colors; "gaps" are columns with mixes.
     thicks = [common.randint(1, 5) for _ in range(len(colors))]
     gaps = [common.randint(1, 5) for _ in range(len(colors) - 1)]
-    width, height = sum(thicks) + sum(gaps), common.randint(8, 16)
+    # Grids can be 7 rows tall: official example 1 uses height=7, which the old
+    # randint(8, 16) lower bound excluded.
+    width, height = sum(thicks) + sum(gaps), common.randint(7, 16)
     # First, figure out how colors shift within each "gap" column.
     cols = []
     for gap in gaps:

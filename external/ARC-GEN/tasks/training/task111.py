@@ -44,8 +44,18 @@ def generate(sprites=None, rows=None, cols=None, minirows=None, minicols=None,
     sprites, rows, cols = [], [], []
     for sprite in range(len(minirows)):
       while True:
-        sprite_rows, sprite_cols = common.conway_sprite()
-        sprite_rows, sprite_cols = sprite_rows + [0], sprite_cols + [1]
+        # The default budget of 5 removals almost always leaves the sparsest
+        # 3x3 sprite (4-5 pixels); official sprites hold up to 7 pixels, so the
+        # number of removal attempts is drawn from a range topped by the old
+        # default.
+        sprite_rows, sprite_cols = common.conway_sprite(
+            tries=common.randint(2, 5))
+        # Pixel (0, 1) must be present (it sits under the gray marker), but
+        # conway_sprite may already contain it -- appending unconditionally
+        # listed it twice, so sprites always had one more entry than the
+        # official examples, whose pixel lists have no duplicates.
+        if (0, 1) not in list(zip(sprite_rows, sprite_cols)):
+          sprite_rows, sprite_cols = sprite_rows + [0], sprite_cols + [1]
         if common.diagonally_connected(list(zip(sprite_rows, sprite_cols))):
           break
       rows, cols = rows + sprite_rows, cols + sprite_cols

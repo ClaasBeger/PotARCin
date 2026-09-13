@@ -39,27 +39,38 @@ def generate(rows=None, cols=None, brow=None, bcol=None, wide=None, tall=None,
         common.draw(grid, r, c, common.blue())
     for r, c in zip(rows, cols):
       grid[r][c] = common.yellow()
-    # Second, look for matches.
+    # Second, look for matches. The reference sprite and the blue-to-black
+    # mapping don't change from one candidate position to the next, so work
+    # them out once and then bail out of a position on its first mismatch.
+    mapped = [[common.black() if v == common.blue() else v for v in row]
+              for row in grid]
+    shapes = []
+    for rotate in [0, 1, 2, 3]:
+      for xpose in [0, 1]:
+        cells = []
+        for r in range(tall):
+          for c in range(wide):
+            dr, dc = r, c
+            if rotate == 1: dr, dc = wide - c - 1, r
+            if rotate == 2: dr, dc = tall - r - 1, wide - c - 1
+            if rotate == 3: dr, dc = c, tall - r - 1
+            if xpose: dr, dc = dc, dr
+            bcolor = common.get_pixel(grid, brow + r, bcol + c)
+            if bcolor == common.blue(): bcolor = common.black()
+            cells.append((dr, dc, bcolor))
+        shapes.append((rotate, xpose, cells))
     matches = []
     for mrow in range(size):
       for mcol in range(size):
         value, xalue = -1, -1
-        for rotate in [0, 1, 2, 3]:
-          for xpose in [0, 1]:
-            match = True
-            for r in range(tall):
-              for c in range(wide):
-                dr, dc = r, c
-                if rotate == 1: dr, dc = wide - c - 1, r
-                if rotate == 2: dr, dc = tall - r - 1, wide - c - 1
-                if rotate == 3: dr, dc = c, tall - r - 1
-                if xpose: dr, dc = dc, dr
-                mcolor = common.get_pixel(grid, mrow + dr, mcol + dc)
-                bcolor = common.get_pixel(grid, brow + r, bcol + c)
-                if mcolor == common.blue(): mcolor = common.black()
-                if bcolor == common.blue(): bcolor = common.black()
-                if mcolor != bcolor: match = False
-            if match: value, xalue = rotate, xpose
+        for rotate, xpose, cells in shapes:
+          for dr, dc, bcolor in cells:
+            r, c = mrow + dr, mcol + dc
+            # Off the grid reads as -1, which never matches the sprite.
+            if r < 0 or c < 0 or r >= size or c >= size: break
+            if mapped[r][c] != bcolor: break
+          else:
+            value, xalue = rotate, xpose
         if value != -1: matches.append((mrow, mcol, value, xalue))
     # Finally, draw the matches on the output grid, and then the yellow dots.
     # If we see anything weird, we'll set illegal to True.
@@ -122,6 +133,8 @@ def generate(rows=None, cols=None, brow=None, bcol=None, wide=None, tall=None,
           cols.append(c)
       grid, output = common.grids(size, size)
       if draw(grid, output): break  # It worked!
+    # The accepted grids are already drawn; no need to redraw them.
+    return {"input": grid, "output": output}
 
   grid, output = common.grids(size, size)
   draw(grid, output)

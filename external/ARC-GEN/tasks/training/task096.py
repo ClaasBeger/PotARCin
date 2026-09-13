@@ -33,7 +33,11 @@ def generate(width=None, height=None, rows=None, cols=None, colors=None,
   if width is None:
     width, height = common.randint(13, 19), common.randint(13, 19)
     b = common.random_color()
-    colors = common.random_colors(common.randint(4, 6), exclude=[b])
+    # Shape colors may be black: the official train[1] uses colors=[0, 4, 2, 1],
+    # but common.random_colors only ever samples from 1..9, so 0 was
+    # unreachable.  Sample distinct colors from the full palette minus b.
+    colors = common.sample([c for c in range(10) if c != b],
+                           common.randint(4, 6))
     lengths = []
     for i in range(len(colors)):
       min_length, max_length = min(i + 1, 2), i + (0 if i > 1 else 1)
@@ -42,8 +46,17 @@ def generate(width=None, height=None, rows=None, cols=None, colors=None,
     # to draw in at least two separate quadrants.
     while True:
       grid = common.grid(width, height, b)
-      rows = [common.randint(0, height - 1) for _ in range(len(colors))]
-      cols = [common.randint(0, width - 1) for _ in range(len(colors))]
+      rows, cols = [], []
+      for idx in range(len(colors)):
+        # A shape's centre may sit one cell outside the grid -- the official
+        # train[2] uses col=-1 and row=18 on an 18-tall grid -- which clamping
+        # to [0, height - 1] / [0, width - 1] made unreachable.  Shape 0 is a
+        # lone pixel, so it still has to land on the grid or its color would
+        # disappear from the input entirely.
+        rows.append(common.randint(0, height - 1) if not idx
+                    else common.randint(-1, height))
+        cols.append(common.randint(0, width - 1) if not idx
+                    else common.randint(-1, width))
       illegal = False
       for idx, color in enumerate(colors):
         row, col, length, num_quad = rows[idx], cols[idx], lengths[idx], 0

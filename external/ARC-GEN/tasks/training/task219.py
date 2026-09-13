@@ -58,12 +58,25 @@ def _generate_one_random_90f3ed37(width, height):
 
 
 def _latent_ambiguous_for_verifiers(example):
-  """True if this pair should be resampled (PotARCin-only; ImportError => never)."""
+  """True if this pair should be resampled (PotARCin-only; ImportError => never).
+
+  Strict form: the input is kept only when the *raw* latent enumeration finds a
+  single task219-consistent output. The repo helper
+  ``_arc_gen_90f3ed37_example_is_unambiguous`` additionally accepts inputs with
+  several latent outputs when a canonical "largest cols" tie-break singles one
+  out, but that tie-break is a convention of this generator, not of the task:
+  the verifiers are free to pick either reading, and they do. So resample
+  whenever more than one completion is consistent with the cyan input.
+  """
   try:
-    from framework.tasks.arc_dataset import _arc_gen_90f3ed37_example_is_unambiguous
+    from framework.tasks.arc_dataset import _arc_gen_90f3ed37_analyze_latent_fits
   except ImportError:
     return False
-  return not _arc_gen_90f3ed37_example_is_unambiguous(example)
+  keys, _ok = _arc_gen_90f3ed37_analyze_latent_fits(example, apply_col_lexmax=False)
+  # len(keys) == 0 means the enumerator cannot express this pair at all (it only
+  # covers the random pipeline's parameter regime, not the hand-written official
+  # examples); say nothing in that case rather than resampling.
+  return len(keys) > 1
 
 
 def generate(arows=None, acols=None, brows=None, bcols=None, crows=None,

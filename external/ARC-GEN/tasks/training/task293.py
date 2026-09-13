@@ -31,7 +31,8 @@ def generate(width=None, height=None, offsets=None, thicks=None, colors=None,
   """
   if width is None:
     width, height = common.randint(5, 15), common.randint(5, 15)
-    thicks = [common.randint(1, 2) for _ in range(2)]
+    # The first official example draws a 3-wide band; 1..2 could never reach it.
+    thicks = [common.randint(1, 3) for _ in range(2)]
     offsets = [common.randint(1, width - thicks[0] - 1),
                common.randint(1, height - thicks[1] - 1)]
     colors = common.random_colors(2)

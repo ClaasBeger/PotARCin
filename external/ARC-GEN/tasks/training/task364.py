@@ -31,12 +31,25 @@ def generate(width=None, height=None, rows=None, cols=None, colors=None):
     height = common.randint(10, 20)
     width = height + common.randint(-2, 2)
     num_boxes = 1 + max(height, width) // 3
+    # Place the boxes one at a time. Drawing all of them at once and throwing
+    # the whole layout away on the first clash left this generator at under two
+    # pictures a second, which is also why its own smallest examples were never
+    # sampled.
     while True:
-      wides = [common.randint(3, 5) for _ in range(num_boxes)]
-      talls = [common.randint(3, 5) for _ in range(num_boxes)]
-      brows = [common.randint(0, height - tall) for tall in talls]
-      bcols = [common.randint(0, width - wide) for wide in wides]
-      if not common.overlaps(brows, bcols, wides, talls, 1): break
+      wides, talls, brows, bcols = [], [], [], []
+      for _ in range(num_boxes):
+        for _ in range(200):
+          wide, tall = common.randint(3, 5), common.randint(3, 5)
+          brow = common.randint(0, height - tall)
+          bcol = common.randint(0, width - wide)
+          if not common.overlaps(brows + [brow], bcols + [bcol], wides + [wide],
+                                 talls + [tall], 1):
+            wides.append(wide); talls.append(tall)
+            brows.append(brow); bcols.append(bcol)
+            break
+        else:
+          break
+      if len(wides) == num_boxes: break
     rows, cols, colors = [], [], []
     for row, col, wide, tall in zip(brows, bcols, wides, talls):
       stype, pixels, color = common.randint(0, 2), [], -1

@@ -543,6 +543,29 @@ def verify_arc_gen_90f3ed37_stable_unambiguous_coverage() -> Tuple[int, int, Lis
     return len(pairs) - len(failed), len(pairs), failed
 
 
+def _int_grid(fn: Callable[[Grid], Grid]) -> Callable[[Grid], Grid]:
+    """Wrap a verifier so its cells come back as plain ints.
+
+    Several code-golf solutions build cells out of comparisons and hand back
+    Python ``bool`` (or numpy scalars). Those compare equal to 0/1, so the grid
+    looks right and passes validation, but it serialises as ``true``/``false``
+    and renders as "True" wherever it is shown. Normalise at the boundary.
+    """
+
+    def _wrapped(grid: Grid) -> Grid:
+        out = fn(grid)
+        if hasattr(out, "tolist"):
+            out = out.tolist()
+        if not isinstance(out, list):
+            return out
+        return [
+            [int(v) for v in row] if isinstance(row, (list, tuple)) else row
+            for row in out
+        ]
+
+    return _wrapped
+
+
 def _make_arc_gen_generator(
     task_id: str,
 ) -> Optional[Callable[..., List[GridPair]]]:
@@ -672,14 +695,14 @@ def _load_golf_verifier_from_neurips(task_id: str) -> Optional[Callable[[Grid], 
 
     solve_fn = getattr(module, "solve", None)
     if callable(solve_fn):
-        return solve_fn  # type: ignore[return-value]
+        return _int_grid(solve_fn)  # type: ignore[return-value]
 
     for attr_name in dir(module):
         if attr_name.startswith("_"):
             continue
         attr = getattr(module, attr_name)
         if callable(attr):
-            return attr  # type: ignore[return-value]
+            return _int_grid(attr)  # type: ignore[return-value]
 
     return None
 
@@ -713,14 +736,14 @@ def _load_golf_verifier_from_google_code_golf_2025(
 
     solve_fn = getattr(module, "solve", None)
     if callable(solve_fn):
-        return solve_fn  # type: ignore[return-value]
+        return _int_grid(solve_fn)  # type: ignore[return-value]
 
     for attr_name in dir(module):
         if attr_name.startswith("_"):
             continue
         attr = getattr(module, attr_name)
         if callable(attr):
-            return attr  # type: ignore[return-value]
+            return _int_grid(attr)  # type: ignore[return-value]
 
     return None
 
@@ -781,14 +804,14 @@ def _load_golf_verifier_from_keymoon(task_id: str) -> Optional[Callable[[Grid], 
 
     solve_fn = getattr(module, "solve", None)
     if callable(solve_fn):
-        return solve_fn  # type: ignore[return-value]
+        return _int_grid(solve_fn)  # type: ignore[return-value]
 
     for attr_name in dir(module):
         if attr_name.startswith("_"):
             continue
         attr = getattr(module, attr_name)
         if callable(attr):
-            return attr  # type: ignore[return-value]
+            return _int_grid(attr)  # type: ignore[return-value]
 
     return None
 

@@ -28,9 +28,19 @@ def generate(row=None, col=None, colors=None, size=8, minisize=5):
     minisize: the width and height of the cutout
   """
   if row is None:
-    # TODO: Make sure we don't cut out the center.
-    row = common.randint(0, size - minisize)
-    col = common.randint(0, size - minisize)
+    # The cutout may sit anywhere in the full 2*size grid (the official
+    # examples use row=5/col=9 and row=4/col=8); the old bound of size-minisize
+    # confined it to the top-left quadrant.  A cutout stays recoverable unless
+    # it overlaps its own mirror image along BOTH axes at once -- that is the
+    # "don't cut out the center" case the old TODO was about -- because then
+    # some erased cell has no surviving copy left anywhere in the grid.
+    def self_mirrored(start):
+      lo, hi = start, start + minisize - 1
+      return hi >= 2 * size - 1 - hi and 2 * size - 1 - lo >= lo
+    while True:
+      row = common.randint(0, 2 * size - minisize)
+      col = common.randint(0, 2 * size - minisize)
+      if not (self_mirrored(row) and self_mirrored(col)): break
     bitmap = common.grid(size, size, common.green())
     for j in range(size):
       for i in range(j + 1):

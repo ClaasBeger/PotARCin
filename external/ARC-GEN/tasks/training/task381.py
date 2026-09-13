@@ -57,14 +57,30 @@ def generate(rows=None, cols=None, wides=None, talls=None, size=10):
 
   if rows is None:
     num_boxes = common.randint(3, 5)
+
+    def place_boxes():
+      # Place the boxes one at a time, retrying only the box that clashes.
+      wides, talls, rows, cols = [], [], [], []
+      for _ in range(num_boxes):
+        for _ in range(200):
+          wide, tall = common.randint(1, 4), common.randint(2, 6)
+          row = common.randint(0, size - tall)
+          col = common.randint(0, size - wide)
+          if common.overlaps(rows + [row], cols + [col], wides + [wide],
+                             talls + [tall], 1): continue
+          wides, talls = wides + [wide], talls + [tall]
+          rows, cols = rows + [row], cols + [col]
+          break
+        else:
+          return None  # This box doesn't fit; redraw the whole layout.
+      return wides, talls, rows, cols
+
     while True:
-      wides = [common.randint(1, 4) for _ in range(num_boxes)]
-      talls = [common.randint(2, 6) for _ in range(num_boxes)]
-      rows = [common.randint(0, size - tall) for tall in talls]
-      cols = [common.randint(0, size - wide) for wide in wides]
+      placed = place_boxes()
+      if placed is None: continue
+      wides, talls, rows, cols = placed
       grid, output = common.grids(size, size)
-      if not draw(grid, output): continue
-      if not common.overlaps(rows, cols, wides, talls, 1): break
+      if draw(grid, output): break
 
   grid, output = common.grids(size, size)
   draw(grid, output)

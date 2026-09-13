@@ -31,11 +31,19 @@ def generate(wides=None, talls=None, colors=None, rows=None, cols=None,
     pcolor: the color used for the small pixels
   """
   if wides is None:
-    wides = [common.randint(5, 10) for _ in range(2)]
-    talls = [common.randint(5, 10) for _ in range(2)]
+    # The official grids reach 12 columns wide and have bands as short as 4
+    # rows, and the test example stacks three bands instead of two, so none of
+    # those was reachable from 5..10 in both directions with a fixed 2x2.
+    wides = [common.randint(5, 12) for _ in range(2)]
+    talls = [common.randint(4, 10) for _ in range(common.randint(2, 3))]
     colors = common.sample(range(10), len(wides) * len(talls))
     pcolor = common.random_color(exclude=colors)
-    counts = common.sample(range(6), len(colors))
+    # Quadrant pixel counts repeat in the official examples (one of them has
+    # counts 0, 1, 0, 2), which sampling distinct values could never give; draw
+    # them independently and only insist that the "mostest" quadrant is unique.
+    while True:
+      counts = [common.randint(0, 5) for _ in colors]
+      if counts.count(max(counts)) == 1: break
     rows, cols = [], []
     for ridx, tall in enumerate(talls):
       for cidx, wide in enumerate(wides):

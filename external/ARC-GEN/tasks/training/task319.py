@@ -17,6 +17,53 @@
 import common
 
 
+def _reading_unique(grid, ground):
+  """True if only one of the small shapes explains the enlarged drawing.
+
+  The enlargement runs off the grid, so part of it is missing, and a different
+  small shape can sometimes be slid under the same visible cells and account for
+  them just as well -- hiding the same amount, in the same direction. The picture
+  then does not say which shape was enlarged, and neither reading can be called
+  the answer, so the instance is rejected rather than emitted.
+
+  Read off the finished picture rather than the parameters that drew it: double
+  each small shape, slide it everywhere, clip at the edge, and see which ones land
+  exactly on the enlarged drawing. If more than one shape can, the instance is
+  dropped, whatever the amounts hidden.
+  """
+  height = len(grid)
+  width = len(grid[0]) if height else 0
+  marks = {}
+  for r in range(height):
+    for c in range(width):
+      if grid[r][c] != ground:
+        marks.setdefault(grid[r][c], set()).add((r, c))
+  owners = set()
+  for big_colour, big_cells in marks.items():
+    for small_colour, small_cells in marks.items():
+      if small_colour == big_colour:
+        continue
+      top = min(r for r, _c in small_cells)
+      left = min(c for _r, c in small_cells)
+      tall = max(r for r, _c in small_cells) - top + 1
+      wide = max(c for _r, c in small_cells) - left + 1
+      shape = [(r - top, c - left) for r, c in small_cells]
+      doubled = [(2 * r + dr, 2 * c + dc)
+                 for r, c in shape for dr in (0, 1) for dc in (0, 1)]
+      for mrow in range(-2 * tall, height):
+        for mcol in range(-2 * wide, width):
+          seen, hidden = set(), 0
+          for r, c in doubled:
+            if 0 <= mrow + r < height and 0 <= mcol + c < width:
+              seen.add((mrow + r, mcol + c))
+            else:
+              hidden += 1
+          if not hidden or seen != big_cells:
+            continue
+          owners.add(small_colour)
+  return len(owners) == 1
+
+
 def generate(width=None, height=None, rows=None, cols=None, idxs=None,
              brows=None, bcols=None, magrow=None, magcol=None, colors=None,
              magcolor=None, bgcolor=None):
@@ -44,6 +91,7 @@ def generate(width=None, height=None, rows=None, cols=None, idxs=None,
     grid = common.grid(width, height, b)
     output = common.grid(wide, tall, b)
     some_hidden = False
+    some_shown = False
     for row, col, idx in zip(rows, cols, idxs):
       r, c = brows[idx] + row, bcols[idx] + col
       if grid[r][c] != b: legal = False
@@ -52,10 +100,16 @@ def generate(width=None, height=None, rows=None, cols=None, idxs=None,
       output[row][col] = colors[idx]
       for dr, dc in [(0, 0), (0, 1), (1, 0), (1, 1)]:
         r, c = mrow + 2 * row + dr, mcol + 2 * col + dc
-        if common.get_pixel(grid, r, c) == -1: some_hidden = True
+        if common.get_pixel(grid, r, c) == -1:
+          some_hidden = True
+        else:
+          some_shown = True
         if common.get_pixel(grid, r, c) not in [b, -1]: legal = False
         common.draw(grid, r, c, mcolor)
-      if not some_hidden: legal = False
+    # Part of the enlargement has to run off the grid, and part of it has to stay
+    # on: an enlargement placed entirely outside leaves nothing to read, and one
+    # placed entirely inside is not this task.
+    if not (some_hidden and some_shown): legal = False
     return grid, output, legal
 
   if rows is None:
@@ -68,7 +122,13 @@ def generate(width=None, height=None, rows=None, cols=None, idxs=None,
       for idx in range(2):
         wide, tall = common.randint(3, 5), common.randint(3, 5)
         while True:
-          xrows, xcols = common.conway_sprite(wide, tall, wide + tall)
+          # conway_sprite removes pixels on wide + tall attempts and almost all
+          # of them land, so a 5x5 sprite came out with 15 pixels 95% of the
+          # time. The official examples are denser than that -- the first one
+          # keeps 17 of the 25 cells in both of its 5x5 sprites -- so vary how
+          # many pixels are taken away instead of always taking the most.
+          tries = common.randint(max(wide, tall), wide + tall)
+          xrows, xcols = common.conway_sprite(wide, tall, tries)
           if common.diagonally_connected(list(zip(xrows, xcols))): break
         rows.extend(xrows)
         cols.extend(xcols)
@@ -76,14 +136,15 @@ def generate(width=None, height=None, rows=None, cols=None, idxs=None,
         brows.append(common.randint(0, height - tall))
         bcols.append(common.randint(0, width - wide))
         if idx: continue
-        magrow = common.randint(0, height - 2 * tall)
-        magcol = common.randint(0, width - 2 * wide)
-        if common.randint(0, 1):
-          magrow = -2 if common.randint(0, 1) else height - 2 * tall + 2
-        else:
-          magcol = -2 if common.randint(0, 1) else width - 2 * wide + 2
-      _, _, legal = draw(bgcolor, magrow, magcol, magcolor)
-      if legal: break
+        # Anywhere that leaves some of the enlargement on the grid. The earlier
+        # version always pushed it off by exactly two pixels at exactly one edge;
+        # the task's own examples are cut by one and by three pixels, and two of
+        # them are cut at two edges at once, so none of them was reachable.
+        magrow = common.randint(-(2 * tall - 1), height - 1)
+        magcol = common.randint(-(2 * wide - 1), width - 1)
+      drawn, _, legal = draw(bgcolor, magrow, magcol, magcolor)
+      # Also require that the picture says which shape was enlarged.
+      if legal and _reading_unique(drawn, bgcolor): break
 
   grid, output, _ = draw(bgcolor, magrow, magcol, magcolor)
   return {"input": grid, "output": output}

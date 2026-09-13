@@ -60,7 +60,11 @@ def generate(rows=None, cols=None, srow=None, scol=None, rdirs=None, cdirs=None,
     dirs = [(0, 0)] + common.sample(dirs, common.randint(2, 3))
     rdirs, cdirs = zip(*dirs)
     color = common.random_color()  # We'll pick a special color for the middle.
-    colors = [color] + [common.random_color(exclude=[color]) for _ in dirs]
+    # One color per direction: dirs already contains the middle sprite's own
+    # (0, 0) entry, so the old comprehension produced one color too many (the
+    # extra was silently dropped by the zip below), making the official
+    # len(colors) == len(dirs) unreachable.
+    colors = [color] + [common.random_color(exclude=[color]) for _ in dirs[1:]]
 
   grid, output = common.grids(size, size)
   def put(thegrid, r, c, thecolor):

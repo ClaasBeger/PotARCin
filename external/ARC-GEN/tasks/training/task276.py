@@ -27,7 +27,9 @@ def generate(width=None, height=None, rows=None, cols=None):
     cols: a list of horizontal coordinates where pixels should be placed
   """
   if width is None:
-    width, height = common.randint(4, 6), common.randint(4, 6)
+    # Two of the official examples are only 3 rows tall, so the height has to
+    # start at 3 like the width does; the old lower bound of 4 excluded them.
+    width, height = common.randint(3, 6), common.randint(3, 6)
     pixels = common.random_pixels(width, height)
     rows, cols = zip(*pixels)
 

@@ -57,7 +57,9 @@ def generate(size=None, width=None, height=None, row=None, col=None,
   if size is None:
     while True:
       size = common.randint(6, 12)
-      width, height = common.randint(2, 5), common.randint(2, 5)
+      # Official train example 1 uses a 1x1 man, so height starts at 1 (the
+      # old lower bound of 2 made that example unreachable).
+      width, height = common.randint(1, 5), common.randint(1, 5)
       row = common.randint(0, size - 1)
       col = common.randint(0, size - 1)
       colors = common.random_colors(2)

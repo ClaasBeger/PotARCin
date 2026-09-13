@@ -36,7 +36,11 @@ def generate(cols=None, lengths=None, idxs=None, colors=None, flip=None,
                common.randint(2, 5),
                common.randint(1, 2),
                common.randint(0, 2)]
+    # The last column does not always get a colour of its own: two of the three
+    # official examples give its bottom block the colour of an earlier column,
+    # so an identity mapping could never produce them.
     idxs = list(range(width))
+    if common.randint(0, 1): idxs[-1] = common.randint(0, width - 2)
     extra_cols = common.sample([2, 3], common.randint(0, 2))
     for extra_col in extra_cols:
       cols.append(extra_col)

@@ -31,7 +31,9 @@ def generate(width=None, height=None, rows=None, cols=None, colors=None):
     num_boxes = common.randint(2, 5)
     # Choose some nonoverlapping box locations.
     while True:
-      width, height = common.randint(10, 16), common.randint(10, 16)
+      # The first official train example is only 9 rows tall, so the old lower
+      # bound of 10 made that height unreachable (3-5 tall boxes still fit).
+      width, height = common.randint(10, 16), common.randint(9, 16)
       wides = [common.randint(3, 5) for _ in range(num_boxes)]
       talls = [common.randint(3, 5) for _ in range(num_boxes)]
       brows = [common.randint(0, height - tall) for tall in talls]

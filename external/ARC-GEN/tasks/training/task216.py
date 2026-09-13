@@ -32,26 +32,40 @@ def generate(rows=None, cols=None, idxs=None, brows=None, bcols=None,
     size: the width and height of the (square) grid
   """
   if rows is None:
-    num_boxes = common.randint(3, 4)
     while True:
+      # The box count has to be resampled along with the box sizes: four boxes
+      # that are each up to 18x18 cannot be packed into a 20x20 grid, so a
+      # count drawn once up front can make the packing unsatisfiable.
+      num_boxes = common.randint(3, 4)
       wides = [common.randint(4, 18) for _ in range(num_boxes)]
       talls = [common.randint(3, 18) for _ in range(num_boxes)]
-      brows = [common.randint(0, size - tall) for tall in talls]
-      bcols = [common.randint(0, size - wide) for wide in wides]
-      if common.overlaps(brows, bcols, wides, talls, 1): continue
-      rows, cols, idxs, counts = [], [], [], []
-      for idx in range(num_boxes):
-        wide, tall = wides[idx], talls[idx]
-        while True:
-          # TODO: Avoid pixels that are exactly adjacent to each other.
-          pixels = common.random_pixels(wide, tall, 0.2)
-          if pixels: break
-        rows.extend(p[0] for p in pixels)
-        cols.extend(p[1] for p in pixels)
-        idxs.extend([idx] * len(pixels))
-        counts.append(len(pixels))
-      if len(set(counts)) != num_boxes: continue  # Need unique counts.
-      if counts[0] != max(counts): continue  # First should have the most.
+      # Given feasible sizes the packing is usually satisfiable but rarely hit
+      # on the first try, so retry the positions before rerolling the sizes.
+      for _ in range(200):
+        brows = [common.randint(0, size - tall) for tall in talls]
+        bcols = [common.randint(0, size - wide) for wide in wides]
+        if not common.overlaps(brows, bcols, wides, talls, 1): break
+      else:
+        continue
+      # The pixel counts only depend on the box sizes, so retry them too rather
+      # than throwing away a perfectly good packing.
+      for _ in range(200):
+        rows, cols, idxs, counts = [], [], [], []
+        for idx in range(num_boxes):
+          wide, tall = wides[idx], talls[idx]
+          while True:
+            # TODO: Avoid pixels that are exactly adjacent to each other.
+            pixels = common.random_pixels(wide, tall, 0.2)
+            if pixels: break
+          rows.extend(p[0] for p in pixels)
+          cols.extend(p[1] for p in pixels)
+          idxs.extend([idx] * len(pixels))
+          counts.append(len(pixels))
+        if len(set(counts)) != num_boxes: continue  # Need unique counts.
+        if counts[0] != max(counts): continue  # First should have the most.
+        break
+      else:
+        continue
       break
 
   grid, output = common.grid(size, size), common.grid(wides[0], talls[0])

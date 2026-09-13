@@ -40,7 +40,9 @@ def generate(width=None, height=None, rows=None, cols=None, color=None,
     while True:
       width, height = common.randint(10, 20), common.randint(10, 20)
       wides = [common.randint(3, 10) for _ in range(num_boxes)]
-      talls = [common.randint(3, 10) for _ in range(num_boxes)]
+      # The official test example contains a box only two rows tall, which the
+      # old lower bound of 3 could never produce.
+      talls = [common.randint(2, 10) for _ in range(num_boxes)]
       boxrows = [common.randint(0, height - tall) for tall in talls]
       boxcols = [common.randint(0, width - wide) for wide in wides]
       if not common.overlaps(boxrows, boxcols, wides, talls, 1): break

@@ -28,7 +28,9 @@ def generate(rows=None, cols=None, color=None, size=5, minisize=3):
     minisize: the width and height of the (square) output grid
   """
   if rows is None:
-    pixels = common.sample(common.all_pixels(size, size), common.randint(9, 16))
+    # The second official test example only has 8 pixels, so the old lower
+    # bound of 9 on the pixel count excluded it.
+    pixels = common.sample(common.all_pixels(size, size), common.randint(8, 16))
     rows, cols = zip(*pixels)
     color = common.choice([1, 2, 3])
 

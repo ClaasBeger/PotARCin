@@ -47,7 +47,9 @@ def generate(
     # Choose the frog & fly body sizes
     width, height = common.randint(12, 20), common.randint(15, 20)
     wides = [common.randint(7, 8), common.randint(3, 5)]
-    talls = [common.randint(3, 8), common.randint(3, 4)]
+    # The smaller body is 2 rows tall in the third official train example, so
+    # the old lower bound of 3 excluded it.
+    talls = [common.randint(3, 8), common.randint(2, 4)]
     # Make the fly smaller than the frog, and choose their respective columns.
     talls[1] = min(talls[0], talls[1])
     cols = [common.randint(1, width - wides[0] - 1)]

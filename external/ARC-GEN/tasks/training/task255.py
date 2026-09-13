@@ -275,6 +275,105 @@ def _edgefill_output(output, GREEN):
   return out
 
 
+def _boxes_unambiguous(bitmap, rows, cols, wides, talls, blank, green):
+  """True if every box's interior is recoverable from the input alone.
+
+  A box is drawn as a cleared rectangle whose interior is filled; the rule reads
+  back "largest empty rectangle, minus a one-cell border". That only reproduces
+  the drawn interior while the line just beyond each border still carries noise.
+  When noise happens to be absent there — by chance, or because a neighbouring
+  box cleared it — the visible empty rectangle is one larger, so the inferable
+  interior is one larger than the interior actually painted, and the example
+  contradicts its own rule. Such instances are rejected rather than emitted.
+  """
+  height = len(bitmap)
+  width = len(bitmap[0]) if height else 0
+
+  def looks_empty(v):
+    # Green becomes blank in the input, so a neighbouring box's interior reads as
+    # empty to any solver even though it is green here.
+    return v == blank or v == green
+
+  for row, col, wide, tall in zip(rows, cols, wides, talls):
+    top, bottom = row + 1, row + tall - 2
+    left, right = col + 1, col + wide - 2
+    top, bottom = max(top, 0), min(bottom, height - 1)
+    left, right = max(left, 0), min(right, width - 1)
+    if top > bottom or left > right:
+      continue
+    for line, span, vertical in (
+        (row - 1, (left, right), True),
+        (row + tall, (left, right), True),
+        (col - 1, (top, bottom), False),
+        (col + wide, (top, bottom), False),
+    ):
+      if vertical:
+        if not 0 <= line < height:
+          continue
+        if all(looks_empty(bitmap[line][c]) for c in range(span[0], span[1] + 1)):
+          return False
+      else:
+        if not 0 <= line < width:
+          continue
+        if all(looks_empty(bitmap[r][line]) for r in range(span[0], span[1] + 1)):
+          return False
+  return True
+
+
+def _no_phantom_limbs(bitmap, rows, cols, wides, talls, blank, green):
+  """True if no chance-cleared channel reads as a limb the generator never drew.
+
+  A limb is a clear channel running from a side edge through the artery. Noise
+  sometimes clears one by accident, and the result is indistinguishable from a
+  drawn limb: same thickness, same reach, same termination at the artery. The
+  picture then admits two readings and the rule cannot say which was meant --
+  indeed a person reading the rule would paint the phantom, since nothing in the
+  picture marks it as accidental. Such instances are rejected rather than
+  emitted, the same determinacy requirement _boxes_unambiguous enforces for box
+  borders. Measured cost: about one draw in two thousand.
+
+  Checked in the canonical orientation, before any transpose or flip, where the
+  artery runs vertically and every limb runs horizontally across it.
+  """
+  height = len(bitmap)
+  width = len(bitmap[0]) if height else 0
+  if not height or not width:
+    return True
+
+  def looks_empty(v):
+    return v == blank or v == green
+
+  artery_lo = cols[0]
+  artery_hi = cols[0] + wides[0] - 1
+  drawn = set()
+  for row, _col, _wide, tall in list(zip(rows, cols, wides, talls))[1:]:
+    drawn.update(range(row, row + tall))
+
+  for lo, hi in ((0, min(artery_hi, width - 1)), (max(artery_lo, 0), width - 1)):
+    if lo > hi:
+      continue
+    clear = [
+        all(looks_empty(bitmap[r][c]) for c in range(lo, hi + 1))
+        for r in range(height)
+    ]
+    r = 0
+    while r < height:
+      if not clear[r]:
+        r += 1
+        continue
+      start = r
+      while r < height and clear[r]:
+        r += 1
+      # Thick enough to read as a limb (two borders and an interior), or two
+      # thick against the grid edge, where the far border lies outside.
+      thick = r - start
+      at_edge = start == 0 or r == height
+      if (thick >= 3 or (thick >= 2 and at_edge)) and any(
+          x not in drawn for x in range(start, r)):
+        return False
+  return True
+
+
 def generate(colors=None, size=30):
   """Returns input and output grids according to the given parameters.
 
@@ -283,6 +382,7 @@ def generate(colors=None, size=30):
     size: the width and height of the (square) grid
   """
   if colors is None:
+   while True:  # re-roll until every box's interior is recoverable
     color = common.random_color(exclude=[common.green()])
     bitmap = common.grid(size, size)
     for r, c in common.random_pixels(size, size, 0.5):
@@ -330,6 +430,14 @@ def generate(colors=None, size=30):
       for r in range(row + 1, row + tall - 1):
         for c in range(col + 1, col + wide - 1):
           common.draw(bitmap, r, c, common.green())
+    # Reject instances whose painted interior is not what the rule reads back.
+    if not _boxes_unambiguous(
+        bitmap, rows, cols, wides, talls, common.black(), common.green()):
+      continue
+    # Reject instances where noise has cleared a channel that reads as a limb.
+    if not _no_phantom_limbs(
+        bitmap, rows, cols, wides, talls, common.black(), common.green()):
+      continue
     # Sometimes we transpose:
     if common.randint(0, 1): bitmap = common.transpose(bitmap)
     # Sometimes we flip:
@@ -337,6 +445,7 @@ def generate(colors=None, size=30):
     colors = []
     for row in bitmap:
       colors.extend(row)
+    break
 
   grid, output = common.grids(size, size)
   for r in range(size):

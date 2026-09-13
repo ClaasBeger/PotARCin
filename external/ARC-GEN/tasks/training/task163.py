@@ -30,17 +30,31 @@ def generate(rows=None, cols=None, minirows=None, minicols=None, colors=None,
     minisize: the width and height of each mini-rid
   """
   if rows is None:
+    # Every mini-grid still gets 2-4 pixels, but the nine counts are drawn
+    # together instead of independently: the total is picked first and then
+    # spread out, one extra pixel at a time, over the mini-grids that can still
+    # take one.  Nine independent randint(2, 4) draws crowd the total around 27
+    # and reach the ends of the range (the first official example puts four
+    # pixels in all nine mini-grids) about once in twenty thousand grids.
+    minigrids = minisize * minisize
+    extras = common.sample(list(range(minigrids)) * 2,
+                           common.randint(0, 2 * minigrids))
+    counts = [2 + extras.count(idx) for idx in range(minigrids)]
+    # The pixels of one puzzle come from one palette.  The official examples use
+    # as few as four colors besides the yellow marker, which picking each pixel
+    # afresh from all seven never does.
+    palette = common.random_colors(common.randint(4, 7),
+                                   exclude=[common.gray(), common.yellow()])
     rows, cols, minirows, minicols, colors = [], [], [], [], []
     for r in range(minisize):
       for c in range(minisize):
-        count = common.randint(2, 4)
+        count = counts[r * minisize + c]
         pixels = common.sample(common.all_pixels(minisize, minisize), count)
         rows.extend([r] * count)
         cols.extend([c] * count)
         minirows.extend([p[0] for p in pixels])
         minicols.extend([p[1] for p in pixels])
-        colors.extend(common.random_colors(count, exclude=[common.gray(),
-                                                           common.yellow()]))
+        colors.extend(common.sample(palette, count))
     colors[common.randint(0, len(colors) - 1)] = common.yellow()
 
   grid = common.hollywood_squares(minisize, common.black(), common.gray())

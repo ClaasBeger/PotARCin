@@ -66,8 +66,18 @@ def generate(size=None, rows=None, cols=None, idxs=None, brows=None, bcols=None,
         rows.extend([p[0] for p in pixels])
         cols.extend([p[1] for p in pixels])
         idxs.extend([idx] * len(pixels))
-      brows = [common.randint(5, size - 6) for _ in range(num_sprites)]
-      bcols = [common.randint(5, size - 6) for _ in range(num_sprites)]
+      # Sprite idx is mirrored around (brows[idx], bcols[idx]) out to its own
+      # extent, so the real limits are that extent, not the worst-case 5 used
+      # before.  train[2] places a 3x4 creature at brow=3 / bcol=4, which the
+      # constant lower bound of 5 could never produce.
+      maxrows = [max(r for r, i in zip(rows, idxs) if i == idx)
+                 for idx in range(num_sprites)]
+      maxcols = [max(c for c, i in zip(cols, idxs) if i == idx)
+                 for idx in range(num_sprites)]
+      brows = [common.randint(maxrows[idx], size - 2 - maxrows[idx])
+               for idx in range(num_sprites)]
+      bcols = [common.randint(maxcols[idx], size - 2 - maxcols[idx])
+               for idx in range(num_sprites)]
       colors = []
       for _ in range(num_sprites):
         colors.extend(common.random_colors(4))

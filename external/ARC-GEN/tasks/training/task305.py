@@ -49,8 +49,10 @@ def generate(rows=None, cols=None, widths=None, heights=None, colors=None,
 
   if rows is None:
     while True:
-      widths = [common.randint(2, 4) for _ in range(5)]
-      heights = [common.randint(2, 4) for _ in range(5)]
+      # Official examples use either 5 or 4 cutouts; the old code hardcoded 5.
+      count = common.randint(4, 5)
+      widths = [common.randint(2, 4) for _ in range(count)]
+      heights = [common.randint(2, 4) for _ in range(count)]
       rows = [common.randint(0, size - h) for h in heights]
       cols = [common.randint(0, size - w) for w in widths]
       colors = common.randint(4, 9)

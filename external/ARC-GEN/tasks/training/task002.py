@@ -41,8 +41,11 @@ def generate(size=None, rows=None, cols=None, brows=None, bcols=None,
       brows = [common.randint(0, size - tall) for tall in talls]
       bcols = [common.randint(0, size - wide) for wide in wides]
       if not common.overlaps(brows, bcols, wides, talls, -1): break
+    # The official examples range from 0.045 to 0.13 static density (e.g. 30
+    # pixels on a 20x20 grid); the fixed 0.05 could not reach the denser ones.
+    density = common.randint(4, 13) / 100
     while True:
-      pixels = common.random_pixels(size, size, 0.05)
+      pixels = common.random_pixels(size, size, density)
       if pixels: break
     rows, cols = zip(*pixels)
 

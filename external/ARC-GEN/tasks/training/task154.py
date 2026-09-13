@@ -39,6 +39,11 @@ def generate(rows=None, cols=None, wide=None, tall=None, brow=None, bcol=None,
       rows, cols = zip(*pixels)
       if tall % 2:  # If height is odd, we can't have pixels in the middle.
         rows = [r if r * 2 != tall - 5 else 0 for r in rows]
+      # Each half has to reach the row nearest its gripper. A half that stops
+      # short leaves the gap between it and the box bigger than one cell, and
+      # then flipping it over the gripper and sliding it in until it nearly
+      # touches put it in different places, so the picture has two answers.
+      if 0 not in rows or tall - 5 not in rows: continue
       # Make sure the two halves are diagonnally connected.
       top = [(r, c) for r, c in zip(rows, cols) if r * 2 < tall - 5]
       bottom = [(r, c) for r, c in zip(rows, cols) if r * 2 > tall - 5]

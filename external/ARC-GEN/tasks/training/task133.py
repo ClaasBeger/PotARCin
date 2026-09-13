@@ -35,7 +35,9 @@ def generate(width=None, height=None, rows=None, cols=None, brows=None,
   """
   if width is None:
     num_sprites = common.randint(2, 4)
-    wide, tall = 3, 3
+    # Official example 2 uses a 4-wide sprite (cols run 0..3), which a sprite
+    # box hardcoded to 3x3 could never hold.
+    wide, tall = common.randint(3, 4), 3
     # First, choose grid dimensions and sprite magnifiers / locations.
     while True:
       width, height = common.randint(10, 30), common.randint(10, 30)
@@ -48,7 +50,9 @@ def generate(width=None, height=None, rows=None, cols=None, brows=None,
       bcols = [common.randint(0, width - w) for w in wides]
       if not common.overlaps(brows, bcols, wides, talls, 2): break
     # Second, choose sprite contents.
-    num_pixels = wide * tall // 2 + common.randint(-1, 1)
+    # Official sprites fill anywhere from half the box to all but one cell of
+    # it (example 3 uses 8 of 9); half the box plus/minus one stopped at 5.
+    num_pixels = common.randint(wide * tall // 2 - 1, wide * tall - 1)
     pixels = common.continuous_creature(num_pixels, wide, tall)
     rows, cols = zip(*pixels)
     while True:  # Make sure we show pixels that are adjacent to the first pixel
@@ -58,6 +62,9 @@ def generate(width=None, height=None, rows=None, cols=None, brows=None,
         d = abs(pixels[0][0] - pixels[s][0]) + abs(pixels[0][1] - pixels[s][1])
         if d > 1: all_adjacent = False
       if all_adjacent: break
+    # The first sprite is drawn in full, so its show index is never read; the
+    # official examples always record it as 0, which randint(1, ...) can't give.
+    shows[0] = 0
     pcolor = common.random_color()
     colors = common.random_colors(num_sprites, exclude=[pcolor])
 

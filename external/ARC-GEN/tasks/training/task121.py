@@ -39,7 +39,11 @@ def generate(rows=None, cols=None, idxs=None, brows=None, bcols=None,
       if not common.overlaps(brows, bcols, lengths, lengths, 1): break
     rows, cols, idxs = [], [], []
     for idx in range(num_sprites):
-      xrows, xcols = common.conway_sprite(3, 3, 4)
+      # A fixed 4 removal attempts leaves each sprite with 5 or 6 of its 9
+      # cells, but the official sprites range from 5 up to 8 cells (the second
+      # training example has an 8-cell sprite), which needs as few as one
+      # removal attempt.
+      xrows, xcols = common.conway_sprite(3, 3, common.randint(1, 4))
       rows.extend(xrows)
       cols.extend(xcols)
       idxs.extend([idx] * len(xrows))

@@ -32,7 +32,9 @@ def generate(width=None, height=None, rows=None, cols=None, flip=None,
   if width is None:
     width, height = common.randint(10, 20), common.randint(10, 20)
     rows, cols = [], []
-    row = 0
+    # Start below zero (like the column loop does) so the first red dot can sit
+    # as high as row 3; starting at 0 forced it to row 4 or lower.
+    row = -1
     # Create the red dots along the side
     while True:
       row += common.randint(4, 7)

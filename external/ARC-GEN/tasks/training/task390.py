@@ -32,8 +32,12 @@ def generate(rows=None, cols=None, wide=None, tall=None, brow=None, bcol=None,
     size: the width and height of the (square) grid
   """
   if rows is None:
-    wide, tall = common.randint(5, 7), common.randint(8, 9)
-    brow, bcol = 3, common.randint(2, 5)
+    # Official examples use boxes up to 8 wide (the old bound stopped at 7) and
+    # put the box top at row 3 or 4, while brow was pinned to 3.  Row 4 only
+    # fits when the contents drawn below the box stay on the grid, which needs
+    # brow + tall + 2 <= size - 1.
+    wide, tall = common.randint(5, 8), common.randint(8, 9)
+    brow, bcol = common.randint(3, min(4, size - 3 - tall)), common.randint(2, 5)
     while True:
       pixels = common.random_pixels(wide - 2, tall - 4, 0.75)
       rows, cols = zip(*pixels)

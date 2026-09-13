@@ -45,7 +45,12 @@ def generate(
     width, height = common.randint(14, 16), common.randint(14, 16)
     length = common.randint(3, 5)
     colors = common.random_colors(4, exclude=[common.cyan()])
-    rows, cols = common.conway_sprite(length, length, 2 * length)
+    # conway_sprite removes nearly every one of its allotted pixels, so a fixed
+    # budget of 2 * length nearly always yields the sparsest sprite; the
+    # official sprites keep more pixels (10 of 16, 6 of 9), so the number of
+    # removal attempts is now drawn from a range topped by the old value.
+    rows, cols = common.conway_sprite(length, length,
+                                      common.randint(length, 2 * length))
     while True:
       spriterow = common.randint(0, height - length)
       spritecol = common.randint(0, width - length)

@@ -32,13 +32,12 @@ def generate(size=None, rows=None, cols=None, wides=None, talls=None,
   """
   if size is None:
     size = 3 * common.randint(3, 5)
-    num_boxes = common.randint(size // 4, size // 2)
+    # Official train example 0 packs 8 boxes into a size-15 grid; the old
+    # size // 2 cap rounded down and topped out at 7.
+    num_boxes = common.randint(size // 4, (size + 1) // 2)
     while True:
       wides = [common.randint(1, 5) for _ in range(num_boxes)]
       talls = [common.randint(1, 5) for _ in range(num_boxes)]
-      rows = [common.randint(0, size - tall) for tall in talls]
-      cols = [common.randint(0, size - wide) for wide in wides]
-      if common.overlaps(rows, cols, wides, talls, 1): continue
       grows, gcols, some_closed = [], [], False
       for wide, tall in zip(wides, talls):
         if wide == 1 or tall == 1:  # Never take a chunk of flat shapes.
@@ -58,7 +57,19 @@ def generate(size=None, rows=None, cols=None, wides=None, talls=None,
         else:  # Take chunks from any 2xH or Wx2 boxes, and half of all others.
           grows.append(0 if common.randint(0, 1) else (tall - 1))
           gcols.append(0 if common.randint(0, 1) else (wide - 1))
-      if some_closed: break
+      if not some_closed: continue
+      rows = [common.randint(0, size - tall) for tall in talls]
+      # Official train example 1 hangs a box one column off the left edge. Only
+      # a box that is open anyway may do that, and its gap has to stay in view:
+      # once a wall is clipped away there is no telling a missing wall from a
+      # cut-off one, and the two readings colour the box differently.
+      cols = []
+      for wide, gcol in zip(wides, gcols):
+        col = common.randint(-1, size - wide)
+        if col < 0 and gcol + col < 0: col = 0
+        cols.append(col)
+      if common.overlaps(rows, cols, wides, talls, 1): continue
+      break
 
   grid, output = common.grids(size, size)
   for row, col, w, t, grow, gcol in zip(rows, cols, wides, talls, grows, gcols):

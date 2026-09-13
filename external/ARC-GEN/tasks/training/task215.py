@@ -41,10 +41,17 @@ def generate(
     # TODO: make sure the pattern is 3 pixels tall, or at least flips?
     # TODO: Make sure the flat L-tetris piece is possible?
     width, height = common.randint(10, 20), common.randint(10, 20)
-    rows, cols = common.conway_sprite(common.randint(2, 3), 3)
+    # The output tiles the pattern with a vertical period of 3, so the drawn
+    # band has to be 3 rows tall. A 3-tall sprite manages that by itself; the
+    # 2-tall sprite of the first official example only does so when alternate
+    # blocks are flipped down into the third row, which needs an odd block
+    # width and flip=1. Pinning the sprite height at 3 made it unreachable.
+    tall = common.randint(2, 3)
+    wide = 3 if tall == 2 else common.randint(2, 3)
+    rows, cols = common.conway_sprite(wide, tall)
     offset = common.randint(3, 4)
     color = common.random_color()
-    flip = common.randint(0, 1)
+    flip = 1 if tall == 2 else common.randint(0, 1)
 
   grid, output = common.grids(width, height)
   wide = max(cols) + 1

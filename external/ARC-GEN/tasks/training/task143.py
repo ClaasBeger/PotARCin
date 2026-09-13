@@ -33,7 +33,27 @@ def generate(rows=None, cols=None, idxs=None, brows=None, bcols=None,
   """
   if rows is None:
     num_sprites = common.randint(3, 5)
-    wides = talls = [3] * num_sprites
+    rows, cols, idxs = [], [], []
+    creatures = []
+    for idx in range(num_sprites):
+      while True:
+        # Sprite 0 is also redrawn inside the 3x3 gray box, so it has to stay
+        # 3 columns wide; the official examples give the other creatures up to
+        # 5 pixels spanning 4 columns (train example 0's last creature), which
+        # the old 3-wide, 3-or-4-pixel draw could never produce.
+        pixels = sorted(common.continuous_creature(
+            common.randint(3, 5), 3 if not idx else 4, 3))
+        if pixels not in creatures: break
+      creatures.append(pixels)
+      xrows, xcols = zip(*pixels)
+      rows.extend(xrows)
+      cols.extend(xcols)
+      idxs.extend([idx] * len(pixels))
+    # Size each box from the creature that actually goes in it.  Reserving a
+    # fixed 3x3 for every sprite capped brows/bcols at 7, while the official
+    # examples place their shorter creatures as low as row 8 / column 8.
+    talls = [max(r for r, _ in p) + 1 for p in creatures]
+    wides = [max(c for _, c in p) + 1 for p in creatures]
     while True:
       brows = [common.randint(0, size - t) for t in talls]
       bcols = [common.randint(0, size - w) for w in wides]
@@ -41,17 +61,6 @@ def generate(rows=None, cols=None, idxs=None, brows=None, bcols=None,
       for i in range(num_sprites):
         if brows[i] < 5 and bcols[i] < 5: illegal = True
       if not illegal: break
-    rows, cols, idxs = [], [], []
-    creatures = []
-    for idx in range(num_sprites):
-      while True:
-        pixels = sorted(common.continuous_creature(common.randint(3, 4)))
-        if pixels not in creatures: break
-      creatures.append(pixels)
-      xrows, xcols = zip(*pixels)
-      rows.extend(xrows)
-      cols.extend(xcols)
-      idxs.extend([idx] * len(pixels))
     bcolor = common.random_color(exclude=[common.gray()])
     colors = common.random_colors(num_sprites, exclude=[bcolor, common.gray()])
 

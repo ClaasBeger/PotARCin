@@ -33,9 +33,11 @@ def generate(width=None, height=None, rows=None, cols=None, offset=None,
   """
   if width is None:
     width, height = common.randint(16, 18), common.randint(4, 5)
-    pixels = common.continuous_creature(common.randint(8, 9), height, height)
+    # An official example uses a ten-pixel creature, and another uses an offset
+    # of 4; the old upper bounds of 9 and 3 excluded both.
+    pixels = common.continuous_creature(common.randint(8, 10), height, height)
     rows, cols = zip(*pixels)
-    offset, redline = common.randint(0, 3), common.randint(width - 6, width - 2)
+    offset, redline = common.randint(0, 4), common.randint(width - 6, width - 2)
     flip, xpose = common.randint(0, 1), common.randint(0, 1)
 
   grid, output = common.grids(width, height)

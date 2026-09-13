@@ -17,6 +17,36 @@
 import common
 
 
+def _turns(pixels):
+  """The eight ways a sprite can be turned over and around."""
+  out = []
+  for flip in (False, True):
+    pts = [(c, r) for r, c in pixels] if flip else list(pixels)
+    for _ in range(4):
+      out.append(pts)
+      pts = [(c, -r) for r, c in pts]
+  return out
+
+
+def _readable(sprites):
+  """Whether every arrangement of key cells names one sprite and one turn.
+
+  A diagonal triple is left where it was by a transpose, and with two sprites
+  sharing a palette a triple can fit the other sprite as well -- either way the
+  clone could be filled in two ways, so the picture has no single answer.
+  """
+  seen = {}
+  for pixels, pos in sprites:
+    for turned in _turns(pixels):
+      anchor = turned[pos[0]]
+      keys = tuple(sorted((turned[p][0] - anchor[0], turned[p][1] - anchor[1], j)
+                          for j, p in enumerate(pos)))
+      shape = frozenset((r - anchor[0], c - anchor[1]) for r, c in turned)
+      if keys in seen and seen[keys] != shape: return False
+      seen[keys] = shape
+  return True
+
+
 def generate(width=None, height=None, rows=None, cols=None, idxs=None,
              colors=None, brows=None, bcols=None, rotates=None):
   """Returns input and output grids according to the given parameters.
@@ -52,16 +82,27 @@ def generate(width=None, height=None, rows=None, cols=None, idxs=None,
     # Choose the contents of the sprites.
     # TODO: Use something less bulky than a continuous creature.
     color_list = common.random_colors(4)
+    # A clone shows only its three key cells, so those cells have to say both
+    # which sprite it is and which way that sprite was turned. Keep drawing
+    # sprites until they do.
+    while True:
+      sprites = []
+      for idx in range(num_sprites):
+        wide, tall = wides[idx], talls[idx]
+        pixels = common.continuous_creature(common.randint(6, 12), wide, tall)
+        pos = None
+        for _ in range(200):  # Pick positions that aren't all in a line
+          choice = common.sample(range(len(pixels)), 3)
+          if len(set(pixels[p][0] for p in choice)) == 1: continue
+          if len(set(pixels[p][1] for p in choice)) == 1: continue
+          pos = choice
+          break
+        if pos is None: break
+        sprites.append((pixels, pos))
+      if len(sprites) == num_sprites and _readable(sprites): break
     rows, cols, idxs, colors = [], [], [], []
-    for idx in range(num_sprites):
-      wide, tall = wides[idx], talls[idx]
-      pixels = common.continuous_creature(common.randint(6, 12), wide, tall)
+    for idx, (pixels, pos) in enumerate(sprites):
       sprite_colors = [color_list[3]] * len(pixels)
-      while True:  # Pick positions that aren't all in a line
-        pos = common.sample(range(len(pixels)), 3)
-        if len(set(pixels[idx][0] for idx in pos)) == 1: continue
-        if len(set(pixels[idx][1] for idx in pos)) == 1: continue
-        break
       sprite_colors[pos[0]] = color_list[0]
       sprite_colors[pos[1]] = color_list[1]
       sprite_colors[pos[2]] = color_list[2]

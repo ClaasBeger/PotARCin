@@ -17,6 +17,72 @@
 import common
 
 
+def _readings(grid, cap=2):
+  """Counts (up to cap) ways the grey shapes can fill the bites in the bar.
+
+  Every shape slides up into the bar, and together they have to fill its bites
+  exactly -- that is the whole puzzle.  Telling the shapes apart by the part of
+  each that shows in the bar is not enough: two shapes with different footprints
+  can still swap places along the bar, leaving the bar looking the same while the
+  parts hanging below it land somewhere else.  A picture like that has two right
+  answers, and only pictures with exactly one are worth drawing.
+  """
+  height = len(grid)
+  width = len(grid[0])
+  deep = [r for r in range(height) if common.red() in grid[r]]
+  bar = {(r, c) for r in deep for c in range(width)}
+  empty = {(r, c) for r in range(height) for c in range(width) if not grid[r][c]}
+  bites = bar & empty
+  deepest = deep[-1] if deep else -1
+
+  seen = [[False] * width for _ in range(height)]
+  shapes = []
+  for row in range(height):
+    for col in range(width):
+      if seen[row][col] or grid[row][col] != common.gray(): continue
+      stack, cells = [(row, col)], []
+      seen[row][col] = True
+      while stack:
+        r, c = stack.pop()
+        cells.append((r, c))
+        for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+          if not (0 <= r + dr < height and 0 <= c + dc < width): continue
+          if seen[r + dr][c + dc] or grid[r + dr][c + dc] != common.gray(): continue
+          seen[r + dr][c + dc] = True
+          stack.append((r + dr, c + dc))
+      top, left = min(r for r, _ in cells), min(c for _, c in cells)
+      shapes.append(frozenset((r - top, c - left) for r, c in cells))
+
+  # Where each shape could sit: on empty cells only, and biting into the bar.
+  places = []
+  for shape in shapes:
+    tall = max(r for r, _ in shape) + 1
+    wide = max(c for _, c in shape) + 1
+    spots = []
+    for dr in range(-tall + 1, deepest + 1):
+      for dc in range(-wide + 1, width):
+        put = frozenset((r + dr, c + dc) for r, c in shape)
+        if any(not (0 <= r < height and 0 <= c < width) for r, c in put): continue
+        if put - empty or not put & bar or (put & bar) - bites: continue
+        spots.append(put)
+    places.append(spots)
+
+  order = sorted(range(len(shapes)), key=lambda i: len(places[i]))
+  answers = set()
+
+  def deal(idx, used):
+    if len(answers) >= cap: return
+    if idx == len(order):
+      if used & bar == bites: answers.add(used)
+      return
+    for put in places[order[idx]]:
+      if put & used: continue
+      deal(idx + 1, used | put)
+
+  deal(0, frozenset())
+  return len(answers)
+
+
 def generate(rows=None, cols=None, idxs=None, bluerows=None, bluecols=None,
              grayrows=None, graycols=None, width=15, height=10):
   """Returns input and output grids according to the given parameters.
@@ -34,8 +100,12 @@ def generate(rows=None, cols=None, idxs=None, bluerows=None, bluecols=None,
   """
 
   if rows is None:
-    num_shapes = max(3, common.randint(0, 4))
     while True:
+      # The number of creatures has to be resampled along with everything else:
+      # four creatures have to be packed into a single 15-wide strip twice over
+      # (once in blue, once in gray), and a count drawn once up front left the
+      # loop spinning for tens of thousands of iterations.
+      num_shapes = max(3, common.randint(0, 4))
       # Choose the dimensions and contents of the creatures.
       wides = [common.randint(1, 4) for _ in range(num_shapes)]
       talls = [common.randint(2, 4) for _ in range(num_shapes)]
@@ -43,9 +113,17 @@ def generate(rows=None, cols=None, idxs=None, bluerows=None, bluecols=None,
                for wide, tall in zip(wides, talls)]
       creatures = [common.continuous_creature(size, wide, tall)
                    for size, wide, tall in zip(sizes, wides, talls)]
-      # Choose the blue locations of the creatures.
+      # Choose the blue locations of the creatures.  The creatures always
+      # overlap vertically, so this is a one-dimensional packing that is nearly
+      # always satisfiable yet rarely hit on the first try -- retry the columns
+      # on their own instead of rebuilding the creatures every time.
       bluerows = [common.randint(1, 2) for _ in range(num_shapes)]
-      bluecols = [common.randint(0, width - wide) for wide in wides]
+      for _ in range(200):
+        bluecols = [common.randint(0, width - wide) for wide in wides]
+        # Make sure the creatures don't overlap.
+        if not common.overlaps(bluerows, bluecols, wides, talls, 1): break
+      else:
+        continue
       # Extract the rows and columns, along with the creatures actual heights.
       rows, cols, idxs, max_rows = [], [], [], []
       for idx, creature in enumerate(creatures):
@@ -54,22 +132,11 @@ def generate(rows=None, cols=None, idxs=None, bluerows=None, bluecols=None,
         idxs.extend([idx] * len(creature))
         max_rows.append(max(p[0] for p in creature))
       grayrows = [height - max_row - 1 for max_row in max_rows]
-      graycols = [common.randint(0, width - wide) for wide in wides]
-      # Make sure the creatures don't overlap.
-      if common.overlaps(bluerows, bluecols, wides, talls, 1): continue
-      if common.overlaps(grayrows, graycols, wides, talls, 1): continue
-      # Draw the shapes, and make sure the red bar remains convex.
-      illegal = False
-      grid = common.grid(width, height)
-      for r in range(3):
-        for c in range(width):
-          grid[r][c] = common.red()
-      for r, c, idx in zip(rows, cols, idxs):
-        grid[r + bluerows[idx]][c + bluecols[idx]] = common.black()
-      for r in range(1, height):
-        for c in range(width):
-          if grid[r][c] == common.red() and grid[r - 1][c] == common.black():
-            illegal = True
+      for _ in range(200):
+        graycols = [common.randint(0, width - wide) for wide in wides]
+        if not common.overlaps(grayrows, graycols, wides, talls, 1): break
+      else:
+        continue
       # Make sure the footprints are unique (so we can match them exactly).
       footprints = []
       for creature in creatures:
@@ -78,12 +145,46 @@ def generate(rows=None, cols=None, idxs=None, bluerows=None, bluecols=None,
         one_deep.sort()
         two_deep.sort()
         footprints.append([one_deep, two_deep])
-      for i, creature in enumerate(creatures):
-        footprint = [p for p in creature if p[0] < 3 - bluerows[i]]
-        footprint.sort()
-        for j in range(len(creatures)):
-          if i != j and footprint in footprints[j]: illegal = True
-      if not illegal: break
+      # Both the convexity of the red bar and the uniqueness of the footprints
+      # depend on the creatures and on how deeply they sit in the bar, but not
+      # on where they sit along it, so reroll the depths on their own rather
+      # than rebuilding the creatures for every collision.
+      for _ in range(50):
+        bluerows = [common.randint(1, 2) for _ in range(num_shapes)]
+        if common.overlaps(bluerows, bluecols, wides, talls, 1): continue
+        # Draw the shapes, and make sure the red bar remains convex.
+        illegal = False
+        grid = common.grid(width, height)
+        for r in range(3):
+          for c in range(width):
+            grid[r][c] = common.red()
+        for r, c, idx in zip(rows, cols, idxs):
+          grid[r + bluerows[idx]][c + bluecols[idx]] = common.black()
+        for r in range(1, height):
+          for c in range(width):
+            if grid[r][c] == common.red() and grid[r - 1][c] == common.black():
+              illegal = True
+        for i, creature in enumerate(creatures):
+          footprint = [p for p in creature if p[0] < 3 - bluerows[i]]
+          footprint.sort()
+          for j in range(len(creatures)):
+            if i != j and footprint in footprints[j]: illegal = True
+        if not illegal: break
+      else:
+        continue
+      # Different footprints still leave the shapes free to swap places along
+      # the bar, which fills the bar the same way but hangs the tails below it
+      # somewhere else; such a picture has two right answers.  Keep only the
+      # pictures that can be read one way -- all three official examples can.
+      grid = common.grid(width, height)
+      for r in range(3):
+        for c in range(width):
+          grid[r][c] = common.red()
+      for r, c, idx in zip(rows, cols, idxs):
+        grid[r + grayrows[idx]][c + graycols[idx]] = common.gray()
+        grid[r + bluerows[idx]][c + bluecols[idx]] = common.black()
+      if _readings(grid) != 1: continue
+      break
 
   grid, output = common.grids(width, height)
   for r in range(3):

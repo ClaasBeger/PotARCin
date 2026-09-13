@@ -49,8 +49,11 @@ def generate(mod=None, modset=None, rows=None, cols=None, wides=None,
   if mod is None:
     mod, modset = common.randint(5, 9), common.randint(1, 4)
     while True:
-      wides = [common.randint(2, 5) for _ in range(5)]
-      talls = [common.randint(2, 5) for _ in range(5)]
+      # Four or five cutouts: official train example 2 uses four, which the
+      # hardcoded range(5) could never produce.
+      num_cutouts = common.randint(4, 5)
+      wides = [common.randint(2, 5) for _ in range(num_cutouts)]
+      talls = [common.randint(2, 5) for _ in range(num_cutouts)]
       rows = [common.randint(0, size - tall) for tall in talls]
       cols = [common.randint(0, size - wide) for wide in wides]
       grid, output = common.grids(size, size)

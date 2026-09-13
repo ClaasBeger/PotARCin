@@ -105,16 +105,19 @@ def generate(width=None, height=None, rows=None, cols=None, wides=None,
   if width is None:
     while True:  # Keep trying this until we get a grid with no intersections.
       width, height = common.randint(20, 25), common.randint(20, 25)
-      wide0 = common.randint(6 * width // 15, 7 * width // 15)
-      tall0 = common.randint(6 * height // 15, 7 * height // 15)
-      wide1 = common.randint(6 * wide0 // 15, 7 * wide0 // 15)
-      tall1 = common.randint(6 * tall0 // 15, 7 * tall0 // 15)
-      wide2 = common.randint(6 * wide0 // 15, 7 * wide0 // 15)
-      tall2 = common.randint(6 * tall0 // 15, 7 * tall0 // 15)
-      wide3 = common.randint(6 * wide0 // 15, 7 * wide0 // 15)
-      tall3 = common.randint(6 * tall0 // 15, 7 * tall0 // 15)
-      row = common.randint(1, height - tall0 - tall1 - tall2 - 2)
-      col = common.randint(1, width - wide0 - wide3 - 2)
+      wide0 = common.randint(4 * width // 15, 8 * width // 15)
+      tall0 = common.randint(6 * height // 15, 8 * height // 15)
+      wide1 = common.randint(6 * wide0 // 15, 10 * wide0 // 15)
+      tall1 = common.randint(6 * tall0 // 15, 10 * tall0 // 15)
+      wide2 = common.randint(6 * wide0 // 15, 10 * wide0 // 15)
+      tall2 = common.randint(6 * tall0 // 15, 10 * tall0 // 15)
+      wide3 = common.randint(6 * wide0 // 15, 10 * wide0 // 15)
+      tall3 = common.randint(6 * tall0 // 15, 10 * tall0 // 15)
+      # The boxes have to fit inside the grid with a little room to spare.
+      if height - tall0 - tall1 - tall2 < 1: continue
+      if width - wide0 - wide3 - 1 < 1: continue
+      row = common.randint(1, height - tall0 - tall1 - tall2)
+      col = common.randint(1, width - wide0 - wide3 - 1)
       rows, cols, wides, talls = [], [], [], []
       # We always add the main box (0) and its little brother (1).
       rows.append(row + tall1 - 1)
@@ -131,33 +134,62 @@ def generate(width=None, height=None, rows=None, cols=None, wides=None,
         cols.append(col + wide0 - wide2)
         wides.append(wide2)
         talls.append(tall2)
-      if common.randint(0, 1):
+      if common.randint(0, 1) and row + tall1 - tall3 >= 0:
         rows.append(row + tall1 - tall3)
         cols.append(col + wide0 - 1)
         wides.append(wide3)
         talls.append(tall3)
-      # Add a bunch of random lines.
-      lowerrows, lowercols, upperrows, uppercols = [], [], [], []
+      # Add a bunch of random lines: one per *distinct* box edge, since boxes
+      # share edges with each other and two lines can never be collinear.
+      hlines, vlines = {}, {}
+      def stretch(lines, key, lo, hi):
+        if key in lines: lo, hi = min(lo, lines[key][0]), max(hi, lines[key][1])
+        lines[key] = (lo, hi)
       for r, c, w, t in zip(rows, cols, wides, talls):
+        stretch(hlines, r, max(0, c - common.randint(0, w - 1)),
+                min(width - 1, c + w + common.randint(0, w - 1)))
+        stretch(hlines, r + t - 1, max(0, c - common.randint(0, w - 1)),
+                min(width - 1, c + w + common.randint(0, w - 1)))
+        stretch(vlines, c, max(0, r - common.randint(0, t)),
+                min(height - 1, r + t + common.randint(0, t - 1)))
+        stretch(vlines, c + w - 1, max(0, r - common.randint(0, t - 1)),
+                min(height - 1, r + t + common.randint(0, t - 1)))
+      lowerrows, lowercols, upperrows, uppercols = [], [], [], []
+      for r, (lo, hi) in hlines.items():
         lowerrows.append(r)
         upperrows.append(r)
-        lowercols.append(max(0, c - common.randint(0, w - 1)))
-        uppercols.append(min(width - 1, c + w + common.randint(0, w - 1)))
-        lowerrows.append(r + t - 1)
-        upperrows.append(r + t - 1)
-        lowercols.append(max(0, c - common.randint(0, w - 1)))
-        uppercols.append(min(width - 1, c + w + common.randint(0, w - 1)))
-        lowerrows.append(max(0, r - common.randint(0, t)))
-        upperrows.append(min(height - 1, r + t + common.randint(0, t - 1)))
+        lowercols.append(lo)
+        uppercols.append(hi)
+      for c, (lo, hi) in vlines.items():
+        lowerrows.append(lo)
+        upperrows.append(hi)
         lowercols.append(c)
         uppercols.append(c)
-        lowerrows.append(max(0, r - common.randint(0, t - 1)))
-        upperrows.append(min(height - 1, r + t + common.randint(0, t - 1)))
-        lowercols.append(c + w - 1)
-        uppercols.append(c + w - 1)
       grid = common.grid(width, height)
       output = common.grid(width, height, common.green())
-      if draw(grid, output): break
+      if not draw(grid, output): continue
+      # Finally, a few free-floating lines; we keep the ones that still fit.
+      for _ in range(common.randint(0, 3)):
+        if common.randint(0, 1):
+          r, c = common.randint(1, height - 2), common.randint(0, width - 6)
+          lowerrows.append(r)
+          upperrows.append(r)
+          lowercols.append(c)
+          uppercols.append(common.randint(c + 5, width - 1))
+        else:
+          r, c = common.randint(0, height - 6), common.randint(1, width - 2)
+          lowerrows.append(r)
+          upperrows.append(common.randint(r + 5, height - 1))
+          lowercols.append(c)
+          uppercols.append(c)
+        grid = common.grid(width, height)
+        output = common.grid(width, height, common.green())
+        if not draw(grid, output):
+          lowerrows.pop()
+          upperrows.pop()
+          lowercols.pop()
+          uppercols.pop()
+      break
     color = common.random_color(exclude=[common.red(), common.green()])
     flip, xpose = common.randint(0, 1), common.randint(0, 1)
 

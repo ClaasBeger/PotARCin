@@ -28,7 +28,9 @@ def generate(colors=None, cols=None, gravity=None, size=12):
   """
   if colors is None:
     colors = common.random_colors(2)
-    cols = [common.randint(3, size - 3) for _ in range(2)]
+    # The plus is drawn out to c +/- 2, so c == 2 is legal (official test uses
+    # a center at column 2); the old lower bound of 3 excluded it.
+    cols = [common.randint(2, size - 3) for _ in range(2)]
     gravity = common.randint(0, 3)
 
   grid, output = common.grids(size, size)

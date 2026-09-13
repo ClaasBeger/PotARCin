@@ -32,7 +32,9 @@ def generate(rows=None, cols=None, idxs=None, brows=None, bcols=None,
     size: the width and height of the (square) grid
   """
   if rows is None:
-    wide, tall = common.randint(2, 3), common.randint(2, 4)
+    # The official examples use sprites up to 3 wide and 5 tall (train[1] has
+    # rows 0..4); the old upper bound of 4 could never reach that height.
+    wide, tall = common.randint(2, 3), common.randint(2, 5)
     rows0, cols0 = common.conway_sprite(wide, tall, wide * tall // 2)
     rows1, cols1 = common.conway_sprite(wide, tall, wide * tall // 2)
     rows, cols = rows0 + rows1, cols0 + cols1

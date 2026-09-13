@@ -34,9 +34,13 @@ def generate(width=None, height=None, row=None, col=None, colors=None,
     width = common.randint(10, 20)
     height = width + common.randint(0, 1)
     colors = common.random_colors(common.randint(3, 4))
-    row = common.randint(len(colors), height - len(colors) - 1)
-    col = common.randint(len(colors), width - len(colors) - 1)
     flip, offset = common.randint(0, 1), common.randint(0, len(colors) - 1)
+    # The drawn patch covers rows row-offset .. row-offset+len(colors)-1 and the
+    # matching columns, so these are exactly the placements that keep it on the
+    # grid. The old bounds also kept the centre len(colors) clear of every edge,
+    # which an official example is not -- it sits at column 2 with three colours.
+    row = common.randint(offset, height - len(colors) + offset)
+    col = common.randint(offset, width - len(colors) + offset)
 
   grid, output = common.grids(width, height)
   for r in range(height):

@@ -30,7 +30,13 @@ def generate(size=None, numred=None, flip=None, xpose=None, lengths=None):
   if size is None:
     size = 2 * common.randint(5, 7)
     numred = common.randint(5 * size // 3, 7 * size // 3)
-    lengths = [max(1, common.randint(0, 3)) for _ in range(4 * size)]
+    # Every official example contains at least one zero-length column and one
+    # of them contains a column of length 4; the max(1, ...) clamp and the
+    # randint upper bound of 3 made both values unreachable.  Both are rare in
+    # the official data (5 zeros and a single 4 across 193 columns), so draw
+    # them rarely rather than reshaping the whole distribution.
+    lengths = [common.choice([0, 4]) if not common.randint(0, 19)
+               else max(1, common.randint(0, 3)) for _ in range(4 * size)]
     flip, xpose = common.randint(0, 1), common.randint(0, 1)
 
   grid, output = common.grids(size, size)

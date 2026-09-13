@@ -37,8 +37,9 @@ def generate(thicks=None, gaps=None, cols=None, lengths=None, colors=None,
     lengths.append(common.randint(lengths[0] + 2, 9))
     col1 = common.randint(0, size - lengths[1] - 1)
     col0 = common.randint(col1 + 1, col1 + lengths[1] - lengths[0])
+    # Only cols[0] and cols[1] are ever read; the official examples all pass a
+    # two-element list, so the extra (unused) third column is not appended.
     cols = [col0, col1]
-    cols.append(common.randint(0, cols[0] - 1))
     colors = common.random_colors(2, exclude=[common.cyan()])
     gravity = common.randint(0, 3)
 

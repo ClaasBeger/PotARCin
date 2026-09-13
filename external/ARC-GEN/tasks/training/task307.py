@@ -34,7 +34,9 @@ def generate(size=None, rows=None, cols=None, idxs=None,
       pixels = common.random_pixels(size, size)
       if pixels: break
     rows, cols = zip(*pixels)
-    num_colors = size + 1
+    # The official test example has size=5 but uses index 6, so the palette
+    # grows to size + 2; the old size + 1 capped indices at size.
+    num_colors = size + 2
     idxs = [common.randint(0, num_colors - 1) for _ in pixels]
 
   grid, output = common.grid_enhance(size, 2, rows, cols, idxs, colors,

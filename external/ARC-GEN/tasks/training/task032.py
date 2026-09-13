@@ -31,6 +31,10 @@ def generate(colors=None, active=None):
       counts = common.choices(range((size + 3) // 2), k=size)
       active = [common.sample(range(size), count) for count in counts]
       if sum([len(c) for c in active]) >= size: break
+    # A column with no active rows never draws its color, and the official
+    # examples spell that unused slot as black; the sampler used to leave a
+    # visible color there, so 0 was unreachable.
+    colors = [c if a else 0 for c, a in zip(colors, active)]
 
   size = len(colors)
   grid, output = common.grids(size, size)

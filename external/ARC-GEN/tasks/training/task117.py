@@ -34,13 +34,30 @@ def generate(size=None, rows=None, cols=None, rowoff=None, coloff=None,
   """
   if rows is None:
     size = common.randint(12, 15)
-    width = common.randint(4, size // 2 - 2)
-    height = common.randint(4, size // 2 - 2)
+    # conway_sprite never lets a row or a column empty out, so its creatures
+    # always start at row 0 and column 0.  Official examples 2 and 3 leave the
+    # creature's first row (and, for example 3, its first column) empty, so pad
+    # the creature explicitly.  The pad and the creature together have to fit
+    # inside the leg span, which is what the (size - 1) // 2 ceilings enforce.
+    rowpad, colpad = common.randint(0, 1), common.randint(0, 1)
+    width = common.randint(4, min(size // 2 - 2, (size - 1) // 2 - colpad))
+    # Official example 4 is a 6-row creature on a 15x15 grid; size // 2 - 2
+    # never got above 5.
+    height = common.randint(4, min(6, (size - 1) // 2 - rowpad))
     while True:
-      rows, cols = common.conway_sprite(width, height, width * height)
+      # width * height removal attempts strip the creature down to 4-8 cells,
+      # but the official creatures keep 9 or 10 of their ~20 cells, so let the
+      # number of attempts run from half the cells upwards.
+      rows, cols = common.conway_sprite(
+          width, height, common.randint(width * height // 2, width * height))
       if common.diagonally_connected(list(zip(rows, cols))): break
-    rowoff = common.randint(height, size - height - 4)
-    coloff = common.randint(width, size - width - 4)
+    rows, cols = [r + rowpad for r in rows], [c + colpad for c in cols]
+    # The legs reach from rowoff-(height-1) to rowoff+height+1, so these bounds
+    # let them touch the first and last row/column. The tighter bounds kept the
+    # creature a cell clear of every edge, which two of the official examples
+    # are not.
+    rowoff = common.randint(height - 1 + rowpad, size - height - 2 - rowpad)
+    coloff = common.randint(width - 1 + colpad, size - width - 2 - colpad)
     color = common.random_color()
     legcolor = common.random_color(exclude=[color])
     flip_horiz, flip_vert = common.randint(0, 1), common.randint(0, 1)

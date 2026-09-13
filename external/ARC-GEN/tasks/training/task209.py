@@ -17,6 +17,72 @@
 import common
 
 
+def _placement_unambiguous(rows, cols, colors, shows, wide, tall, irow, icol, mag):
+  """True if the magnified copies pin down the magnification and the offset.
+
+  Only some of the sprite's cells are copied into the box, magnified; the rest of
+  the answer has to be read off the small sprite outside it. That only works if
+  the copies say *how much* the sprite was magnified and *where* it sits. When a
+  different magnification or offset would put exactly the same copies in exactly
+  the same places, the picture has two readings and neither can be called the
+  answer, so the instance is rejected rather than emitted.
+
+  Stated over the picture rather than the parameters that drew it: the sprite's
+  extent is its drawn bounding box, which is what a reader can see.
+  """
+  srow0, srow1 = min(rows), max(rows)
+  scol0, scol1 = min(cols), max(cols)
+  sh, sw = srow1 - srow0 + 1, scol1 - scol0 + 1
+  sprite = [[0] * sw for _ in range(sh)]
+  for idx, color in enumerate(colors):
+    sprite[rows[idx] - srow0][cols[idx] - scol0] = color
+
+  shown = {}
+  for idx in shows:
+    r0 = irow + (rows[idx] - srow0) * mag
+    c0 = icol + (cols[idx] - scol0) * mag
+    for dr in range(mag):
+      for dc in range(mag):
+        shown[(r0 + dr, c0 + dc)] = colors[idx]
+
+  found = 0
+  for mg in range(2, 9):
+    if mg * sh > tall - 2 or mg * sw > wide - 2:
+      continue
+    for ir in range(1, tall - mg * sh + 1):
+      for ic in range(1, wide - mg * sw + 1):
+        ok = True
+        # every copied cell must land on a sprite cell of its own colour
+        for (rr, cc), color in shown.items():
+          dr, dc = rr - ir, cc - ic
+          if dr < 0 or dc < 0 or dr >= mg * sh or dc >= mg * sw:
+            ok = False
+            break
+          if sprite[dr // mg][dc // mg] != color:
+            ok = False
+            break
+        if not ok:
+          continue
+        # and every sprite cell must be copied whole or not at all
+        for sr in range(sh):
+          for sc in range(sw):
+            color = sprite[sr][sc]
+            block = set()
+            for dr in range(mg):
+              for dc in range(mg):
+                block.add(shown.get((ir + sr * mg + dr, ic + sc * mg + dc), 0))
+            if block != {0} and block != {color}:
+              ok = False
+              break
+          if not ok:
+            break
+        if ok:
+          found += 1
+          if found > 1:
+            return False
+  return found == 1
+
+
 def generate(width=None, height=None, rows=None, cols=None, colors=None,
              shows=None, wide=None, tall=None, brow=None, bcol=None, irow=None,
              icol=None, srow=None, scol=None, mag=None):
@@ -40,6 +106,7 @@ def generate(width=None, height=None, rows=None, cols=None, colors=None,
     mag: the magnification factor
   """
   if width is None:
+   while True:  # re-roll until the copies determine magnification and offset
     width, height = common.randint(15, 20), common.randint(15, 20)
     mag = common.randint(2, min(4, (height + 1) // 5))
     w, t = common.randint(2, 7 - mag), common.randint(2, 3)
@@ -53,10 +120,18 @@ def generate(width=None, height=None, rows=None, cols=None, colors=None,
     tall = common.randint(mag * t + 2, height - 4)
     brow = common.randint(0, height - 4 - tall)
     bcol = common.randint(0, width - wide)
-    irow = common.randint(1, tall - 1 - mag * t)
-    icol = common.randint(1, wide - 1 - mag * w)
+    # Upper bound is tall/wide - mag*t, not one less: the magnified sprite may sit
+    # against the far border, as it does in the task's own test example, which the
+    # tighter bound made unreachable.
+    irow = common.randint(1, tall - mag * t)
+    icol = common.randint(1, wide - mag * w)
     srow = height - t - 1
     scol = common.randint(1, width - 1 - w)
+    # Reject instances whose magnified copies admit a second reading.
+    if not _placement_unambiguous(
+        rows, cols, colors, shows, wide, tall, irow, icol, mag):
+      continue
+    break
 
   grid, output = common.grid(width, height), common.grid(wide, tall)
   for r, c in [(0, 0), (0, wide - 1), (tall - 1, 0), (tall - 1, wide - 1)]:

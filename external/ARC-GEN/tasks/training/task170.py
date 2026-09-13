@@ -62,10 +62,16 @@ def generate(width=None, height=None, rows=None, cols=None, srow=None,
       width, height = common.randint(21, 28), common.randint(21, 28)
       size = common.randint(3, 4)
       smag = common.randint(3, 5 if size < 4 else 4)
-      srow, scol = 1, common.randint(1, width - size * smag - 1)
-      brow = height - size - 1
-      bcol = common.randint(width // 2, width - size - 1)
-      rows, cols = common.conway_sprite(size, size)
+      # The official examples put the megasprite lower than row 1, put the
+      # color box a few rows above the very bottom, and place it anywhere
+      # across the width (not just in the right half), so widen all three.
+      srow = common.randint(1, height - size * smag - 1)
+      scol = common.randint(1, width - size * smag - 1)
+      brow = height - size - common.randint(1, 5)
+      bcol = common.randint(0, width - size - 1)
+      # The official 4x4 sprites have 10 and 11 pixels; the default of five
+      # removal attempts bottoms out at 11, so allow a sixth removal too.
+      rows, cols = common.conway_sprite(size, size, tries=common.randint(5, 6))
       if not common.diagonally_connected(list(zip(rows, cols))): continue
       colors = [common.random_color() for _ in range(size * size)]
       scolor = common.random_color()

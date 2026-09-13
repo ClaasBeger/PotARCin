@@ -33,8 +33,9 @@ def generate(wides=None, talls=None, rows=None, cols=None, colors=None,
     num_boxes = min(3, common.randint(2, 5))
     # Choose nonoverlapping locations for the boxes.
     while True:
-      wides = [common.randint(3, 6) for _ in range(num_boxes)]
-      talls = [common.randint(3, 6) for _ in range(num_boxes)]
+      # One official example stacks a 7-tall box, which 3..6 could never draw.
+      wides = [common.randint(3, 7) for _ in range(num_boxes)]
+      talls = [common.randint(3, 7) for _ in range(num_boxes)]
       rows = [common.randint(0, size - tall) for tall in talls]
       cols = [common.randint(0, size - wide) for wide in wides]
       if not common.overlaps(rows, cols, wides, talls, 1): break

@@ -63,6 +63,10 @@ def generate(rows=None, cols=None, idxs=None, colors=None):
         rows.append(2)
         cols.append(1)
         idxs.append(idx)
+    # Cell positions that no pixel uses never reach the grid, and the official
+    # examples park those unused slots on blue (the background). The draw above
+    # picks four *distinct non-blue* colors, so it could never produce them.
+    colors = [c if i in idxs else common.blue() for i, c in enumerate(colors)]
 
   grid, output = common.grids(8, 8, common.blue())
   # Mark the original cells, then infer new ones.

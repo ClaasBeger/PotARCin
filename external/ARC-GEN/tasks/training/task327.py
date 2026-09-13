@@ -27,6 +27,7 @@ def generate(rows=None, cols=None, colors=None, size=3):
     size: the width and height of the (square) grid
   """
   if rows is None:
+    colors = common.random_colors(3)
     rows, cols, diags = [], [], []
     for (r, c) in common.shuffle(common.all_pixels(size, size)):
       diag = c - r
@@ -34,7 +35,10 @@ def generate(rows=None, cols=None, colors=None, size=3):
       diags.append(diag)
       rows.append(r)
       cols.append(c)
-    colors = common.random_colors(3)
+      # Stop once there is one pixel per color: the rest were silently dropped
+      # by the zip below, which left rows/cols longer (and wider-spanning) than
+      # any official example, all of which pass exactly three coordinates.
+      if len(rows) == len(colors): break
 
   grid, output = common.grid(size, size), common.grid(2 * size, 2 * size)
   for r, c, color in zip(rows, cols, colors):

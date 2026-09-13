@@ -33,7 +33,10 @@ def generate(width=None, height=None, rows=None, cols=None, idxs=None,
     width, height = common.randint(3, 5), common.randint(3, 5)
     pixels = common.random_pixels(width, height)
     rows, cols = zip(*pixels)
-    colors = common.random_colors(width * height // 3)
+    # The first official example paints its 3x3 grid with only 2 colors, but
+    # width * height // 3 is never below 3, so a 2-colour palette was
+    # unreachable.
+    colors = common.random_colors(common.randint(2, width * height // 3))
     idxs = [common.randint(0, len(colors) - 1) for _ in pixels]
 
   grid = common.grid(width, height)

@@ -41,7 +41,9 @@ def generate(size=None, rows=None, cols=None, colors=None, plusrows=None,
     while True:
       colors = [common.choice(color_list) for _ in pixels]
       if len(set(colors)) > 1: break
-    num_plusses = common.randint(size * size // 3, 2 * size * size // 3)
+    # Up to three quarters of the cells may be plusses: the official test uses
+    # 12 of 16 on a size-4 grid, above the old 2 * size * size // 3 == 10 cap.
+    num_plusses = common.randint(size * size // 3, 3 * size * size // 4)
     plusses = common.sample(common.all_pixels(size, size), num_plusses)
     plusrows, pluscols = zip(*plusses)
 

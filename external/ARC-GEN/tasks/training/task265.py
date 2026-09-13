@@ -26,7 +26,6 @@ def generate(colors=None, size=18):
   """
 
   def draw(grid, output, stripes=[0, 1]):
-    legal = True
     for r in range(size):
       for c in range(size):
         output[r][c] = grid[r][c] = colors[r * size + c]
@@ -46,10 +45,8 @@ def generate(colors=None, size=18):
             if not is_empty(r, c): continue
             # Cells on one side can't both be empty
             if c > 0 and output[r][c - 1] + output[r + 1][c - 1] == 0:
-              legal = False
               continue
             if c < size - 2 and output[r][c + 2] + output[r + 1][c + 2] == 0:
-              legal = False
               continue
             topaint.append((r, c))
       if stripe == 1:  # Second, paint all sidestripes
@@ -58,17 +55,14 @@ def generate(colors=None, size=18):
             if not is_empty(r, c): continue
             # Cells on one side can't both be empty
             if r > 0 and output[r - 1][c] + output[r - 1][c + 1] == 0:
-              legal = False
               continue
             if r < size - 2 and output[r + 2][c] + output[r + 2][c + 1] == 0:
-              legal = False
               continue
             topaint.append((r, c))
       paint(topaint)
-    return legal
 
   if colors is None:
-    while True:
+    if True:
       # Create some static
       pixels = common.random_pixels(size, size, 0.8)
       grid = common.grid(size, size)
@@ -84,11 +78,14 @@ def generate(colors=None, size=18):
       for r in range(size):
         for c in range(size):
           colors.append(grid[r][c])
-      grid, output1 = common.grids(size, size)
-      if not draw(grid, output1, [0, 1]): continue
-      grid, output2 = common.grids(size, size)
-      if not draw(grid, output2, [1, 0]): continue
-      if output1 == output2: break  # Avoid ambigous problems.
+      # Every draw is emitted. The earlier version rejected any instance where two
+      # empty squares overlapped side by side or one above the other, and also any
+      # instance whose answer changed if the two painting passes were swapped.
+      # Between them those rejected *all four* of the task's own train/test
+      # examples, so the generator covered none of the official data. Overlaps are
+      # ordinary in this task -- pair 2 of the official set has one -- and the
+      # answer is the one the sideways-first pass gives, which is the order drawn
+      # below and the order the verifier reads.
 
   grid, output = common.grids(size, size)
   draw(grid, output)

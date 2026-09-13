@@ -42,9 +42,39 @@ def generate(height=None, rows=None, cols=None, colors=None, width=13):
           if r != horiz and c != vert: continue
         pixels.append((r, c))
     rows, cols = zip(*pixels)
-    colors = [
-        common.blue() if common.randint(0, 3) else common.red() for _ in pixels
+    # Cells strictly inside the border: these are exactly the divider's cells.
+    inside = [
+        idx for idx, (r, c) in enumerate(pixels)
+        if top < r < top + tall - 1 and 2 < c < wide + 1
     ]
+    # The four sides of the border, each as a list of indices into `pixels`.
+    sides = [
+        [idx for idx, (r, c) in enumerate(pixels) if r == top],
+        [idx for idx, (r, c) in enumerate(pixels) if r == top + tall - 1],
+        [idx for idx, (r, c) in enumerate(pixels) if c == 2],
+        [idx for idx, (r, c) in enumerate(pixels) if c == wide + 1],
+    ]
+    while True:
+      colors = [
+          common.blue() if common.randint(0, 3) else common.red() for _ in pixels
+      ]
+      # Determinacy guard, part 1: red cells are erased from the input, so the
+      # divider has to be readable from the blue cells that survive inside the
+      # border. With zero survivors the input is indistinguishable from a box
+      # with no divider at all; with exactly one survivor at (r, c) the same
+      # input is explained equally well by a horizontal divider along row r and
+      # by a vertical divider along column c. Two or more survivors are
+      # collinear along the divider, which pins down orientation and position.
+      if inside and sum(1 for idx in inside if colors[idx] == common.blue()) < 2:
+        continue
+      # Determinacy guard, part 2: if one whole side of the border is erased,
+      # the box's extent is not recoverable -- the picture is explained just as
+      # well by the box one row/column smaller, whose own border is exactly the
+      # cells that did survive. Keep at least one blue cell on every side.
+      if any(all(colors[idx] != common.blue() for idx in side)
+             for side in sides):
+        continue
+      break
 
   grid, output = common.grids(width, height)
   for r, c, color in zip(rows, cols, colors):

@@ -64,17 +64,29 @@ def generate(width=None, height=None, rows=None, cols=None, colors=None,
           cols.extend([1, 1, 1])
           colors.extend([color0, color1, color0])
           idxs.extend([idx] * 3)
-      # Second, choose some non-overlapping locations.
+      # Second, choose some non-overlapping locations.  Each copy is placed on
+      # its own, retrying just that copy when it clashes; rejecting the whole
+      # layout (as this used to) is what kept the crowded grids out of reach,
+      # since the official test packs ten copies into a 19x19 grid and a layout
+      # that big almost never comes out clash-free on the first try.
       megarows, megacols, megaidxs, megashows = [], [], [], []
+      wanted = 0
       for idx in range(sprite_types):
         copies = common.randint(2, 4)
-        megarows.extend([common.randint(0, height - 3) for _ in range(copies)])
-        megacols.extend([common.randint(0, width - 3) for _ in range(copies)])
-        megaidxs.extend([idx] * copies)
-        megashows.extend([0])
-        megashows.extend([common.randint(1, 2) for _ in range(copies - 1)])
-      lengths = [3] * len(megarows)
-      if not common.overlaps(megarows, megacols, lengths, lengths, 2): break
+        wanted += copies
+        for nth in range(copies):
+          for _ in range(50):
+            megarow = common.randint(0, height - 3)
+            megacol = common.randint(0, width - 3)
+            lengths = [3] * (len(megarows) + 1)
+            if common.overlaps(megarows + [megarow], megacols + [megacol],
+                               lengths, lengths, 2): continue
+            megarows.append(megarow)
+            megacols.append(megacol)
+            megaidxs.append(idx)
+            megashows.append(0 if nth == 0 else common.randint(1, 2))
+            break
+      if len(megarows) == wanted: break
 
   grid, output = common.grids(width, height)
   for mr, mc, mi, ms in zip(megarows, megacols, megaidxs, megashows):

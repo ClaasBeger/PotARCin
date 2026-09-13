@@ -25,7 +25,9 @@ def generate(size=None, color=None):
     color: a digit representing a color to be used
   """
   if size is None:
-    size = 2 * common.randint(2, 7) + 1
+    # Down to 3: the smallest odd grid this task's own example uses, which a
+    # lower bound of 2 (giving 5) cannot reach.
+    size = 2 * common.randint(1, 7) + 1
     color = common.random_color()
 
   grid, output = common.grids(size, size, color)

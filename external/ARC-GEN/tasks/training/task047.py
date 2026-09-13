@@ -26,8 +26,10 @@ def generate(rows=None, cols=None, size=9):
     size: the width and height of the (square) grid
   """
   if rows is None:
-    rows = common.sample(range(1, size - 2), 2)
-    cols = common.sample(range(1, size - 2), 2)
+    # Coordinates may be anywhere off the border: official examples use row 7
+    # on a size-9 grid, which range(1, size - 2) (max size - 3) excluded.
+    rows = common.sample(range(1, size - 1), 2)
+    cols = common.sample(range(1, size - 1), 2)
 
   grid, output = common.grids(size, size)
   grid[rows[0]][cols[0]] = common.cyan()

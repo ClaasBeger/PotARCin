@@ -45,6 +45,15 @@ def generate(rows=None, cols=None, idxs=None, colors=None, megarows=None,
     idx_set, idx_list, megaidxs = common.randint(0, 2), [], []
     if idx_set in [0, 1]: idx_list += [0]
     if idx_set in [0, 2]: idx_list += [1]
+    # Both sprite types were always described, even when only one of them got
+    # placed; the two official single-sprite examples list just the pixels of
+    # the type they use, so drop the pixels of the type that never appears.
+    # (The drawing loop already skips them, so the grids are unchanged.)
+    keep = [i for i, idx in enumerate(idxs) if idx in idx_list]
+    rows = [rows[i] for i in keep]
+    cols = [cols[i] for i in keep]
+    colors = [colors[i] for i in keep]
+    idxs = [idxs[i] for i in keep]
     for idx in idx_list:
       megaidxs.extend([idx] * common.randint(2, 3))
     megalens = [3] * len(megaidxs)

@@ -16,6 +16,8 @@
 
 import common
 
+_MAX_PLACEMENTS = 200
+
 
 def generate(rows=None, cols=None, idxs=None, brows=None, bcols=None, size=10):
   """Returns input and output grids according to the given parameters.
@@ -29,17 +31,41 @@ def generate(rows=None, cols=None, idxs=None, brows=None, bcols=None, size=10):
     size: the width and height of the (square) grid
   """
   if rows is None:
-    num_sprites = common.randint(3, 6)
     # Choose dimensions for the sprites & find non-overlapping positions.
     while True:
-      wides = [common.randint(2, 4) for _ in range(num_sprites)]
-      talls = [6 - wide for wide in wides]
-      brows = [common.randint(0, size - tall) for tall in talls]
-      bcols = [common.randint(0, size - wide) for wide in wides]
-      if not common.overlaps(brows, bcols, wides, talls, 1): break
+      # The sprite count is redrawn with the layout: six or seven sprites
+      # rarely pack into a 10x10 grid, and holding the count fixed outside the
+      # loop leaves it spinning on a layout it cannot find.
+      num_sprites = common.randint(3, 7)
+      # Place the sprites one at a time, retrying only the one that fails to
+      # fit.  Rejecting the whole layout at once effectively never reaches the
+      # six- and seven-sprite grids the official examples use.
+      wides, talls, brows, bcols = [], [], [], []
+      for _ in range(num_sprites):
+        for _ in range(_MAX_PLACEMENTS):
+          # The official examples include a 1x5 and a 5x1 sprite, so the
+          # width runs 1..5 (the height is its complement).
+          wide = common.randint(1, 5)
+          tall = 6 - wide
+          brow = common.randint(0, size - tall)
+          bcol = common.randint(0, size - wide)
+          if common.overlaps(brows + [brow], bcols + [bcol],
+                             wides + [wide], talls + [tall], 1): continue
+          wides.append(wide)
+          talls.append(tall)
+          brows.append(brow)
+          bcols.append(bcol)
+          break
+        else:
+          break
+      if len(wides) == num_sprites: break
     # Finally, choose the sprite contents (leaning towards sixes).
-    counts = [common.randint(4, 8) for _ in range(num_sprites)]
-    counts = [count if common.randint(0, 2) else 6 for count in counts]
+    # A sprite cannot hold more pixels than its box has cells, and
+    # common.continuous_creature() never terminates if asked for more.
+    areas = [wide * tall for wide, tall in zip(wides, talls)]
+    counts = [common.randint(4, min(8, area)) for area in areas]
+    counts = [count if common.randint(0, 2) else min(6, area)
+              for count, area in zip(counts, areas)]
     rows, cols, idxs = [], [], []
     for idx in range(num_sprites):
       pixels = common.continuous_creature(counts[idx], wides[idx], talls[idx])

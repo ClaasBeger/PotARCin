@@ -17,6 +17,35 @@
 import common
 
 
+def _smallest_period(rows, span, other, vertical):
+  """The shortest repeat the visible cells allow, or None if there is none."""
+  for step in range(1, span):
+    ok = True
+    for i in range(span - step):
+      for j in range(other):
+        a = rows[i][j] if vertical else rows[j][i]
+        b = rows[i + step][j] if vertical else rows[j][i + step]
+        if a and b and a != b:
+          ok = False
+          break
+      if not ok: break
+    if ok: return step
+  return None
+
+
+def _repeats_inside(colors, tall, wide):
+  """Whether the tile is itself made of a smaller tile repeated."""
+  for step in range(1, tall):
+    if tall % step: continue
+    if all(colors[r * wide + c] == colors[(r % step) * wide + c]
+           for r in range(tall) for c in range(wide)): return True
+  for step in range(1, wide):
+    if wide % step: continue
+    if all(colors[r * wide + c] == colors[r * wide + (c % step)]
+           for r in range(tall) for c in range(wide)): return True
+  return False
+
+
 def generate(mod=None, length=None, offset=None, rows=None, cols=None,
              wides=None, talls=None, colors=None, size=29):
   """Returns input and output grids according to the given parameters.
@@ -33,13 +62,55 @@ def generate(mod=None, length=None, offset=None, rows=None, cols=None,
     size: the size of the grid
   """
   if offset is None:
-    mod = common.randint(4, 9)
-    length = common.randint(4, mod)
+    # Two kinds of background are drawn below: a ripple worked out from the row
+    # and column, and a tile of colours laid down edge to edge. Every official
+    # example is of the second kind, which the sampler never drew -- `colors`
+    # was left unset, so only the ripple was reachable.
+    if common.randint(0, 1):
+      length = common.randint(4, 9)              # the tile's height
+      # The tile may be wider than the picture, as it is in the second official
+      # example -- the pattern then repeats only downwards, which is enough to
+      # fill the holes back in.
+      mod = common.randint(4, 2 * size)          # and its width
+      palette = common.sample(range(1, 10), common.randint(4, 9))
+      while True:
+        colors = [common.choice(palette) for _ in range(length * mod)]
+        # The answer is read off the pattern's repeat, so a tile that repeats
+        # inside itself would leave the period -- and the answer -- unclear.
+        if _repeats_inside(colors, length, mod): continue
+        break
+    else:
+      # mod=4 forces length=4, which degenerates into a three-colour stripe
+      # rather than the many-coloured patterns the task is made of.
+      mod = common.randint(5, 9)
+      length = common.randint(4, mod)
     offset = common.randint(1, length)
-    wides = [common.randint(2, 5) for _ in range(5)]
-    talls = [common.randint(2, 5) for _ in range(5)]
-    rows = [common.randint(0, size - tall) for tall in talls]
-    cols = [common.randint(0, size - wide) for wide in wides]
+    while True:
+      wides = [common.randint(2, 7) for _ in range(5)]
+      talls = [common.randint(2, 7) for _ in range(5)]
+      rows = [common.randint(0, size - tall) for tall in talls]
+      cols = [common.randint(0, size - wide) for wide in wides]
+      # A hidden cell is filled in from the others that share its place in the
+      # repeat, so every one of those places has to stay visible somewhere.
+      covered = {(r, c)
+                 for row, col, wide, tall in zip(rows, cols, wides, talls)
+                 for r in range(row, row + tall)
+                 for c in range(col, col + wide)}
+      # The ripple repeats every `length` both ways; a tile repeats every
+      # `length` down and `mod` across.
+      across_period = mod if colors is not None else length
+      hidden = {(r % length, c % across_period) for r, c in covered}
+      seen = {(r % length, c % across_period) for r in range(size) for c in range(size)
+              if (r, c) not in covered}
+      if not hidden <= seen: continue
+      if colors is None: break
+      # The holes must not leave the pattern looking like a shorter repeat than
+      # it is, or the picture would have a second, equally consistent answer.
+      visible = [[0 if (r, c) in covered else colors[(r % length) * mod + (c % mod)]
+                  for c in range(size)] for r in range(size)]
+      if _smallest_period(visible, size, size, True) != length: continue
+      if 2 * mod <= size and _smallest_period(visible, size, size, False) != mod: continue
+      break
 
   grid, output = common.grids(size, size)
   for bitmap in [grid, output]:

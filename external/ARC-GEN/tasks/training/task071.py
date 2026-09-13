@@ -36,12 +36,18 @@ def generate(rows=None, cols=None, srow=None, scol=None, brow=None, bcol=None,
     size: the width and height of the (square) grid
   """
   if rows is None:
-    pixels = common.continuous_creature(common.randint(8, 24), 4, 8)
+    # The creature's bounding box is 5 x 9: official examples reach row 8 and
+    # column 4, both outside the old 4 x 8 box.
+    pixels = common.continuous_creature(common.randint(8, 24), 5, 9)
     rows, cols = zip(*pixels)
     off, flip = common.randint(0, 1), common.randint(0, 1)
-    srow, scol = common.randint(2, 5), common.randint(6, 10)
-    brow, bcol = srow + common.randint(1, 2), scol + common.randint(1, 2) - off
-    wide, tall = 4, common.randint(3, 5)
+    # Official example 1 mirrors about column 11, one past the old upper bound.
+    srow, scol = common.randint(2, 5), common.randint(6, 11)
+    brow = srow + common.randint(1, 2)
+    wide = 4
+    # Clamp so the box stays on the grid; a no-op for every scol <= 10.
+    bcol = min(scol + common.randint(1, 2) - off, size - wide)
+    tall = common.randint(3, 5)
     colors = common.random_colors(2)
 
   grid, output = common.grids(size, size)

@@ -27,7 +27,10 @@ def generate(tops=None, bottoms=None, col=None, size=10):
     size: the width and height of the (square) grid
   """
   if tops is None:
-    col, loc = common.randint(1, 3), common.randint(1, 3)
+    # Two official examples run bars across 9 columns (col=1 and no space left
+    # on the right), which needs loc=0; the old lower bound of 1 capped the
+    # number of bars at 8.
+    col, loc = common.randint(1, 3), common.randint(0, 3)
     tops, bottoms = [], []
     for _ in range(col, size - loc):
       top = common.randint(1, 5)

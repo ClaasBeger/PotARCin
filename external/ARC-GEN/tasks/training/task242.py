@@ -28,9 +28,16 @@ def generate(row=None, col=None, colors=None, size=8, minisize=3):
     minisize: the width and height of the cutout
   """
   if row is None:
-    # TODO: Make sure we don't cut out the center.
-    row = common.randint(0, size - minisize)
-    col = common.randint(0, size - minisize)
+    # The cutout is taken from the full 2*size x 2*size grid, not from a single
+    # quadrant: official examples use row=8 and col=10 while size is only 8.
+    # It may straddle one mirror axis but not both -- a cutout covering the
+    # centre would blank all four copies of those cells, leaving nothing to
+    # recover them from.
+    while True:
+      row = common.randint(0, 2 * size - minisize)
+      col = common.randint(0, 2 * size - minisize)
+      if row >= size or row + minisize <= size: break
+      if col >= size or col + minisize <= size: break
     bitmap = common.grid(size, size)
     for j in range(size):
       for i in range(j + 1):

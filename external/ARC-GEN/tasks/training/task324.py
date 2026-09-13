@@ -57,7 +57,9 @@ def generate(width=None, height=None, rows=None, cols=None, bgcolors=None,
     width, height = common.randint(10, 20), common.randint(10, 20)
     bgcolors = common.random_colors(2)
     colors = common.random_colors(2, exclude=bgcolors)
-    brows, bcols, row, col = [], [], common.randint(2, 7), common.randint(2, 7)
+    # The third official train example starts its vertical stripes at column 0,
+    # which the old lower bound of 2 made unreachable.
+    brows, bcols, row, col = [], [], common.randint(2, 7), common.randint(0, 7)
     while True:  # First, choose horizontal stripes.
       spacing = common.randint(2, 5)
       if row + spacing > height: break

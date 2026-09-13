@@ -45,8 +45,12 @@ def generate(rows=None, cols=None, idxs=None, colors=None, brows=None,
     return True
 
   if rows is None:
-    wides = [common.randint(2, 5) for _ in range(num_boxes)]
-    talls = [common.randint(2, 7 - wide) for wide in wides]
+    # The third official example has a 7x2 box, so widths above 5 have to be
+    # reachable.  The old "tall <= 7 - wide" budget both capped the width at 5
+    # and left no room at all for a box that wide, so clamp the height budget
+    # to at least 2 instead.
+    wides = [common.randint(2, 7) for _ in range(num_boxes)]
+    talls = [common.randint(2, max(2, 7 - wide)) for wide in wides]
     while True:
       brows = [common.randint(0, size - tall) for tall in talls]
       bcols = [common.randint(0, size - wide) for wide in wides]

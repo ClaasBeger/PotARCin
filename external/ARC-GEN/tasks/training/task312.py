@@ -33,9 +33,12 @@ def generate(rows=None, cols=None, wides=None, talls=None, pattern=None,
     start, num_boxes = common.randint(0, 1), common.randint(3, 4)
     while True:
       wides = [common.randint(2, 6) for _ in range(num_boxes)]
-      talls = [common.randint(3, 7) for _ in range(num_boxes)]
+      # Official examples use boxes up to 8 tall, and place boxes as far left
+      # as column 1 (only column 0 is reserved for the pattern stripe), so the
+      # old bounds of 7 and 2 excluded those.
+      talls = [common.randint(3, 8) for _ in range(num_boxes)]
       rows = [common.randint(start, size - tall) for tall in talls]
-      cols = [common.randint(2, size - wide) for wide in wides]
+      cols = [common.randint(1, size - wide) for wide in wides]
       if not common.overlaps(rows, cols, wides, talls): break
     color_list = common.random_colors(common.randint(2, 3),
                                       exclude=[common.gray()])

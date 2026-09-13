@@ -33,18 +33,66 @@ def generate(rows=None, cols=None, idxs=None, colors=None, boxrows=None,
     size: the width and height of the (square) grid
   """
   if rows is None:
-    num_sprites = common.randint(5, 6)
+    # The test example holds eight sprites, so 5..6 could never produce it.
+    num_sprites = common.randint(5, 8)
+    # Each sprite is retried on its own: drawing a whole layout at once and
+    # rejecting all of it almost never succeeds once there are eight sprites.
     while True:
-      # TODO: We might need more space around sprite #0 (due to its box).
-      rows = [common.randint(1, size - 6) for _ in range(num_sprites)]
-      cols = [common.randint(1, size - 6) for _ in range(num_sprites)]
-      lengths = [5] * num_sprites
-      if not common.overlaps(rows, cols, lengths, lengths, 1): break
+      rows, cols = [], []
+      for idx in range(num_sprites):
+        # Sprite #0 is the one the 7x7 box is drawn around, so it has to keep a
+        # row and a column of room on every side. The others do not, and the
+        # official examples put sprites in row 0, row 15 and column 0, which
+        # the old shared bound of 1..14 excluded.
+        low, high = (1, size - 6) if not idx else (0, size - 5)
+        for _ in range(100):
+          row, col = common.randint(low, high), common.randint(low, high)
+          lengths = [5] * (len(rows) + 1)
+          if common.overlaps(rows + [row], cols + [col],
+                             lengths, lengths, 1): continue
+          rows.append(row)
+          cols.append(col)
+          break
+      if len(rows) == num_sprites: break
     idxs = [common.randint(0, 9) for _ in range(num_sprites)]
     idxs[1] = idxs[0]  # We should have at least one copy.
     colors = [common.randint(2, 3)] + [1] * (num_sprites - 1)
     boxrows, boxcols, wides, talls = [rows[0] - 1], [cols[0] - 1], [7], [7]
-    # TODO: Create the "fakeout" boxes.
+    # The "fakeout" boxes of the TODO above. Three of the five official examples
+    # draw one or two extra gray boxes, each around a sprite that wears the
+    # boxed sprite's colour but has a different shape. Every one of them runs
+    # off an edge of the grid, so only the box that is drawn whole says which
+    # shape to repaint. Without them boxrows/boxcols were always a single
+    # non-negative entry and wides/talls always exactly 7, so the three official
+    # examples that use them were unreachable.
+
+    def box_is_clear(brow, bcol, wide, tall, owner):
+      """True if the box touches neither another box nor a foreign sprite."""
+      for orow, ocol, owide, otall in zip(boxrows, boxcols, wides, talls):
+        if (brow - 1 < orow + otall and orow - 1 < brow + tall and
+            bcol - 1 < ocol + owide and ocol - 1 < bcol + wide): return False
+      for other, (srow, scol) in enumerate(zip(rows, cols)):
+        if other == owner: continue
+        if (brow - 1 < srow + 5 and srow - 1 < brow + tall and
+            bcol - 1 < scol + 5 and scol - 1 < bcol + wide): return False
+      return True
+
+    num_fakes = common.randint(0, 2)
+    for owner in common.shuffle(list(range(1, num_sprites))):
+      if len(boxrows) > num_fakes: break
+      # Never box the answer shape: the picture would then name two of them.
+      if idxs[owner] == idxs[0]: continue
+      brow, bcol = rows[owner] - 1, cols[owner] - 1
+      wide, tall = 7 + common.randint(0, 2), 7 + common.randint(0, 1)
+      # It has to be cut by an edge, or it would be a second real box.
+      if (brow >= 0 and bcol >= 0 and
+          brow + tall <= size and bcol + wide <= size): continue
+      if not box_is_clear(brow, bcol, wide, tall, owner): continue
+      boxrows.append(brow)
+      boxcols.append(bcol)
+      wides.append(wide)
+      talls.append(tall)
+      colors[owner] = colors[0]
 
   grid, output = common.grids(size, size)
   for row, col, idx, color in zip(rows, cols, idxs, colors):

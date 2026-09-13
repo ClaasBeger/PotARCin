@@ -33,7 +33,10 @@ def generate(width=None, height=None, rows=None, cols=None, colors=None,
   """
   if width is None:
     num_sprites = common.randint(2, 4)
-    width, height = 12 if num_sprites < 4 else 14, 14 if num_sprites < 4 else 17
+    # The official four-sprite example is 21 wide, which a fixed 14 could never
+    # reach.
+    width = 12 if num_sprites < 4 else common.randint(14, 21)
+    height = 14 if num_sprites < 4 else 17
     wide, tall = common.randint(3, 4), common.randint(3, 4)
     # First, choose sprite magnifiers & locations.
     while True:
@@ -42,7 +45,10 @@ def generate(width=None, height=None, rows=None, cols=None, colors=None,
       wides = [bmag * wide for bmag in bmags]
       talls = [bmag * tall for bmag in bmags]
       brows = [common.randint(0, height - t) for t in talls]
-      bcols = [common.randint(0, width - w) for w in wides]
+      # Official train example 2 hangs a 3x copy two columns off the left edge:
+      # less than one magnified cell, so every cell of the copy still shows.
+      bcols = [common.randint(1 - bmag, width - w)
+               for bmag, w in zip(bmags, wides)]
       if not common.overlaps(brows, bcols, wides, talls, 1): break
     # Second, choose sprite contents.
     num_pixels = wide * tall // 2 + common.randint(-1, 1)

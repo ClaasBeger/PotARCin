@@ -35,7 +35,11 @@ def generate(size=None, minisize=None, color=None, rows=None, cols=None):
       for c in range(size * (minisize + 1) - 1):
         if r % (minisize + 1) == minisize or c % (minisize + 1) == minisize:
           pixels.append((r, c))
-    num_pixels = common.randint(size + minisize, size * minisize)
+    # The official test example punches 33 holes into a 7x7 cell grid with
+    # minisize 3, which the old upper bound of size * minisize (21) excluded.
+    # The number of wall pixels grows with the area, so cap by the area too.
+    num_pixels = common.randint(size + minisize,
+                                max(size * minisize, size * size * minisize // 4))
     pixels = common.sample(pixels, num_pixels)
     rows, cols = zip(*pixels)
     color = common.random_color(exclude=[common.yellow(), common.green()])

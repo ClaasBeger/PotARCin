@@ -44,7 +44,11 @@ def generate(rows=None, cols=None, idxs=None, colors=None, size=30):
         idxs.append(0)
     colors = common.random_colors(common.randint(2, 4))
     # Then, create all the other pixels in the background (but don't clobber!).
-    pixels = common.random_pixels(size, size, (len(colors) - 1) / 50)
+    # The official examples scatter background pixels far more densely than
+    # the fixed 1/50 rate allowed (e.g. ~100 and ~140 pixels on a 30x30 grid),
+    # so the rate is now drawn from a range whose sparse end is the old value.
+    pixels = common.random_pixels(size, size,
+                                  (len(colors) - 1) / common.randint(20, 50))
     for (r, c) in pixels:
       if r < row - 1 or r > row + height or c < col - 1 or c > col + width:
         rows.append(r)

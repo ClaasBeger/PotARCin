@@ -67,6 +67,9 @@ def generate(width=None, height=None, rows=None, cols=None, lines=None,
         if common.randint(0, 2): continue
         rows.append(r)
         cols.append(c)
+      # Half the official examples stand the picture on its side; the sampler
+      # never set this, so those were unreachable.
+      xpose = common.randint(0, 1)
       grid, output = common.grids(width, height)
       if draw(grid, output): break
 

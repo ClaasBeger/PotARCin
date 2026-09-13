@@ -32,11 +32,26 @@ def generate(width=None, height=None, rows=None, cols=None, colors=None, size=9,
   """
   if width is None:
     colors = [common.random_color(exclude=[common.gray()]) for _ in range(size)]
+    lengths = [3] * size
     while True:
       width, height = common.randint(14, 16), common.randint(14, 16)
-      rows = [common.randint(0, height - minisize) for _ in range(size)]
-      cols = [common.randint(0, width - minisize) for _ in range(size)]
-      lengths = [3] * size
+      # Nine 3x3 sprites with a one-cell gap fill more than half of a 14x14
+      # grid, so drawing all nine positions at once almost never lands a legal
+      # packing.  Place them one at a time instead, retrying a single sprite
+      # rather than the whole board, and reroll the grid size if we get stuck.
+      rows, cols = [], []
+      for _ in range(size):
+        for _ in range(200):
+          row = common.randint(0, height - minisize)
+          col = common.randint(0, width - minisize)
+          if common.overlaps(rows + [row], cols + [col],
+                             lengths[:len(rows) + 1],
+                             lengths[:len(rows) + 1], 1): continue
+          rows, cols = rows + [row], cols + [col]
+          break
+        else:
+          break
+      if len(rows) < size: continue
       if not common.overlaps(rows, cols, lengths, lengths, 1): break
 
   grid = common.grid(width, height, common.black())

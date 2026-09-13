@@ -27,8 +27,16 @@ def generate(rows=None, cols=None, offset=None, size=10):
     size: the width and height of the (square) grid
   """
   if rows is None:
-    pixels = common.continuous_creature(common.randint(6, 12), 4, 4)
+    # Five cells across, not four, and sometimes shifted up by one: the task's
+    # own examples reach row -1 and column 4, which a 4x4 creature cannot, and
+    # that is what lets the drawing touch the edge of the grid. The shift is
+    # drawn rather than fixed -- one official example starts at row 0, so always
+    # shifting would trade one unreachable case for another. The cell count goes
+    # to 16 because an official example has 13.
+    pixels = common.continuous_creature(common.randint(6, 16), 5, 5)
     rows, cols = zip(*pixels)
+    shift = common.randint(0, 1)
+    rows = [r - shift for r in rows]
     offset = common.randint(0, 1)
 
   grid, output = common.grids(size, size)

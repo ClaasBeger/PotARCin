@@ -28,7 +28,10 @@ def generate(size=None, rows=None, cols=None, lengths=None):
   """
   if size is None:
     size = common.randint(10, 20)
-    num_boxes = common.randint(size // 4, size // 3)
+    # Official examples use as few as two boxes even on larger grids (e.g.
+    # size=15 with lengths [7, 6]); the size // 4 floor ruled that out, and with
+    # it any grid whose smallest box is 6 or more.
+    num_boxes = common.randint(2, size // 3)
     while True:
       lengths = [common.randint(3, 10) for _ in range(num_boxes)]
       rows = [common.randint(0, size - length) for length in lengths]

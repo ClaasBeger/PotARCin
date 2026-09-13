@@ -26,7 +26,11 @@ def generate(cols=None, colors=(2, 4, 3), size=3):
     size: the width and height of the (square) grid
   """
   if cols is None:
-    cols = common.shuffle(range(size))
+    # One column per row, chosen independently. Shuffling range(size) only ever
+    # gives a permutation -- every colour exactly once -- but three of this
+    # task's five official examples repeat a column ([2,2,2], [0,1,0], [1,2,1]),
+    # which a permutation can never produce.
+    cols = [common.randint(0, size - 1) for _ in range(size)]
 
   grid, output = common.grids(size, size)
   for r, col in enumerate(cols):

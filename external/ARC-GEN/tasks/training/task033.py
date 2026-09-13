@@ -37,15 +37,20 @@ def generate(rows=None, cols=None, megarows=None, megacols=None, color=None,
     if 2 in cells: pixels.extend([(1, 1)])
     rows, cols = [p[0] for p in pixels], [p[1] for p in pixels]
     megarows, megacols = [0] * len(pixels), [0] * len(pixels)
-    for mr in range(3):
-      for mc in range(3):
-        if mr == 0 or mc == 0: continue
-        for p in pixels:
-          if common.randint(0, 1): continue
-          rows.append(p[0])
-          cols.append(p[1])
-          megarows.append(mr)
-          megacols.append(mc)
+    # Partial copies went only into the four cells with mr and mc both nonzero,
+    # so the top row and left column of the mega grid were always empty. Every
+    # official example puts copies there -- (0, 1), (0, 2), (1, 0), (2, 0) --
+    # and one of them uses no cell in the last mega column at all. Pick a few
+    # of the eight non-reference cells instead.
+    others = common.sample([(mr, mc) for mr in range(3) for mc in range(3)
+                            if mr or mc], common.randint(3, 4))
+    for mr, mc in others:
+      for p in pixels:
+        if common.randint(0, 1): continue
+        rows.append(p[0])
+        cols.append(p[1])
+        megarows.append(mr)
+        megacols.append(mc)
     colors = common.random_colors(2)
     color, linecolor = colors[0], colors[1]
 

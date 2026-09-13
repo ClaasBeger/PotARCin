@@ -33,7 +33,11 @@ def generate(size=None, minisize=None, colors=None, row=None, col=None,
     size = common.randint(4, 7)
     minisize = 2 if size < 7 else 3
     color_list = common.random_colors(2)
-    colors = [color_list[common.randint(0, 1)] for _ in range(size * size)]
+    # Only the first minisize * minisize entries are ever read (the pattern is
+    # tiled), and that is the length the official examples use; the old
+    # size * size length could never match them.
+    colors = [color_list[common.randint(0, 1)]
+              for _ in range(minisize * minisize)]
     bitesize = 1
     if size > 4: bitesize = 2
     if size > 6: bitesize = common.randint(2, 3)

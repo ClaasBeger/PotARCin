@@ -40,7 +40,19 @@ def generate(width=None, height=None, rows=None, cols=None, wides=None,
       if max(wides) > width - 2 or max(talls) > height - 2: continue  # Too big.
       rows = [common.randint(1, height - tall - 1) for tall in talls]
       cols = [common.randint(1, width - wide - 1) for wide in wides]
-      if not common.overlaps(rows, cols, wides, talls, 1): break
+      if common.overlaps(rows, cols, wides, talls, 1): continue
+      # Determinacy guard: the background must be unambiguous. Box colors are
+      # distinct (common.random_colors samples without replacement), so each
+      # color covers exactly one box. If some box color covered at least as many
+      # cells as black, that color would be the grid's plurality color and could
+      # just as well be read as the background -- under that reading the input
+      # holds no solid rectangle at all (the remaining black cells are only the
+      # outline of the grid) and the correct output would be the input itself.
+      # Requiring black to be the strict plurality forces the intended reading.
+      biggest = max(wide * tall for wide, tall in zip(wides, talls))
+      filled = sum(wide * tall for wide, tall in zip(wides, talls))
+      if width * height - filled <= biggest: continue
+      break
     colors = common.random_colors(num_boxes)
 
   grid, output = common.grids(width, height)

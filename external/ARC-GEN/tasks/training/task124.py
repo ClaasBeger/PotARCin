@@ -34,7 +34,9 @@ def generate(height=None, rows=None, cols=None, offset=None, color=None,
     height = common.randint(5, 8)
     wide, tall = common.randint(2, 3), common.randint(2, 3)
     if height < 8: tall = 2
-    if height < 6: wide = 1
+    # Official train example 1 is a single pixel (wide = tall = 1); forcing
+    # tall >= 2 made that one-row pattern unreachable.
+    if height < 6: wide, tall = 1, common.randint(1, 2)
     while True:
       rows, cols = common.conway_sprite(wide, tall)
       if len(set(rows)) == tall and len(set(cols)) == wide: break

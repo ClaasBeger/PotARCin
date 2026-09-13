@@ -35,7 +35,11 @@ def generate(rows=None, cols=None, row=None, col=None, size=9):
       if common.diagonally_connected(pixels): break
     rows, cols = zip(*pixels)
     rows, cols = [r - min(rows) for r in rows], [c - min(cols) for c in cols]
-    row, col = common.randint(1, height - 2), common.randint(1, width - 2)
+    # The offset places the sprite in the size x size grid, so the row range is
+    # bounded by the grid, not by the sprite's own height: official example 2
+    # uses row=4, unreachable from randint(1, height - 2) with height <= 4.
+    row, col = (common.randint(1, size - height - 1),
+                common.randint(1, width - 2))
 
   width, height = max(cols) + 1, max(rows) + 1
   grid = common.grid(size, size)

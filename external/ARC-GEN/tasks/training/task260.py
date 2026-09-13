@@ -37,6 +37,20 @@ def generate(diag=None, rows=None, cols=None, color=None, size=10):
         lorow, locol = row, col
       if row - col > diag + 1 and col >= -diag and row < (size + diag):
         hirow, hicol = row, col
+    # The third official example and the test example both have a corner on
+    # BOTH sides of the diagonal.  A single (row, col) can never satisfy both
+    # conditions above, and the loop stops as soon as either side is filled in,
+    # so two corners was unreachable: half the time, keep drawing until the
+    # other side is filled in too (bounded, since the first side already has a
+    # corner and a failure to find the second just yields the one-corner case).
+    if common.randint(0, 1):
+      for _ in range(100):
+        if lorow and hirow: break
+        row, col = common.randint(1, size - 2), common.randint(1, size - 2)
+        if row - col < diag - 1 and col < (size - diag) and row >= diag:
+          lorow, locol = row, col
+        if row - col > diag + 1 and col >= -diag and row < (size + diag):
+          hirow, hicol = row, col
     rows, cols = [], []
     if lorow and locol:
       rows.append(lorow)

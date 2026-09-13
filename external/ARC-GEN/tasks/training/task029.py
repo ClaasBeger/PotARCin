@@ -38,14 +38,19 @@ def generate(width=None, height=None, rows=None, cols=None, idxs=None,
   if width is None:
     width, height = common.randint(10, 25), common.randint(10, 25)
     num_colors = common.randint(3, 4)
+    # The official grids only fill about 52%-68% of their cells.  Skipping a
+    # cell only when randint(0, num_colors) landed on num_colors pinned the
+    # fill rate at num_colors/(num_colors+1), i.e. 75%-80%, so the sparser
+    # official grids (e.g. 114 pixels on 16x13) were unreachable.  Draw the
+    # fill rate separately instead.
+    fill = common.randint(50, 80)
     rows, cols, idxs = [], [], []
     for r in range(height):
       for c in range(width):
-        idx = common.randint(0, num_colors)
-        if idx == num_colors: continue
+        if common.randint(1, 100) > fill: continue
         rows.append(r)
         cols.append(c)
-        idxs.append(idx)
+        idxs.append(common.randint(0, num_colors - 1))
     zoom_color = common.random_color()
     colors = common.random_colors(num_colors, exclude=[zoom_color])
     zoom_width = common.randint(1, width - 2)

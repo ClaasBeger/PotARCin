@@ -32,7 +32,10 @@ def generate(rows=None, cols=None, colors=None, flip_horiz=None, flip_vert=None,
   if rows is None:
     pixels = common.random_pixels(size, size)
     rows, cols = zip(*pixels)
-    colors = common.random_colors(4, exclude=[common.green(), common.cyan()])
+    # Corners are chosen independently, so two may share a colour -- an official
+    # example does exactly that, which four guaranteed-distinct colours cannot.
+    colors = [common.random_color(exclude=[common.green(), common.cyan()])
+              for _ in range(4)]
     flip_horiz, flip_vert = common.randint(0, 1), common.randint(0, 1)
 
   grid, output = common.grid(size + 3, size + 3), common.grid(size, size)

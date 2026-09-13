@@ -29,11 +29,29 @@ def generate(rows=None, cols=None, wides=None, talls=None, colors=None, size=8):
     size: the width and height of one quarter of the grid
   """
   if rows is None:
-    # TODO: Make sure we don't cut out the center.
-    wides = [common.randint(2, 4) for _ in range(2)]
-    talls = [common.randint(2, 4) for _ in range(2)]
-    rows = [common.randint(0, size - tall) for tall in talls]
-    cols = [common.randint(0, size - wide) for wide in wides]
+    # The cutouts may sit anywhere in the full 2*size grid -- the official
+    # examples use rows up to 11 and cols up to 12 -- while bounding them by
+    # size - tall / size - wide confined both of them to the top-left quadrant.
+    # A cutout stays recoverable as long as at least one of its two mirror
+    # images is left untouched by both cutouts; that is what the old TODO about
+    # "cutting out the center" was guarding against.
+    limit = 2 * size
+
+    def blocked(row, col, tall, wide, boxes):
+      for r, c, w, t in boxes:
+        if row < r + t and r < row + tall and col < c + w and c < col + wide:
+          return True
+      return False
+
+    while True:
+      wides = [common.randint(2, 4) for _ in range(2)]
+      talls = [common.randint(2, 4) for _ in range(2)]
+      rows = [common.randint(0, limit - tall) for tall in talls]
+      cols = [common.randint(0, limit - wide) for wide in wides]
+      boxes = list(zip(rows, cols, wides, talls))
+      if all(not blocked(r, limit - c - w, t, w, boxes) or
+             not blocked(limit - r - t, c, t, w, boxes)
+             for r, c, w, t in boxes): break
     bitmap = common.grid(size, size, common.yellow())
     for j in range(size):
       for i in range(j + 1):
