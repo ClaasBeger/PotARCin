@@ -53,6 +53,14 @@ def main() -> None:
 
     limit = args.num_tasks if args.num_tasks > 0 else None
 
+    # Keep canonical choices made by hand in an existing CSV, as long as the slot
+    # is still valid; otherwise the first valid slot becomes the canonical one.
+    previous: dict[str, str] = {}
+    if args.out.is_file():
+        with args.out.open(newline="", encoding="utf-8") as f:
+            for old in csv.DictReader(f):
+                previous[old["task_id"]] = (old.get("selected_verifier_slot") or "").strip()
+
     with args.out.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
@@ -62,7 +70,8 @@ def main() -> None:
             if limit is not None and idx >= limit:
                 break
             valid = valid_verifier_slots_for_task(task)
-            selected = valid[0] if valid else ""
+            kept = previous.get(task.task_id, "")
+            selected = kept if kept in valid else (valid[0] if valid else "")
             row = {
                 "task_id": task.task_id,
                 "valid_verifier_slots": ";".join(valid),

@@ -25,6 +25,11 @@ VerifierSlot = Literal["re_arc", "google", "keymoon", "neurips", "custom"]
 _ROOT = Path(__file__).resolve().parents[1]
 _DEFAULT_CSV = _ROOT / "task_valid_verifiers.csv"
 _CSV_SLOTS: dict[str, list[VerifierSlot]] | None = None
+# The one verifier a task is meant to be judged by. Several slots can be listed
+# as valid and still disagree with the generator on draws the audit did not
+# see, so the canonical choice is recorded per task and tried first.
+_CSV_SELECTED: dict[str, VerifierSlot] | None = None
+_CSV_SELECTED_FROM: Path | None = None
 _CSV_LOADED_FROM: Path | None = None
 
 
@@ -36,9 +41,45 @@ def default_verifiers_csv_path() -> Path:
 
 def clear_verifier_csv_cache() -> None:
     """Drop cached CSV mapping (e.g. after swapping files in tests)."""
-    global _CSV_SLOTS, _CSV_LOADED_FROM
+    global _CSV_SLOTS, _CSV_SELECTED, _CSV_SELECTED_FROM, _CSV_LOADED_FROM
     _CSV_SLOTS = None
+    _CSV_SELECTED = None
+    _CSV_SELECTED_FROM = None
     _CSV_LOADED_FROM = None
+
+
+def _load_selected_csv(path: Path) -> dict[str, VerifierSlot]:
+    """task_id -> the slot named in ``selected_verifier_slot``, when it is a real slot."""
+    if not path.is_file():
+        return {}
+    out: dict[str, VerifierSlot] = {}
+    with path.open(encoding="utf-8", newline="") as f:
+        for row in csv.DictReader(f):
+            tid = (row.get("task_id") or "").strip()
+            sel = (row.get("selected_verifier_slot") or "").strip()
+            if tid and sel in ("re_arc", "google", "keymoon", "neurips", "custom"):
+                out[tid] = sel  # type: ignore[assignment]
+    return out
+
+
+def csv_selected_slot_for_task(task_id: str, csv_path: Path | None = None) -> VerifierSlot | None:
+    """The canonical slot recorded for *task_id*, or ``None``."""
+    global _CSV_SELECTED, _CSV_SELECTED_FROM
+    path = csv_path if csv_path is not None else default_verifiers_csv_path()
+    if _CSV_SELECTED is None or _CSV_SELECTED_FROM != path:
+        _CSV_SELECTED = _load_selected_csv(path)
+        _CSV_SELECTED_FROM = path
+    return _CSV_SELECTED.get(task_id)
+
+
+def _canonical_first(task_id: str, slots: Sequence[VerifierSlot], csv_path: Path | None) -> list[VerifierSlot]:
+    """*slots* with the task's canonical slot moved to the front, when it is listed."""
+    canon = csv_selected_slot_for_task(task_id, csv_path)
+    ordered = list(slots)
+    if canon in ordered:
+        ordered.remove(canon)
+        ordered.insert(0, canon)
+    return ordered
 
 
 def _load_csv(path: Path) -> dict[str, list[VerifierSlot]]:
@@ -126,7 +167,7 @@ def select_verifier_for_task(
     dynamic_pairs: Sequence[GridPair] | None = None,
     csv_path: Path | None = None,
 ) -> Tuple[VerifierSlot, Verifier] | None:
-    """Choose a verifier: CSV ordering first, optional instance dynamic check, then legacy probe."""
+    """Choose a verifier: the CSV's canonical slot, then CSV order, optional instance dynamic check, then legacy probe."""
     try:
         parse_test2_task_num(task.task_id)
         if task.verifier is None:
@@ -137,7 +178,7 @@ def select_verifier_for_task(
     except ValueError:
         pass
 
-    csv_order = _slots_for_task_id(task.task_id, csv_path)
+    csv_order = _canonical_first(task.task_id, _slots_for_task_id(task.task_id, csv_path), csv_path)
     for slot in csv_order:
         fn = _callable_for_slot(task, slot)
         if fn is None:
@@ -167,7 +208,7 @@ def valid_verifiers_for_task(
     out: list[Tuple[VerifierSlot, Verifier]] = []
     seen: set[VerifierSlot] = set()
 
-    ordered_slots = list(_slots_for_task_id(task.task_id, csv_path)) + list(_PRIORITY)
+    ordered_slots = _canonical_first(task.task_id, _slots_for_task_id(task.task_id, csv_path), csv_path) + list(_PRIORITY)
     for slot in ordered_slots:
         if slot in seen:
             continue
