@@ -27,11 +27,10 @@ Tasks come from the ARC-AGI-1 training set and from **P-ARC** (`Test2/`), a set 
 - `scripts/` – command-line runners, consolidation, plotting and dataset export.
 - `Test2/` – the P-ARC tasks, each with a generator, verifier, sample pool and corruptions.
 - `evaluation/` – results per dimension and model (`<dimension>_eval_results/<Model>/<Run>/<run_tag>/`) and `figures/`.
-- `Demonstrations/` – HTML views of model answers.
+- `Demonstrations/` – HTML reports of model answers (see [HTML reports](#html-reports)).
 - `datasets/p_arc_hub_bundle/` – the P-ARC dataset bundle for Hugging Face.
 - `external/` – vendored generators and verifiers (ARC-GEN, RE-ARC, code-golf solutions); two of these are git submodules.
 - `task_valid_verifiers.csv` – audited verifier slots per ARC-AGI-1 task.
-- `Viewer/` – Streamlit viewer for tasks, generated pairs and verifiers.
 - `tests/` – unit and smoke tests.
 
 ## Setup
@@ -158,8 +157,11 @@ To audit every verifier of the first 400 training tasks against their examples a
 python scripts/caller.py
 ```
 
-## Viewer
+## HTML reports
+
+Results are browsed as static HTML pages: `Demonstrations/` holds reports of model answers, and the `scripts/build_*_html.py` scripts generate new ones. For example, a ground-truth-vs-prediction page for an output-grid run (written to `<results-dir>/compare_gt_vs_pred.html` unless `--out` is given):
 
 ```bash
-streamlit run Viewer/app.py
+python scripts/build_output_grid_results_dir_html.py \
+  --results-dir evaluation/output_grid_eval_results/KimiK25/ARC1Eval/Run1/Evaluation_Run_kimi_arc1_eval_output_grid_run1
 ```

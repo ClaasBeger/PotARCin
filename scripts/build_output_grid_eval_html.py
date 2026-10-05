@@ -13,7 +13,7 @@ if str(ROOT_DIR) not in sys.path:
 
 from framework.grids import Grid
 
-# Same palette as Viewer/render.py
+# Standard ARC colour palette
 _SYMBOL_TO_COLOR: dict[int, str] = {
     0: "#000000",
     1: "#0074D9",
