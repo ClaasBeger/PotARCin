@@ -1,9 +1,14 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[1]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 from datetime import datetime
 import copy
-from pathlib import Path
 
 from framework.tasks.arc_dataset import load_task, iter_tasks
 from framework.tasks.base import ArcTask, TaskSource
@@ -426,7 +431,7 @@ def check_verifiers_on_arc_gen(task: ArcTask, max_examples: int = 5) -> dict:
                 print(f"    first failure: {ff['kind']}[{ff['index']}] mismatch")
 
     # Only write mismatch HTMLs for these logged tasks, and only when we have grids.
-    mismatch_dir = Path("caller_mismatches")
+    mismatch_dir = ROOT_DIR / "caller_mismatches"
     for name, key, _verifier in present:
         ff = stats[key]["first_failure"]
         if not ff or "input" not in ff or "expected" not in ff or "got" not in ff:
@@ -453,7 +458,7 @@ if __name__ == "__main__":
     num_tasks_to_check = 400
 
     # Tee all output to a log file so the full run is never lost to scrollback.
-    log_path = Path("caller_run_" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".log")
+    log_path = ROOT_DIR / ("caller_run_" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".log")
     _log_file = open(log_path, "w", encoding="utf-8")
 
     class _Tee:

@@ -38,9 +38,16 @@ def _load_arc_gen_module() -> ModuleType | None:
         if spec is None or spec.loader is None:
             continue
 
+        # arc_gen.py imports its sibling ``task_list`` module, so its folder has to
+        # be importable while it loads.
+        if str(base_dir) not in sys.path:
+            sys.path.insert(0, str(base_dir))
         module = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(module)
+        except Exception:
+            continue
         sys.modules["arc_gen_external"] = module
-        spec.loader.exec_module(module)
         _ARC_GEN_MODULE = module
         return module
 

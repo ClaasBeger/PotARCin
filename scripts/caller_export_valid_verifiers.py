@@ -8,15 +8,20 @@ re-check instance-specific dynamic pairs).
 
 Example::
 
-    python caller_export_valid_verifiers.py --out task_valid_verifiers.csv --num-tasks 400
+    python scripts/caller_export_valid_verifiers.py --out task_valid_verifiers.csv --num-tasks 400
 """
 
 from __future__ import annotations
 
-import argparse
-import csv
 import sys
 from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[1]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
+import argparse
+import csv
 
 from framework.dimensions.classification_distribution import valid_verifier_slots_for_task
 from framework.tasks.arc_dataset import iter_tasks
@@ -32,7 +37,7 @@ def main() -> None:
     parser.add_argument(
         "--out",
         type=Path,
-        default=Path("task_valid_verifiers.csv"),
+        default=ROOT_DIR / "task_valid_verifiers.csv",
         help="Output CSV path",
     )
     parser.add_argument(
