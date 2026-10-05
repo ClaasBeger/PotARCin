@@ -23,8 +23,9 @@ configs:
 
 # P-ARC
 
-P-ARC is a held-out set of 50 hand-crafted ARC-style tasks, introduced with **PotARCin: Multi-Dimensional Evaluation of Skill Acquisition in Abstract Reasoning Tasks** (NeurIPS 2026). Every task comes with a generator and a verifier program, 50 fixed generated examples, three erroneous human attempts used as corruptions, and a natural-language statement of its rule.
+P-ARC is a held-out set of 50 hand-crafted ARC-style tasks, introduced with **PotARCin: Multi-Dimensional Evaluation of Skill Acquisition in Abstract Reasoning Tasks** (NeurIPS 2026, Evaluations and Datasets Track). Every task comes with a generator and a verifier program, 50 fixed generated examples, three erroneous human attempts used as corruptions, and a natural-language statement of its rule.
 
+- **Venue:** NeurIPS 2026, Evaluations and Datasets Track
 - **Paper:** [arXiv:2609.27288](https://arxiv.org/abs/2609.27288)
 - **Authors:** Claas Beger, Ryan Yi, Melanie Mitchell
 - **Contact:** claasbeger@santafe.edu
