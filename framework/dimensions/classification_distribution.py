@@ -97,9 +97,20 @@ def _sample_category(
     return c
 
 
+# Official ARC examples whose stored output is wrong, by task id and 0-based train
+# index. A verifier that implements the task's rule correctly cannot match them, so
+# they are left out of the validity check.
+KNOWN_INCORRECT_TRAIN_EXAMPLES: dict[str, frozenset[int]] = {
+    "e5062a87": frozenset({1}),  # train example 2
+}
+
+
 def verifier_matches_train_test_stable_dynamic50(task: ArcTask, v: Verifier) -> bool:
     """True if *v* matches train, test, ARC-GEN stable (if any), and 50 dynamic pairs."""
-    for p in task.train_pairs:
+    skip = KNOWN_INCORRECT_TRAIN_EXAMPLES.get(task.task_id, frozenset())
+    for i, p in enumerate(task.train_pairs):
+        if i in skip:
+            continue
         try:
             out = v(copy.deepcopy(p.input))
             if not is_equal_grid(out, p.output):
