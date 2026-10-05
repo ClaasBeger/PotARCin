@@ -23,7 +23,7 @@ configs:
 
 # P-ARC
 
-P-ARC is a held-out set of 50 hand-crafted ARC-style tasks, introduced with **PotARCin: Multi-Dimensional Evaluation of Skill Acquisition in Abstract Reasoning Tasks** (NeurIPS 2026, Evaluations and Datasets Track). Every task comes with a generator and a verifier program, 50 fixed generated examples, three erroneous human attempts used as corruptions, and a natural-language statement of its rule.
+P-ARC is a held-out set of 50 hand-crafted ARC-style tasks, introduced with **PotARCin: Multi-Dimensional Evaluation of Skill Acquisition in Abstract Reasoning Tasks** (NeurIPS 2026, Evaluations and Datasets Track). Every task comes with a generator and a verifier program, 50 fixed generated examples, three human-made corruptions (erroneous attempts from the feasibility check or errors designed by the task's creator), and a natural-language statement of its rule.
 
 - **Venue:** NeurIPS 2026, Evaluations and Datasets Track
 - **Paper:** [arXiv:2609.27288](https://arxiv.org/abs/2609.27288)
@@ -56,7 +56,7 @@ Grouped by their main operation, the tasks cover physics and dynamics (9 tasks),
 | `train_demonstrations_json` | JSON list of training pairs `{input, output}` |
 | `test_input_json` / `test_output_json` | JSON grids of the held-out test pair |
 | `stable_instances_50_json` | JSON object `{"train": [...]}` with 50 fixed generator-produced pairs |
-| `human_corruptions_json` | JSON list of 3 `{input, output}` pairs whose outputs are erroneous human attempts |
+| `human_corruptions_json` | JSON list of 3 `{input, output}` pairs with incorrect outputs, made by people: erroneous attempts from the feasibility check or errors designed by the task's creator |
 | `generator_py` | Python source of the task's generator |
 | `verifier_py` | Python source of the task's verifier, which maps an input grid to its correct output |
 
@@ -81,14 +81,8 @@ To read the CSV with Python's `csv` module, raise its field size limit first, si
 
 - **Tasks.** The authors designed each task. A candidate was shown to team members other than its author (at least one, most often two or three) and kept only if at least one of them produced the correct output. This is a feasibility check during design, not a formal human study; solve rates and times were not recorded.
 - **Generators and verifiers.** For every task, a team member other than its author inspected at least 50 generator-produced examples and confirmed that they follow the intended rule. All train and test pairs and all 50 stable examples agree with the task's verifier.
-- **Corruptions.** Erroneous attempts collected during the feasibility check; three incorrect outputs are kept per task.
+- **Corruptions.** Each task has three pairs with incorrect outputs. Some are erroneous attempts collected during the feasibility check; others were designed by the task's creator.
 - **Rules.** All 50 rules were reviewed by the authors in September 2026.
-
-## Limitations
-
-- Difficulty is estimated from an internal feasibility check rather than a formal study with naive participants.
-- ARC tasks are underspecified and can admit several consistent rules. The verifier encodes the intended rule, so a pair it rejects may still be explained by an alternative rule that fits the demonstrations.
-- In one corruption (`t36`, the second), the stored input already contains part of a drawn path, so the task's verifier cannot process it.
 
 ## Changes
 

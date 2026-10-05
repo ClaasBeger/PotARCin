@@ -61,7 +61,7 @@
  "alternateName": [
   "ClaasBeger/P-ARC"
  ],
- "description": "P-ARC is a held-out set of 50 hand-crafted ARC-style tasks introduced with PotARCin, a benchmark that evaluates abstract-rule understanding across five dimensions (Definition, Classification, Constrained Generation, Editing, Inversion). Each task includes train and test pairs, a generator and a verifier program, 50 fixed generated examples, three erroneous human attempts used as corruptions, and a reviewed natural-language rule.",
+ "description": "P-ARC is a held-out set of 50 hand-crafted ARC-style tasks introduced with PotARCin, a benchmark that evaluates abstract-rule understanding across five dimensions (Definition, Classification, Constrained Generation, Editing, Inversion). Each task includes train and test pairs, a generator and a verifier program, 50 fixed generated examples, three human-made corruptions (erroneous attempts from the feasibility check or errors designed by the task's creator), and a reviewed natural-language rule.",
  "url": "https://huggingface.co/datasets/ClaasBeger/P-ARC",
  "license": "https://choosealicense.com/licenses/mit/",
  "version": "1.1.0",
@@ -234,7 +234,7 @@
      "@type": "cr:Field",
      "@id": "tasks/human_corruptions_json",
      "name": "human_corruptions_json",
-     "description": "Compact JSON array of 3 {input, output} pairs whose outputs are erroneous human attempts at the task, used as corruptions.",
+     "description": "Compact JSON array of 3 {input, output} pairs with incorrect outputs, made by people: erroneous attempts from the feasibility check or errors designed by the task's creator.",
      "dataType": "sc:Text",
      "source": {
       "fileObject": {
@@ -278,7 +278,7 @@
    ]
   }
  ],
- "rai:dataCollection": "The 50 tasks were designed by the authors. Each candidate task was shown to team members other than its author (at least one, most often two or three) and kept only if at least one of them produced the correct output; multiple attempts were allowed. For every task, a team member other than its author inspected at least 50 generator-produced examples and confirmed that they follow the intended rule. Three erroneous output grids from attempts during this check are kept per task as corruptions.",
+ "rai:dataCollection": "The 50 tasks were designed by the authors. Each candidate task was shown to team members other than its author (at least one, most often two or three) and kept only if at least one of them produced the correct output; multiple attempts were allowed. For every task, a team member other than its author inspected at least 50 generator-produced examples and confirmed that they follow the intended rule. Each task has three corruptions: pairs with incorrect outputs that are either erroneous attempts from this check or errors designed by the task's creator.",
  "rai:dataCollectionType": [
   "Manual Human Curation",
   "Software Collection"
@@ -287,13 +287,13 @@
   "2026-04-11T00:00:00",
   "2026-05-03T23:59:59"
  ],
- "rai:dataCollectionRawData": "Tasks, generators and verifiers were written by the authors; the 50 stable examples per task were produced by each task's generator; corruptions are erroneous attempts by authors and team members solving the tasks.",
+ "rai:dataCollectionRawData": "Tasks, generators and verifiers were written by the authors; the 50 stable examples per task were produced by each task's generator; corruptions are erroneous attempts by team members solving the tasks or errors designed by the task's creator.",
  "rai:dataAnnotationProtocol": "Natural-language rules were written by the authors and reviewed in September 2026: 39 were redrafted from each task's transform and reviewed, 10 were written from scratch, and one task kept its original hand-written rule after review.",
  "rai:dataAnnotationPlatform": "Internal; no crowdsourcing platform was used.",
  "rai:annotatorDemographics": "The annotators are the authors and their research team members; no further demographic information was collected.",
  "rai:dataPreprocessingProtocol": "Grids are stored as lists of rows of integers 0-9. Train and test pairs and all 50 stable examples were checked against each task's verifier.",
  "rai:dataBiases": "Tasks reflect the authors' choices of concepts, grouped as physics and dynamics, rigid geometric transforms, connection and pathfinding, symmetry and completion, object composition, constraint satisfaction and logic, and colour or attribute mapping; they do not sample ARC-style reasoning uniformly. Human feasibility was checked by team members familiar with ARC rather than naive participants, so difficulty for the general population may be higher.",
- "rai:dataLimitations": "Difficulty is estimated from an internal feasibility check, not a formal human study; solve rates and times were not recorded. ARC tasks are underspecified, so a pair that a verifier rejects may still fit an alternative rule consistent with the demonstrations. In one corruption (t36, the second), the stored input already contains part of a drawn path and the verifier cannot process it.",
+ "rai:dataLimitations": "Difficulty is estimated from an internal feasibility check, not a formal human study; solve rates and times were not recorded. ARC tasks are underspecified, so a pair that a verifier rejects may still fit an alternative rule consistent with the demonstrations.",
  "rai:dataUseCases": "Evaluating abstract reasoning and rule understanding in AI models on tasks outside the public ARC-AGI-1 distribution, including the five PotARCin dimensions. Not intended as training data for models evaluated on it.",
  "rai:dataSocialImpact": "The dataset contains abstract coloured grids only. Its intended impact is more careful evaluation of AI reasoning claims; we are not aware of direct risks.",
  "rai:personalSensitiveInformation": "None. The data consists of abstract grids, programs and rule descriptions; no personal or sensitive information is included.",
