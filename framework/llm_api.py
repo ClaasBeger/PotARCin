@@ -522,6 +522,20 @@ def _openai_responses_completion(
     return "\n".join(parts).strip()
 
 
+def _anthropic_message_text_from_content(content: Any) -> str:
+    parts: list[str] = []
+    for block in content or []:
+        txt = getattr(block, "text", None)
+        if isinstance(txt, str) and txt.strip():
+            parts.append(txt)
+            continue
+        if isinstance(block, dict) and block.get("type") == "text":
+            t = block.get("text")
+            if isinstance(t, str) and t.strip():
+                parts.append(t)
+    return "\n".join(parts).strip()
+
+
 def _anthropic_messages_completion(
     *,
     prompt: str,
@@ -531,29 +545,22 @@ def _anthropic_messages_completion(
     reasoning_effort: Optional[str] = None,
     timeout_s: int = 180,
 ) -> str:
+    """
+    Anthropic Messages API completion.
+
+    Thinking mode (enabled + 120k by default): stream only. No messages.create(),
+    no raw-HTTP fallback, and no wall-clock / client timeout — those were the
+    credit-burn path on Run2 and must not cut off long 120k generations.
+    """
     effort = _normalize_reasoning_effort(reasoning_effort)
     thinking_budget_tokens = _anthropic_thinking_budget_tokens(effort)
     # Anthropic requires: thinking.budget_tokens < max_tokens.
     max_tokens = 4096
     if thinking_budget_tokens is not None:
         max_tokens = max(max_tokens, thinking_budget_tokens + 1024)
-    # Allow one-off Anthropic timeout overrides for long-running calls.
-    # This only controls model-response waiting (SDK + fallback HTTP), not
-    # post-response evaluation (e.g., definition script execution).
-    anth_to = int(os.environ.get("POTARCIN_ANTHROPIC_TIMEOUT_S", "0").strip() or 0)
-    if anth_to > 0:
-        timeout_s = anth_to
-    sdk_timeout_s = max(timeout_s, 900)  # keep Claude requests generous by default (15 min minimum)
-    max_attempts = 3
+    thinking_enabled = thinking_budget_tokens is not None
 
-    # Match ConceptARC-Rules first: anthropic SDK client.
-    def _sdk_call() -> str:
-        import anthropic  # type: ignore[import-not-found]
-
-        kwargs: dict[str, Any] = {"api_key": api_key}
-        if base_url.rstrip("/") != "https://api.anthropic.com/v1":
-            kwargs["base_url"] = base_url
-        client = anthropic.Anthropic(**kwargs)
+    def _build_req() -> dict[str, Any]:
         req: dict[str, Any] = {
             "model": model,
             "max_tokens": max_tokens,
@@ -566,41 +573,58 @@ def _anthropic_messages_completion(
                 "type": "enabled",
                 "budget_tokens": thinking_budget_tokens,
             }
-        # Anthropic SDK requires streaming for requests that may exceed ~10 minutes.
-        # Use stream() first, then fall back to create() for compatibility.
-        stream_fn = getattr(client.messages, "stream", None)
-        if callable(stream_fn):
-            try:
-                with stream_fn(**req) as stream:
-                    parts: list[str] = []
-                    text_stream = getattr(stream, "text_stream", None)
-                    if text_stream is not None:
-                        for chunk in text_stream:
-                            if isinstance(chunk, str) and chunk:
-                                parts.append(chunk)
-                    # Some SDK versions expose the final message object.
-                    if not parts:
-                        final_msg = getattr(stream, "get_final_message", None)
-                        if callable(final_msg):
-                            msg = final_msg()
-                            for block in getattr(msg, "content", []) or []:
-                                txt = getattr(block, "text", None)
-                                if isinstance(txt, str) and txt.strip():
-                                    parts.append(txt)
-                    text = "".join(parts).strip()
-                    if text:
-                        return text
-            except Exception:
-                # Fall back to non-streaming path below, preserving behavior.
-                pass
+        return req
 
-        resp = client.messages.create(**req)
-        parts: list[str] = []
-        for block in getattr(resp, "content", []) or []:
-            txt = getattr(block, "text", None)
-            if isinstance(txt, str) and txt.strip():
-                parts.append(txt)
-        text = "\n".join(parts).strip()
+    def _make_client() -> Any:
+        import anthropic  # type: ignore[import-not-found]
+
+        kwargs: dict[str, Any] = {"api_key": api_key}
+        if base_url.rstrip("/") != "https://api.anthropic.com/v1":
+            kwargs["base_url"] = base_url
+        return anthropic.Anthropic(**kwargs)
+
+    # --- Thinking: stream on the calling thread; no timeouts; no fallbacks. ---
+    if thinking_enabled:
+        client = _make_client()
+        req = _build_req()
+        stream_fn = getattr(client.messages, "stream", None)
+        if not callable(stream_fn):
+            raise RuntimeError(
+                "Anthropic thinking is enabled but messages.stream() is unavailable; "
+                "refusing non-streaming fallback to avoid unbounded token burn."
+            )
+        with stream_fn(**req) as stream:
+            parts: list[str] = []
+            text_stream = getattr(stream, "text_stream", None)
+            if text_stream is not None:
+                for chunk in text_stream:
+                    if isinstance(chunk, str) and chunk:
+                        parts.append(chunk)
+            text = "".join(parts).strip()
+            if not text:
+                final_msg = getattr(stream, "get_final_message", None)
+                if callable(final_msg):
+                    text = _anthropic_message_text_from_content(
+                        getattr(final_msg(), "content", None)
+                    )
+            if text:
+                return text
+        raise ValueError(
+            "Anthropic streaming response completed without any text content "
+            "(thinking-only or empty). Refusing non-streaming fallback."
+        )
+
+    # --- Non-thinking: prior create() + ThreadPool + HTTP fallback behavior. ---
+    anth_to = int(os.environ.get("POTARCIN_ANTHROPIC_TIMEOUT_S", "0").strip() or 0)
+    if anth_to > 0:
+        timeout_s = anth_to
+    sdk_timeout_s = max(timeout_s, 900)
+    max_attempts = 3
+
+    def _sdk_call() -> str:
+        client = _make_client()
+        resp = client.messages.create(**_build_req())
+        text = _anthropic_message_text_from_content(getattr(resp, "content", None))
         if text:
             return text
         raise ValueError("Anthropic SDK response did not contain any text content.")
@@ -620,22 +644,10 @@ def _anthropic_messages_completion(
         if attempt < max_attempts:
             time.sleep(min(4, attempt))
 
-    # Fallback: raw HTTP.
     url = base_url.rstrip("/") + "/messages"
-    payload: dict[str, Any] = {
-        "model": model,
-        "max_tokens": max_tokens,
-        "messages": [{"role": "user", "content": prompt}],
-    }
-    if effort is not None:
-        payload["output_config"] = {"effort": effort}
-    if thinking_budget_tokens is not None:
-        payload["thinking"] = {
-            "type": "enabled",
-            "budget_tokens": thinking_budget_tokens,
-        }
+    payload = _build_req()
     body = json.dumps(payload).encode("utf-8")
-    req = request.Request(
+    http_req = request.Request(
         url=url,
         data=body,
         headers={
@@ -646,7 +658,7 @@ def _anthropic_messages_completion(
         method="POST",
     )
     try:
-        with request.urlopen(req, timeout=sdk_timeout_s) as resp:
+        with request.urlopen(http_req, timeout=sdk_timeout_s) as resp:
             raw = resp.read().decode("utf-8")
     except error.HTTPError as e:
         body_txt = e.read().decode("utf-8", errors="replace")
@@ -657,17 +669,7 @@ def _anthropic_messages_completion(
         raise ValueError(f"Anthropic SDK failed ({last_sdk_error}); fallback HTTP failed: {e}") from e
 
     parsed = json.loads(raw)
-    blocks = parsed.get("content")
-    parts: list[str] = []
-    if isinstance(blocks, list):
-        for block in blocks:
-            if not isinstance(block, dict):
-                continue
-            if block.get("type") == "text":
-                txt = block.get("text")
-                if isinstance(txt, str) and txt.strip():
-                    parts.append(txt)
-    text = "\n".join(parts).strip()
+    text = _anthropic_message_text_from_content(parsed.get("content"))
     if text:
         return text
     raise ValueError(f"Anthropic SDK failed ({last_sdk_error}); fallback HTTP had no text content.")
