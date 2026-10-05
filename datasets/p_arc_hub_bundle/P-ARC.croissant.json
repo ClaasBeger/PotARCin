@@ -1,1 +1,301 @@
-{"@context":{"@language":"en","@vocab":"https://schema.org/","arrayShape":"cr:arrayShape","citeAs":"cr:citeAs","column":"cr:column","conformsTo":"dct:conformsTo","containedIn":"cr:containedIn","cr":"http://mlcommons.org/croissant/","data":{"@id":"cr:data","@type":"@json"},"dataBiases":"cr:dataBiases","dataCollection":"cr:dataCollection","dataType":{"@id":"cr:dataType","@type":"@vocab"},"dct":"http://purl.org/dc/terms/","extract":"cr:extract","field":"cr:field","fileProperty":"cr:fileProperty","fileObject":"cr:fileObject","fileSet":"cr:fileSet","format":"cr:format","includes":"cr:includes","isArray":"cr:isArray","isLiveDataset":"cr:isLiveDataset","jsonPath":"cr:jsonPath","key":"cr:key","md5":"cr:md5","parentField":"cr:parentField","path":"cr:path","personalSensitiveInformation":"cr:personalSensitiveInformation","recordSet":"cr:recordSet","references":"cr:references","regex":"cr:regex","repeated":"cr:repeated","replace":"cr:replace","sc":"https://schema.org/","separator":"cr:separator","source":"cr:source","subField":"cr:subField","transform":"cr:transform"},"@type":"sc:Dataset","distribution":[{"@type":"cr:FileObject","@id":"repo","name":"repo","description":"The Hugging Face git repository.","contentUrl":"https://huggingface.co/datasets/PotARCin/P-ARC/tree/refs%2Fconvert%2Fparquet","encodingFormat":"git+https","sha256":"https://github.com/mlcommons/croissant/issues/80"},{"@type":"cr:FileSet","@id":"parquet-files-for-config-default","containedIn":{"@id":"repo"},"encodingFormat":"application/x-parquet","includes":"default/*/*.parquet"}],"recordSet":[{"@type":"cr:RecordSet","dataType":"cr:Split","key":{"@id":"default_splits/split_name"},"@id":"default_splits","name":"default_splits","description":"Splits for the default config.","field":[{"@type":"cr:Field","@id":"default_splits/split_name","dataType":"sc:Text"}],"data":[{"default_splits/split_name":"test"}]},{"@type":"cr:RecordSet","@id":"default","description":"PotARCin/P-ARC - 'default' subset","field":[{"@type":"cr:Field","@id":"default/split","dataType":"sc:Text","source":{"fileSet":{"@id":"parquet-files-for-config-default"},"extract":{"fileProperty":"fullpath"},"transform":{"regex":"default/(?:partial-)?(test)/.+parquet$"}},"references":{"field":{"@id":"default_splits/split_name"}}},{"@type":"cr:Field","@id":"default/task_id","dataType":"sc:Text","source":{"fileSet":{"@id":"parquet-files-for-config-default"},"extract":{"column":"task_id"}}},{"@type":"cr:Field","@id":"default/train_demonstrations_json","dataType":"sc:Text","source":{"fileSet":{"@id":"parquet-files-for-config-default"},"extract":{"column":"train_demonstrations_json"}}},{"@type":"cr:Field","@id":"default/test_input_json","dataType":"sc:Text","source":{"fileSet":{"@id":"parquet-files-for-config-default"},"extract":{"column":"test_input_json"}}},{"@type":"cr:Field","@id":"default/test_output_json","dataType":"sc:Text","source":{"fileSet":{"@id":"parquet-files-for-config-default"},"extract":{"column":"test_output_json"}}},{"@type":"cr:Field","@id":"default/stable_instances_50_json","dataType":"sc:Text","source":{"fileSet":{"@id":"parquet-files-for-config-default"},"extract":{"column":"stable_instances_50_json"}}},{"@type":"cr:Field","@id":"default/generator_py","dataType":"sc:Text","source":{"fileSet":{"@id":"parquet-files-for-config-default"},"extract":{"column":"generator_py"}}},{"@type":"cr:Field","@id":"default/verifier_py","dataType":"sc:Text","source":{"fileSet":{"@id":"parquet-files-for-config-default"},"extract":{"column":"verifier_py"}}}]}],"conformsTo":"http://mlcommons.org/croissant/1.1","name":"P-ARC","description":"\n\t\n\t\t\n\t\tP-ARC CSV export (PotARCin Test2)\n\t\n\nOne CSV file in UTF-8. Each row is one of the fifty P-ARC tasks from PotARCin (t1.json through t50.json). Besides the usual train/test grids, each row includes the fifty-sample bundle from t<n>_samples_50.json as compact JSON (same structure as the file, without the extra whitespace from pretty-printing), plus the generator.py and verifier.py sources from the matching task folder.\n\n\t\n\t\t\n\t\n\t\n\t\tFiles\n\t\n\n\n\t\n\t\t\nFile\nDescription\n\n\n\t\t\np_arc_dataset.csv… See the full description on the dataset page: https://huggingface.co/datasets/PotARCin/P-ARC.","alternateName":["PotARCin/P-ARC","P-ARC (PotARCin Test Set) tabular export"],"creator":{"@type":"Person","name":"PotARCin","url":"https://huggingface.co/PotARCin"},"keywords":["other","English","other","< 1K","csv","Text","Datasets","pandas","Polars","Croissant","🇺🇸 Region: US","arc","arc-agi","potarcin","program-synthesis"],"license":"https://choosealicense.com/licenses/other/","url":"https://huggingface.co/datasets/PotARCin/P-ARC"}
+{
+ "@context": {
+  "@language": "en",
+  "@vocab": "https://schema.org/",
+  "arrayShape": "cr:arrayShape",
+  "citeAs": "cr:citeAs",
+  "column": "cr:column",
+  "conformsTo": "dct:conformsTo",
+  "containedIn": "cr:containedIn",
+  "cr": "http://mlcommons.org/croissant/",
+  "data": {
+   "@id": "cr:data",
+   "@type": "@json"
+  },
+  "dataBiases": "cr:dataBiases",
+  "dataCollection": "cr:dataCollection",
+  "dataType": {
+   "@id": "cr:dataType",
+   "@type": "@vocab"
+  },
+  "dct": "http://purl.org/dc/terms/",
+  "extract": "cr:extract",
+  "field": "cr:field",
+  "fileProperty": "cr:fileProperty",
+  "fileObject": "cr:fileObject",
+  "fileSet": "cr:fileSet",
+  "format": "cr:format",
+  "includes": "cr:includes",
+  "isArray": "cr:isArray",
+  "isLiveDataset": "cr:isLiveDataset",
+  "jsonPath": "cr:jsonPath",
+  "key": "cr:key",
+  "md5": "cr:md5",
+  "parentField": "cr:parentField",
+  "path": "cr:path",
+  "personalSensitiveInformation": "cr:personalSensitiveInformation",
+  "recordSet": "cr:recordSet",
+  "references": "cr:references",
+  "regex": "cr:regex",
+  "repeated": "cr:repeated",
+  "replace": "cr:replace",
+  "sc": "https://schema.org/",
+  "separator": "cr:separator",
+  "source": "cr:source",
+  "subField": "cr:subField",
+  "transform": "cr:transform",
+  "rai": "http://mlcommons.org/croissant/RAI/",
+  "samplingRate": "cr:samplingRate",
+  "equivalentProperty": "cr:equivalentProperty",
+  "examples": {
+   "@id": "cr:examples",
+   "@type": "@json"
+  }
+ },
+ "@type": "sc:Dataset",
+ "conformsTo": [
+  "http://mlcommons.org/croissant/1.1",
+  "http://mlcommons.org/croissant/RAI/1.0"
+ ],
+ "name": "P-ARC",
+ "alternateName": [
+  "ClaasBeger/P-ARC"
+ ],
+ "description": "P-ARC is a held-out set of 50 hand-crafted ARC-style tasks introduced with PotARCin, a benchmark that evaluates abstract-rule understanding across five dimensions (Definition, Classification, Constrained Generation, Editing, Inversion). Each task includes train and test pairs, a generator and a verifier program, 50 fixed generated examples, three erroneous human attempts used as corruptions, and a reviewed natural-language rule.",
+ "url": "https://huggingface.co/datasets/ClaasBeger/P-ARC",
+ "license": "https://choosealicense.com/licenses/mit/",
+ "version": "1.1.0",
+ "datePublished": "2026-10-05",
+ "creator": [
+  {
+   "@type": "sc:Person",
+   "name": "Claas Beger"
+  },
+  {
+   "@type": "sc:Person",
+   "name": "Ryan Yi"
+  },
+  {
+   "@type": "sc:Person",
+   "name": "Melanie Mitchell"
+  }
+ ],
+ "keywords": [
+  "ARC",
+  "ARC-AGI",
+  "abstract reasoning",
+  "program synthesis",
+  "evaluation",
+  "PotARCin"
+ ],
+ "citeAs": "@inproceedings{beger2026potarcin, title={PotARCin: Multi-Dimensional Evaluation of Skill Acquisition in Abstract Reasoning Tasks}, author={Beger, Claas and Yi, Ryan and Mitchell, Melanie}, booktitle={Advances in Neural Information Processing Systems}, year={2026}, eprint={2609.27288}, archivePrefix={arXiv}}",
+ "distribution": [
+  {
+   "@type": "cr:FileObject",
+   "@id": "p_arc_dataset.csv",
+   "name": "p_arc_dataset.csv",
+   "description": "One row per task (t1-t50).",
+   "contentUrl": "https://huggingface.co/datasets/ClaasBeger/P-ARC/resolve/main/p_arc_dataset.csv",
+   "encodingFormat": "text/csv",
+   "sha256": "ef3db3142661cd8f32e99bcf58e0dfd964a18aa64237ff39cd2d2143ba7cdf78"
+  }
+ ],
+ "recordSet": [
+  {
+   "@type": "cr:RecordSet",
+   "@id": "tasks",
+   "name": "tasks",
+   "description": "One record per P-ARC task.",
+   "key": {
+    "@id": "tasks/task_id"
+   },
+   "field": [
+    {
+     "@type": "cr:Field",
+     "@id": "tasks/task_id",
+     "name": "task_id",
+     "description": "Task id, t1 through t50.",
+     "dataType": "sc:Text",
+     "source": {
+      "fileObject": {
+       "@id": "p_arc_dataset.csv"
+      },
+      "extract": {
+       "column": "task_id"
+      }
+     }
+    },
+    {
+     "@type": "cr:Field",
+     "@id": "tasks/task_name",
+     "name": "task_name",
+     "description": "Short descriptive name of the task, e.g. corner_to_center.",
+     "dataType": "sc:Text",
+     "source": {
+      "fileObject": {
+       "@id": "p_arc_dataset.csv"
+      },
+      "extract": {
+       "column": "task_name"
+      }
+     }
+    },
+    {
+     "@type": "cr:Field",
+     "@id": "tasks/rule",
+     "name": "rule",
+     "description": "Natural-language statement of the task's intended rule, reviewed by the authors.",
+     "dataType": "sc:Text",
+     "source": {
+      "fileObject": {
+       "@id": "p_arc_dataset.csv"
+      },
+      "extract": {
+       "column": "rule"
+      }
+     }
+    },
+    {
+     "@type": "cr:Field",
+     "@id": "tasks/rule_source",
+     "name": "rule_source",
+     "description": "How the rule was written: human_reviewed (redrafted from the task's transform and reviewed), human_annotated (written from scratch), or draft (the original hand-written rule, kept after review).",
+     "dataType": "sc:Text",
+     "source": {
+      "fileObject": {
+       "@id": "p_arc_dataset.csv"
+      },
+      "extract": {
+       "column": "rule_source"
+      }
+     }
+    },
+    {
+     "@type": "cr:Field",
+     "@id": "tasks/train_demonstrations_json",
+     "name": "train_demonstrations_json",
+     "description": "Compact JSON array of training pairs {input, output}; grids are lists of lists of integers 0-9.",
+     "dataType": "sc:Text",
+     "source": {
+      "fileObject": {
+       "@id": "p_arc_dataset.csv"
+      },
+      "extract": {
+       "column": "train_demonstrations_json"
+      }
+     }
+    },
+    {
+     "@type": "cr:Field",
+     "@id": "tasks/test_input_json",
+     "name": "test_input_json",
+     "description": "Compact JSON grid for the held-out test input.",
+     "dataType": "sc:Text",
+     "source": {
+      "fileObject": {
+       "@id": "p_arc_dataset.csv"
+      },
+      "extract": {
+       "column": "test_input_json"
+      }
+     }
+    },
+    {
+     "@type": "cr:Field",
+     "@id": "tasks/test_output_json",
+     "name": "test_output_json",
+     "description": "Compact JSON grid for the held-out test output.",
+     "dataType": "sc:Text",
+     "source": {
+      "fileObject": {
+       "@id": "p_arc_dataset.csv"
+      },
+      "extract": {
+       "column": "test_output_json"
+      }
+     }
+    },
+    {
+     "@type": "cr:Field",
+     "@id": "tasks/stable_instances_50_json",
+     "name": "stable_instances_50_json",
+     "description": "Compact JSON object {\"train\": [...]} with 50 fixed generator-produced {input, output} pairs.",
+     "dataType": "sc:Text",
+     "source": {
+      "fileObject": {
+       "@id": "p_arc_dataset.csv"
+      },
+      "extract": {
+       "column": "stable_instances_50_json"
+      }
+     }
+    },
+    {
+     "@type": "cr:Field",
+     "@id": "tasks/human_corruptions_json",
+     "name": "human_corruptions_json",
+     "description": "Compact JSON array of 3 {input, output} pairs whose outputs are erroneous human attempts at the task, used as corruptions.",
+     "dataType": "sc:Text",
+     "source": {
+      "fileObject": {
+       "@id": "p_arc_dataset.csv"
+      },
+      "extract": {
+       "column": "human_corruptions_json"
+      }
+     }
+    },
+    {
+     "@type": "cr:Field",
+     "@id": "tasks/generator_py",
+     "name": "generator_py",
+     "description": "Python source of the task's generator.",
+     "dataType": "sc:Text",
+     "source": {
+      "fileObject": {
+       "@id": "p_arc_dataset.csv"
+      },
+      "extract": {
+       "column": "generator_py"
+      }
+     }
+    },
+    {
+     "@type": "cr:Field",
+     "@id": "tasks/verifier_py",
+     "name": "verifier_py",
+     "description": "Python source of the task's verifier, which maps an input grid to the correct output grid.",
+     "dataType": "sc:Text",
+     "source": {
+      "fileObject": {
+       "@id": "p_arc_dataset.csv"
+      },
+      "extract": {
+       "column": "verifier_py"
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "rai:dataCollection": "The 50 tasks were designed by the authors. Each candidate task was shown to team members other than its author (at least one, most often two or three) and kept only if at least one of them produced the correct output; multiple attempts were allowed. For every task, a team member other than its author inspected at least 50 generator-produced examples and confirmed that they follow the intended rule. Three erroneous output grids from attempts during this check are kept per task as corruptions.",
+ "rai:dataCollectionType": [
+  "Manual Human Curation",
+  "Software Collection"
+ ],
+ "rai:dataCollectionTimeFrame": [
+  "2026-04-11T00:00:00",
+  "2026-05-03T23:59:59"
+ ],
+ "rai:dataCollectionRawData": "Tasks, generators and verifiers were written by the authors; the 50 stable examples per task were produced by each task's generator; corruptions are erroneous attempts by authors and team members solving the tasks.",
+ "rai:dataAnnotationProtocol": "Natural-language rules were written by the authors and reviewed in September 2026: 39 were redrafted from each task's transform and reviewed, 10 were written from scratch, and one task kept its original hand-written rule after review.",
+ "rai:dataAnnotationPlatform": "Internal; no crowdsourcing platform was used.",
+ "rai:annotatorDemographics": "The annotators are the authors and their research team members; no further demographic information was collected.",
+ "rai:dataPreprocessingProtocol": "Grids are stored as lists of rows of integers 0-9. Train and test pairs and all 50 stable examples were checked against each task's verifier.",
+ "rai:dataBiases": "Tasks reflect the authors' choices of concepts, grouped as physics and dynamics, rigid geometric transforms, connection and pathfinding, symmetry and completion, object composition, constraint satisfaction and logic, and colour or attribute mapping; they do not sample ARC-style reasoning uniformly. Human feasibility was checked by team members familiar with ARC rather than naive participants, so difficulty for the general population may be higher.",
+ "rai:dataLimitations": "Difficulty is estimated from an internal feasibility check, not a formal human study; solve rates and times were not recorded. ARC tasks are underspecified, so a pair that a verifier rejects may still fit an alternative rule consistent with the demonstrations. In one corruption (t36, the second), the stored input already contains part of a drawn path and the verifier cannot process it.",
+ "rai:dataUseCases": "Evaluating abstract reasoning and rule understanding in AI models on tasks outside the public ARC-AGI-1 distribution, including the five PotARCin dimensions. Not intended as training data for models evaluated on it.",
+ "rai:dataSocialImpact": "The dataset contains abstract coloured grids only. Its intended impact is more careful evaluation of AI reasoning claims; we are not aware of direct risks.",
+ "rai:personalSensitiveInformation": "None. The data consists of abstract grids, programs and rule descriptions; no personal or sensitive information is included.",
+ "rai:dataReleaseMaintenancePlan": "Maintained by the authors on Hugging Face; corrections are documented in the dataset card. Contact: claasbeger@santafe.edu."
+}

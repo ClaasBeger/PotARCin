@@ -1,0 +1,212 @@
+{
+ "_meta": {
+  "source": "ActiveARC external/nl_rules/collected_rules.json (parc section)",
+  "reviewed_at": "2026-09-18T04:44:55.111552+00:00",
+  "note": "All 50 P-ARC rules reviewed 2026-09-18. Ten written from scratch for tasks that had no rule; 39 redrafted from each task transform and reviewed; t12 kept as its original hand-written draft, which already read as a rule.",
+  "rule_source_values": {
+   "human_reviewed": "redrafted from the task's transform and reviewed",
+   "human_annotated": "written from scratch for a task that had no rule",
+   "draft": "the task's original hand-written rule, kept after review"
+  }
+ },
+ "t1": {
+  "rule": "The grid is square with an even side n. Up to four coloured components sit in the corners, each inside a corner window of side n/2 − 2. Every component slides inward until the group packs against the middle. The top-left and top-right components move down together by the amount that brings their lowest occupied row onto row n/2 − 1; the bottom pair move up so their highest occupied row lands on row n/2. Horizontally the same: the left pair shift right so their rightmost column lands on column n/2 − 1, the right pair shift left onto column n/2. The shift is shared within each pair, so two components on the same side move by the same amount and keep their relative positions.",
+  "source": "human_reviewed"
+ },
+ "t2": {
+  "rule": "Find the 8-connected objects of non-black cells; their leftmost cells all sit in different columns. Order the objects by that leftmost cell (by column). Rotate the colours one step along that order with wrap-around: each object takes the colour of the object before it, and the first takes the colour of the last. Shapes and positions are unchanged.",
+  "source": "human_reviewed"
+ },
+ "t3": {
+  "rule": "A rectangular box is placed so that it runs off one edge of the grid and continues on the opposite edge, offset along that edge; the two halves may carry different outline colours. Reassemble the box across the wrap and output only its interior — the cells inside the outline, with the outline itself removed.",
+  "source": "human_annotated"
+ },
+ "t4": {
+  "rule": "A small framed key sits in one corner of the grid holding a 3x3 pattern. Divide the whole grid into a 3x3 arrangement of equal blocks. Each coloured group in the key corresponds to a single rectangle of blocks in the output: draw it scaled up as a hollow outline one cell thick, in that colour (multiple adjacent rectangles of one cell are merged, they do not have internal separators). Inside each of these outlines fill one quadrant solid red — the specific quadrant corresponds to the corner the key itself occupies in the input grid, so a key in the top-left fills each rectangle's top-left quadrant.",
+  "source": "human_annotated"
+ },
+ "t5": {
+  "rule": "Orange cells are fixed walls. Cyan behaves like a liquid inside whatever region the walls leave open. In each region the same number of cyan cells settles at the bottom under gravity: rows fill from the bottom upward, each row is filling outward from the middle of the row (rows end at the border or an orange wall). Orange keeps its position.",
+  "source": "human_annotated"
+ },
+ "t6": {
+  "rule": "A grey rectangle encloses an area split into separate compartments, where each compartment has a single set of colored cells. In the grid, there is exactly one cell that is green (it can be in one of the compartments, or outside). Rank the compartments by how close their content cells (the colored cell) lie to the green cell, measured as the shortest Manhattan distance from the green cell to one of the object cell in that compartment. Fill each compartment solid: green for the nearest, yellow for the second, red for the third. The grey rectangle stays as it is and everything outside it becomes black.",
+  "source": "human_annotated"
+ },
+ "t7": {
+  "rule": "A single cyan cell and one or more solid single-coloured objects sit on a black background. Trace the four diagonals out from the cyan cell and take the object it reaches first. Fill the black cells along that diagonal with cyan, stopping at the object. Then outline that object in cyan: every black cell orthogonally adjacent to one of its cells becomes cyan. All other objects and every remaining cell are unchanged.",
+  "source": "human_annotated"
+ },
+ "t8": {
+  "rule": "There is a large body of blue cells in the grid (\"water\"). In this body, there are red cells (\"fish\") and a connected grey line, 8-connected (\"the net\"). The grey closed boundary encloses a body made of blue and red cells. Imagine extracting the contents of that enclosed body. Inside it let the red cells fall: in each column every enclosed red cell stacks at the bottom, keeping its column. The output is a box with these contents, which has the dimensions of the maximal vertical and horizontal stretch of the enclosed blue and red cells (e.g largest y position minus smallest y-position and same for x). The box has red where it settled and black everywhere else — the blue body and the boundary are discarded.",
+  "source": "human_annotated"
+ },
+ "t9": {
+  "rule": "Several coloured pieces lie scattered on the grid. Exactly one subset of them fits together, by translation only, into a solid rectangle with no gaps and no overlaps. Output that assembled rectangle, each piece keeping its own colour. Where more than one subset could work it is the one covering the largest area; pieces not needed for the assembly are left out.",
+  "source": "human_annotated"
+ },
+ "t10": {
+  "rule": "Every cell has a 180-degree partner: the cell at the opposite position through the grid's centre. For each cell, keep its own colour if it is non-black, otherwise take the colour of its partner. In these puzzles at most one of any partner pair is non-black to begin with, so each pair ends up filled with that single colour on both sides.",
+  "source": "human_reviewed"
+ },
+ "t11": {
+  "rule": "A single non-black cell is the source, and its colour is the ray colour. Four rays leave it, one along each diagonal. A ray travels outward colouring every cell it passes in the source colour, until it reaches an edge of the grid; call that distance d. It then bounces off the edge and travels d further, still colouring as it goes and bouncing again off any edge it meets, so every ray covers twice the distance from the source to the first wall it hits. The cell each ray finishes on turns blue. Then all four diagonal neighbours of every finishing cell turn green, overwriting whatever was there. The rest of the grid, the source cell included, is unchanged.",
+  "source": "human_reviewed"
+ },
+ "t12": {
+  "rule": "The input contains a straight full-length line of 9s and, touching it, a hollow shape open on one side — a C, a V, a diagonal cup, or a ring with one gap. Other coloured cells lie scattered around. In the output, the shape has slid in the direction of its opening, one cell at a time, pushing along every coloured cell it ran into (and everything those pushed cells ran into), until the shape or something it was pushing would have left the grid or hit the line of 9s. Cells it never reached, and the line of 9s, are unchanged.",
+  "source": "draft"
+ },
+ "t13": {
+  "rule": "The pattern is a set of concentric rectangular rings around a red center, each ring a single colour, with one green cell somewhere among them. Peel inward from the outermost ring, counting a new layer each time the ring colour changes. Stop at the ring the green cell lies on: replace that green cell with the ring's own colour. Then record the depth reached by stacking that many 9s (brown) in the last column — a green cell on the outermost layer scores one, the next layer in scores two, and so on.",
+  "source": "human_reviewed"
+ },
+ "t14": {
+  "rule": "A red cell sits on the bottom row and travels right along it. It steps forward as long as it can. The red block can cross empty cells always and when a green block stands directly ahead it jumps over (landing to the right of it) but only if that block's column is one or two cells tall and the landing cell is empty; anything taller stops it. Output the grid with the red cell moved to where it came to rest and everything else unchanged. If it reached the last column, also draw a five-cell yellow plus with its center at the top right (a 3 cell-column at the second position from the right in the top row and a 3 cell row from the right in the second row from the top).",
+  "source": "human_annotated"
+ },
+ "t15": {
+  "rule": "In the grid, there is a pattern. The pattern has four-fold rotational symmetry about a centre, except for a single cell that breaks it. Move that one cell a quarter turn clockwise about the centre, into the position its rotation would occupy, leaving black behind where it was. Every other cell is unchanged.",
+  "source": "human_annotated"
+ },
+ "t16": {
+  "rule": "Exactly one colour other than grey appears, in small fragments, alongside several grey shapes. Treat the coloured fragments as pieces, where fragments touching only at a diagonal count as one piece. Work out which shapes can be built by fitting those pieces together without overlaps. In the output the original colored fragments are erased, and any grey shape whose form matches one of those assemblies is recoloured in the fragment colour. Grey shapes that cannot be built from the pieces stay grey.",
+  "source": "human_reviewed"
+ },
+ "t17": {
+  "rule": "The foreground is a single colour and consists of repeated copies of one shape, some of them clipped by the grid edge. Every copy falls straight down by exactly the height of that shape. The output shows only the fallen copies, on an otherwise empty grid. Note that partially shown patterns fall into the grid in full (e.g their previously cut off parts are shown when pushed into the visible grid) and copies at the bottom can fall out of the visual grid.",
+  "source": "human_reviewed"
+ },
+ "t18": {
+  "rule": "A horizontally periodic motif occupies one half of the grid, with its axis row reaching one side edge (left or right) and not touching the opposite edge. The motif wraps into the other half on the same side as that wrap edge, shifted vertically into the other half, and from there continues across that half all the way to the opposite grid edge. The period and the motif are the same in both halves, and the axis row sits at the same relative position within each half.",
+  "source": "human_reviewed"
+ },
+ "t19": {
+  "rule": "Two grey cells sit on two different edges of the grid; imagine a straight line (can be diagonal) between them that divides the grid into two sides. No shape touches that line. Each side is handled on its own, using only the cells on it, and grey cells never count as part of a shape.  If a side holds more than one shape, take the bounding box of all of them together and fill it solid grey. If a side holds exactly one shape, replace it with a solid square in that shape's own colour, with side equal to the longer side of the shape's bounding box. The square must contain the whole shape and stay on its own side of the line; where several placements would, take the one furthest down and to the right. The output keeps the two grey cells and shows only these filled regions. Everything else, the original shapes included, is cleared.",
+  "source": "human_reviewed"
+ },
+ "t20": {
+  "rule": "The rule is an adaption of the game space invaders. Alien ships are the foreground components that are neither grey nor pink. Pink cells are shots, fired vertically upward. Shots are resolved by shooter row, from the top row down, and each shot destroys (\"deletes/makes black\") the whole connected component of the first ship it reaches. Where several shots share a row, they are ordered so that as many ships as possible are destroyed overall. The grey cannon along the bottom is unchanged.",
+  "source": "human_reviewed"
+ },
+ "t21": {
+  "rule": "Four square patches, one at each corner, are cut from the input. Their side length k is the side of the bounding box of the largest corner shape, where cells touching diagonally count as joined. The patches are then swapped diagonally: top-left with bottom-right, and top-right with bottom-left. The output is the 2k by 2k grid assembled from the four patches in their new positions.",
+  "source": "human_reviewed"
+ },
+ "t22": {
+  "rule": "Every colour has an anchor: its cell lying closest to the centre of the grid, measured by straight-line distance. No colour has two cells tied for closest, and no two colours have their anchors on the same row. Work through the colours in order of anchor row, top to bottom. For each colour, connect its anchor to each of its cells in turn with an L-shaped path in that colour: first straight down or up the anchor's own column to the target's row, then straight across that row to the target. A path overwrites whatever it crosses, with one exception — it never writes over a cell belonging to a colour that has not had its turn yet. Those cells are protected until their own colour is processed, after which they can be overwritten like anything else. The output is the input with these paths drawn on top; nothing is cleared.",
+  "source": "human_reviewed"
+ },
+ "t23": {
+  "rule": "Cells of the same colour that touch, including diagonally, form one shape. Take every pair of shapes that share a colour. If the two shapes share a row, they can be joined straight across it; if they share a column, straight down it. Where both are possible, use the shorter join, and where those tie, the horizontal one. Each join is drawn in grey, filling only the gap between the two shapes — the cells strictly between them, none of the shapes' own cells. The output shows only these grey connectors. Every original coloured shape is gone.",
+  "source": "human_reviewed"
+ },
+ "t24": {
+  "rule": "A single red cell is an infection's starting point. Every other coloured region — cells of one colour joined edge to edge — is a shape that can catch it. The infection reaches from any infected cell to any cell of a shape that is next to it, either orthogonally or diagonally, or two steps away in a straight line with a single black cell in between. Once any cell of a shape is reached, the whole shape is infected and spreads onward from all of its cells, so the infection travels shape to shape until nothing further is in reach. In the output every infected shape is recoloured red, and the original red cell becomes black. Shapes the infection never reached keep their own colour, and the rest of the grid is unchanged.",
+  "source": "human_reviewed"
+ },
+ "t25": {
+  "rule": "The grid holds one foreground colour split into several 4-connected shapes. One of them is the prototype: the shape that cannot be composed from copies of any other shape present, but can itself compose at least one other. Where more than one qualifies it is the largest, and it is unique. Any shape that can be built exactly from one or more non-overlapping copies of the prototype, allowing translation, rotation and reflection, is kept. Every other shape is removed.",
+  "source": "human_reviewed"
+ },
+ "t26": {
+  "rule": "The input shows a hollow coloured outline together with one or two cyan lines. Each cyan line is an axis of symmetry, running vertically, horizontally, or along either diagonal. Reflecting a position across those axes gives a set of matching positions. Fill any empty position whose matching set already holds a coloured cell, using that colour. Where every position in a matching set is empty, they all stay empty.",
+  "source": "human_reviewed"
+ },
+ "t27": {
+  "rule": "Several shapes lie on the grid, all of different shape. They divide into groups such that the shapes within a group can be fitted together, by translation, into a solid rectangle. For each group, take each of its shapes in turn as an anchor and lay the assembled rectangle down so that the anchor covers the cells it already occupies. Every shape keeps its own colour, and the result is drawn on an empty grid.",
+  "source": "human_reviewed"
+ },
+ "t28": {
+  "rule": "The input contains several obstacles, a single coloured cell near the bottom, and a two-cell grey pointer extending from it diagonally. The pointer gives that cell's starting direction. The cell moves one step at a time along the diagonal, bouncing off the grid walls at forty-five degrees. It stops when the next step after any bounce would land on an obstacle. The output shows the cell at its last empty position, with the original cell and the grey pointer removed.",
+  "source": "human_reviewed"
+ },
+ "t29": {
+  "rule": "Each connected block of a single colour slides diagonally in a direction fixed by that colour: magenta up and right, green up and left, yellow down and left, cyan down and right. Every block travels as far as it can, stopping when one more step would push any part of it off the grid. Blocks are never rotated or reshaped.",
+  "source": "human_reviewed"
+ },
+ "t30": {
+  "rule": "The grid is a vertical stack of equal-sized frames, and some of the frames are blank. The filled frames show a step-by-step progression — a shape growing, a ring expanding outward, a line sweeping across, a border travelling round, or a figure translating. Work out which progression the filled frames follow and continue it into every blank frame. Frames that already had content stay exactly as they were.",
+  "source": "human_reviewed"
+ },
+ "t31": {
+  "rule": "A full-height green line divides the grid into equal left and right halves. Every other object is a solid two-by-two block. Each block has a destination in the opposite half, on the same rows and at the same position within that half — a block sitting three columns from the left edge of its own half moves to three columns from the left edge of the other half. It crosses straight over; it is not reflected. A block stays where it is if its destination would overlap the starting cells of any block, or if two blocks are aiming at destinations that overlap — in which case every block involved stays. All other blocks move, leaving their starting positions empty. The output shows the green divider and the blocks in their final positions, on an otherwise empty grid.",
+  "source": "human_reviewed"
+ },
+ "t32": {
+  "rule": "A full grey row divides the grid. Above it, each row is a colour pairing: a run of one colour on the left and a run of another on the right, and those two colours correspond. The pairing works in both directions.\nBelow the grey row the area is split into two halves by a black column down the middle. Coloured blocks sit wholly in one half or the other. Every block is also drawn into the other half, at the same rows and the same position within that half, recoloured to its partner — a block on the left takes its right-hand partner colour, one on the right takes its left-hand partner colour. Each block also stays where it is, in its original colour.",
+  "source": "human_reviewed"
+ },
+ "t33": {
+  "rule": "Several coloured pieces lie on the grid. Removing exactly one of them leaves a set that fits together into a solid rectangle; that removed piece is the odd one out. Output only the odd piece, cropped to its own bounding box.",
+  "source": "human_annotated"
+ },
+ "t34": {
+  "rule": "The input contains a cyan square occluder with exactly one red cell at one of its corners. The output is the pattern hidden beneath that square, rotated so that the red corner would end up at the top-left: no rotation if the red corner is already top-left, a quarter turn anticlockwise if it is top-right, a quarter turn clockwise if it is bottom-left, and a half turn if it is bottom-right.",
+  "source": "human_reviewed"
+ },
+ "t35": {
+  "rule": "The input is a horizontal row of equally sized frames separated by vertical cyan lines, shown out of order. In the correct order the content drifts steadily across the sequence: frames are ordered by the natural movement progression, and where that ties, by how many cells are filled. The output shows the same frames rearranged into that order, separated as before.",
+  "source": "human_reviewed"
+ },
+ "t36": {
+  "rule": "The top row carries the directions: a yellow start marker, then alternating pairs of a place colour and a turn colour, ending with a cyan destination marker. Below sits a lattice of grey three-by-three tiles separated by blank rows and columns, each tile holding a coloured centre. Begin at the yellow centre and move to a neighbouring tile whose centre matches the first place colour — the start has no turn attached to it. At every tile after that, the paired turn colour says where to go relative to the way you were already heading: blue carries straight on, red turns right, green turns left. Move one tile that way, and its centre must match the next place colour. After the last pair, the final turn must bring you onto the cyan destination. In the output the top row of instructions is gone and the route is drawn in yellow, a line one cell thick running through the tiles visited and the corridors between them. The destination centre stays cyan.",
+  "source": "human_reviewed"
+ },
+ "t37": {
+  "rule": "The input contains one large single-colour shape, clear of the top row and the left column. Cells in the left column mark rows: red means shift that row's shape cells one step right, green means one step left. Cells in the top row mark colours for columns. In each marked row, every shape cell moves one step in the marked direction, and before moving, a cell whose column carries a top-row marker takes that marker's colour. Shape cells in unmarked rows neither move nor change colour. All the markers in the top row and left column are removed from the output.",
+  "source": "human_reviewed"
+ },
+ "t38": {
+  "rule": "The input is a self-similar fractal built from a small template. Starting from a single filled cell, each round replaces every filled cell with a copy of the whole template, so the grid grows by the template's height and width each time. Most filled cells share a base colour and a few carry a distinct highlight colour. The output is the template itself, drawn in the base colour, except that a template cell takes the highlight colour if any highlighted cell in the input sits at a matching position — the same coordinates once row and column are reduced modulo the template's height and width.",
+  "source": "human_reviewed"
+ },
+ "t39": {
+  "rule": "The input contains several three-by-three hollow square islands, their borders sharing one colour. A red cell at the midpoint of an island's side is a one-way gate, allowing movement from that island to the neighbouring island in that direction. One island's centre holds a yellow cell, the source; another holds a cyan cell, the target. Follow the shortest path of gates from source to target, which is unique. In the output every gate used along that path turns grey, the source centre is cleared, and the target centre turns yellow.",
+  "source": "human_reviewed"
+ },
+ "t40": {
+  "rule": "The input contains several hollow rectangular blocks. Some are marked by having their whole interior filled with red. Every marked block is removed. Any remaining block then left unsupported is removed as well, and this repeats until nothing more falls. A block is supported if its bottom edge rests on the bottom row of the grid, or if another surviving block sits directly beneath it, its top edge exactly one row below, with their horizontal spans overlapping.",
+  "source": "human_reviewed"
+ },
+ "t41": {
+  "rule": "The input contains a dotted vertical grey line and a single coloured cell to its left. The cell travels horizontally right, passing through the line and continuing to the far-right edge on the same row. From the point where it crosses the line, a second copy sets off diagonally up and to the right until it reaches the top edge or the right edge. The output keeps the dotted line and shows just those two cells where they came to rest; the original cell on the left is gone.",
+  "source": "human_reviewed"
+ },
+ "t42": {
+  "rule": "The grid is split down the middle into a left and a right half. The left half is unchanged. Both halves are divided into the same stack of boxes, one above the other, each box using two colours. Every box on the right is adjusted to show the same pattern as the box beside it on the left. Only the two colours already present in that right-hand box are used — cells switch between them, and no new colour appears. Of the two ways those colours can be assigned to the pattern, take the one needing fewer changes.",
+  "source": "human_reviewed"
+ },
+ "t43": {
+  "rule": "Several objects overlap, each hiding part of those behind it. Every object's full shape can be worked out from the parts that stay visible, and the front-to-back order is unambiguous. Rebuild each object complete, then redraw them all with that order reversed, so what was in front is now furthest back and what was most hidden is now on top.",
+  "source": "human_reviewed"
+ },
+ "t44": {
+  "rule": "A nest of concentric square outlines surrounds a single marked centre cell, and a second cell of that same marker colour sits on the grid edge, lined up with the centre either horizontally or vertically. The side of the nest that this edge marker faces is the target side. Every outline is missing exactly one cell, at the midpoint of one of its four sides — that is its gap.\nFor each outline, count how many quarter turns clockwise would carry its gap round to the target side. The count is 0 if the gap already faces that side, and otherwise 1, 2 or 3.\nThe output is a new grid, not the input modified. It is three cells wide, with one row for each outline, ordered innermost at the top and outermost at the bottom. In an outline's row, the first n cells from the left are filled with that outline's own colour and the rest are black, where n is its count. A count of 0 leaves the row entirely black; a count of 3 fills it.",
+  "source": "human_reviewed"
+ },
+ "t45": {
+  "rule": "A yellow marker sits at a corner of the grid or at the midpoint of one edge, and the grid has a single background colour. Every cell that is neither background nor yellow casts a black shadow directly away from the marker — along rows and columns when the marker is on an edge, along diagonals when it is at a corner. Yellow cells cast no shadow. Where a yellow cell falls inside another object's shadow it shines instead: the cells beyond it along that same direction are restored to the background colour, until the ray meets another object.",
+  "source": "human_reviewed"
+ },
+ "t46": {
+  "rule": "The grid is five by five, with a grey middle row and middle column dividing it into four two-by-two quadrants. Four colours fill the sixteen non-grey cells so that no row, no column and no quadrant holds the same colour twice. The input reveals four cells, one of each colour, and the output is the single completion those constraints allow.",
+  "source": "human_reviewed"
+ },
+ "t47": {
+  "rule": "Two equal halves are separated by a full grey line, and both share one background colour. Each half carries a single other colour as its foreground. Compare the halves position by position: where only the first half has foreground, the output takes the first half's colour; where only the second does, it takes the second half's colour; where both have foreground, or neither does, the output is black.",
+  "source": "human_reviewed"
+ },
+ "t48": {
+  "rule": "The last row begins with four palette colours. Above it lies a map whose walls are drawn in a colour that is not in the palette, dividing the area into regions. Some regions already carry a palette colour and at least one is still empty. Fill every empty region so that no two regions sharing a border end up the same colour.",
+  "source": "human_reviewed"
+ },
+ "t49": {
+  "rule": "Several two-by-two nodes sit on the grid, all in one colour. Two nodes can be joined only where their blocks line up, sharing a top row or a left column. The cost of a join is the gap between the facing edges of the two blocks, counted in cells. Connect every node using the cheapest set of joins that leaves them all linked, drawing the corridors in grey, two cells wide to match the nodes.",
+  "source": "human_reviewed"
+ },
+ "t50": {
+  "rule": "Grey cells are nodes, and one node carries a different colour, marking the start. Beside each node sits a single orange cell, which points in one of the four directions. From a node, travel in its indicated direction until the next node is met; this gives every node exactly one successor. Follow successors from the highlighted start until reaching a node already visited — the loop from that node onward is the cycle. In the output, return the start node to grey and draw the cycle as a closed polygon, joining consecutive nodes with straight horizontal or vertical lines in the highlight colour.",
+  "source": "human_reviewed"
+ }
+}

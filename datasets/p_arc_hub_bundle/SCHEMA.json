@@ -1,49 +1,69 @@
 {
-  "name": "p_arc_potarcin_tabular",
+  "name": "P-ARC",
   "primary_file": "p_arc_dataset.csv",
+  "parquet_file": "p_arc_dataset.parquet",
   "encoding": "utf-8",
   "format": "csv",
   "quoting": "QUOTE_NONNUMERIC",
   "notes": [
-    "Cells may exceed Python's default csv.field_size_limit (~128 KiB); use csv.field_size_limit(sys.maxsize).",
-    "Train/test grids match Test2/t<n>.json; stable_instances_50_json is json.loads(t<n>_samples_50.json) re-serialized as compact JSON (same data as on disk, no decorative whitespace).",
-    "generator_py and verifier_py match Test2/<subdir>/generator.py and verifier.py verbatim."
+    "Cells can exceed Python's default csv.field_size_limit (~128 KiB); call csv.field_size_limit(sys.maxsize) before reading the CSV.",
+    "tasks/<task_id>.json holds each task's train and test pairs in the standard ARC JSON format."
   ],
   "columns": [
     {
       "name": "task_id",
       "type": "string",
-      "description": "Task id from t1 through t50."
+      "description": "Task id, t1 through t50."
+    },
+    {
+      "name": "task_name",
+      "type": "string",
+      "description": "Short descriptive name of the task, e.g. corner_to_center."
+    },
+    {
+      "name": "rule",
+      "type": "string",
+      "description": "Natural-language statement of the task's intended rule, reviewed by the authors."
+    },
+    {
+      "name": "rule_source",
+      "type": "string",
+      "description": "How the rule was written: human_reviewed (redrafted from the task's transform and reviewed), human_annotated (written from scratch), or draft (the original hand-written rule, kept after review)."
     },
     {
       "name": "train_demonstrations_json",
       "type": "json_string",
-      "description": "Compact JSON array of training pairs {input, output}; grids are List[List[int]]."
+      "description": "Compact JSON array of training pairs {input, output}; grids are lists of lists of integers 0-9."
     },
     {
       "name": "test_input_json",
       "type": "json_string",
-      "description": "Compact JSON grid for test[0].input."
+      "description": "Compact JSON grid for the held-out test input."
     },
     {
       "name": "test_output_json",
       "type": "json_string",
-      "description": "Compact JSON grid for test[0].output (published gold)."
+      "description": "Compact JSON grid for the held-out test output."
     },
     {
       "name": "stable_instances_50_json",
       "type": "json_string",
-      "description": "Compact JSON object parsed from t<n>_samples_50.json (stable sample bundle; minimal separators, no pretty-print)."
+      "description": "Compact JSON object {\"train\": [...]} with 50 fixed generator-produced {input, output} pairs."
+    },
+    {
+      "name": "human_corruptions_json",
+      "type": "json_string",
+      "description": "Compact JSON array of 3 {input, output} pairs whose outputs are erroneous human attempts at the task, used as corruptions."
     },
     {
       "name": "generator_py",
       "type": "string",
-      "description": "UTF-8 Python source for the task generator."
+      "description": "Python source of the task's generator."
     },
     {
       "name": "verifier_py",
       "type": "string",
-      "description": "UTF-8 Python source for the task verifier."
+      "description": "Python source of the task's verifier, which maps an input grid to the correct output grid."
     }
   ]
 }

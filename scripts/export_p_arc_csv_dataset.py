@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Export P-ARC (Test2 t1..t50) into one CSV row per task.
 
-Columns include canonical demonstrations + held-out test pair, the bundled
-50-sample stable JSON, and generator/verifier source from each task directory.
+Columns include the task's name and natural-language rule, canonical
+demonstrations + held-out test pair, the bundled 50-sample stable JSON, the three
+human-error corruptions, and generator/verifier source from each task directory.
+Rules are read from ``Test2/p_arc_rules.json``.
 
 Default output: ``evaluation/figures/p_arc_dataset.csv`` (UTF-8, RFC4180-style).
 
@@ -71,12 +73,17 @@ def main() -> int:
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     task_dirs = _discover_task_dirs(test2_dir)
+    rules = json.loads((test2_dir / "p_arc_rules.json").read_text(encoding="utf-8"))
     fieldnames = (
         "task_id",
+        "task_name",
+        "rule",
+        "rule_source",
         "train_demonstrations_json",
         "test_input_json",
         "test_output_json",
         "stable_instances_50_json",
+        "human_corruptions_json",
         "generator_py",
         "verifier_py",
     )
@@ -125,13 +132,31 @@ def main() -> int:
             stable_obj = json.loads(samples_path.read_text(encoding="utf-8"))
             stable_json = _compact_json(stable_obj)
 
+            # Three erroneous human attempts; older tasks name them t<n>_corrupt<k>.json,
+            # newer ones t<n>_corrupted<k>.json.
+            corruption_paths = sorted(subdir.glob(f"t{n}_corrupt*.json"))
+            if len(corruption_paths) != 3:
+                raise FileNotFoundError(f"Expected 3 corruption files for {tid}, found {len(corruption_paths)}")
+            corruptions = [
+                json.loads(p.read_text(encoding="utf-8"))["test"][0] for p in corruption_paths
+            ]
+            rule = rules.get(tid)
+            if not rule:
+                raise KeyError(f"Missing rule for {tid} in p_arc_rules.json")
+
             w.writerow(
                 {
                     "task_id": tid,
+                    "task_name": re.sub(r"^t\d+_", "", subdir.name),
+                    "rule": rule["rule"],
+                    "rule_source": rule["source"],
                     "train_demonstrations_json": _compact_json(train),
                     "test_input_json": _compact_json(te0["input"]),
                     "test_output_json": _compact_json(te0["output"]),
                     "stable_instances_50_json": stable_json,
+                    "human_corruptions_json": _compact_json(
+                        [{"input": c["input"], "output": c["output"]} for c in corruptions]
+                    ),
                     "generator_py": gen_path.read_text(encoding="utf-8"),
                     "verifier_py": ver_path.read_text(encoding="utf-8"),
                 }
