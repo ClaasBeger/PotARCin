@@ -119,3 +119,52 @@ python scripts/run_all_dimensions_eval.py \
 ```
 
 
+
+## ARC-AGI-1 evaluation split — output grids (OpenRouter)
+
+Pure output-grid generation (the "normal ARC setting"): training demonstrations plus one
+test input, model returns the output grid. Same prompt and parser as the training-split
+runner — only the task source differs.
+
+The 400 evaluation tasks are read from `external/re_arc/arc_original.zip`
+(`arc_original/evaluation/`); an extracted `external/arc_original_eval/` directory is used
+instead when present. Results are written to
+`evaluation/output_grid_eval_results/<ModelAlias>/ARC1Eval/<Run1|Run2>/<run_tag>/`, so they
+sit alongside — and never collide with — the training-split runs.
+
+Requires `OPENROUTER_API_KEY`.
+
+**Kimi K2.5:**
+
+```bash
+python scripts/run_output_grid_eval_arc1_eval_batch.py \
+  --all-eval \
+  --model moonshotai/Kimi-K2.5:nitro \
+  --provider openrouter \
+  --reasoning-effort low \
+  --run-tag Evaluation_Run_kimi_arc1_eval_output_grid_run1 \
+  --batch-size 50
+```
+
+**MiniMax M2.5:**
+
+```bash
+python scripts/run_output_grid_eval_arc1_eval_batch.py \
+  --all-eval \
+  --model minimax/minimax-m2.5:nitro \
+  --provider openrouter \
+  --reasoning-effort low \
+  --run-tag Evaluation_Run_minimax_arc1_eval_output_grid_run1 \
+  --batch-size 50
+```
+
+Re-run the same command to continue: `--skip-completed` (default) skips tasks that already
+have a non-error result under the run tag, so 400 tasks can be walked in `--batch-size`
+chunks. Useful extras:
+
+- `--all-test-indices` — evaluate every test example (19 of the 400 eval tasks have 2);
+  artifacts for index > 0 are named `<task_id>_test<idx>_output_grid_eval_*.json`.
+- `--tasks <id> …` / `--tasks-file <path>` — run a subset instead of `--all-eval`.
+- `--retries` / `--retry-backoff-s` / `--no-retry-eval-failures` — transient-error and
+  parse-failure retry budget. Failures that exhaust it are logged as
+  `<task_id>_output_grid_eval_error_*.json` and are not treated as completed on resume.

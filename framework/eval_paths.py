@@ -56,12 +56,10 @@ def multi_run_summary_dir(
     return p / run_bucket(run_tag) / run_tag
 
 
-def output_grid_run_dir(*, root_dir: Path, model: str, run_tag: str) -> Path:
-    return (
-        root_dir
-        / "evaluation"
-        / "output_grid_eval_results"
-        / model_alias(model)
-        / run_bucket(run_tag)
-        / run_tag
-    )
+def output_grid_run_dir(
+    *, root_dir: Path, model: str, run_tag: str, dataset_segment: str | None = None
+) -> Path:
+    p = root_dir / "evaluation" / "output_grid_eval_results" / model_alias(model)
+    if dataset_segment:
+        p = p / dataset_segment
+    return p / run_bucket(run_tag) / run_tag
