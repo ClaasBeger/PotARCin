@@ -11,6 +11,8 @@ from __future__ import annotations
 
 import copy
 import random
+import signal
+import threading
 from dataclasses import dataclass
 from typing import List, Literal, Optional, Sequence, Tuple
 
@@ -24,6 +26,7 @@ from framework.corruption.p_arc import sample_p_arc_pair
 from framework.corruption.test2_verifier_ast import load_and_corrupt_test2_verifier
 from framework.corruption.verifier_ast import load_and_corrupt_re_arc_verifier
 from framework.grids import (
+    Grid,
     GridPair,
     assert_int_grid_pair,
     connected_component_color_flips_on_pair,
@@ -105,51 +108,93 @@ KNOWN_INCORRECT_TRAIN_EXAMPLES: dict[str, frozenset[int]] = {
 }
 
 
-def verifier_matches_train_test_stable_dynamic50(task: ArcTask, v: Verifier) -> bool:
-    """True if *v* matches train, test, ARC-GEN stable (if any), and 50 dynamic pairs."""
+class _CallTimeout(Exception):
+    """A verifier or generator call ran past its time limit."""
+
+
+def _limited(fn, timeout_s: Optional[float]):
+    """Call *fn*, raising :class:`_CallTimeout` after *timeout_s* seconds (main thread only)."""
+    if not timeout_s or threading.current_thread() is not threading.main_thread():
+        return fn()
+
+    def _expire(*_args: object) -> None:
+        raise _CallTimeout()
+
+    previous = signal.signal(signal.SIGALRM, _expire)
+    signal.setitimer(signal.ITIMER_REAL, timeout_s)
+    try:
+        return fn()
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous)
+
+
+def verifier_matches_train_test_stable_dynamic50(
+    task: ArcTask,
+    v: Verifier,
+    *,
+    dynamic_samples: int = 50,
+    seed: Optional[int] = None,
+    call_timeout_s: Optional[float] = None,
+) -> bool:
+    """True if *v* matches train, test, ARC-GEN stable (if any), and *dynamic_samples* generator pairs.
+
+    With *seed* set, the generator pairs are drawn from ``random.Random(seed)``, so every
+    verifier checked with the same seed sees the same pairs and a rebuild is reproducible.
+    With *call_timeout_s* set, a verifier call that runs longer counts as a mismatch, like
+    one that raises; a generator draw that runs longer is skipped.
+    """
+
+    def matches(grid: Grid, expected: Grid) -> bool:
+        try:
+            return is_equal_grid(_limited(lambda: v(copy.deepcopy(grid)), call_timeout_s), expected)
+        except Exception:
+            return False
+
     skip = KNOWN_INCORRECT_TRAIN_EXAMPLES.get(task.task_id, frozenset())
     for i, p in enumerate(task.train_pairs):
-        if i in skip:
-            continue
-        try:
-            out = v(copy.deepcopy(p.input))
-            if not is_equal_grid(out, p.output):
-                return False
-        except Exception:
+        if i not in skip and not matches(p.input, p.output):
             return False
     n_test = min(len(task.test_inputs), len(task.test_outputs))
     for i in range(n_test):
-        try:
-            out = v(copy.deepcopy(task.test_inputs[i]))
-            if not is_equal_grid(out, task.test_outputs[i]):
-                return False
-        except Exception:
+        if not matches(task.test_inputs[i], task.test_outputs[i]):
             return False
-    if task.arc_gen_synthetic_pairs:
-        for p in task.arc_gen_synthetic_pairs:
-            try:
-                out = v(copy.deepcopy(p.input))
-                if not is_equal_grid(out, p.output):
-                    return False
-            except Exception:
-                return False
+    for p in task.arc_gen_synthetic_pairs or []:
+        if not matches(p.input, p.output):
+            return False
     if task.arc_gen_generator is None:
         return False
-    try:
-        dyn = task.arc_gen_generator(50)
-    except Exception:
-        return False
-    for p in dyn:
+    if seed is None:
         try:
-            out = v(copy.deepcopy(p.input))
-            if not is_equal_grid(out, p.output):
-                return False
+            dyn = task.arc_gen_generator(dynamic_samples)
         except Exception:
             return False
-    return True
+        return all(matches(p.input, p.output) for p in dyn)
+    # One pair per draw from a single seeded RNG (the same pairs a batch call would
+    # give).  A draw that raises or runs past the time limit is a generator fault,
+    # not the verifier's, so it is skipped; some ARC-GEN seeds loop forever.
+    rng = random.Random(seed)
+    checked = 0
+    for _ in range(4 * dynamic_samples):
+        if checked == dynamic_samples:
+            break
+        try:
+            pair = _limited(lambda: task.arc_gen_generator(1, rng=rng)[0], call_timeout_s)
+        except Exception:
+            continue
+        if not matches(pair.input, pair.output):
+            return False
+        checked += 1
+    return checked == dynamic_samples
 
 
-def valid_verifier_slots_for_task(task: ArcTask) -> List[VerifierSlot]:
+def valid_verifier_slots_for_task(
+    task: ArcTask,
+    *,
+    dynamic_samples: int = 50,
+    seed: Optional[int] = None,
+    call_timeout_s: Optional[float] = None,
+) -> List[VerifierSlot]:
     """Every verifier slot that passes :func:`verifier_matches_train_test_stable_dynamic50`.
 
     Used for offline CSV generation. Runtime selection uses
@@ -167,7 +212,9 @@ def valid_verifier_slots_for_task(task: ArcTask) -> List[VerifierSlot]:
     for name, fn in candidates:
         if fn is None:
             continue
-        if verifier_matches_train_test_stable_dynamic50(task, fn):
+        if verifier_matches_train_test_stable_dynamic50(
+            task, fn, dynamic_samples=dynamic_samples, seed=seed, call_timeout_s=call_timeout_s
+        ):
             out.append(name)
     return out
 
