@@ -1,5 +1,11 @@
 # PotARCin
 
+[![NeurIPS 2026](https://img.shields.io/badge/NeurIPS-2026-4b44ce.svg)](https://neurips.cc/)
+[![arXiv](https://img.shields.io/badge/arXiv-2609.27288-b31b1b.svg)](https://arxiv.org/abs/2609.27288)
+[![Dataset on Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-P--ARC-ffd21e.svg)](https://huggingface.co/datasets/ClaasBeger/P-ARC)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+
 Code and results for **PotARCin: Multi-Dimensional Evaluation of Skill Acquisition in Abstract Reasoning Tasks** (Beger, Yi and Mitchell, NeurIPS 2026, [arXiv:2609.27288](https://arxiv.org/abs/2609.27288)).
 
 PotARCin tests whether a model has actually acquired the rule behind an ARC task, rather than only producing the right output grid. Each task is evaluated along five dimensions, alongside the standard output-grid setting:
