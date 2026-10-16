@@ -1,6 +1,7 @@
 # PotARCin
 
 [![NeurIPS 2026](https://img.shields.io/badge/NeurIPS-2026-4b44ce.svg)](https://neurips.cc/)
+[![Project Page](https://img.shields.io/badge/Project-Page-2ea44f.svg)](https://claasbeger.github.io/potarcin)
 [![arXiv](https://img.shields.io/badge/arXiv-2609.27288-b31b1b.svg)](https://arxiv.org/abs/2609.27288)
 [![Dataset on Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-P--ARC-ffd21e.svg)](https://huggingface.co/datasets/ClaasBeger/P-ARC)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
