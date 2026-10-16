@@ -10,7 +10,7 @@ PotARCin tests whether a model has actually acquired the rule behind an ARC task
 - **Editing** – repair a corrupted pair so that it follows the rule again.
 - **Inversion** – given an output, produce an input that the rule maps to it.
 
-Tasks come from the ARC-AGI-1 training set and from **P-ARC** (`Test2/`), a set of 50 new tasks. Generated pairs come from ARC-GEN and RE-ARC generators, and answers are checked by per-task verifiers.
+Tasks come from the ARC-AGI-1 training set and from **P-ARC** (`Test2/`), a set of 50 new tasks, also available on Hugging Face as [ClaasBeger/P-ARC](https://huggingface.co/datasets/ClaasBeger/P-ARC). Generated pairs come from ARC-GEN and RE-ARC generators, and answers are checked by per-task verifiers.
 
 ## Layout
 
@@ -25,10 +25,10 @@ Tasks come from the ARC-AGI-1 training set and from **P-ARC** (`Test2/`), a set 
   - `llm_api.py` – model calls (OpenAI, Anthropic, Google, Together, OpenRouter).
   - `eval_paths.py` – where results are written.
 - `scripts/` – command-line runners, consolidation, plotting and dataset export.
-- `Test2/` – the P-ARC tasks, each with a generator, verifier, sample pool and corruptions.
+- `Test2/` – the P-ARC tasks ([Hugging Face](https://huggingface.co/datasets/ClaasBeger/P-ARC)), each with a generator, verifier, sample pool and corruptions.
 - `evaluation/` – results per dimension and model (`<dimension>_eval_results/<Model>/<Run>/<run_tag>/`) and `figures/`.
 - `Demonstrations/` – HTML reports of model answers (see [HTML reports](#html-reports)).
-- `datasets/p_arc_hub_bundle/` – the P-ARC dataset bundle for Hugging Face.
+- `datasets/p_arc_hub_bundle/` – the P-ARC dataset bundle, published as [ClaasBeger/P-ARC](https://huggingface.co/datasets/ClaasBeger/P-ARC) on Hugging Face.
 - `external/` – vendored generators and verifiers (ARC-GEN, RE-ARC, code-golf solutions); two of these are git submodules.
 - `task_valid_verifiers.csv` – audited verifier slots per ARC-AGI-1 task.
 - `tests/` – unit and smoke tests.
@@ -145,10 +145,11 @@ Re-run the same command to continue: `--skip-completed` (the default) skips task
 
 Each ARC-AGI-1 task can have up to five verifiers: `re_arc`, three code-golf solution sets (`google`, `keymoon`, `neurips`) and a hand-written `custom` one. `task_valid_verifiers.csv` lists which of them agree with the task's examples and generator, and `selected_verifier_slot` names the canonical one the task is judged by. `framework/verifier_selection.py` tries the canonical slot first, then the other valid slots, and skips any verifier that disagrees with the specific generated pair being judged.
 
-To rebuild the CSV (canonical choices that are still valid are kept):
+The CSV was built by checking every slot against the task's train, test and ARC-GEN stable examples and 500 generator draws (seed 0); a verifier call over 10 s counts as a mismatch. To rebuild it (a rebuild only removes listed slots that now fail, and keeps canonical choices that are still valid):
 
 ```bash
-python scripts/caller_export_valid_verifiers.py --out task_valid_verifiers.csv --num-tasks 400
+python scripts/caller_export_valid_verifiers.py --out task_valid_verifiers.csv --num-tasks 400 \
+  --dynamic-samples 500 --seed 0 --call-timeout 10 --workers 16
 ```
 
 To audit every verifier of the first 400 training tasks against their examples and generators, writing a log to `caller_run_<time>.log` and HTML reports of disagreements to `caller_mismatches/`:
@@ -165,3 +166,33 @@ Results are browsed as static HTML pages: `Demonstrations/` holds reports of mod
 python scripts/build_output_grid_results_dir_html.py \
   --results-dir evaluation/output_grid_eval_results/KimiK25/ARC1Eval/Run1/Evaluation_Run_kimi_arc1_eval_output_grid_run1
 ```
+
+## Citation
+
+```bibtex
+@inproceedings{beger2026potarcin,
+  title         = {PotARCin: Multi-Dimensional Evaluation of Skill Acquisition in Abstract Reasoning Tasks},
+  author        = {Beger, Claas and Yi, Ryan and Mitchell, Melanie},
+  booktitle     = {Advances in Neural Information Processing Systems},
+  year          = {2026},
+  eprint        = {2609.27288},
+  archivePrefix = {arXiv}
+}
+```
+
+## License
+
+The PotARCin code and data, including P-ARC (`Test2/`, `datasets/p_arc_hub_bundle/`), are released under the MIT License (`LICENSE`).
+
+The third-party code and data under `external/` keep their own licenses:
+
+| Path | Source | License |
+|---|---|---|
+| `external/ARC-GEN/` | [google/ARC-GEN](https://github.com/google/ARC-GEN) | Apache 2.0. Generators for 110 tasks were modified, and one was added, so that each reproduces its task's training demonstrations and test pairs; see `external/ARC-GEN/POTARCIN_CHANGES.md`. |
+| `external/re_arc/` | [michaelhodel/re-arc](https://github.com/michaelhodel/re-arc) | MIT. In `arc_original.zip`, the first training example of 469497ad is corrected. |
+| `external/golf/` | [key-moon/golf](https://github.com/key-moon/golf), snapshot from March 2026 | Apache 2.0 |
+| `external/google-code-golf-2025/` (submodule) | [xsot/google-code-golf-2025](https://github.com/xsot/google-code-golf-2025) | Apache 2.0 |
+| `external/NeurIPS-Code-Golf-2025/` (submodule) | [Seek64/NeurIPS-Code-Golf-2025](https://github.com/Seek64/NeurIPS-Code-Golf-2025) | Apache 2.0 |
+| `external/arc_gen_stable.zip` | [The ARC-GEN-100K Dataset](https://www.kaggle.com/datasets/arcgen100k/the-arc-gen-100k-dataset) (August 2025), unchanged | Apache 2.0 |
+| `external/arc_original_train/` | ARC-AGI-1 training tasks from [fchollet/ARC-AGI](https://github.com/fchollet/ARC-AGI), unchanged | Apache 2.0 |
+| `external/H-ARC/incorrect_submissions.csv` | Incorrect human attempts, filtered, from H-ARC ([LeGris et al., 2025](https://doi.org/10.1038/s41597-025-05687-1); [data](https://osf.io/bh8yq/)) | CC0 1.0 |

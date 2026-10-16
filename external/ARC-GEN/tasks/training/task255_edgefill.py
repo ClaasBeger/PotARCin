@@ -6,6 +6,9 @@
 #   any non-green non-black (the "other" colored) cells.
 #
 # This file intentionally does NOT modify the original task255.py.
+#
+# Added for PotARCin (2026). Derived from task255.py, Copyright 2025 Google LLC,
+# licensed under the Apache License, Version 2.0; see external/ARC-GEN/LICENSE.
 
 import copy
 from pathlib import Path
